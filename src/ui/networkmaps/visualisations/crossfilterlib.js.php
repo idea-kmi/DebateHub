@@ -325,19 +325,60 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	var formatDateGroup = d3.time.format("%B %Y");
 	var formatDate = d3.time.format("%B %d, %Y");
-	var formatTime = d3.time.format("%a %d %Y %I:%M %p");
+	var formatTime = d3.time.format("%a %d %b %Y %I:%M %p");
+
+	var checkDuplicateNames = {};
+
+	/*data.forEach(function(d, i) {
+		d.index = i;
+		d.date = new Date(d.date*1000);
+	});*/
 
 	data.forEach(function(d, i) {
 		d.index = i;
 		d.date = new Date(d.date*1000);
+		if (d.username != "") {
+			// Handle duplicate names
+			var name = d.username;
+			if (checkDuplicateNames[name]) {
+				var nameuseridArray = checkDuplicateNames[name];
+				var found = false;
+				for (i=0; i<nameuseridArray.length; i++) {
+					nextid = nameuseridArray[i];
+					if (nextid == d.userid) {
+						if (i == 0) {
+							d.username = name;
+						} else {
+							d.username = name+" ("+(i+1)+")";
+						}
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					nameuseridArray.push(d.userid);
+					d.username = name+" ("+(nameuseridArray.length)+")";
+					checkDuplicateNames[name] = nameuseridArray;
+				}
+			} else {
+				d.username = name;
+				var array = new Array();
+				array.push(d.userid);
+				checkDuplicateNames[name] = array;
+			}
+		}
 	});
+
 
 	var activities = crossfilter(data);
 	var all = activities.groupAll();
 
 	/*** MAIN DATE CHART ***/
-	var user = activities.dimension(function(d) {return d.userid;});
+	var user = activities.dimension(function(d) {return d.username;});
 	var users = user.group();
+
+	//var user = activities.dimension(function(d) {return d.userid;});
+	//var users = user.group();
 
 	var usersGrouped = user.group().reduce(
 		function(p, v) {
@@ -420,7 +461,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.yAxisPadding(0)
 		.elasticX(false)
 		.xAxisPadding(0)
-		.x(d3.scale.ordinal())
+		.x(d3.scale.ordinal().domain(data.map( function(d){ return d.username;})))
 		.xUnits(dc.units.ordinal)
 		.centerBar(true)
 		.renderHorizontalGridLines(true)
@@ -512,7 +553,11 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	dc.dataTable("#data-table")
 		.dimension(user)
 		.group(function(d) {
-			return d.userid ;
+			if (d.homepage && d.homepage != "") {
+				return '<a target="_blank" href="'+d.homepage+'">'+d.username+'</a>';
+			} else {
+				return d.username;
+			}
 		})
 		// (optional) max number of records to be shown, :default = 25
 		.size(50)
@@ -576,7 +621,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.color(colorrange)
 		.width(width)
 		.height(20)
-        .margin({top: 0, right: 0, bottom: 0, left: 15});
+        .margin({top: 2, right: 0, bottom: 0, left: 15});
 
 	var priorities = [getNodeTitleAntecedence('Issue', false),
 					getNodeTitleAntecedence('Solution', false),
@@ -595,7 +640,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	d3.select('.legendWrap')
           .datum(nest.entries(data))
-          .attr('transform', 'translate(' + -(width/2) + ',' + 0 +')')
           .call(legend);
 
  	$('messagearea').innerHTML="";

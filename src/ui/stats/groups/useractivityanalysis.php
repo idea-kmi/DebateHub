@@ -67,14 +67,17 @@ for ($i=0; $i<$count; $i++) {
 					array_push($usersCheck, $userid);
 
 					$userid = $users[$userid];
+					$username = $node->users[0]->name;
 					$countUsers++;
 				} else {
 					$userid = $users[$userid];
+					$username = $node->users[0]->name;
 				}
 
 				$nexttopic = array(
 					"date" => $date,
 					"userid" => $userid,
+					"username" => $username,
 					"nodeid" => $node->nodeid,
 					"title" => $node->name,
 					"nodetype" => $role,

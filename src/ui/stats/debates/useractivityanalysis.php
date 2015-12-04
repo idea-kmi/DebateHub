@@ -80,14 +80,17 @@ for ($i=0; $i<$count; $i++) {
 					array_push($usersCheck, $userid);
 
 					$userid = $users[$userid];
+					$username = $node->users[0]->name;
 					$countUsers++;
 				} else {
 					$userid = $users[$userid];
+					$username = $node->users[0]->name;
 				}
 
 				$nexttopic = array(
 					"date" => $date,
 					"userid" => $userid,
+					"username" => $username,
 					"nodeid" => $node->nodeid,
 					"title" => $node->name,
 					"nodetype" => $role,
@@ -166,32 +169,6 @@ Event.observe(window, 'load', function() {
 		</table>
 	</div>
 </div>
-
-
-<!-- div style="clear:both;float:left;">
-  <div style="clear:both;float:left;height:350px;width:650px;" id="user-chart">
-    <div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_USERS_TITLE; ?></div>
-  </div>
-  <div style="float:left;height:300px;margin-left:20px;width:250px;" id="nodetype-chart">
-  	<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_ACTION_TITLE; ?></div>
-  </div>
-</div>
-
-<div style="clar:both;float:left;margin-top:20px;">
-	<div id="data-count">
-		<span class="filter-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART1; ?> <span class="total-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART2; ?> | <a
-			href="javascript:dc.filterAll(); dc.renderAll();"><?php echo $LNG->STATS_ACTIVITY_RESET_ALL_BUTTON; ?></a>
-	</div>
-	<table id="data-table" class="table table-hover dc-data-table" style="float:left;width:980px">
-		<thead>
-		<tr class="header">
-			<th width="20%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_DATE; ?></th>
-			<th width="15%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_ACTION; ?></th>
-			<th width="50%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_TITLE; ?></th>
-		</tr>
-		</thead>
-	</table>
-</div -->
 
 <?php
 include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));

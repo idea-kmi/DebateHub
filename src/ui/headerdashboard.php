@@ -84,7 +84,7 @@ global $HUB_FLM;
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/crossfilter-1.3.9/crossfilter.min.js"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/dc.js-1.7.0/dc.min.js"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/nvd3-1.1.15-beta/nv.d3.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="<?php echo $CFG->homeAddress; ?>ui/lib/d3-tip-0.6.6/index.js"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/networkmaps/visualisations/circlepackinglib.js.php" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/networkmaps/visualisations/scatterplotlib.js.php" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/networkmaps/visualisations/streamgraphlib.js.php" type="text/javascript"></script>

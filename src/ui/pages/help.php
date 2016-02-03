@@ -41,49 +41,49 @@
 		<div style="clear:both;float:left; margin-top:20px;width:480px">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_INTRO;?><span style="font-size:9pt;padding-left:5px;color:gray">(1m 48s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="float:left; margin-top:20px;width:480px;margin-left:20px;">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_GROUPS;?><span style="font-size:9pt;padding-left:5px;color:gray">(2m 57s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-groups.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-groups.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-groups.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="clear:both;float:left; margin-top:20px;width:480px;">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_DEBATES;?><span style="font-size:9pt;padding-left:5px;color:gray">(15m 53s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-debates.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-debates.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-debates.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="float:left; margin-top:20px;width:480px;margin-left:20px;">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_MYHUB;?><span style="font-size:9pt;padding-left:5px;color:gray">(6m 19s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-myhub.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-myhub.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-myhub.mp4" type=video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="clear:both;float:left; margin-top:20px;width:480px;">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_SEARCHES;?><span style="font-size:9pt;padding-left:5px;color:gray">(2m 03s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-searching.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-searching.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-searching.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="float:left; margin-top:20px;width:480px;margin-left:20px;">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_DASHBOARD;?><span style="font-size:9pt;padding-left:5px;color:gray">(18m 42s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-dashboards.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-dashboards.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-dashboards.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 
 		<div style="clear:both;float:left; margin-top:20px;width:480px">
 		<h2><?php echo $LNG->HELP_MOVIES_TITLE_MODERATORS;?><span style="font-size:9pt;padding-left:5px;color:gray">(11m 55s)</span></h2>
 		<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-moderators.png" style="border:2px solid #E8E8E8" width="480px" height="360px" autobuffer="autobuffer" controls="controls">
-		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-moderators.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+		<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-moderators.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 		</video>
 		</div>
 

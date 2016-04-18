@@ -164,9 +164,9 @@ class DatabaseManager {
 	 */
 	function addLimitingResults($sql, $start, $max) {
 		$newsql = $sql;
-		if ($max > -1) {
+		if ($max > -1 && $start > -1) {
 			if ($this->databasetype == $this->DATABASE_TYPE_MYSQL) {
-				$newsql .= " LIMIT ". $start.",".$max;
+				$newsql .= " LIMIT ".$start.",".$max;
 			} else if ($this->databasetype == $this->DATABASE_TYPE_ODBC) {
 				$newsql = "SELECT TOP ".$start.",".$max." * from (".$sql.") as temp";
 			}

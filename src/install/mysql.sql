@@ -572,7 +572,7 @@ CREATE TABLE `Users` (
   `Website` varchar(255) DEFAULT NULL,
   `Photo` varchar(255) DEFAULT NULL,
   `Private` enum('N','Y') NOT NULL DEFAULT 'N',
-  `AuthType` varchar(10) NOT NULL DEFAULT 'evhub',
+  `AuthType` varchar(10) NOT NULL DEFAULT 'debatehub',
   `InvitationCode` varchar(50) DEFAULT NULL,
   `LocationText` varchar(255) DEFAULT NULL,
   `LocationCountry` char(2) DEFAULT NULL,

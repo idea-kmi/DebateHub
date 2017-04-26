@@ -43,9 +43,9 @@ $LNG->PAGE_ABOUT_BODY .= '<p>DebateHub helps communities to identify the most ro
 $LNG->PAGE_ABOUT_BODY .= '<p>DebateHub also supports informed participation to public debates by providing a collective intelligence visualization dashboard consisting of summary analytics and attention mediation feedback. These features support newcomers to get a sense of where is the debate at and where is the best way for them to contribute. The DebateHub Visualization Dashboard is also a tool for community managers to monitor their community, promote attention and prioritize community\'s resources and actions.</p>';
 
 $LNG->PAGE_ABOUT_BODY .= '<p>'.$CFG->SITE_TITLE.' is developed by the ';
-$LNG->PAGE_ABOUT_BODY .= '<a href="http://projects.kmi.open.ac.uk/hyperdiscourse/">Knowledge Media Institute</a> ';
+$LNG->PAGE_ABOUT_BODY .= '<a href="http://idea.kmi.open.ac.uk/">Knowledge Media Institute</a> ';
 $LNG->PAGE_ABOUT_BODY .= 'team (';
-$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://people.kmi.open.ac.uk/anna/index.html">Anna De Liddo</a> and ';
-$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/bachler">Michelle Bachler</a>). </p>';
-$LNG->PAGE_ABOUT_BODY .= '<p>We are indebted to <a target="About" href="http://kmi.open.ac.uk/people/harry/">Harriett Cornish</a> for graphic design.</p> ';
+$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/member/anna-de-liddo/">Anna De Liddo</a> and ';
+$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/member/michelle-bachler">Michelle Bachler</a>). </p>';
+$LNG->PAGE_ABOUT_BODY .= '<p>We are indebted to <a target="About" href="http://kmi.open.ac.uk/people/member/harriett-cornish/">Harriett Cornish</a> for graphic design.</p> ';
 ?>

@@ -37,7 +37,7 @@
         return;
     }
 
-    $userid = required_param("PARAM_ALPHANUMEXT",PARAM_TEXT);
+    $userid = required_param("userid",PARAM_ALPHANUMEXT);
     $code = required_param("code",PARAM_TEXT);
 
     //check valid code

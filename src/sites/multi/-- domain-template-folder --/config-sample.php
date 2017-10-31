@@ -229,7 +229,7 @@ $CFG->PROXY_PORT = "";
 $CFG->CAPTCHA_ON = true;
 
 // captcha public/private keys - olnet.org and subdomains - ci.
-// You can get these from the Captcha website (http://www.captcha.net/)
+// You can get these from the Captcha website (https://www.google.com/recaptcha/admin)
 $CFG->CAPTCHA_PUBLIC = "";
 $CFG->CAPTCHA_PRIVATE = "";
 

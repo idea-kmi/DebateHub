@@ -981,8 +981,8 @@ function getTotalUsersCount() {
 	$count = 0;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
-		for ($i=0; $i<$count; $i++) {
+		$icount = count($resArray);
+		for ($i=0; $i<$icount; $i++) {
 			$array = $resArray[$i];
 			$count = $array['num'];
 		}
@@ -1072,8 +1072,8 @@ function getRegisteredUserCount($mintime, $maxtime) {
 	$num = 0;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
-		for ($i=0; $i<$count; $i++) {
+		$icount = count($resArray);
+		for ($i=0; $i<$icount; $i++) {
 			$array = $resArray[$i];
 			$num = $array['num'];
 		}

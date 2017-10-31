@@ -306,6 +306,145 @@ function displayReportNodes(objDiv,nodes,start){
 }
 
 /**
+ * Render a list of nodes for the Connectedness stats boxes
+ */
+function displayConnectionStatNodes(objDiv,nodes,start,includeUser,uniqueid){
+	if (uniqueid == undefined) {
+		uniqueid = 'idea-list';
+	}
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	for(var i=0; i< nodes.length; i++){
+		if(nodes[i].cnode){
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			lOL.insert(iUL);
+			var blobDiv = new Element("div", {'class':'idea-blob-list', 'style':'clear:both;float:left;margin-bottom:2px;'});
+			var blobNode = renderWidgetListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,'active');
+			blobDiv.insert(blobNode);
+			iUL.insert(blobDiv);
+		}
+	}
+	objDiv.insert(lOL);
+}
+
+
+/**
+ * Render the given node from an associated connection.
+ * @param node the node object do render
+ * @param uniQ is a unique id element prepended to the nodeid to form an overall unique id within the currently visible site elements
+ * @param role the role object for this node
+ * @param includeUser whether to include the user image and link
+ * @param type defaults to 'active', but can be 'inactive' so nothing is clickable
+ * 			or a specialized type for some of the popups
+ */
+function renderWidgetListNode(node, uniQ, role, includeUser, type){
+
+	if (type === undefined) {
+		type = "active";
+	}
+
+	if(role === undefined){
+		role = node.role[0].role;
+	}
+
+	var nodeuser = null;
+	// JSON structure different if coming from popup where json_encode used.
+	if (node.users[0].userid) {
+		nodeuser = node.users[0];
+	} else {
+		nodeuser = node.users[0].user;
+	}
+	var user = null;
+	var connection = node.connection;
+	if (connection) {
+		user = connection.users[0].user;
+	} else {
+		user = nodeuser;
+	}
+
+	var breakout = "";
+
+	//needs to check if embedded as a snippet
+	if(top.location != self.location){
+		breakout = " target='_blank'";
+	}
+
+	var focalrole = "";
+	if (connection) {
+		uniQ = connection.connid+uniQ;
+		var fN = connection.from[0].cnode;
+		var tN = connection.to[0].cnode;
+		if (node.nodeid == fN.nodeid) {
+			focalrole = tN.role[0].role;
+		} else {
+			focalrole = fN.role[0].role;
+		}
+	} else {
+		uniQ = node.nodeid + uniQ;
+	}
+
+	var nodeTable = document.createElement('table', {'style':'width:100%'});
+	nodeTable.className = "toConnectionsTable";
+	nodeTable.width="100%";
+	//nodeTable.border = "1";
+	var row = nodeTable.insertRow(-1);
+
+	var textCell = row.insertCell(-1);
+	textCell.vAlign="middle";
+	textCell.align="left";
+	textCell.width="90%";
+
+	var alttext = getNodeTitleAntecedence(role.name, false);
+	if (node.imagethumbnail != null && node.imagethumbnail != "") {
+		var originalurl = "";
+		if(node.urls && node.urls.length > 0){
+			for (var i=0 ; i< node.urls.length; i++){
+				var urlid = node.urls[i].url.urlid;
+				if (urlid == node.imageurlid) {
+					originalurl = node.urls[i].url.url;
+					break;
+				}
+			}
+		}
+		if (originalurl == "") {
+			originalurl = node.imagethumbnail;
+		}
+		var iconlink = new Element('a', {
+			'href':originalurl,
+			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
+ 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:20px;height:20px;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+ 		iconlink.insert(nodeicon);
+ 		textCell.insert(iconlink);
+ 		textCell.insert(alttext+": ");
+	} else if (role.image != null && role.image != "") {
+ 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:20px;height:20px;margin-top:3px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + role.image});
+		textCell.insert(nodeicon);
+	} else {
+ 		textCell.insert(alttext+": ");
+	}
+
+	var title = node.name;
+	var exploreButton = new Element('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ, 'style':'line-height:1.8em;font-weight:normal'});
+	if (role.name == "Map") {
+		if (node.searchid && node.searchid != "") {
+			exploreButton.href= "<?php echo $CFG->homeAddress; ?>map.php?id="+node.nodeid+"&sid="+node.searchid;
+		} else {
+			exploreButton.href= "<?php echo $CFG->homeAddress; ?>map.php?id="+node.nodeid;
+		}
+	} else {
+		if (node.searchid && node.searchid != "") {
+			exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"&sid="+node.searchid;
+		} else {
+			exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid;
+		}
+	}
+	exploreButton.insert(title);
+	textCell.insert(exploreButton);
+
+	return nodeTable;
+}
+
+
+/**
  * Render the given node.
  * Used for Activities, Multi connection Viewer, Stats pages etc. where the node is drawn as a Cohere style box.
  *

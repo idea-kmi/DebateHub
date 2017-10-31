@@ -293,7 +293,7 @@ function loadgroups(context,args){
 					}
 
 					var tb2 = new Element("div", {'class':'toolbarrow'});
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
+					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
 					$("tab-content-group-list").insert(tb2);
 

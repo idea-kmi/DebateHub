@@ -65,11 +65,11 @@
 		$next[2] = $LNG->ADMIN_BUTTON_HINT;
 		array_push($items, $next);
 
-		//$next = array();
-		//$next[0] = $LNG->HOMEPAGE_STATS_LINK;
-		//$next[1] = "javascript:window.location.replace('".$CFG->homeAddress."ui/stats');";
-		//$next[2] = $LNG->ADMIN_STATS_BUTTON_HINT;
-		//array_push($items, $next);
+		$next = array();
+		$next[0] = $LNG->HOMEPAGE_STATS_LINK;
+		$next[1] = "javascript:window.location.replace('".$CFG->homeAddress."ui/admin/stats');";
+		$next[2] = $LNG->ADMIN_STATS_BUTTON_HINT;
+		array_push($items, $next);
 
 
 		$i = 0;

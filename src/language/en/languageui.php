@@ -67,6 +67,7 @@ $LNG->HEADER_SEARCH_INFO_HINT .= "<br><br>Use double quotes around the search st
 $LNG->FOOTER_TERMS_LINK = 'Terms of Use';
 $LNG->FOOTER_PRIVACY_LINK = 'Privacy';
 $LNG->FOOTER_CONTACT_LINK = 'Contact';
+$LNG->FOOTER_COOKIES_LINK = 'Cookies';
 
 /** REPORT FOOTER **/
 $LNG->FOOTER_REPORT_PRINTED_ON = 'Report printed on:';
@@ -759,17 +760,26 @@ $LNG->TAB_ADD_GROUP_HINT = 'Add '.$LNG->GROUP_NAME;
 
 /** HOMEPAGE **/
 $LNG->HOMEPAGE_TITLE = '';
-$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> gives online communities a place to: i. raise issues; ii. share ideas; iii. debate the pros and cons; iv. and vote contributions in order to collectively organize and progress good ideas forward.  DebateHub is distinctive in its use of advanced analytics to show you the best argued ideas, and visualisations of your community.';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 = '<b>For Community Members:</b><br>Debate Hub helps you share new ideas, but also opens them up for debate. This helps you make the case for your viewpoint, and identify the most robust ideas in all the noise.';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>For Community Managers:</b><br>Debate Hub provides new tools to organise your community\'s contributions, reduces idea duplication, and supports content analysis and summarisation. The analytics dashboard onto your groups helps you spot connections between people and ideas, detect gaps in knowledge, discover new patterns of (dis)agreement, and produce visual summaries of the community debate.</p>';
+
+$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> is an open, online, collaborative tool to support collective ideation, deliberation and democratic decision making.';
+$LNG->HOMEPAGE_FIRST_PARA .= ' It allows you to set up staged online challenges/debates, that can be launched and addressed in the following way: users can collectively propose new ideas to tackle open challenges/debates; they can discuss and argument in favour or against the proposed ideas; they can then reduce and select the most promising ideas by building on the analysis of the arguments raised in favour and against each idea; they can finally vote for the most promising ideas that are worth pursuing further.';
+
+$LNG->HOMEPAGE_SECOND_PARA_PART2 = $CFG->SITE_TITLE.' has a very simple User Interface, which may look like a common web forum, but is enhanced by a semantic data model. This allows a better informed idea selection support as well as the development of advanced analytics on your group, debate and challenge data, which are delivered to you with a visualisation dashboard.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' also has moderator features (such as idea merging, splitting and moving) to help reducing idea duplication in online discussion, which is one of the main weaknesses of existing online ideation and debate platforms.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>At present '.$CFG->SITE_TITLE.' has 500 users, from 6 countries, 40 community groups and 100 debates. Users indicate that '.$CFG->SITE_TITLE.' is a very useful platform in supporting and effectively managing collaborative decision-making.';
+
+//$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> gives online communities a place to: i. raise issues; ii. share ideas; iii. debate the pros and cons; iv. and vote contributions in order to collectively organize and progress good ideas forward.  DebateHub is distinctive in its use of advanced analytics to show you the best argued ideas, and visualisations of your community.';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 = '<b>For Community Members:</b><br>Debate Hub helps you share new ideas, but also opens them up for debate. This helps you make the case for your viewpoint, and identify the most robust ideas in all the noise.';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>For Community Managers:</b><br>Debate Hub provides new tools to organise your community\'s contributions, reduces idea duplication, and supports content analysis and summarisation. The analytics dashboard onto your groups helps you spot connections between people and ideas, detect gaps in knowledge, discover new patterns of (dis)agreement, and produce visual summaries of the community debate.</p>';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= 'To do so you can:';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<ul>';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<li>Map your ideas - add '.$LNG->ISSUES_NAME.', ';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->SOLUTIONS_NAME.', ';
+//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->ARGUMENTS_NAME.' and '.$LNG->RESOURCES_NAME.'</li></ul>';
+
 $LNG->FOOTER_PARTNERSHIP_LABEL = 'In Partnership with';
 $LNG->HOMEPAGE_KEEP_READING = 'keep reading';
 $LNG->HOMEPAGE_READ_LESS = 'read less';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= 'To do so you can:';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<ul>';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<li>Map your ideas - add '.$LNG->ISSUES_NAME.', ';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->SOLUTIONS_NAME.', ';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->ARGUMENTS_NAME.' and '.$LNG->RESOURCES_NAME.'</li></ul>';
 
 /** WIDGETS **/
 $LNG->WIDGET_FOLLOW_SIGNIN_HINT = 'Sign In to follow this entry';

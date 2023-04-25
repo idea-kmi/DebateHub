@@ -179,7 +179,7 @@ window.onload = init;
 					}
 				?>
 				| <a title="<?php echo $LNG->HEADER_ABOUT_PAGE_LINK_HINT; ?>" href='<?php echo $CFG->homeAddress; ?>ui/pages/about.php'><?php echo $LNG->HEADER_ABOUT_PAGE_LINK_TEXT; ?></a>
-				| <a title="<?php echo $LNG->HEADER_HELP_PAGE_LINK_HINT; ?>" href='<?php echo $CFG->homeAddress; ?>help/'><?php echo $LNG->HEADER_HELP_PAGE_LINK_TEXT; ?></a>
+				| <a title="<?php echo $LNG->HEADER_HELP_PAGE_LINK_HINT; ?>" href='<?php echo $CFG->homeAddress; ?>ui/pages/help.php'><?php echo $LNG->HEADER_HELP_PAGE_LINK_TEXT; ?></a>
 
 				<?php
 				if($USER->getIsAdmin() == "Y"){

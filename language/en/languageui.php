@@ -671,7 +671,7 @@ $LNG->ISSUE_DESC_FORM_HINT = '(optional) - Enter a longer description of the '.$
 
 /**** EMAIL TEXT *****/
 $LNG->WELCOME_REGISTER_OPEN_SUBJECT = "Welcome to the ".$CFG->SITE_TITLE;
-$LNG->WELCOME_REGISTER_OPEN_BODY = 'Thank you for registering with us.<br><br>For more information about what the Debate Hub is, why not read our <a href="'.$CFG->homeAddress.'ui/pages/about.php">about page</a>.<br>For help in getting started using the hub why not visit our <a href="'.$CFG->homeAddress.'help/">help page</a>.<br>Why not start using the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a> today.';
+$LNG->WELCOME_REGISTER_OPEN_BODY = 'Thank you for registering with us.<br><br>For more information about what the Debate Hub is, why not read our <a href="'.$CFG->homeAddress.'ui/pages/about.php">about page</a>.<br>For help in getting started using the hub why not visit our <a href="'.$CFG->homeAddress.'ui/pages/help.php">help page</a>.<br>Why not start using the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a> today.';
 
 $LNG->VALIDATE_REGISTER_SUBJECT = "Completing your registration on ".$CFG->SITE_TITLE;
 

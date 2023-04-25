@@ -71,7 +71,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 			$direction='DESC';
 		}
 
-		echo '<tr><td></td><td align="left" valign="bottom" width="25%" class="adminTableHead"><a href="userRegistration.php?&sort=name&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_NAME.'</b>';
+		echo '<tr><td></td><td align="left" valign="bottom" width="25%" class="adminTableHead"><a href="userregistration.php?&sort=name&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_NAME.'</b>';
 		if ($sort === 'name') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
@@ -80,7 +80,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 			}
 		}
 		echo '</td>';
-		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userRegistration.php?&sort=date&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_DATE.'</b>';
+		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userregistration.php?&sort=date&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_DATE.'</b>';
 		if ($sort === 'date') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
@@ -89,7 +89,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 			}
 		}
 		echo '</td>';
-		echo '<td align="left" valign="bottom" width="25%" class="adminTableHead"><a href="userRegistration.php?&sort=desc&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_DESC.'</b>';
+		echo '<td align="left" valign="bottom" width="25%" class="adminTableHead"><a href="userregistration.php?&sort=desc&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_DESC.'</b>';
 		if ($sort === 'desc') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
@@ -98,7 +98,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 			}
 		}
 		echo '</td>';
-		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userRegistration.php?&sort=website&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_WEBSITE.'</b>';
+		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userregistration.php?&sort=website&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_WEBSITE.'</b>';
 		if ($sort === 'website') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
@@ -108,7 +108,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 		}
 		echo '</td>';
 
-		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userRegistration.php?&sort=location&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_LOCATION.'</b>';
+		echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="userregistration.php?&sort=location&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_LOCATION.'</b>';
 		if ($sort === 'location') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
@@ -118,7 +118,7 @@ echo '<h3 style="float: left">'.$LNG->STATS_GLOBAL_REGISTER_TOTAL_LABEL.' = '.$c
 		}
 		echo '</td>';
 
-		echo '<td align="left" valign="bottom" width="20%" class="adminTableHead"><a href="userRegistration.php?&sort=login&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_LAST_LOGIN.'</b>';
+		echo '<td align="left" valign="bottom" width="20%" class="adminTableHead"><a href="userregistration.php?&sort=login&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->STATS_GLOBAL_REGISTER_HEADER_LAST_LOGIN.'</b>';
 		if ($sort === 'login') {
 			if ($direction === 'ASC') {
 				echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';

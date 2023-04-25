@@ -361,10 +361,4 @@ $LNG->PAGE_HELP_BODY .= '<li>You can also choose to receive a daily/weekly/month
 $LNG->PAGE_HELP_BODY .= '<li>By following an item in LiteMap you will also be added to the list of followers shown in the explore page of that item.</li>';
 $LNG->PAGE_HELP_BODY .= '</ul>';
 */
-
-//$LNG->PAGE_HELP_BODY .= '<h2>Tools</h2>';
-//$LNG->PAGE_HELP_BODY .= 'Use our <a href="'.$CFG->homeAddress.'help/builderhelp.php" target="_blank">LiteMap Online Builder Tool</a> to help you harvest information as you browse!';
-//$LNG->PAGE_HELP_BODY .= '<br>';
-//$LNG->PAGE_HELP_BODY .= '<br>';
-//$LNG->PAGE_HELP_BODY .= '<p>If you would like to report a bug or have suggestions for improvements to LiteMap, or have any other questions about the site then please <a href="mailto:'.$CFG->EMAIL_REPLY_TO.'">contact us</a>.</p>';
 ?>

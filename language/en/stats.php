@@ -29,6 +29,8 @@
  *
  */
 
+$LNG->STATS_GO_BACK = "Go back";
+
 /** STATE PAGE NAMES **/
 $LNG->STATS_TAB_NETWORK = $LNG->DEBATE_NAME.' Network';
 $LNG->STATS_TAB_SOCIAL = 'Social Network';
@@ -42,6 +44,16 @@ $LNG->STATS_TAB_ACTIVITY_ANALYSIS = 'Activity Analysis';
 $LNG->STATS_TAB_USER_ACTIVITY_ANALYSIS = 'User Activity Analysis';
 $LNG->STATS_TAB_OVERVIEW = 'Quick Overview';
 $LNG->STATS_TAB_VOTES = 'Voting';
+
+$LNG->STATS_AVAILABLE_FROM = "Available Date Range from";
+$LNG->STATS_AVAILABLE_TO = "to";
+$LNG->STATS_START_DATE = "Show data from";
+$LNG->STATS_END_DATE = "Show data to";
+$LNG->STATS_LOAD_BUTTON = "Load Data";
+$LNG->STATS_ACTIVITY_WARNING = "If there is a lot of data to load, your connection may timout. If this happens, please reduce the date range you have selected.";
+$LNG->STATS_START_END_DATE_ERROR = "The from date must be earlier than the to date";
+$LNG->STATS_START_DATE_ERROR = "Please select a date to load data from";
+$LNG->STATS_END_DATE_ERROR = "Please select a date to load data to";
 
 /** VISLUAISATION HELP TEXTS **/
 

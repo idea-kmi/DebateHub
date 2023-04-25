@@ -79,9 +79,10 @@ class ActivitySet {
 					$this->add($a);
 				}
 			}
-			$this->totalno = 0;
+			//$this->totalno = 0; // allow multiple calls to acumulate the total
+            
 			if (is_countable($this->activities)) {
-				$this->totalno = count($this->activities);
+				$this->totalno += count($this->activities); // allow multiple calls to acumulate the total, hence +=
 			}
 		} else {
 			return database_error();

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -32,19 +32,7 @@ global $CFG;
 
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 
-//$group = getGroup($groupid);
-//$members = $group->members;
-
-//$memberlist = $members->users;
 $userHashtable = array();
-//$countmembers = 0;
-//if (is_countable($memberlist)) {
-//	$countmembers = count($memberlist);
-//}
-//for ($i=0; $i<$countmembers; $i++) {
-//	$member = $memberlist[$i];
-//	$userHashtable[$member->userid] = $member;
-//}
 
 $userCheck = array();
 $usersToDebates = array();
@@ -158,10 +146,7 @@ if (is_countable($usersToDebates)) {
 	$count = count($usersToDebates);
 }
 
-//$userHashtable = $userCheck;
-
 foreach ($usersToDebates as $nodeid => $users) {
-	//$from = $nodeCheck[$nodeid];
 
 	foreach ($users as $userid => $user) {
 		$to = $user;
@@ -233,24 +218,23 @@ echo "<script type='text/javascript'>";
 echo "var NODE_ARGS = ".$argsStr.";";
 echo "</script>";
 ?>
+
 <script type='text/javascript'>
-Event.observe(window, 'load', function() {
+	Event.observe(window, 'load', function() {
 
-	NODE_ARGS['jsonnodes'] = JSON.parse('<?php echo addslashes($jsonnodes); ?>');
-	NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');
-	NODE_ARGS['jsoncons'] = JSON.parse('<?php echo addslashes($jsoncons); ?>');
+		NODE_ARGS['jsonnodes'] = JSON.parse('<?php echo addslashes($jsonnodes); ?>');
+		NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');
+		NODE_ARGS['jsoncons'] = JSON.parse('<?php echo addslashes($jsoncons); ?>');
 
-	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>', 'stats-groups-sunburst-script');
-});
+		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>', 'stats-groups-sunburst-script');
+	});
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div class="d-flex flex-column">
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 
-	<div id="sunburst-div" style="clear:both;float:left;width:100%;height:100%;"></div>
+	<div id="sunburst-div" class="d-flex flex-row justify-content-left statsgraph"></div>
 </div>
 
 <?php

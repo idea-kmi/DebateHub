@@ -494,7 +494,6 @@ function printCanvas(graphview)  {
 	canvas.translate(reverseX*1/canvas.scaleOffsetX, reverseY*1/canvas.scaleOffsetY);
 }
 
-
 function computeMostConnectedNode(graphview) {
 	var connectedCount = 0;
 	var connectedNode = "";
@@ -502,11 +501,12 @@ function computeMostConnectedNode(graphview) {
 	for(var i in graphview.graph.nodes) {
 		var n = graphview.graph.nodes[i];
 		var connections = n.getData('connections');
-		if (connections && connections.length > connectedCount) {
+		if (connections.length > connectedCount) {
 			connectedCount = connections.length;
 			connectedNode = n;
 		}
 	}
+
 	if (connectedNode && connectedNode != "") {
 		FD_MOST_CONNECTED_NODE = connectedNode;
 		if (!graphview.root) {
@@ -644,22 +644,21 @@ function d3Legend() {
 
 function sparklineDateNVD3(container, data, width, height) {
 
-	var margin = {top: 15, right: 50, bottom: 10, left: 60};
+	var margin = {top: 15, right: 80, bottom: 10, left: 60};
 	var width = width - (margin.left+margin.right);
 
 	var formatDate = d3.time.format("%e %b %y");
 
 	var chart = nv.models.sparklinePlus()
-	  .margin(margin)
-	  .x(function(d) { return d.x })
-	  .y(function(d) { return d.y })
-	  .width(width)
-	  .height(height)
-	  ;
-
-  	chart.xTickFormat(function(d) {
-          return formatDate(new Date(d));
-    });
+	.margin(margin)
+	.x(function(d) { return d.x })
+	.y(function(d) { return d.y })
+	.width(width)
+	.height(height)
+	.showLastValue(true)
+	.xTickFormat(function(d) {
+		return formatDate(new Date(d));
+	});
 
 	var svg = d3.select(container).append("svg");
 	svg.datum(data)

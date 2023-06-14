@@ -111,9 +111,9 @@ We store your email address so that we can operate the Site and contact you abou
 We store your IP address as part of our user analytics. We will not share your IP address with anyone outside of the team operating the Site, unless required to by law.<br />
 The team will use the user analytics data to help monitor and improve the Site and for research purposes.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= 'We will not make your email address available to anyone outside the team operating the Site, unless required to by law.<br /></p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We will not make your email address available to anyone outside the team operating the Site, unless required to by law.<br /></p>';
 
-$LNG->PAGE_PRIVACY_BODY .= 'This Site was created and is managed as part of an on-going line of research being conducted at Knowledge Media Institute at the Open University.<br />
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">This Site was created and is managed as part of an on-going line of research being conducted at Knowledge Media Institute at the Open University.<br />
 Any information available on this site could be analysed and used for research purposes. Any resultant research publications will always use anonymized data.</p>';
 
 $LNG->PAGE_PRIVACY_BODY .= '<h2><a name="transfers"></a>4. Do we transfer information outside the EEA?</h2>';

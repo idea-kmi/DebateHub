@@ -85,11 +85,6 @@
 						$role = $node->role->name;
 						if ($type == "Vote") {
 							$role = $LNG->STATS_ACTIVITY_VOTE;
-							//if ($changetype == "Y") {
-							//	$role = $LNG->STATS_ACTIVITY_VOTED_FOR;
-							//} else {
-							//	$role = $LNG->STATS_ACTIVITY_VOTED_AGAINST;
-							//}
 						}
 
 						$userid = $node->users[0]->userid;
@@ -128,7 +123,6 @@
 		else $r = ($a > $b) ? 1: -1;
 		return $r;
 	}
-	//uksort($data, "datesort");
 
 	// get the activity date range for the given set of nodes.
 	$nodeString = "";
@@ -148,6 +142,7 @@
 
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 ?>
+
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
 
@@ -165,7 +160,7 @@
 			<?php if ($sdt != "" && $edt != "") {?>
 				$('messagearea').innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
 			<?php } ?>
-		}
+		}		
 	});
 
 	function checkForm() {
@@ -195,62 +190,60 @@
 		$('messagearea').update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 		return true;
-	}
+	}	
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div>
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 </div>
 
-<div style="clear:both;float:left;padding:5px;margin-left:10px;height:100%;width:100%;">
+<form id="dateform" name="dateform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+	<div id="datediv" class="formrow" style="display: block;padding-top:5px;">
+		<label class="formlabelbig" for="startdate"><?php echo $LNG->STATS_START_DATE; ?></label>
+		<input class="dateinput" id="startdate" name="startdate" value="<?php if ($sdt != "") { echo date('d M Y H:i',$start); } ?>">
+		<img src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/cal.gif" onclick="javascript:NewCssCal('<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/','startdate','DDMMMYYYY','dropdown',true,'24')" style="cursor:pointer"/>
 
-	<form id="dateform" name="dateform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-		<div id="datediv" class="formrow" style="display: block;padding-top:5px;">
-			<label class="formlabelbig" for="startdate"><?php echo $LNG->STATS_START_DATE; ?></label>
-			<input class="dateinput" id="startdate" name="startdate" value="<?php if ($sdt != "") { echo date('d M Y H:i',$start); } ?>">
-			<img src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/cal.gif" onclick="javascript:NewCssCal('<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/','startdate','DDMMMYYYY','dropdown',true,'24')" style="cursor:pointer"/>
+		<label style="padding-left:10px;" for="enddate"><b> <?php echo $LNG->STATS_END_DATE; ?> </b></label>
+		<input class="dateinput" id="enddate" name="enddate" value="<?php if ($edt != "") { echo date('d M Y H:i',$end); } ?>">
+		<img src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/cal.gif" onclick="javascript:NewCssCal('<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/','enddate','DDMMMYYYY','dropdown',true,'24')" style="cursor:pointer;"/>
 
-			<label style="padding-left:10px;" for="enddate"><b> <?php echo $LNG->STATS_END_DATE; ?> </b></label>
-			<input class="dateinput" id="enddate" name="enddate" value="<?php if ($edt != "") { echo date('d M Y H:i',$end); } ?>">
-			<img src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/cal.gif" onclick="javascript:NewCssCal('<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/images2/','enddate','DDMMMYYYY','dropdown',true,'24')" style="cursor:pointer;"/>
+		<span>&nbsp;&nbsp;</span><input type="submit" class="submit" value="<?php echo $LNG->STATS_LOAD_BUTTON; ?>" />
+	</div>
+	<p><?php echo $LNG->STATS_AVAILABLE_FROM; ?> <b><?php echo date('d M Y H:i',$dateRange->min); ?></b> <?php echo $LNG->STATS_AVAILABLE_TO; ?> <b><?php echo date('d M Y H:i',$dateRange->max); ?></b></p>
+	<span><?php echo $LNG->STATS_ACTIVITY_WARNING; ?></span>
+</form>
 
-			<span>&nbsp;&nbsp;</span><input type="submit" class="submit" value="<?php echo $LNG->STATS_LOAD_BUTTON; ?>" />
-		</div>
-		<p><?php echo $LNG->STATS_AVAILABLE_FROM; ?> <b><?php echo date('d M Y H:i',$dateRange->min); ?></b> <?php echo $LNG->STATS_AVAILABLE_TO; ?> <b><?php echo date('d M Y H:i',$dateRange->max); ?></b></p>
-		<span><?php echo $LNG->STATS_ACTIVITY_WARNING; ?></span>
-	</form>
-
+<div class="d-flex flex-column">
 	<div id="messagearea"></div>
+	<div id="keyarea" class="w-100 text-end keyarea statsgraph"></div>
+</div>
 
-	<div id="keyarea" style="width:100%;height:30px;"></div>
-
-	<div id="allStatsArea" style="visibility:hidden;">
-		<div>
-			<div style="float:left;clear:both;">
+<div id="allStatsArea" style="visibility:hidden;">
+	<div class="d-flex flex-column">
+		<div class="d-flex flex-row">
+			<div>
 				<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_USERS_TITLE; ?></div>
-				<div style="clear:both;height:330px;width:940px;" id="user-chart"></div>
+				<div id="user-chart" class="statsgraph"></div>
 			</div>
-			<div style="float:left;clear:both;">
+			<div>
 				<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_ACTION_TITLE; ?></div>
-				<div style="clear:both;height:220px;width:350px;" id="nodetype-chart"></div>
+				<div id="nodetype-chart" class="statsgraph"></div>
 			</div>
 		</div>
 
-		<div style="clear:both;float:left;margin-top:20px;">
+		<div class="d-flex flex-column mt-5">
 			<div id="data-count">
 				<span class="filter-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART1; ?> <span class="total-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART2; ?> | <a
 					href="javascript:dc.filterAll(); dc.renderAll();"><?php echo $LNG->STATS_ACTIVITY_RESET_ALL_BUTTON; ?></a>
 			</div>
-			<table id="data-table" class="table table-hover dc-data-table" style="float:left;clear:both;width:940px">
+			<table id="data-table" class="table table-hover dc-data-table">
 				<thead>
-				<tr class="header">
-					<th width="20%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_DATE; ?></th>
-					<th width="15%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_ACTION; ?></th>
-					<th width="50%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_TITLE; ?></th>
-				</tr>
+					<tr class="header">
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_DATE; ?></th>
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_ACTION; ?></th>
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_TITLE; ?></th>
+					</tr>
 				</thead>
 			</table>
 		</div>
@@ -258,5 +251,5 @@
 </div>
 
 <?php
-include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
 ?>

@@ -105,16 +105,14 @@ function setTabPushed(e) {
 		if ($("tab-"+i)) {
 			if(tab == i){
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("unselected");
-					$("tab-"+i).addClassName("current");
+					$("tab-"+i).addClassName("active");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").show();
 					}
 				}
 			} else {
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("current");
-					$("tab-"+i).addClassName("unselected");
+					$("tab-"+i).removeClassName("active");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").hide();
 					}
@@ -133,15 +131,13 @@ function setTabPushed(e) {
 		for (i in DATAVIZ){
 			if(viz == i){
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("unselected");
-					$("tab-"+tab+"-"+i).addClassName("current");
+					$("tab-"+tab+"-"+i).addClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").show();
 					$("tab-content-"+tab+"-"+i).show();
 				}
 			} else {
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("current");
-					$("tab-"+tab+"-"+i).addClassName("unselected");
+					$("tab-"+tab+"-"+i).removeClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").hide();
 					$("tab-content-"+tab+"-"+i).hide();
 				}
@@ -354,11 +350,12 @@ function loadmygroups(context,args){
 							}
 							$("tab-content-group-admin").style.display = 'block';
 							$("tab-content-group").style.display = 'block';
-							displayMyGroups($("tab-content-group-admin-list"),admingroups, 1, 466,180);
-							displayMyGroups($("tab-content-group-list"),finalgroups, 1, 466,180);
+
+							displayMyGroups($("tab-content-group-admin-list"),admingroups, 1);
+							displayMyGroups($("tab-content-group-list"),finalgroups, 1);
 						} else {
 							$("tab-content-group").style.display = 'block';
-							displayGroups($("tab-content-group-list"),groups,1, 466,180, false, true);
+							displayGroups($("tab-content-group-list"),groups, 1, 466,180, false, true);
 						}
 					}
 				});
@@ -958,14 +955,15 @@ function filterSearchComments() {
  */
 function displaySortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2  col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
 
     var selOrd = new Element("select");
  	Event.observe(selOrd,'change',handler);
     selOrd.id = "select-orderby-"+tab;
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
+    selOrd.setAttribute("aria-label","Sort by");
     sbTool.insert(selOrd);
     for(var key in sortOpts){
         var opt = new Element("option");
@@ -980,8 +978,9 @@ function displaySortForm(sortOpts,args,tab,handler){
     var sortBy = new Element("select");
  	Event.observe(sortBy,'change',handler);
     sortBy.id = "select-sort-"+tab;
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
+    sortBy.setAttribute("aria-label","Order by");
     sbTool.insert(sortBy);
     for(var key in sortBys){
         var opt = new Element("option");
@@ -1038,16 +1037,16 @@ function setSelectedUsers(types) {
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow', 'style':'padding-top: 8px; padding-bottom: 8px;'});
+	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous"});
+	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
 	    if(start > 0){
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("active");
 	        Event.observe(prevSpan,"click", function(){
 	            var newArr = argArray;
@@ -1055,12 +1054,12 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        });
 	    } else {
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' disabled src='<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("inactive");
 	    }
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages"});
+	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i<totalPages+1; i++){
@@ -1077,9 +1076,9 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next"});
+	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
 	        Event.observe(nextSpan,"click", function(){
 	            var newArr = argArray;
@@ -1087,7 +1086,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        });
 	    } else {
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2-disabled.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("inactive");
 	    }
 

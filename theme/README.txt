@@ -20,7 +20,7 @@ To create a new theme:
    To override images, create an 'images' subfolder inside your new theme folder.
    Create the new image that you wish to use instead of the default.
    Make sure the new image type and name matches exactly the image type and name for 
-   the image you wish to replace. Use the same process for overriding help images.
+   the image you wish to replace.
    
    If you look inside the theme 'default/images' you will see the basic set of images you will 
    probably wish to replace, like the header logo, and depending on your colour scheme, some buttons.

@@ -27,6 +27,7 @@
 </div>
 </div>
 
-<div id="footer" style="margin:10px; border-top: 1px"></div>
+<div id="footer" class="footerback footer border-top"></div>
+
 </body>
 </html>

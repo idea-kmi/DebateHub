@@ -54,6 +54,7 @@ Event.observe(window, 'load', function() {
 	) {
 		NODE_ARGS['issueDiscussing'] = true;
 	} else {
+		NODE_ARGS['issueDiscussing'] = false;
 		NODE_ARGS['issueDebating'] = false;
 	}
 	if (currentphase == DECIDE_PHASE
@@ -99,7 +100,7 @@ Event.observe(window, 'load', function() {
 			if (currentphase == DISCUSS_PHASE
 					|| currentphase == TIMED_VOTEPENDING_PHASE
 					|| currentphase == OPEN_VOTEPENDING_PHASE) {
-				if ($('discuss1')) { $('discuss1').className = 'current'; }
+				if ($('discuss1')) { $('discuss1').className = 'step current'; }
 				if ($('discusshelp')) { $('discusshelp').style.display = 'block'; }
 			}
 			if ($('addnewideaarea')) { $('addnewideaarea').style.display = 'block'; }
@@ -109,7 +110,8 @@ Event.observe(window, 'load', function() {
 		}
 		if (lemonstart > 0 && lemonend > 0) {
 			if (currentphase == REDUCE_PHASE) {
-				if ($('reduce1')) { $('reduce1').className = 'current'; }
+				if ($('discuss1')) { $('discuss1').className = 'step'; }
+				if ($('reduce1')) { $('reduce1').className = 'step current'; }
 				if ($('reducehelp')) {$('reducehelp').style.display = 'block'; }
 				if ($('lemonbasket')) {	$('lemonbasket').style.display = 'block'; }
 				if ($('dashboardbutton')) { $('dashboardbutton').style.display = 'none'; }
@@ -121,7 +123,8 @@ Event.observe(window, 'load', function() {
 		if (votestart > 0) {
 			if (currentphase == DECIDE_PHASE || currentphase == TIMED_VOTEON_PHASE
 					|| currentphase == OPEN_VOTEON_PHASE) {
-				if($('decide1')) { $('decide1').className = 'current'; }
+				if ($('discuss1')) { $('discuss1').className = 'step'; }
+				if($('decide1')) { $('decide1').className = 'step current'; }
 				if($('decidehelp')) { $('decidehelp').style.display = 'block'; }
 			}
 		} else {
@@ -684,19 +687,17 @@ function loadViewingStats() {
 }
 
 function insertArgumentLink(uniQ, type) {
-
 	var argumentLinkDiv = $('linksdiv'+type+uniQ);
 	var count = parseInt(argumentLinkDiv.linkcount);
 	count = count+1;
 	argumentLinkDiv.linkcount = count;
 
 	var weblink = new Element("input", {
-		'class':'hgrinput',
+		'class':'form-control mt-2',
 		'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 		'id':'argumentlink'+type+uniQ+count,
 		'name':'argumentlink'+type+uniQ+'[]',
-		'value':'',
-		'style':'margin-bottom:3px;'
+		'value':''
 	});
 
 	argumentLinkDiv.insert(weblink);
@@ -704,19 +705,17 @@ function insertArgumentLink(uniQ, type) {
 }
 
 function insertIdeaLink(uniQ, type) {
-
 	var argumentLinkDiv = $('linksdiv'+type+uniQ);
 	var count = parseInt(argumentLinkDiv.linkcount);
-	count = count+1;
+	count = count + 1;
 	argumentLinkDiv.linkcount = count;
 
 	var weblink = new Element("input", {
-		'class':'forminput hgrwide',
+		'class':'form-control mt-2',
 		'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 		'id':'argumentlink'+type+uniQ+count,
 		'name':'argumentlink'+type+uniQ+'[]',
-		'value':'',
-		'style':'height:16px;margin-bottom:3px;'
+		'value':''
 	});
 
 	argumentLinkDiv.insert(weblink);
@@ -736,18 +735,18 @@ function toggleOrganizeMode(obj, mode) {
 	}
 	NODE_ARGS['mode'] = mode;
 
-	$('maininner').className='';
+	$('maininner').className='p-3';
 
 	if ($('moderatebutton')) {
-		$('moderatebutton').className = "groupbutton modeback1 modeborder1";
+		$('moderatebutton').className = "btn btn-moderator d-grid gap-2 m-2";
 	}
 
 	if (obj != null) {
 		if (mode == "Gather") {
 			obj.className = "groupbutton modeback3 modeborder3pressed";
 		} else if (mode == "Organize") {
-			obj.className = "groupbutton modeback1 modeborder1pressed";
-			$('maininner').className = "modebackinner1";
+			obj.className = "btn btn-moderator d-grid gap-2 m-2 active";
+			$('maininner').className = "p-3 modebackinner1";
 		}
 	}
 
@@ -775,8 +774,12 @@ function setMode(mode) {
 		if ($('mergeideaform')) {
 			$('mergeideaform').style.display = "none";
 		}
-		if ($('addnewideaarea')) {
-			$('addnewideaarea').style.display = "block";
+		if (currentphase == DISCUSS_PHASE
+					|| currentphase == TIMED_VOTEPENDING_PHASE
+					|| currentphase == OPEN_VOTEPENDING_PHASE) {		
+			if ($('addnewideaarea')) {
+				$('addnewideaarea').style.display = "block";
+			}
 		}
 	}
 
@@ -788,11 +791,11 @@ function setMode(mode) {
 	var votebardiv = document.getElementsByName('votebardiv');
 	if (votebardiv && votebardiv.length > 0) {
 		var count = votebardiv.length;
-		for (var i=0; i<count; i++) {
+		for (var i=0; i < count; i++) {
 			var bar = votebardiv[i];
 			bar.style.display = "none";
 			if (mode == "Gather") {
-				bar.style.display = "block";
+				bar.style.display = "inline";
 			}
 		}
 	}
@@ -801,7 +804,7 @@ function setMode(mode) {
 	var checkboxes = document.getElementsByName('nodecheckcell');
 	if (checkboxes.length > 0) {
 		var count = checkboxes.length;
-		for (var i=0; i<count; i++) {
+		for (var i=0; i < count; i++) {
 			var boxitem = checkboxes[i];
 			boxitem.style.display = "none";
 			if (mode == "Organize") {
@@ -820,13 +823,13 @@ function setMode(mode) {
 	var ideasplitbuttons = document.getElementsByName('ideasplitbutton');
 	if (ideasplitbuttons.length > 0) {
 		var count = ideasplitbuttons.length;
-		for (var i=0; i<count; i++) {
+		for (var i=0; i < count; i++) {
 			var item = ideasplitbuttons[i];
 			item.style.display = "none";
 			var uniQ = item.uniQ;
 			if (mode == "Organize") {
 				if (IS_USER_ADMIN && item.hasChildren == 'N') { //item.userid == USER &&
-					item.style.display = "block";
+					item.style.display = "inline";
 				}
 			}
 		}
@@ -837,7 +840,7 @@ function setMode(mode) {
 		var argumentvoteDiv = document.getElementsByName('argumentvotediv');
 		if (argumentvoteDiv.length > 0) {
 			var count = argumentvoteDiv.length;
-			for (var i=0; i<count; i++) {
+			for (var i=0; i < count; i++) {
 				var argumentdiv = argumentvoteDiv[i];
 				argumentdiv.style.display = "table-cell";
 			}
@@ -846,7 +849,7 @@ function setMode(mode) {
 		var argumentvoteDiv = document.getElementsByName('argumentvotediv');
 		if (argumentvoteDiv.length > 0) {
 			var count = argumentvoteDiv.length;
-			for (var i=0; i<count; i++) {
+			for (var i=0; i < count; i++) {
 				var argumentdiv = argumentvoteDiv[i];
 				argumentdiv.style.display = "none";
 			}
@@ -858,7 +861,7 @@ function setMode(mode) {
 		var ideavoteDiv = document.getElementsByName('ideavotediv');
 		if (ideavoteDiv.length > 0) {
 			var count = ideavoteDiv.length;
-			for (var i=0; i<count; i++) {
+			for (var i=0; i < count; i++) {
 				var votediv = ideavoteDiv[i];
 				votediv.style.display = "table-cell";
 			}
@@ -867,7 +870,7 @@ function setMode(mode) {
 		var ideavoteDiv = document.getElementsByName('ideavotediv');
 		if (ideavoteDiv.length > 0) {
 			var count = ideavoteDiv.length;
-			for (var i=0; i<count; i++) {
+			for (var i=0; i < count; i++) {
 				var votediv = ideavoteDiv[i];
 				votediv.style.display = "none";
 			}
@@ -939,7 +942,7 @@ function showAddForm(objno, type) {
 
 function cancelAllEdits(type) {
 	var array = document.getElementsByTagName('div');
-	for(var i=0;i<array.length;i++) {
+	for(var i=0;i < array.length;i++) {
 		if (array[i].id.startsWith('editform'+type)) {
 			var objno = array[i].id.substring(12);
 			cancelEditAction(objno, type);
@@ -1061,7 +1064,7 @@ function loadsolutions(context,args){
 			} else {
 				var nodes = new Array();
 				var nodeids = "";
-				for(var i=0; i< conns.length; i++){
+				for(var i=0; i <  conns.length; i++){
 					var c = conns[i].connection;
 					var fN = c.from[0].cnode;
 					var tN = c.to[0].cnode;
@@ -1188,7 +1191,7 @@ function loadremovedsolutions(context,args){
 			} else {
 				var nodes = new Array();
 				var nodeids = "";
-				for(var i=0; i< conns.length; i++){
+				for(var i=0; i <  conns.length; i++){
 					var c = conns[i].connection;
 					var fN = c.from[0].cnode;
 					var tN = c.to[0].cnode;
@@ -1327,7 +1330,7 @@ function editExploreNode(orinode, nodeid, nodetypeid, name, desc, type, uniQ, ac
 	var resourcesArray = document.getElementsByName('argumentlinkedit'+uniQ+'[]');
 	var count = resourcesArray.length;
 	var j=0;
-	for(var i=0; i<count; i++) {
+	for(var i=0; i < count; i++) {
 		var resource = resourcesArray[i];
 		if (resource) {
 			var url = resource.value;
@@ -1440,7 +1443,8 @@ function promptForArgument(node, uniQ, type, nodetype, actiontype, includeUser, 
 	heading2.insert('<?php echo $LNG->DEBATE_VOTE_ARGUMENT_PLACEHOLDER; ?>');
 
 	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'6','style':'color: black; width:300px; border: 1px solid gray; padding: 3px; padding-top:0px;overflow:hidden;z-index:200;margin-top:0px;'});
-	var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>'});
+
+	var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>'});
 	Event.observe(buttonOK,'click', function() {
 		var name = textarea1.value;
 		if (name != "") {
@@ -1450,17 +1454,20 @@ function promptForArgument(node, uniQ, type, nodetype, actiontype, includeUser, 
 		$('prompttext').update("");
 	});
 
-	var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+	var buttonCancel = new Element('input', { 'class':'btn btn-secondary mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	Event.observe(buttonCancel,'click', function() {
 		$('prompttext').style.display = "none";
 		$('prompttext').update("");
 	});
 
+	var buttonDiv = new Element('div', { 'class':'col-auto'});
+	buttonDiv.insert(buttonOK);
+	buttonDiv.insert(buttonCancel);
+
 	$('prompttext').insert(heading);
 	$('prompttext').insert(heading2);
 	$('prompttext').insert(textarea1);
-	$('prompttext').insert(buttonOK);
-	$('prompttext').insert(buttonCancel);
+	$('prompttext').insert(buttonDiv);
 	$('prompttext').style.display = "block";
 
 	textarea1.focus();
@@ -1575,7 +1582,7 @@ function addExploreNode(parentnode, nodetypename, linktypename, name, desc, type
 	var resourcesArray = document.getElementsByName('argumentlink'+type+uniQ+'[]');
 	var count = resourcesArray.length;
 	var j=0;
-	for(var i=0; i<count; i++) {
+	for(var i=0; i < count; i++) {
 		var resource = resourcesArray[i];
 		if (resource) {
 			var url = resource.value;
@@ -1706,21 +1713,21 @@ function addCurrentUserAsGroupMember() {
 function clearSelections() {
 	var items = document.getElementsByName('idearowitem');
 	var count = items.length;
-	for (var i=0; i<count; i++) {
+	for (var i=0; i < count; i++) {
 		var item = items[i];
 		item.className = "";
 		item.style.background = "transparent";
 	}
 	items = document.getElementsByName('argumentrowitem');
 	count = items.length;
-	for (var i=0; i<count; i++) {
+	for (var i=0; i < count; i++) {
 		var item = items[i];
 		item.className = "";
 		item.style.background = "transparent";
 	}
 	items = document.getElementsByName('commentrowitem');
 	count = items.length;
-	for (var i=0; i<count; i++) {
+	for (var i=0; i < count; i++) {
 		var item = items[i];
 		item.className = "";
 		item.style.background = "transparent";
@@ -1916,16 +1923,16 @@ function connectiontypealphanodesort(a, b) {
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow', 'style':'padding-top: 8px; padding-bottom: 8px;'});
+	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous"});
+	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
 	    if(start > 0){
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("active");
 	        Event.observe(prevSpan,"click", function(){
 	            var newArr = argArray;
@@ -1933,15 +1940,15 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        });
 	    } else {
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' disabled src='<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("inactive");
 	    }
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages"});
+	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
-	    for (var i = 1; i<totalPages+1; i++){
+	    for (var i = 1; i < totalPages+1; i++){
 	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
@@ -1955,9 +1962,9 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next"});
+	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
 	        Event.observe(nextSpan,"click", function(){
 	            var newArr = argArray;
@@ -1965,7 +1972,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        });
 	    } else {
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2-disabled.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("inactive");
 	    }
 
@@ -2018,14 +2025,15 @@ function reorderSolutions(){
  */
 function displaySortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
 
     var selOrd = new Element("select");
  	Event.observe(selOrd,'change',handler);
     selOrd.id = "select-orderby-"+tab;
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
+    selOrd.setAttribute("aria-label","Sort by");
     sbTool.insert(selOrd);
     for(var key in sortOpts){
         var opt = new Element("option");
@@ -2040,8 +2048,9 @@ function displaySortForm(sortOpts,args,tab,handler){
     var sortBy = new Element("select");
  	Event.observe(sortBy,'change',handler);
     sortBy.id = "select-sort-"+tab;
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
+    sortBy.setAttribute("aria-label","Order by");
     sbTool.insert(sortBy);
     for(var key in sortBys){
         var opt = new Element("option");

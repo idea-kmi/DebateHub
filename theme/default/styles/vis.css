@@ -8,6 +8,7 @@
     width: 40px;
     margin:5px;
     margin-top:10px;
+    height: fit-content;
 }
 
 .trafficlight span {
@@ -96,4 +97,15 @@
 
 .trafficlightbutton:hover {
 	border:2px inset #C0C0C0;
+}
+
+
+/* Fix box-sizing messing up graphs */
+.statsgraph {
+	box-sizing: unset;
+}
+
+.statsgraph * {
+	box-sizing: unset;
+    width: revert-layer;
 }

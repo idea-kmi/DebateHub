@@ -128,22 +128,20 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 ?>
 
 <script type='text/javascript'>
-var NODE_ARGS = new Array();
+	var NODE_ARGS = new Array();
 
-Event.observe(window, 'load', function() {
-	NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
+	Event.observe(window, 'load', function() {
+		NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
-	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-streamgraph.js.php"); ?>', 'stats-debates-streamgraph-script');
-});
+		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-streamgraph.js.php"); ?>', 'stats-debates-streamgraph-script');
+	});
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div class="d-flex flex-column">
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 
-	<div id="streamgraph-div" style="float:left;width:100%;height:100%;"></div>
+	<div id="streamgraph-div" class="statsgraph"></div>
 </div>
 
 <?php

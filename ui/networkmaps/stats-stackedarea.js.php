@@ -1,30 +1,30 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 The Open University UK                                   *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
 
-header('Content-Type: text/javascript;');
-include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	header('Content-Type: text/javascript;');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 ?>
 
 var stackedAreaChart = null;
@@ -34,27 +34,27 @@ function loadExploreGroupStackedArea(){
 	$("stackedarea-div").innerHTML = "";
 
 	if (!isCanvasSupported()) {
-		$("stackedarea-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		$("stackedarea-div").insert('<div><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
-	var stackedareadiv = new Element('div', {'id':'stackedareadiv', 'style': 'clear:both;float:left;'});
-	var width = 770;
+	var stackedareadiv = new Element('div', {'id':'stackedareadiv','class':'stackedareadiv'});
+	var width = 950;
 	var height = 600;
 	stackedareadiv.style.width = width+"px";
 	stackedareadiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'stackedareamessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'stackedareadiv-outer', 'style': 'float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var messagearea = new Element("div", {'id':'stackedareamessage','class':'toolbitem fw-bold'});
+	var outerDiv = new Element('div', {'id':'stackedareadiv-outer', 'style': 'margin-left:5px;margin-bottom:5px;overflow:hidden'});
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(stackedareadiv);
 
-	var stackedareaInfoOuter = new Element('div', {'class':'boxshadowsquare', 'id':'stackedareaInfoOuterdiv', 'style': 'padding:5px;float:left;width:170px;height:600px;margin-right:5px;'});
-	var stackedareaTitleDiv = new Element('div', {'id':'stackedareaTitleDiv', 'style': 'float:left;width:99%;height:20px;padding:5px;'});
+	var stackedareaInfoOuter = new Element('div', {'class':'boxshadowsquare p-3 w-25 stackedarea-div', 'id':'stackedareaInfoOuterdiv'});
+	var stackedareaTitleDiv = new Element('div', {'id':'stackedareaTitleDiv'});
 	stackedareaTitleDiv.insert('<h2><?php echo $LNG->STATS_GROUP_STACKEDAREA_TITLE; ?></h2>');
 
-	var stackedareaInfoDiv = new Element('div', {'id':'stackedareaInfoDiv', 'style': 'clear:both;float:left;width:165px;padding:2px;padding-top:0px;'});
+	var stackedareaInfoDiv = new Element('div', {'id':'stackedareaInfoDiv', 'class':'d-flex flex-column justify-content-center'});
 
 	stackedareaInfoOuter.insert(stackedareaTitleDiv);
 	stackedareaInfoOuter.insert(stackedareaInfoDiv);
@@ -77,9 +77,9 @@ function loadExploreGroupStackedArea(){
 	}
 	listobj.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 
-	stackedareaInfoDiv.insert('<div style="clear:both;padding-top:20px;"><?php echo $LNG->STATS_GROUP_STACKEDAREA_HELP; ?></div>');
+	stackedareaInfoDiv.insert('<div style="padding-top:20px;"><?php echo $LNG->STATS_GROUP_STACKEDAREA_HELP; ?></div>');
 
-	var restoreButton = new Element('div', {'id':'restore','class':'theme button white','style':'clear:both'});
+	var restoreButton = new Element('div', {'id':'restore','class':'restorebtn theme button white'});
 	restoreButton.insert('<?php echo $LNG->STATS_GROUP_STACKEDAREA_RESTORE_BUTTON; ?>');
 	Event.observe(restoreButton,'click',function (){
  		stackedAreaChart.restore();

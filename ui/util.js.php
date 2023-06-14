@@ -661,18 +661,21 @@ function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler
 
 	$('prompttext').insert("<br />");
 
-    var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
+    var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
 	Event.observe(buttonOK,'click', function() {
 		var valuechosen = $('radiopromptchoice').value;
 		eval( refresher + '("'+focalnodeid+'","'+filternodetypes+'","'+focalnodeend+'","'+handler+'","'+key+'","'+nodetofocusid+'","'+valuechosen+'")' );
 		textAreaCancel();
 	});
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert(buttonOK);
-	$('prompttext').insert(buttonCancel);
+	var buttonDiv = new Element('div', { 'class':'col-auto'});
+	buttonDiv.insert(buttonOK);
+	buttonDiv.insert(buttonCancel);
+
+	$('prompttext').insert(buttonDiv);
 	$('prompttext').style.display = "block";
 }
 
@@ -700,26 +703,29 @@ function textAreaPrompt(messageStr, text, connid, handler, refresher, width, hei
 	$('prompttext').style.left = x+getPageOffsetX()+"px";
 	$('prompttext').style.top = y+getPageOffsetY()+"px";
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'7','style':'color: black; width:390px; border: 1px solid gray; padding: 3px; overflow:hidden'});
+	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'messagetextarea'});
 	textarea1.value=text;
 
 	if (connid != "") {
-		var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
+		var buttonOK = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
 		Event.observe(buttonOK,'click', function() {
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert('<h2>'+messageStr+'</h2>');
-	$('prompttext').insert(textarea1);
+	var buttonDiv = new Element('div', { 'class':'col-auto'});
 	if (connid != "") {
-		$('prompttext').insert(buttonOK);
+		$('buttonDiv').insert(buttonOK);
 	}
-	$('prompttext').insert(buttonCancel);
+	buttonDiv.insert(buttonCancel);
+
+	$('prompttext').insert('<div class="fw-bold p-2" style="color: #4E725F">'+messageStr+'</div>');
+	$('prompttext').insert(textarea1);
+	$('prompttext').insert(buttonDiv);
 	$('prompttext').style.display = "block";
 }
 
@@ -1257,7 +1263,7 @@ function auditTesting(itemid, testelementid, testevent, state, handler) {
 
 function auditDashboardButton(itemid, name, link, levelname, elementid) {
 
-	//console.log(itemid+":"+name+":"+link+":"+levelname+":"+elementid);
+	//alert(itemid+":"+name+":"+link+":"+levelname+":"+elementid);
 	var handler = function() {
 		 location.href=link;
 	}

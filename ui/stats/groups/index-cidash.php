@@ -1,7 +1,7 @@
 <?php
 	/********************************************************************************
 	 *                                                                              *
-	 *  (c) Copyright 2015-2023 The Open University UK                              *
+	 *  (c) Copyright 2015 The Open University UK                                   *
 	 *                                                                              *
 	 *  This software is freely distributed in accordance with                      *
 	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -22,54 +22,52 @@
 	 *  possibility of such damage.                                                 *
 	 *                                                                              *
 	 ********************************************************************************/
+	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	include_once($HUB_FLM->getCodeDirPath("core/formats/cipher.php"));
 
-	$page = optional_param("page","home",PARAM_ALPHANUM);
 	$groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 	$group = getGroup($groupid);
-	$pageindex = 0;
 
-	$userid = "";
-	if (isset($USER->userid)) {
-		$userid = $USER->userid;
+	if($group instanceof Hub_Error){
+		include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
+		echo "<h1>Group not found</h1>";
+		include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+		die;
 	}
-	auditDashboardView($userid, $groupid, $page);
 
-	include_once('visdata.php');
+	$dashboardService = "https://cidashboard.net/ui/visualisations/index.php?";
+	//5,6 = scatterplots
+	//12 Attention Map - broken at present
+	$vises = "11,1,2,3,4,7,8,9,10";
+	$lang = $CFG->language;
+	$dashboardtitle = '';
+
+	$cipher;
+	$salt = openssl_random_pseudo_bytes(32);
+	$cipher = new Cipher($salt);
+	$obfuscationkey = $cipher->getKey();
+	$obfuscationiv = $cipher->getIV();
+
+	$dataurl = $CFG->homeAddress.'api/conversations/'.$groupid;
+	$reply = createObfuscationEntry($obfuscationkey, $obfuscationiv, $dataurl);
+	$finaldataurl = $dataurl.'/?id='.$reply['dataid'];
+	$userurl = $CFG->homeAddress.'api/unobfuscatedusers/?id='.$reply['obfuscationid'];
+
+	$dashboardurl = $dashboardService."&timeout=300&width=1000&height=1000&vis=".$vises."&lang=".$lang."&title=".$dashboardtitle."&url=".$finaldataurl."&userurl=".$userurl;
+
+	include_once($HUB_FLM->getCodeDirPath("ui/headerstatsexternal.php"));
 ?>
 
-<h1 class="text-center">
-	<?php echo $LNG->STATS_GROUP_TITLE.$group->name; ?>
-	<a href="<?php echo $CFG->homeAddress.'group.php?groupid='.$groupid; ?>" class="fw-normal fs-6">[<?php echo $LNG->STATS_GO_BACK; ?>]</a>
-</h1>
+<div class="d-flex flex-column">
+	<h1 class="text-center">
+		<?php echo $LNG->STATS_GROUP_TITLE.$group->name; ?>	
+		<a href="<?php echo $CFG->homeAddress.'group.php?groupid='.$groupid; ?>" class="fw-normal fs-6">[Go back]</a>
+	</h1>
 
-<div id="tabber" class="tabber-user my-4">
-	<ul id="tabs" class="nav nav-tabs">
-		<li class="nav-item">
-			<a class="nav-link <?php if ($page == "home") { echo 'active'; } else { echo 'unselected'; } ?>" href="index.php?page=home&groupid=<?php echo $groupid; ?>"><span class="nav-item"><?php echo $LNG->TAB_HOME; ?></span></a>
-		</li>
+	<iframe width="1000px;" height="1000px;" src="<?php echo $dashboardurl; ?>" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 
-		<?php
-			$count = 0;
-			if (is_countable($sequence)) {
-				$count = count($sequence);
-			}
-			for ($i=0; $i<$count; $i++) {
-				$next = $sequence[$i];
-				$nextitem = $dashboarddata[$next-1];
-				$nextpage = $nextitem[6];
-
-				echo '<li class="nav-item">';
-				echo '<a class="nav-link';
-				if ($page == $nextpage) {
-					$pageindex = $next-1;
-					echo ' active';
-				} else {
-					echo ' unselected';
-				}
-				echo '" href="'.$nextitem[4].'page='.$nextpage.'&groupid='.$groupid.'"><span class="nav-item">'.$nextitem[0].'</span></a>';
-				echo '</li>';
-			}
-		?>
-	</ul>
 </div>
 
+<?php
+	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
+?>

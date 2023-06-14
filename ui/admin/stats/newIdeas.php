@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2013 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -70,14 +70,14 @@ $grandtotal1 += $icount;
 //$categoryArray[$LNG->COMMENT_NAME] = $icount;
 //$grandtotal1 += $icount;
 
-echo '<div style="clear: both; float: left;margin-right:50px;"><table cellpadding="3">';
+echo '<div class="my-4"><table class="table table-sm table-borderless" cellpadding="3">';
 
 foreach( $categoryArray as $key => $value) {
-	echo '<tr><td><span>'.$key.'</span></td><td><span> = '.$value.'</span</td></tr>';
+	echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
 }
 
 echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
-echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td><span class="hometext"> = '.$grandtotal1.'</span</td></tr>';
+echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
 echo '</table></div>';
 
 
@@ -85,7 +85,7 @@ echo '</table></div>';
 
 $time = "months";
 
-echo '<div style="clear: both; float: left; margin-top: 0px;margin-top:20px;"><img src="newIdeasGraph.php?time=months" /></div>';
+echo '<div class="text-center"><img src="newIdeasGraph.php?time=months" alt="graph of items created" /></div>';
 
 
 /***** MONTHLY BY CATEOGRY TABLE ******/
@@ -124,23 +124,20 @@ if ($time === 'weeks') {
 	}*/
 }
 
-echo '<div style="clear:both; float:left;margin-top:20px;margin-left:50px;">';
-echo '<table border="1" cellpadding="3" style="border-collapse:collapse">';
+echo '<div class="my-3">';
+echo '<table class="table table-sm">';
 echo '<tr>';
 if ($time === 'weeks') {
-	echo '<th valign="top" style="font-weight:bold; width:70px;">Week</th>';
+	echo '<th valign="top" style="font-weight:bold;">Week</th>';
 } else {
-	echo '<th valign="top" style="font-weight:bold; width:70px;">Month</th>';
+	echo '<th valign="top" style="font-weight:bold;">Month</th>';
 }
 
-echo '<td valign="top" style="font-weight:bold; width:60px;">'.$LNG->ISSUES_NAME.'</th>';
-echo '<th valign="top" style="font-weight:bold; width:60px;">'.$LNG->SOLUTIONS_NAME.'</th>';
-echo '<th valign="top" style="font-weight:bold; width:60px;">'.$LNG->PROS_NAME.'</th>';
-echo '<th valign="top" style="font-weight:bold; width:60px;">'.$LNG->CONS_NAME.'</th>';
-//echo '<th valign="top" style="font-weight:bold; width:60px;">'.$LNG->COMMENTS_NAME.'</th>';
-
-echo '<th valign="top" style="font-weight:bold; width:70px;">'.$LNG->ADMIN_STATS_IDEAS_MONTHLY_TOTAL_LABEL.'</th>';
-
+echo '<td valign="top" style="font-weight:bold;" class="text-center">'.$LNG->ISSUES_NAME.'</th>';
+echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->SOLUTIONS_NAME.'</th>';
+echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->PROS_NAME.'</th>';
+echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->CONS_NAME.'</th>';
+echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->ADMIN_STATS_IDEAS_MONTHLY_TOTAL_LABEL.'</th>';
 echo '</tr>';
 
 $totalsArray = array();
@@ -165,7 +162,7 @@ for ($i=0; $i<$count; $i++) {
 	}
 
 	$num2 = getNodeCreationCount("Issue",$mintime, $maxtime);
-	echo '<td>'.$num2.'</td>';
+	echo '<td class="text-end">'.$num2.'</td>';
 	if (isset($totalsArray[$LNG->ISSUES_NAME])) {
 		$totalsArray[$LNG->ISSUES_NAME] += $num2;
 	} else {
@@ -174,7 +171,7 @@ for ($i=0; $i<$count; $i++) {
 	$monthlytotal += $num2;
 
 	$num3 = getNodeCreationCount("Solution",$mintime, $maxtime);
-	echo '<td>'.$num3.'</td>';
+	echo '<td class="text-end">'.$num3.'</td>';
 	if (isset($totalsArray[$LNG->SOLUTIONS_NAME])) {
 		$totalsArray[$LNG->SOLUTIONS_NAME] += $num3;
 	} else {
@@ -183,7 +180,7 @@ for ($i=0; $i<$count; $i++) {
 	$monthlytotal += $num3;
 
 	$num4 = getNodeCreationCount("Pro",$mintime, $maxtime);
-	echo '<td>'.$num4.'</td>';
+	echo '<td class="text-end">'.$num4.'</td>';
 	if (isset($totalsArray[$LNG->PROS_NAME])) {
 		$totalsArray[$LNG->PROS_NAME] += $num4;
 	} else {
@@ -192,7 +189,7 @@ for ($i=0; $i<$count; $i++) {
 	$monthlytotal += $num4;
 
 	$num5 = getNodeCreationCount("Con",$mintime, $maxtime);
-	echo '<td>'.$num5.'</td>';
+	echo '<td class="text-end">'.$num5.'</td>';
 	if (isset($totalsArray[$LNG->CONS_NAME])) {
 		$totalsArray[$LNG->CONS_NAME] += $num5;
 	} else {
@@ -200,18 +197,7 @@ for ($i=0; $i<$count; $i++) {
 	}
 	$monthlytotal += $num5;
 
-	/*
-	$num8 = getNodeCreationCount("Idea",$mintime, $maxtime);
-	echo '<td>'.$num8.'</td>';
-	if (isset($totalsArray[$LNG->COMMENTS_NAME])) {
-		$totalsArray[$LNG->COMMENTS_NAME] += $num8;
-	} else {
-		$totalsArray[$LNG->COMMENTS_NAME] = $num8;
-	}
-	$monthlytotal += $num8;
-	*/
-
-	echo '<td style="font-weight:bold;">'.$monthlytotal.'</td>';
+	echo '<td style="font-weight:bold;" class="text-end">'.$monthlytotal.'</td>';
 	echo '</tr>';
 }
 
@@ -219,27 +205,17 @@ echo '<tr>';
 
 $grandtotal = 0;
 
-echo '<td valign="top" style="font-weight:bold; width:70px;">Total</td>';
-
-echo '<td valign="top" style="font-weight:bold; width:50px;">'.$totalsArray[$LNG->ISSUES_NAME].'</td>';
+echo '<td valign="top" style="font-weight:bold;">Total</td>';
+echo '<td valign="top" style="font-weight:bold;" class="text-end">'.$totalsArray[$LNG->ISSUES_NAME].'</td>';
 $grandtotal += $totalsArray[$LNG->ISSUES_NAME];
-
-echo '<td valign="top" style="font-weight:bold; width:50px;">'.$totalsArray[$LNG->SOLUTIONS_NAME].'</td>';
+echo '<td valign="top" style="font-weight:bold;" class="text-end">'.$totalsArray[$LNG->SOLUTIONS_NAME].'</td>';
 $grandtotal += $totalsArray[$LNG->SOLUTIONS_NAME];
-
-echo '<td valign="top" style="font-weight:bold; width:50px;">'.$totalsArray[$LNG->PROS_NAME].'</td>';
+echo '<td valign="top" style="font-weight:bold;" class="text-end">'.$totalsArray[$LNG->PROS_NAME].'</td>';
 $grandtotal += $totalsArray[$LNG->PROS_NAME];
-
-echo '<td valign="top" style="font-weight:bold; width:50px;">'.$totalsArray[$LNG->CONS_NAME].'</td>';
+echo '<td valign="top" style="font-weight:bold;" class="text-end">'.$totalsArray[$LNG->CONS_NAME].'</td>';
 $grandtotal += $totalsArray[$LNG->CONS_NAME];
-
-//echo '<td valign="top" style="font-weight:bold; width:50px;">'.$totalsArray[$LNG->COMMENTS_NAME].'</td>';
-//$grandtotal += $totalsArray[$LNG->COMMENTS_NAME];
-
-echo '<td valign="top" style="font-weight:bold; width:50px;">'.$grandtotal.'</td>';
-
+echo '<td valign="top" style="font-weight:bold;" class="text-end">'.$grandtotal.'</td>';
 echo '</tr>';
-
 echo '</table>';
 echo '</div>';
 

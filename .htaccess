@@ -31,8 +31,8 @@ AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
 ##RewriteCond %{HTTP_HOST} ^debatehub1.kmi.open.ac.uk$ [NC]
 ##RewriteCond %{HTTP_HOST} ^debatehub2.kmi.open.ac.uk$ [NC]
 
-#RewriteCond %{REQUEST_URI} !/index-maintenance.php$ 
-#RewriteRule $ /index-maintenance.php [R=302,L]
+##RewriteCond %{REQUEST_URI} !/index-maintenance.php$ 
+##RewriteRule $ /index-maintenance.php [R=302,L]
 
 ################################################################################
 

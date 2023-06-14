@@ -51,19 +51,17 @@ echo "</script>";
 ?>
 
 <script type='text/javascript'>
-Event.observe(window, 'load', function() {
-	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-debate-social.js.php"); ?>', 'stats-debates-debate-social-script');
-});
+	Event.observe(window, 'load', function() {
+		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-debate-social.js.php"); ?>', 'stats-debates-debate-social-script');
+	});
 </script>
 
-<div id="visheader" style="float:left;width:100%;margin:5px;margin-right:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div class="d-flex flex-column">
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 </div>
 
-<div id="social-debate-div" style="clear:both;float:left;width:100%;height:100%;"></div>
+<div id="social-debate-div" class="d-flex flex-column"></div>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));

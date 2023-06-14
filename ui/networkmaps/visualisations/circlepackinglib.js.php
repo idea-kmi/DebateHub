@@ -174,7 +174,7 @@ function completeCirclePackingD3Vis(root) {
 	var legend = d3Legend();
 	legend
 		.color(colorrange)
-		.width(width)
+		.width(width+10)
 		.height(20)
         .margin({top: 0, right: 0, bottom: 10, left: 15});
 

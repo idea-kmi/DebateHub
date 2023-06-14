@@ -100,6 +100,7 @@ window.onload = init;
         }
     }
 ?>
+
 </head>
 <body <?php echo $BODY_ATT; ?> id="cohere-body">
 

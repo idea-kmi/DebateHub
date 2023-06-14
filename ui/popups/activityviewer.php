@@ -109,10 +109,14 @@
 
 					echo "<td>";
 					echo "<span class='labelinput' style='font-size: 100%;'>";
-					if ($activity->changetype == 'Y') {
+					if ($activity->xml == 'Y') {
 						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_PROMOTED_ITEM;
-					} else if ($activity->changetype == 'N') {
+					} else if ($activity->xml == 'N') {
 						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_DEMOTED_ITEM;
+					} else if ($activity->xml == 'L') {
+						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_LEMONED_ITEM;
+					} else {
+						echo "Unknown";
 					}
 					echo "</span>";
 					echo "</td>";
@@ -278,11 +282,12 @@
         ?>
         </div>
     </div>
-
-    <div class="formrow">
-   		<input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
-    </div>
-
+		
+	<div class="mb-3 row">
+		<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+			<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">

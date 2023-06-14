@@ -31,11 +31,16 @@
 		die;
 	}
 
-    include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php")); 
+?>
 
-    echo '<h1>'.$LNG->PAGE_PRIVACY_TITLE.'</h1>';
+<div class="container-fluid">
+    <div class="page">
+        <h1><?php echo $LNG->PAGE_PRIVACY_TITLE; ?></h1>
+        <?php echo $LNG->PAGE_PRIVACY_BODY; ?>
+    </div>
+</div>
 
-	echo $LNG->PAGE_PRIVACY_BODY;
-
+<?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

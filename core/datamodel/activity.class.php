@@ -57,7 +57,7 @@ class Activity {
      * @param String $userid the id of the user who caused the audit to happen. Who performed the activity.
      * @param String $type the type of audited item ('Vote', 'Node', 'Connection', 'Follow', 'View')
      * @param int $modificationdate the time of the audit in seconds from epoch
-     * @param String $changetype the type of activity (view, edit, add, delete etc)
+     * @param String $changetype the type of activity (view, edit, add, delete etc or for voting Y,N,L)
      * @param String $xml the xml for the audited history object
      * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
 	 */

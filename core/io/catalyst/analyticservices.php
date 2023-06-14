@@ -228,7 +228,7 @@ function callAnalyticsAPIWithJson($method, $requests, $jsondata, $timeout=60) {
 	$httpCode = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
 	curl_close($curl);
 
-	//error_log(print_r($response, true));
+	error_log(print_r($response, true));
 
 	if($httpCode != 200 || $response === false) {
 		return false;

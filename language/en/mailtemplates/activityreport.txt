@@ -1,5 +1,0 @@
-<p>Dear %s,</p>
-<h3>Below is your %s Debate Hub Activity Report</h3>
-
-<p>%s</p>
-<br>

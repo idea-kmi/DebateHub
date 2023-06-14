@@ -48,7 +48,7 @@ function loadSocialNet() {
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;margin-left:5px;margin-bottom:5px;overflow:hidden'});
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
 	$("tab-content-social").insert(outerDiv);

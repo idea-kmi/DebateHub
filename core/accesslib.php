@@ -91,7 +91,6 @@ function userLogin($email,$password){
     }
 }
 
-// NOTE: THIS IS NOW DONE IN /ui/pages/loginexternal.php
 function loginExternal($provider, &$errors) {
     global $CFG, $LNG;
 

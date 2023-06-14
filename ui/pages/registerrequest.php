@@ -126,8 +126,19 @@
 						array_push($errors, $LNG->FORM_ERROR_EMAIL_USED);
 					} else {
 						if($CFG->CAPTCHA_ON) {
+							/*
+							$reCaptcha = new ReCaptcha($CFG->CAPTCHA_PRIVATE);
+							$response = $reCaptcha->verifyResponse(
+								$_SERVER["REMOTE_ADDR"],
+								$recaptcha_response_field
+							);
+							if ($recaptcha_response_field == "" || $response == null || !$response->isSuccess()) {
+								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
+							}
+							*/
+
 							$reCaptcha = new \ReCaptcha\ReCaptcha($CFG->CAPTCHA_PRIVATE);
-							$response = $reCaptcha->setExpectedHostname($CFG->CAPTCHA_DOMAIN)
+							$response = $reCaptcha->setExpectedHostname($CFG->homeAddress)
 								->verify(
 									$recaptcha_response_field,
 									$_SERVER["REMOTE_ADDR"]
@@ -135,7 +146,7 @@
 
 							if ($response == null || !$response->isSuccess()) {
 								if (isset($response) && $response != null) {
-									error_log($response->getErrorCodes());
+									console.log($response->getErrorCodes());
 								}
 								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
 							}

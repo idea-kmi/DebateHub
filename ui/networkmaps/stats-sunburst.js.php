@@ -41,26 +41,26 @@ function loadExploreGroupSunburst(){
 
 	/**** SETUP THE GRAPH ****/
 
-	var sunburstdiv = new Element('div', {'id':'sunburstdiv', 'style': 'clear:both;float:left;'});
+	var sunburstdiv = new Element('div', {'id':'sunburstdiv', 'style': ''});
 	var width = 600;
 	var height = 600;
 	sunburstdiv.style.width = width+"px";
 	sunburstdiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'sunburstmessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'sunburstdiv-outer', 'style': 'clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var messagearea = new Element("div", {'id':'sunburstmessage','class':'toolbitem fw-bold'});
+	var outerDiv = new Element('div', {'id':'sunburstdiv-outer', 'style': 'overflow:hidden'});
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(sunburstdiv);
 	$("sunburst-div").insert(outerDiv);
 
-	var sunburstInfoOuter = new Element('div', {'class':'boxshadowsquare', 'id':'sunburstinfoouterdiv', 'style': 'float:left;width:320px;height:600px;margin-left:20px;'});
-	var sunburstTitleDiv = new Element('div', {'id':'sunbursttitlediv', 'style': 'float:left;width:99%;height:20px;padding:5px;'});
+	var sunburstInfoOuter = new Element('div', {'class':'boxshadowsquare', 'id':'sunburstinfoouterdiv'});
+	var sunburstTitleDiv = new Element('div', {'id':'sunbursttitlediv'});
 	sunburstTitleDiv.insert('<h2><?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS; ?></h2>');
 
-	var sunburstInfoScrollDiv = new Element('div', {'id':'sunburstinfoscrolldiv', 'style': 'clear:both;float:left;width:100%;height:570px;overflow-y:auto;overflow-x:none'});
+	var sunburstInfoScrollDiv = new Element('div', {'id':'sunburstinfoscrolldiv', 'style': 'overflow-y:auto;overflow-x:none'});
 
-	var sunburstInfoDiv = new Element('div', {'id':'sunburstinfodiv', 'style': 'clear:both;float:left;padding:5px;padding-top:0px;'});
+	var sunburstInfoDiv = new Element('div', {'id':'sunburstinfodiv', 'style': 'padding:5px;padding-top:0px;'});
 	sunburstInfoDiv.insert('<?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS_CLICK; ?>');
 	sunburstInfoScrollDiv.insert(sunburstInfoDiv);
 
@@ -69,26 +69,6 @@ function loadExploreGroupSunburst(){
 	$("sunburst-div").insert(sunburstInfoOuter);
 
 	sunburstGraph = createNewSunburstGraph('sunburstdiv', 'sunburstinfodiv');
-
-	//addSunburstData();
-
-	// THE KEY
-	//var keybar = createNetworkGraphKey();
-	// THE TOOLBAR
-	//var toolbar = createBasicGraphToolbar(sunburstGraph, "sunburst-div");
-
-	//$("sunburst-div").insert({top: toolbar});
-	//$("sunburst-div").insert({top: keybar});
-
-	//event to resize
-	//Event.observe(window,"resize",function() {
-	//	resizeFDGraph(sunburstGraph, "sunburst-div", false);
-	//});
-
- 	//var size = calulateInitialGraphViewport("sunburst-div");
- 	//alert(size.width+":"+size.height);
-	//outerDiv.style.width = size.width+"px";
-	//outerDiv.style.height = size.height+"px";
 
 	loadData(sunburstGraph, messagearea);
 }

@@ -50,7 +50,7 @@ function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status){
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol', 'style':'margin: 0px; padding: 0px;margin-right:5px;margin-top:5px'});
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -62,20 +62,14 @@ function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status){
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			// reminder that these counts are there is I want them
-			//alert(connection.vote);
-			//alert(connection.weight);
-			//alert(connection.kids);
-			//alert(connection.kidsweight);
-
-			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li', 'style':'float:left;width:100%;margin-bottom:5px;'});
+			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list', 'style':'clear:both;float:left;margin:0px;padding:0px;margin-bottom:0px;width:100%;'});
+			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list d-flex flex-column'});
 			var blobNode = renderIdeaList(node, myuniqueid, node.role[0].role,includeUser,type,status, i);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
 			if (NODE_ARGS['currentphase'] == CLOSED_PHASE && i == 2) {
-				blobDiv.insert('<hr class="hrline-slim" style="float:left;clear:both;width:100%;margin-top:10px;margin-bottom:10px;padding:0px;">');
+				blobDiv.insert('<hr class="hrline-slim">');
 			}
 		}
 	}
@@ -97,7 +91,7 @@ function displayRemovedIdeaList(objDiv,nodes,start,includeUser,uniqueid){
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol', 'style':'margin: 0px; padding: 0px;margin-right:5px;margin-top:5px;'});
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -109,9 +103,9 @@ function displayRemovedIdeaList(objDiv,nodes,start,includeUser,uniqueid){
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li', 'style':'float:left;width:100%;margin-bottom:5px;'});
+			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list', 'style':'clear:both;float:left;margin:0px;padding:0px;margin-bottom:0px;width:100%;'});
+			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderIdeaRemovedList(node, myuniqueid, node.role[0].role,includeUser);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -152,10 +146,10 @@ function displayIssueNodes(width, height, objDiv,nodes,start,includeUser,uniquei
 	// Clear timers from any previous calls
  	clearAllIssueTimers();
 
-	var lOL = new Element("div", {'start':start, 'class':'idea-list-ol', 'style':'clear:both;float:left;width:100%;margin:0px;padding:0px;'});
+	var lOL = new Element("div", {'start':start, 'class':'issues-div' });
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var blobDiv = new Element("div", {'style':'float:left;margin:10px;margin-bottom:20px;'});
+			var blobDiv = new Element("div", {'class':'d-inline-block m-2'});
 			var blobNode = renderIssueNode(width, height, nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,isActive, includeconnectedness, includevoting, cropdesc);
 			blobDiv.insert(blobNode);
 			lOL.insert(blobDiv);
@@ -163,7 +157,6 @@ function displayIssueNodes(width, height, objDiv,nodes,start,includeUser,uniquei
 	}
 	objDiv.insert(lOL);
 }
-
 
 /**
  * Render a list of Comment nodes
@@ -183,7 +176,7 @@ function displayCommentNodes(objDiv,nodes,start,includeUser,uniqueid, type, stat
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol', 'style':'margin: 0px; padding: 0px;'});
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -197,7 +190,7 @@ function displayCommentNodes(objDiv,nodes,start,includeUser,uniqueid, type, stat
 
 			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'id':'commentblobdiv'+myuniqueid, 'class':'idea-blob-list', 'style':'clear:both;float:left;margin:0px;padding:0px;margin-bottom:10px;width:100%'});
+			var blobDiv = new Element("div", {'id':'commentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderCommentNode(nodes[i].cnode, myuniqueid, nodes[i].cnode.role[0].role,includeUser, type, status);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -223,7 +216,7 @@ function displayArgumentNodes(objDiv,nodes,start,includeUser,uniqueid, type, sta
 		status = <?php echo $CFG->STATUS_ACTIVE; ?>;
 	}
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol', 'style':'margin: 0px; padding: 0px;'});
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -237,7 +230,7 @@ function displayArgumentNodes(objDiv,nodes,start,includeUser,uniqueid, type, sta
 
 			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'id':'argumentblobdiv'+myuniqueid, 'class':'idea-blob-list', 'style':'clear:both;float:left;margin:0px;padding:0px;margin-bottom:10px;width:100%'});
+			var blobDiv = new Element("div", {'id':'argumentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderArgumentNode(nodes[i].cnode, myuniqueid, nodes[i].cnode.role[0].role,includeUser, type, status);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -253,12 +246,12 @@ function displayUsersNodes(objDiv,nodes,start,uniqueid){
 	if (uniqueid == undefined) {
 		uniqueid = 'widget-list';
 	}
-	var lOL = new Element("ul", {'style':'float:left;clear:both;'});
+	var lOL = new Element("ul", {'class':'widget-list-ideas'});
 	for(var i=0; i < nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'style':'clear:both;float:left;padding:0px;margin:0px;vertical-align:center;border:1px solid transparent'});
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'style':'float:left;clear:both;padding:0px;margin:0px;'});
+			var blobDiv = new Element("div", {'class':' '});
 			var blobNode = renderListNode(nodes[i].cnode, uniqueid+i+start, nodes[i].cnode.role[0].role, false);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -279,9 +272,9 @@ function displaySearchNodes(objDiv,nodes,start,includeUser,uniqueid){
 	var lOL = new Element("ul", {'start':start, 'style':''});
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'style':'clear:both;float:left;padding:0px;margin:0px;'});
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'class':'idea-blob-list', 'style':'clear:both;float:left;margin-bottom:10px;width:100%;'});
+			var blobDiv = new Element("div", {'class':'idea-blob-list'});
 			var blobNode = renderListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role, includeUser);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -295,13 +288,13 @@ function displaySearchNodes(objDiv,nodes,start,includeUser,uniqueid){
  */
 function displayReportNodes(objDiv,nodes,start){
 
-	objDiv.insert('<div style="clear:both; margin: 0px; padding: 0px;"></div>');
+	objDiv.insert('<div></div>');
 
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("span", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li', 'style':'padding-bottom: 5px;'});
+			var iUL = new Element("span", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			objDiv.insert(iUL);
-			var blobDiv = new Element("div", {'style':'margin: 2px; width: 650px'});
+			var blobDiv = new Element("div", {'class':' '});
 			var blobNode = renderReportNode(nodes[i].cnode,'idea-list'+i+start, nodes[i].cnode.role[0].role);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -321,7 +314,7 @@ function displayConnectionStatNodes(objDiv,nodes,start,includeUser,uniqueid){
 		if(nodes[i].cnode){
 			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'class':'idea-blob-list', 'style':'clear:both;float:left;margin-bottom:2px;'});
+			var blobDiv = new Element("div", {'class':'idea-blob-list'});
 			var blobNode = renderWidgetListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,'active');
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -386,16 +379,11 @@ function renderWidgetListNode(node, uniQ, role, includeUser, type){
 		uniQ = node.nodeid + uniQ;
 	}
 
-	var nodeTable = document.createElement('table', {'style':'width:100%'});
+	var nodeTable = document.createElement('table', {'class':'table'});
 	nodeTable.className = "toConnectionsTable";
-	nodeTable.width="100%";
-	//nodeTable.border = "1";
 	var row = nodeTable.insertRow(-1);
 
 	var textCell = row.insertCell(-1);
-	textCell.vAlign="middle";
-	textCell.align="left";
-	textCell.width="90%";
 
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (node.imagethumbnail != null && node.imagethumbnail != "") {
@@ -415,19 +403,19 @@ function renderWidgetListNode(node, uniQ, role, includeUser, type){
 		var iconlink = new Element('a', {
 			'href':originalurl,
 			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
- 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:20px;height:20px;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+ 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
  		iconlink.insert(nodeicon);
  		textCell.insert(iconlink);
  		textCell.insert(alttext+": ");
 	} else if (role.image != null && role.image != "") {
- 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:20px;height:20px;margin-top:3px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + role.image});
+ 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		textCell.insert(nodeicon);
 	} else {
  		textCell.insert(alttext+": ");
 	}
 
 	var title = node.name;
-	var exploreButton = new Element('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ, 'style':'line-height:1.8em;font-weight:normal'});
+	var exploreButton = new Element('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ});
 	if (role.name == "Map") {
 		if (node.searchid && node.searchid != "") {
 			exploreButton.href= "<?php echo $CFG->homeAddress; ?>map.php?id="+node.nodeid+"&sid="+node.searchid;
@@ -495,7 +483,6 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 
 	var nodeTable = new Element( 'table' );
 	nodeTable.className = "toConnectionsTable";
-	nodeTable.width="100%";
 	if (type == "connselect") {
 		nodeTable.style.cursor = 'pointer';
 		Event.observe(nodeTable,'click',function (){
@@ -532,12 +519,12 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 		var iconlink = new Element('a', {
 			'href':originalurl,
 			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
- 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+ 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
  		iconlink.insert(nodeicon);
  		itDiv.insert(iconlink);
  		itDiv.insert(alttext+": ");
 	} else if (role.image != null && role.image != "") {
- 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + role.image});
+ 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		itDiv.insert(nodeicon);
 	} else {
  		itDiv.insert(alttext+": ");
@@ -549,7 +536,7 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	// Add right side with user image and date below
 	var iuDiv = new Element("div", {'class':'idea-user'});
 
-	var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'style':'padding-right:5px;','align':'right', 'border':'0','src': user.thumb});
+	var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 
 	if (type == "active") {
 		var imagelink = new Element('a', {
@@ -568,7 +555,7 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	var modDate = new Date(node.creationdate*1000);
 	if (modDate) {
 		var fomatedDate = modDate.format(DATE_FORMAT);
-		iuDiv.insert("<div style='clear: both;'>"+fomatedDate+"</span>");
+		iuDiv.insert("<div>"+fomatedDate+"</span>");
 	}
 
 	rightCell.insert(iuDiv);
@@ -577,7 +564,7 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	var iwDiv = new Element("div", {'class':'idea-wrapper'});
 	var imDiv = new Element("div", {'class':'idea-main'});
 	var idDiv = new Element("div", {'class':'idea-detail'});
-	var headerDiv = new Element("div", {'class':'idea-menus', 'style':'width: 100%'});
+	var headerDiv = new Element("div", {'class':'idea-menus'});
 	idDiv.insert(headerDiv);
 
 	if (type == 'active') {
@@ -591,10 +578,8 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 
 	imDiv.insert(idDiv);
 	iwDiv.insert(imDiv);
-	iwDiv.insert('<div style="clear:both;"></div>');
 
 	iDiv.insert(ihDiv);
-	iDiv.insert('<div style="clear:both;"></div>');
 	iDiv.insert(iwDiv);
 
 	return iDiv;
@@ -620,19 +605,16 @@ function renderPickerNode(node, role, includeUser){
 		user = node.users[0].user;
 	}
 
-	var iDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
-	var ihDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
+	var iDiv = new Element("div", {'class':' '});
+	var ihDiv = new Element("div", {'class':' '});
 	var itDiv = new Element("div", {'class':'idea-title'});
 
 	var nodeTable = new Element( 'table' );
 	nodeTable.className = "toConnectionsTable";
-	nodeTable.width="100%";
 	nodeTable.style.cursor = 'pointer';
 
 	var row = nodeTable.insertRow(-1);
 	var leftCell = row.insertCell(-1);
-	leftCell.vAlign="top";
-	leftCell.align="left";
 
 	var rightCell = row.insertCell(-1);
 	rightCell.vAlign="top";
@@ -640,7 +622,7 @@ function renderPickerNode(node, role, includeUser){
 
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (role.image != null && role.image != "") {
-		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'padding-right:5px;','align':'left','border':'0','src': URL_ROOT + role.image});
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		itDiv.insert(nodeicon);
 	} else {
 		itDiv.insert(alttext+": ");
@@ -650,13 +632,13 @@ function renderPickerNode(node, role, includeUser){
 		loadSelecteditem(node);
 	});
 
-	itDiv.insert("<span class='itemtext' style='line-height:1.8em' title='Select this item'>"+node.name+"</span>");
+	itDiv.insert("<span class='itemtext' title='Select this item'>"+node.name+"</span>");
 
 	leftCell.insert(itDiv);
 
 	if (includeUser) {
-		var iuDiv = new Element("div", {'class':'idea-user2', 'style':'clear:both;float:right;'});
-		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'style':'padding-right:5px;','align':'right', 'border':'0','src': user.thumb});
+		var iuDiv = new Element("div", {'class':'idea-user2'});
+		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 		iuDiv.insert(userimageThumb)
 		rightCell.insert(iuDiv);
 	}
@@ -664,10 +646,8 @@ function renderPickerNode(node, role, includeUser){
 	ihDiv.insert(nodeTable);
 
 	iDiv.insert(ihDiv);
-	iDiv.insert('<div style="clear:both;"></div>');
 
 	var iwDiv = new Element("div", {'class':'idea-wrapper'});
-	iwDiv.insert('<div style="clear:both;"></div>');
 	iDiv.insert(iwDiv);
 
 	return iDiv;
@@ -752,36 +732,25 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		breakout = " target='_blank'";
 	}
 
-	var iDiv = new Element("div", {'style':'float:left;width:100%;'});
-	iDiv.style.width = width+"px";
+	var iDiv = new Element("div", {'class':'card border-0 my-2'});
 
-	if (!mainheading) {
-		iDiv.style.height = height+"px";
-		iDiv.style.minHeight = height+"px";
-	}
-
-	var nodetableDiv = new Element("div", {'style':'float:left;width:100%;'});
-	var nodeTable = new Element( 'div', {'class':'nodetable boxborder boxbackground', 'style':'float:left;padding:0px;margin:0px;'} );
-
-	if (!mainheading) {
-		nodetableDiv.style.height = (height-30)+"px";
-		nodetableDiv.style.maxHeight = (height-30)+"px";
-	}
+	var nodetableDiv = new Element("div", {'class':'card-body pb-0'});
+	var nodeTable = new Element( 'div', {'class':'nodetableDebate border border-2'} );
 
 	nodetableDiv.insert(nodeTable);
 
-	var row = new Element( 'div', {'class':'nodetablerow'} );
+	var row = new Element( 'div', {'class':'d-flex flex-row'} );
 	nodeTable.insert(row);
 
-	var imageCell = new Element( 'div', {'class':'nodetablecelltop'} );
-	imageCell.style.width="20%";
+	var imageCell = new Element( 'div', {'class':'p-2 issue-img'} );
 	row.insert(imageCell);
+
 	if (notStarted) {
-		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'style':'padding:5px;padding-bottom:10px;', 'border':'0','src': node.image});
+		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'src': node.image});
 		imageCell.insert(imageObj);
 		imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 	} else {
-		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'style':'padding:5px;padding-bottom:10px;', 'border':'0','src': node.image});
+		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'src': node.image});
 		var imagelink = new Element('a', {
 			'href':URL_ROOT+"explore.php?id="+node.nodeid,
 		});
@@ -791,11 +760,10 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 	}
 
-	var textCell = new Element( 'div', {'class':'nodetablecelltop'} );
-	textCell.style.width="80%";
+	var textCell = new Element( 'div', {'class':'p-2'} );
 	row.insert(textCell);
 
-	var textDiv = new Element('div', {'style':'overflow-wrap:break-word;margin-left:10px;margin-right:10px;'});
+	var textDiv = new Element('div', {'class':'issue-title'});
 	textCell.insert(textDiv);
 
 	var title = node.name;
@@ -807,11 +775,11 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		exploreButton.insert(title);
 	} else {
 		if (notStarted) {
-			var exploreButton = new Element('span', {'style':'font-weight:bold;font-size:12pt;float:left;margin-top:5px;'});
+			var exploreButton = new Element('span', {'class':' '});
 			textDiv.insert(exploreButton);
 			exploreButton.insert(title);
 		} else {
-			var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'style':'font-weight:bold;font-size:12pt;float:left;margin-top:5px;'});
+			var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'});
 			if (node.searchid && node.searchid != "") {
 				exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"&sid="+node.searchid;
 			} else if (node.groupid && node.groupid != "") {
@@ -829,18 +797,17 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		}
 
 		textDiv.insert(exploreButton);
-		textDiv.insert("<br>");
 	}
 
 	if (mainheading) {
-		var textDivinner = new Element('div', {'style':'overflow-wrap:break-word;margin-left:0px;margin-right:0px;'});
+		var textDivinner = new Element('div', {'class':' '});
 		textDivinner.insert(description);
 		textDiv.insert(textDivinner);
 	} else {
 		if (description != "" && title.length <=80) {
 			var plaindesc = removeHTMLTags(description);
 			var hint = plaindesc;
-			var croplength = 160-title.length;
+			var croplength = 110-title.length;
 			if (plaindesc && plaindesc.length > croplength) {
 				hint = plaindesc;
 				var plaincrop = plaindesc.substr(0,croplength)+"...";
@@ -851,17 +818,17 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		}
 	}
 
-	var rowToolbar = new Element( 'div', {'class':'nodetablerow'} );
+	var rowToolbar = new Element( 'div', {'class':'d-flex justify-content-between'} );
 	nodeTable.insert(rowToolbar);
 
-	var toolbarCell = new Element( 'div', {'class':'nodetablecellbottom'} );
+	var toolbarCell = new Element( 'div', {'class':'d-flex align-items-end'} );
 	rowToolbar.insert(toolbarCell);
 
-	var userDiv = new Element("div", {'class':'nodetablecellbottom'} );
+	var userDiv = new Element("div", {'class':'m-1'} );
 	toolbarCell.insert(userDiv);
 
 	if (includeUser) {
-		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'style':'float:left;padding-left:5px;padding-right:5px;margin-bottom:5px;', 'border':'0','src': user.thumb});
+		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+user.userid,
@@ -875,29 +842,29 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			userDiv.insert(userimageThumb)
 		}
 
-		var userDateDiv = new Element("div", {'class':'nodetablecellbottom', 'style':'font-size:9pt;'} );
+		var userDateDiv = new Element("div", {'class':'m-1'} );
 		toolbarCell.insert(userDateDiv);
 
 		var cDate = new Date(node.creationdate*1000);
-		var dateDiv = new Element('div',{'title':'<?php echo $LNG->NODE_ADDED_ON; ?>','style':'float:left;clear:both;padding-left:5px;margin-bottom:5px;vertical-align:bottom;'});
+		var dateDiv = new Element('div',{'title':'<?php echo $LNG->NODE_ADDED_ON; ?>', 'class':'added_on'});
 		dateDiv.insert(cDate.format(DATE_FORMAT));
 
 		userDateDiv.insert(dateDiv);
 	}
 
-	var toolbarDivOuter = new Element("div", {'class':'nodetablecellbottom'} );
+	var toolbarDivOuter = new Element("div", {'class':'d-flex align-items-end'} );
 	rowToolbar.insert(toolbarDivOuter);
 
-	var toolbarDiv = new Element("div", {'style':'float:right;margin-bottom:5px;'} );
+	var toolbarDiv = new Element("div", {'class':'m-1 issue-tools'} );
 	toolbarDivOuter.insert(toolbarDiv);
 
 	// IF OWNER ADD EDIT / DEL ACTIONS
 	if (type == "active") {
 		if (USER == user.userid) {
-			var edit = new Element('img',{'style':'float:left;cursor: pointer;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+			var edit = new Element('img',{'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 			Event.observe(edit,'click',function (){loadDialog('editissue',URL_ROOT+"ui/popups/issueedit.php?nodeid="+node.nodeid, 770,550)});
 			toolbarDiv.insert(edit);
-			var del = new Element('img',{'id':'deletebutton'+uniQ,'style':'float:left;padding-left:5px;margin-right: 10px', 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
+			var del = new Element('img',{'id':'deletebutton'+uniQ, 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
 			toolbarDiv.insert(del);
 			if (node.connectedness == 0) {
 				var deletename = node.name;
@@ -911,43 +878,13 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		}
 	}
 
-	/*if (type == "active") { // might add this back later so left code.
-		if (USER != "") { // IF LOGGED IN
-			// Add spam icon
-			var spaming = new Element('img', {'style':'float:left;padding-top:0px;padding-right:10px;'});
-			if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
-				spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
-				spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-				spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
-			} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
-				if(USER != ""){
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, type, node); } );
-				} else {
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
-				}
-			}
-			toolbarDiv.insert(spaming);
-		} else {
-
-		}
-	}*/
-
 	if (type == "active" && !issueClosed) {
 		if (USER != "") {
-			var followbutton = new Element('img', {'style':'float:left;padding-top:0px;margin-right:10px;'});
+			var followbutton = new Element('img', {'class':' '});
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 			followbutton.setAttribute('alt', 'Follow');
 			followbutton.setAttribute('id','follow'+node.nodeid);
 			followbutton.nodeid = node.nodeid;
-			followbutton.style.marginRight="3px";
 			followbutton.style.cursor = 'pointer';
 
 			toolbarDiv.insert(followbutton);
@@ -962,7 +899,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 				followbutton.setAttribute('title', '<?php echo $LNG->NODE_FOLLOW_ITEM_HINT; ?>');
 			}
 		} else {
-			toolbarDiv.insert("<img style='float:left;margin-right:10px;padding-top:0px;cursor:pointer' onclick='$(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' border='0' />");
+			toolbarDiv.insert("<img onclick='$(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' />");
 		}
 	}
 
@@ -979,15 +916,13 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			voteforimg.setAttribute('id','nodefor'+node.nodeid);
 			voteforimg.nodeid = node.nodeid;
 			voteforimg.vote='Y';
-			voteforimg.style.marginRight="2px";
-			voteforimg.style.cssFloat="left";
 			toolbarDiv.insert(voteforimg);
 			if (!node.positivevotes) {
 				node.positivevotes = 0;
 			}
 
 			if (issueClosed) {
-				toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 5px;" id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
+				toolbarDiv.insert('<b><span id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
 			} else {
 				if(USER != ""){
 					voteforimg.style.cursor = 'pointer';
@@ -1000,10 +935,10 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 						voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-empty3.png"); ?>');
 						voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_FOR_ADD_HINT; ?>');
 					}
-					toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 5px;" id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
+					toolbarDiv.insert('<b><span id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
 				} else {
 					voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_FOR_LOGIN_HINT; ?>');
-					toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 5px;" id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
+					toolbarDiv.insert('<b><span id="nodevotefor'+node.nodeid+'">'+node.positivevotes+'</span></b>');
 				}
 			}
 
@@ -1014,14 +949,12 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			voteagainstimg.setAttribute('id', 'nodeagainst'+node.nodeid);
 			voteagainstimg.nodeid = node.nodeid;
 			voteagainstimg.vote='N';
-			voteagainstimg.style.cssFloat="left";
-			voteagainstimg.style.marginRight="2px";
 			toolbarDiv.insert(voteagainstimg);
 			if (!node.negativevotes) {
 				node.negativevotes = 0;
 			}
 			if (issueClosed) {
-				toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 10px;" id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
+				toolbarDiv.insert('<b><span id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
 			} else {
 				if(USER != ""){
 					voteagainstimg.style.cursor = 'pointer';
@@ -1034,20 +967,18 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 						voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-empty3.png"); ?>');
 						voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_AGAINST_ADD_HINT; ?>');
 					}
-					toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 10px;" id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
+					toolbarDiv.insert('<b><span id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
 				} else {
 					voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_AGAINST_LOGIN_HINT; ?>');
-					toolbarDiv.insert('<b><span style="float:left;font-size: 10pt;margin-right: 10px;" id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
+					toolbarDiv.insert('<b><span id="nodevoteagainst'+node.nodeid+'">'+node.negativevotes+'</span></b>');
 				}
 			}
 		}
 	}
 
 	if (mainheading) {
-		toolbarDiv.style.marginBottom = "0px";
-
-		var jsonldButton = new Element("span", {'style':'float:right;padding-top:0px;padding-right:5px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
-		var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0'});
+		var jsonldButton = new Element("span", {'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
+		var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0', 'alt':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
 		jsonldButton.insert(jsonldButtonicon);
 		var jsonldButtonhandler = function() {
 			var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
@@ -1070,30 +1001,36 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 
 	if (phase == PENDING_PHASE) {
 		var start = convertUTCTimeToLocalDate(node.startdatetime);
-		countdowntableDiv = new Element("div", {'class':'issuepending', 'id':'div-timer'+node.nodeid, 'style':'clear:both;float:left;width:100%;height:16px;'});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid, 'style':'float:left;padding-left:5px;font-size:10pt;height:16px;font-weight:bold;'} );
+		countdowntableDiv = new Element("div", {'class':'issue-status issuepending d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
 		countdowntableDiv.insert(countdownbar);
 		iDiv.insert(countdowntableDiv);
 		countDownIssueTimer(start.getTime(), countdownbar, '<?php echo $LNG->NODE_COUNTDOWN_START; ?>', false);
 	} else if (phase == TIMED_PHASE || phase == TIMED_NOVOTE_PHASE
 			|| phase == TIMED_VOTEPENDING_PHASE || phase == TIMED_VOTEON_PHASE
 			|| phase == DISCUSS_PHASE || phase == REDUCE_PHASE || phase == DECIDE_PHASE ) {
+
 		var end = convertUTCTimeToLocalDate(node.enddatetime);
-		countdowntableDiv = new Element("div", {'class':'issueopen', 'id':'div-timer'+node.nodeid, 'style':'clear:both;float:left;width:100%;height:16px;'});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid, 'style':'float:left;padding-left:5px;font-size:10pt; height:16px;font-weight:bold;'} );
+		countdowntableDiv = new Element("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		let countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
 		countdowntableDiv.insert(countdownbar);
 		iDiv.insert(countdowntableDiv);
-		countDownIssueTimer(end.getTime(), countdownbar, '<?php echo $LNG->NODE_COUNTDOWN_END; ?>', false);
+
+		if (mainheading) {
+			countDownIssueTimer(end.getTime(), countdownbar, '<?php echo $LNG->NODE_COUNTDOWN_END; ?>', false);
+		} else {
+			countdownbar.insert("<?php echo $LNG->NODE_COUNTDOWN_TIMED; ?>");
+		}
 	} else if (phase == CLOSED_PHASE) {
-		countdowntableDiv = new Element("div", {'class':'issueclosed', 'id':'div-timer'+node.nodeid, 'style':'clear:both;float:left;width:100%;height:16px;'});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid, 'style':'float:left;padding-left:5px;font-size:10pt; height:16px;font-weight:bold;'} );
+		countdowntableDiv = new Element("div", {'class':'issue-status issueclosed d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
 		countdownbar.insert("<?php echo $LNG->NODE_COUNTDOWN_CLOSED; ?>");
 		countdowntableDiv.insert(countdownbar);
 		iDiv.insert(countdowntableDiv);
 	} else if (phase == OPEN_PHASE
 			|| phase == OPEN_VOTEPENDING_PHASE || phase == OPEN_VOTEON_PHASE) {
-		countdowntableDiv = new Element("div", {'class':'issueopen', 'id':'div-timer'+node.nodeid, 'style':'clear:both;float:left;width:100%;height:16px;'});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid, 'style':'float:left;padding-left:5px;font-size:10pt;height:16px;font-weight:bold;'} );
+		countdowntableDiv = new Element("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
 		countdownbar.insert("<?php echo $LNG->NODE_COUNTDOWN_OPEN; ?>");
 		countdowntableDiv.insert(countdownbar);
 		iDiv.insert(countdowntableDiv);
@@ -1104,75 +1041,75 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	}
 
 	if (includestats) {
-		var statstableDiv = new Element("div", {'style':'clear:both;float:left;width:100%'});
-		var statsTable = new Element( 'div', {'class':'nodetable', 'style':'float:left;clear:both;height:30px;'} );
+		var statstableDiv = new Element("div", {'class':'card-footer debates border-0 bg-white py-0 text-center'});
+		var statsTable = new Element( 'div', {'class':'nodetable'} );
 		statstableDiv.insert(statsTable);
 
-		var innerRowStats = new Element( 'div', {'class':'nodetablerow'} );
+		var innerRowStats = new Element( 'div', {'class':'d-flex justify-content-between'} );
 		statsTable.insert(innerRowStats);
 
-		var innerStatsCellViews = new Element( 'div', {'class':'nodetablecellmid'} );
+		var innerStatsCellViews = new Element( 'div', {'class':'col-auto'} );
 		innerRowStats.insert(innerStatsCellViews);
 
-		var viewslabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
+		var viewslabelspan = new Element("strong");
 		viewslabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_VIEWS; ?>');
 		innerStatsCellViews.insert(viewslabelspan);
 
-		var viewnumspan = new Element("span", {'id':'debateviewstats'+node.nodeid, 'style':'padding-left:5px;'});
+		var viewnumspan = new Element("span", {'id':'debateviewstats'+node.nodeid});
 		viewnumspan.insert(node.viewcount);
 		innerStatsCellViews.insert(viewnumspan);
 
 		if ((NODE_ARGS['issueHasLemoning'] && NODE_ARGS['currentphase'] == DECIDE_PHASE)
 				|| (NODE_ARGS['issueHasLemoning'] && NODE_ARGS['currentphase'] == CLOSED_PHASE)) {
-			var innerStatsCellDebates = new Element( 'div', {'class':'nodetablecellmid'} );
+			var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
 			innerRowStats.insert(innerStatsCellDebates);
-			var idealabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
-			idealabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_ALL; ?>');
+			var idealabelspan = new Element("strong");
+			idealabelspan.insert(' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_ALL; ?>');
 			innerStatsCellDebates.insert(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid, 'style':'padding-left:5px;'});
+			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid});
 			ideanumspan.insert('-');
 			innerStatsCellDebates.insert(ideanumspan);
 
-			var innerStatsCellDebatesNow = new Element( 'div', {'class':'nodetablecellmid'} );
+			var innerStatsCellDebatesNow = new Element( 'div', {'class':'col-auto'} );
 			innerRowStats.insert(innerStatsCellDebatesNow);
-			var idealabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
-			idealabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_REMAINING; ?>');
+			var idealabelspan = new Element("strong");
+			idealabelspan.insert(' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_REMAINING; ?>');
 			innerStatsCellDebatesNow.insert(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideasnow'+node.nodeid, 'style':'padding-left:5px;'});
+			var ideanumspan = new Element("span", {'id':'debatestatsideasnow'+node.nodeid});
 			ideanumspan.insert('-');
 			innerStatsCellDebatesNow.insert(ideanumspan);
 		} else {
-			var innerStatsCellDebates = new Element( 'div', {'class':'nodetablecellmid'} );
+			var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
 			innerRowStats.insert(innerStatsCellDebates);
-			var idealabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
-			idealabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES; ?>');
+			var idealabelspan = new Element("strong");
+			idealabelspan.insert(' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES; ?>');
 			innerStatsCellDebates.insert(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid, 'style':'padding-left:5px;'});
+			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid});
 			ideanumspan.insert('-');
 			innerStatsCellDebates.insert(ideanumspan);
 		}
 
-		var innerStatsCellPeople = new Element( 'div', {'class':'nodetablecellmid'} );
+		var innerStatsCellPeople = new Element( 'div', {'class':'col-auto'} );
 		innerRowStats.insert(innerStatsCellPeople);
 
- 		var peoplelabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
-		peoplelabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_PEOPLE; ?>');
+ 		var peoplelabelspan = new Element("strong");
+		peoplelabelspan.insert(' <?php echo $LNG->DEBATE_BLOCK_STATS_PEOPLE; ?>');
 		innerStatsCellPeople.insert(peoplelabelspan);
 
-		var peoplenumspan = new Element("span", {'id':'debatestatspeople'+node.nodeid, 'style':'padding-left:5px;'});
+		var peoplenumspan = new Element("span", {'id':'debatestatspeople'+node.nodeid});
 		peoplenumspan.insert('-');
 		innerStatsCellPeople.insert(peoplenumspan);
 		peoplenumspan.people = new Array();
 		peoplenumspan.people.push(user.userid);
 
-		var innerStatsCellVotes = new Element( 'div', {'class':'nodetablecellmid'} );
+		var innerStatsCellVotes = new Element( 'div', {'class':'col-auto'} );
 		innerRowStats.insert(innerStatsCellVotes);
 
-		var votelabelspan = new Element("span", {'style':'font-size:10pt;font-weight:bold'});
+		var votelabelspan = new Element("strong");
 		votelabelspan.insert('<?php echo $LNG->DEBATE_BLOCK_STATS_VOTES; ?>');
 		innerStatsCellVotes.insert(votelabelspan);
 
-		var votenumspan = new Element("span", {'id':'debatestatsvotes'+node.nodeid, 'style':'padding-left:5px;'});
+		var votenumspan = new Element("span", {'id':'debatestatsvotes'+node.nodeid});
 		votenumspan.insert('-');
 		innerStatsCellVotes.insert(votenumspan);
 		votenumspan.votes = new Array();
@@ -1247,7 +1184,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		}
 	}
 
-	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker', 'style':'width:100%;padding:0px;'});
+	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker'});
 
 	if (USER != "" && NODE_ARGS['currentphase'] == REDUCE_PHASE) {
 		Event.observe(itDiv,"dragover", function(e){
@@ -1286,11 +1223,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 	}
 
-	var nodeTable = new Element('table', {'style':'width:100%;margin:3px;'});
+	var nodeTable = new Element('table', {'class':'table'});
 	nodeTable.className = "toConnectionsTable";
-	nodeTable.width="100%";
 	itDiv.insert(nodeTable);
-	//nodeTable.border = "1";
 
 	var row = nodeTable.insertRow(-1);
 	row.setAttribute('name','idearowitem');
@@ -1302,27 +1237,28 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		if (i == 0) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid, 'border':'0', 'style':'float:left;vertical-align:top;'});
+			var img = new Element("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('first-place.png'); ?> ";
+			img.alt = "1st place ";
 			winCell.insert(img);
 		} else if (i == 1) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid, 'border':'0', 'style':'float:left;vertical-align:top;'});
+			var img = new Element("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('second-place.png'); ?> ";
+			img.alt = "2nd place ";
 			winCell.insert(img);
 		} else if (i == 2) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid, 'border':'0', 'style':'float:left;vertical-align:top;'});
+			var img = new Element("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('third-place.png'); ?> ";
+			img.alt = "3rd place ";
 			winCell.insert(img);
 		}
 	}
 
 	if (node.nodeid == NODE_ARGS['selectednodeid']) {
-		//alert("hightlighting!!");
-		//row.className = "selectedback";
 		var options = new Array();
 		options['startcolor'] = '#FAFB7D';
 		options['endcolor'] = '#FDFDE3';
@@ -1332,20 +1268,18 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	} else {
 		row.className = "transparent";
 	}
-	//row.style.borderBottom = "3px solid #4E725F";
 
 	// FOR ORGANIZE MODE
 	<?php if (isset($_SESSION['IS_MODERATOR']) && $_SESSION['IS_MODERATOR']){ ?>
 	if (type == 'active' && NODE_ARGS['issueDiscussing']) {
 		var boxCell = row.insertCell(-1);
-		boxCell.setAttribute('vAlign','middle');
-		boxCell.setAttribute('align','left');
-		boxCell.setAttribute('style','display:none;width:30px;max-width:30px;padding-left:5px;height:100%;padding-top:4px;');
+		boxCell.style.display='none';
+		boxCell.setAttribute('class','nodecheckcell');
 		boxCell.setAttribute('name','nodecheckcell');
 		boxCell.setAttribute('id','nodecheckcell'+uniQ);
 		boxCell.userid = nodeuser.userid;
 		boxCell.nodeid = node.nodeid;
-		var inChk = new Element("input",{'class':'nodecheck','type':'checkbox','id':'nodecheck'+node.nodeid, 'value':node.nodeid});
+		var inChk = new Element("input",{'class':'nodecheck','type':'checkbox','id':'nodecheck'+node.nodeid, 'value':node.nodeid, 'aria-label':'test'});
 		Event.observe(inChk,'click',function (){
 			var toAdd = getSelectedNodeIDs($('tab-content-idea-list'));
 			if(toAdd.length < 2) {
@@ -1370,12 +1304,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	if (type == 'active') {
 		if (connection) {
 			var voteCell = row.insertCell(-1);
-			voteCell.setAttribute('style','min-width:40px;width:40px;display:none;');
+			voteCell.setAttribute('style','display:none;');
 			voteCell.setAttribute('name','ideavotediv');
 			voteCell.setAttribute('id','ideavotediv'+uniQ);
-			voteCell.setAttribute('vAlign','top');
-			voteCell.setAttribute('align','left');
-			voteCell.setAttribute('width','40');
+			voteCell.setAttribute('class','ideavotediv');
+			
 			if (NODE_ARGS['issueVoting'] || NODE_ARGS["currentphase"] == CLOSED_PHASE) {
 				voteCell.style.display = "table-cell";
 			} else {
@@ -1384,10 +1317,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 			var voteDiv = new Element("div", {
 				'name':'editformvotedividea',
-				'id':'editformvotedividea'+uniQ,
-				'style':'padding-top:0px;'
+				'class':'editformvotedividea',
+				'id':'editformvotedividea'+uniQ
 			});
-			//voteDiv.insert('<span style="margin-right:5px;"><?php echo $LNG->NODE_VOTE_MENU_TEXT; ?></span>');
 			voteCell.insert(voteDiv);
 
 			var toRoleName = getNodeTitleAntecedence(connection.torole[0].role.name, false);
@@ -1406,8 +1338,6 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			voteforimg.uniq = uniQ;
 
 			voteforimg.vote='Y';
-			voteforimg.style.verticalAlign="bottom";
-			voteforimg.style.marginRight="3px";
 			voteDiv.insert(voteforimg);
 			if (!connection.positivevotes) {
 				connection.positivevotes = 0;
@@ -1462,8 +1392,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 			var voteforcount = new Element('span');
 			voteforcount.setAttribute('id',connection.connid+'votefor');
-			//voteforcount.setAttribute('id','forideavotes'+uniQ);
-			voteforcount.setAttribute('style','font-size: 10pt;margin-right: 5px;font-weight:bold');
+			voteforcount.setAttribute('class',' ');
 			voteforcount.insert(connection.positivevotes);
 			voteDiv.insert(voteforcount);
 
@@ -1476,9 +1405,6 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			voteagainstimg.nodeid = node.nodeid;
 			voteagainstimg.connid = connection.connid;
 			voteagainstimg.vote='N';
-			voteagainstimg.style.verticalAlign="bottom";
-			voteagainstimg.style.marginTop="5px";
-			voteagainstimg.style.marginRight="3px";
 			voteDiv.insert(voteagainstimg);
 			if (!connection.negativevotes) {
 				connection.negativevotes = 0;
@@ -1502,12 +1428,10 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 							}
 							drawVotesBar(votebar, uniQ, node.parentid);
 							recalculatePeople();
-							//promptForArgument(node, uniQ, 'con', "Con", type, includeUser, status);
 						}
 						voteagainstimg.handlerdelete = function() {
 							var votebar = $('votebardiv'+uniQ);
 							votebar.negativevotes = parseInt(votebar.negativevotes)-1;
-							//alert(parseInt(votebar.positivevotes)+":"+parseInt(votebar.negativevotes));
 							drawVotesBar(votebar, uniQ, node.parentid);
 							recalculatePeople();
 						}
@@ -1534,8 +1458,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 			var voteagainstcount = new Element('span');
 			voteagainstcount.setAttribute('id',connection.connid+'voteagainst');
-			//voteagainstcount.setAttribute('id','forideavotes'+uniQ);
-			voteagainstcount.setAttribute('style','font-size: 10pt;margin-right: 5px;font-weight:bold');
+			voteagainstcount.setAttribute('class',' ');
 			voteagainstcount.insert(connection.negativevotes);
 			voteDiv.insert(voteagainstcount);
 		}
@@ -1543,11 +1466,8 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	if (includeUser == true) {
 		var userCell = row.insertCell(-1);
-		userCell.setAttribute('style','width:40px;');
-		userCell.setAttribute('style','max-width:40px;');
-		userCell.vAlign="top";
-		userCell.align="left";
-		userCell.width="40";
+		userCell.classList.add("idea-user-img");
+		
 		if (connection) {
 			var cDate = new Date(connection.creationdate*1000);
 			var dStr = "<?php echo $LNG->NODE_ADDED_BY; ?> "+nodeuser.name+ " on "+cDate.format(DATE_FORMAT)
@@ -1557,11 +1477,10 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		// Add right side with user image and date below
 		var iuDiv = new Element("div", {
 			'id':'editformuserdividea'+uniQ,
-			'class':'idea-user2',
-			'style':'float:left;'
+			'class':'idea-user2'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;padding-top:5px;', 'border':'0','src': nodeuser.thumb});
+		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
@@ -1579,22 +1498,20 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	}
 
 	var textCell = row.insertCell(-1);
-	//textCell.setAttribute('style','width:85%');
-	textCell.vAlign="top";
-	textCell.align="left";
-	textCell.setAttribute('width','95%');
+	textCell.classList.add("idea-section");
 
 	var textDiv = new Element("div", {
 		'id':'textdividea'+uniQ,
-		'style':'clear:both;float:left;width:98%;display:block;padding-left:5px;padding-bottom:3px;'
+		'class':'textdividea'
 	});
 	textCell.insert(textDiv);
+	
 
 	var title = node.name;
 
 	var textspan = new Element("span", {
 		'id':'desctoggle'+uniQ,
-		'style':'cursor:pointer;float:left;font-weight:bold;font-size:14pt'
+		'class':'desctoggle'
 	});
 	textspan.insert(title);
 	textspan.datadisabled = false;
@@ -1606,10 +1523,8 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	});
 
 	if (USER == nodeuser.userid && type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var editbutton = new Element("img", {
-			'border':'0',
-			'class':'imagebuttonfaded',
-			'style':'float:left;padding-left:10px;margin-top:3px;',
+		var editbutton = new Element("img", {			
+			'class':'idea-edit',
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
 			'title':'<?php echo $LNG->NODE_EDIT_SOLUTION_ICON_HINT; ?>',
 		});
@@ -1620,7 +1535,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 		if (!node.otheruserconnections || node.otheruserconnections == 0) {
 			var deletename = node.name;
-			var del = new Element('img',{'style':'float:left;cursor: pointer;padding-left:5px;padding-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+			var del = new Element('img',{		
+				'class':'idea-delete',
+				'alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 
+				'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
+				'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'
+			});
 			Event.observe(del,'click',function (){
 				var callback = function () {
 					refreshSolutions();
@@ -1629,13 +1549,22 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			});
 			textDiv.insert(del);
 		} else {
-			var del = new Element('img',{'style':'float:left;cursor: pointer;padding-left:5px;padding-top:5px;', 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
+			var del = new Element('img',{ 	
+				'class':'idea-delete',
+				'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 
+				'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 
+				'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'
+			});
 			textDiv.insert(del);
 		}
 	}
 
 	if (node.urls && node.urls.length > 0) {
-		var menuButton = new Element('img',{'alt':'>', 'style':'float:left;padding-left:10px;padding-top:4px;width:16px;height:16px;','width':'16','height':'16','border':'0','src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'});
+		var menuButton = new Element('img',{
+			'class':'idea-url',
+			'alt':'>','width':'16','height':'16',
+			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
+		});
 		textDiv.appendChild(menuButton);
 		Event.observe(menuButton,'mouseout',function (event){
 			hideBox('toolbardiv'+uniQ);
@@ -1675,7 +1604,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			if(node.urls[i].url){
 				var next = node.urls[i].url;
 				var url = next.url;
-				var weblink = new Element("a", {'style':'clear:both;float:left;margin-bottom:6px;font-size:10pt','target':'_blank'});
+				var weblink = new Element("a", {'class':' ','target':'_blank'});
 				weblink.href = url;
 				weblink.insert(url);
 				toolbarDiv.insert(weblink);
@@ -1684,7 +1613,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	}
 
 	if (type == 'active') {
-		var more = new Element('img',{'style':'float:left;cursor: pointer;padding-left:5px;margin-right: 10px;padding-top:5px;display:none','alt':'built from', 'title': 'built from', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("desc.png"); ?>'});
+		var more = new Element('img',{
+			'class':'idea-built',
+			'style':'display:none',
+			'alt':'built from', 
+			'title': 'built from', 'src': '<?php echo $HUB_FLM->getImagePath("desc.png"); ?>'
+		});
 		Event.observe(more,'click',function (){
 			loadDialog('builtfroms',URL_ROOT+"ui/popups/builtfroms.php?nodeid="+node.nodeid, 800,550);
 		});
@@ -1694,9 +1628,10 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		<?php if (isset($_SESSION['IS_MODERATOR']) && $_SESSION['IS_MODERATOR']){ ?>
 		if (NODE_ARGS['issueDiscussing']) {
 			var splitbutton = new Element("button", {
+				'class':'idea-split',
 				'id':'ideasplitbutton'+uniQ,
 				'name':'ideasplitbutton',
-				'style':'float:left;margin-left:10px;display:none',
+				'style':'display:none',
 				'title':'<?php echo $LNG->FORM_BUTTON_SPLIT_HINT; ?>'
 			});
 			splitbutton.uniQ = uniQ;
@@ -1705,7 +1640,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			} else {
 				splitbutton.hasChildren = true; // as it is unknown so cannot risk drawing split button
 			}
-			splitbutton.insert('<h2 style="margin-bottom:0px;font-size:10pt"><?php echo $LNG->FORM_BUTTON_SPLIT; ?></h2>');
+			splitbutton.insert('<?php echo $LNG->FORM_BUTTON_SPLIT; ?>');
 			textDiv.insert(splitbutton);
 			Event.observe(splitbutton,'click',function (){
 				loadDialog('split',URL_ROOT+"ui/popups/split.php?nodeid="+node.nodeid+"&debateid="+node.parentid+"&groupid="+node.groupid, 770,550);
@@ -1714,33 +1649,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		<?php } ?>
 	}
 
-	//if (status != 2 &&
-	if (NODE_ARGS['currentphase'] == DISCUSS_PHASE
-			|| NODE_ARGS['currentphase'] == OPEN_PHASE
-			|| NODE_ARGS['currentphase'] == OPEN_VOTEON_PHASE
-			|| NODE_ARGS['currentphase'] == OPEN_VOTEPENDING_PHASE
-			|| NODE_ARGS['currentphase'] == TIMED_PHASE
-			|| NODE_ARGS['currentphase'] == TIMED_VOTEON_PHASE
-			|| NODE_ARGS['currentphase'] == TIMED_VOTEPENDING_PHASE
-			|| NODE_ARGS['currentphase'] == DISCUSS_PHASE
-			|| NODE_ARGS['currentphase'] == REDUCE_PHASE
-		) {
-		var votebarDiv = new Element('div',{'name':'votebardiv','id':'votebardiv'+uniQ,'class':'votebar', 'style':'display:block'});
-		votebarDiv.positivevotes = parseInt(connection.positivevotes);
-		votebarDiv.negativevotes = parseInt(connection.negativevotes);
-		votebarDiv.conpositivevotes = 0;
-		votebarDiv.connegativevotes = 0;
-		votebarDiv.propositivevotes = 0;
-		votebarDiv.pronegativevotes = 0;
-		votebarDiv.procount = 0;
-		votebarDiv.concount = 0;
-		textDiv.insert(votebarDiv);
-		drawVotesBar(votebarDiv, uniQ, node.parentid);
-	}
-
 	// LEMONING
 	if (USER != "" && NODE_ARGS['currentphase'] == REDUCE_PHASE) {
-		var lemonigDiv = new Element('div', {'name':'lemondiv','id':'lemondiv'+node.nodeid,'style':'float:right;padding:0px;margin:0px;'});
+		var lemonigDiv = new Element('div', { 'style':'float:right;width:100px;', 'name':'lemondiv','id':'lemondiv'+node.nodeid});
 		if (node.userlemonvote > 0) {
 			lemonigDiv.style.display = 'block';
 		} else {
@@ -1764,7 +1675,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		lemonigDiv.insert(minuslemon);
 
-		var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>', 'border':'0', 'class':'lemonimg' });
+		var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimg' });
 		lemonimg.setAttribute('draggable', 'true');
 		Event.observe(lemonimg,"dragstart", function(e){
 			e.dataTransfer.setData("text", node.nodeid);
@@ -1802,8 +1713,32 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		textDiv.insert(lemonigDiv);
 	}
 
+	//if (status != 2 &&
+	if (NODE_ARGS['currentphase'] == DISCUSS_PHASE
+			|| NODE_ARGS['currentphase'] == OPEN_PHASE
+			|| NODE_ARGS['currentphase'] == OPEN_VOTEON_PHASE
+			|| NODE_ARGS['currentphase'] == OPEN_VOTEPENDING_PHASE
+			|| NODE_ARGS['currentphase'] == TIMED_PHASE
+			|| NODE_ARGS['currentphase'] == TIMED_VOTEON_PHASE
+			|| NODE_ARGS['currentphase'] == TIMED_VOTEPENDING_PHASE
+			|| NODE_ARGS['currentphase'] == DISCUSS_PHASE
+			|| NODE_ARGS['currentphase'] == REDUCE_PHASE
+		) {
+		var votebarDiv = new Element('div',{'name':'votebardiv','id':'votebardiv'+uniQ,'class':'votebar'});
+		votebarDiv.positivevotes = parseInt(connection.positivevotes);
+		votebarDiv.negativevotes = parseInt(connection.negativevotes);
+		votebarDiv.conpositivevotes = 0;
+		votebarDiv.connegativevotes = 0;
+		votebarDiv.propositivevotes = 0;
+		votebarDiv.pronegativevotes = 0;
+		votebarDiv.procount = 0;
+		votebarDiv.concount = 0;
+		textDiv.insert(votebarDiv);
+		drawVotesBar(votebarDiv, uniQ, node.parentid);
+	}
+
 	if(node.description || node.hasdesc){
-		var dStr = '<div style="float:left;clear:both;margin:0px;padding:0px;margin-top:5px;font-size:10pt" class="idea-desc" id="desc'+uniQ+'div">';
+		var dStr = '<div class="idea-desc" id="desc'+uniQ+'div">';
 		if (node.description && node.description != "") {
 			dStr += node.description;
 		}
@@ -1814,8 +1749,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	var argumentLink = new Element("span", {
 		'name':'ideaargumentlink',
 		'id':'ideaargumentlink'+uniQ,
-		'class':'active',
-		'style':'clear:both;float:left;display:block;font-size:10pt;margin-top:7px;font-weight:bold;',
+		'class':'active ideaargumentlink',
 		'title':'<?php echo $LNG->IDEA_ARGUMENTS_HINT; ?>',
 	});
 	argumentLink.nodeid = node.nodeid;
@@ -1845,11 +1779,10 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	textDiv.insert(argumentLink);
 
-	var commentLink = new Element("div", {
+	var commentLink = new Element("span", {
 		'name':'ideacommentlink',
 		'id':'ideacommentlink'+uniQ,
-		'class':'active',
-		'style':'float:left;display:block;font-size:10pt;margin-top:7px;font-weight:bold;margin-left:30px;',
+		'class':'active ideacommentlink',
 		'title':'<?php echo $LNG->IDEA_COMMENTS_HINT; ?>',
 	});
 	commentLink.nodeid = node.nodeid;
@@ -1887,13 +1820,14 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	/** ADD THE EDIT FORM FOR THE IDEA **/
 	if (USER == user.userid && type == 'active' && NODE_ARGS['issueDiscussing']) {
 		var editDiv = new Element("fieldset", {
+			'class':'editformdividea',
 			'name':'editformdividea',
 			'id':'editformdividea'+uniQ,
-			'style':'clear:both;float:left;display:none;'
+			'style':'display:none;'
 		});
 
 		var legend = new Element("legend", {});
-		var legendtitle = new Element("h2", {'style':'margin-bottom:0px;',});
+		var legendtitle = new Element("h2", {'class':'editing-header',});
 		legendtitle.insert('<?php echo $LNG->EXPLORE_EDITING_ARGUMENT_TITLE; ?>');
 		legend.insert(legendtitle);
 		editDiv.insert(legend);
@@ -1914,36 +1848,37 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		editDiv.insert(editnodetypeid);
 
 		var rowDiv1 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		editDiv.insert(rowDiv1);
 		var editideaname = new Element("input", {
-			'class':'forminput hgrwide',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 			'id':'editideaname'+uniQ,
 			'name':'editideaname',
 			'value':node.name,
+			'aria-label':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 		});
 		rowDiv1.insert(editideaname);
 
 		var rowDiv2 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		editDiv.insert(rowDiv2);
 		var editideadesc = new Element("textarea", {
 			'rows':'3',
-			'class':'forminput hgrwide',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
 			'id':'editideadesc'+uniQ,
 			'name':'editideadesc',
+			'aria-label':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
 		});
 		editideadesc.insert(node.description);
 		rowDiv2.insert(editideadesc);
 
 		var rowDiv4 = new Element("div", {
-			'class':'formrowsm',
+			'class':'mb-2',
 			'id':'linksdivedit'+uniQ,
-			'style':'margin-bottom:0px;padding-bottom:0px;'
 		});
 		rowDiv4.linkcount = 0;
 		editDiv.insert(rowDiv4);
@@ -1956,12 +1891,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 					var urlid = next.urlid;
 					var url = next.url;
 					var weblink = new Element("input", {
-						'class':'forminput hgrwide',
+						'class':'form-control',
 						'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 						'id':'argumentlinkedit'+uniQ+i,
 						'name':'argumentlinkedit'+uniQ+'[]',
 						'value':url,
-						'style':'height:16px;margin-bottom:3px;'
+						'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 					});
 					weblink.urlid = urlid;
 					rowDiv4.insert(weblink);
@@ -1970,21 +1905,21 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		} else {
 			rowDiv4.linkcount = 0;
 			var weblink = new Element("input", {
-				'class':'forminput hgrwide',
+				'class':'form-control',
 				'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 				'id':'argumentlinkedit'+uniQ+0,
 				'name':'argumentlinkedit'+uniQ+'[]',
 				'value':'',
-				'style':'height:16px;margin-bottom:3px;'
+				'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			});
 			rowDiv4.insert(weblink);
 		}
 
-		var rowDiv5 = new Element("div", {'style':'margin:0px;padding:0px;'});
+		var rowDiv5 = new Element("div", {'class':'my-3'});
 		editDiv.insert(rowDiv5);
-		var addURL = new Element("span", {
-			'class':'forminput hgrwide active',
-			'style':'margin-top:0px;padding-top:0px;font-size:8pt'
+		var addURL = new Element("a", {
+			'href':'javascript:void(0)',
+			'class':'hgrinput',
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
 		Event.observe(addURL,'click',function (){
@@ -1997,7 +1932,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		editDiv.insert(rowDiv3);
 		var editideasave = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-primary',
 			'id':'editidea',
 			'name':'editidea',
 			'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>',
@@ -2009,11 +1944,10 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		rowDiv3.insert(editideasave);
 		var editideacancel = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-secondary ms-2',
 			'id':'cancelidea',
 			'name':'editidea',
 			'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>',
-			'style':'margin-right:10px;',
 		});
 		Event.observe(editideacancel,'click',function (){
 			cancelEditAction(uniQ, 'idea');
@@ -2031,15 +1965,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		'nodeid':node.nodeid,
 		'id':'comments'+uniQ,
 		'class':'ideadata',
-		'style':'clear:both;float:left;padding:0px;margin:0px;width:100%;display:none;'
+		'style':'display:none;'
 	});
 	itDiv.insert(expandDiv);
 
-	var kidscommentTable = new Element('table', {'style':'clear:both;margin-top:0px;width:100%'});
-	kidscommentTable.width="100%";
-	kidscommentTable.style.paddingLeft = '20px';
+	var kidscommentTable = new Element('table', {'style':'width:100%'});
 	expandDiv.insert(kidscommentTable);
-	//kidscommentTable.border = "1";
 	var rowcomment = kidscommentTable.insertRow(-1);
 	var commentCell = rowcomment.insertCell(-1);
 
@@ -2057,7 +1988,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	var commentKidsDiv = new Element('div', {
 		'id':'commentslist'+uniQ,
-		'style':'width:100%;clear:both;float:left;padding-top:5px;margin-top:5px;',
+		'style':'width:100%;',
 	});
 	commentKidsDiv.style.borderTop = "1px solid #D8D8D8";
 	commentCell.insert(commentKidsDiv);
@@ -2068,43 +1999,44 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		var addCommentDiv = new Element("div", {
 			'name':'addformdivcomment',
 			'id':'addformdivcomment'+uniQ,
-			'style':'clear:both;float:left;display:block;'
 		});
 
 		var rowDiv1 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.insert(rowDiv1);
 
 		var addcommentname = new Element("input", {
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 			'id':'addcommentname'+uniQ,
 			'name':'addcommentname',
 			'value':'',
+			'aria-label':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 		});
 		rowDiv1.insert(addcommentname);
 
 		var rowDiv2 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.insert(rowDiv2);
 		var addcommentdesc = new Element("textarea", {
 			'rows':'3',
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
 			'id':'addcommentdesc'+uniQ,
 			'name':'addcommentdesc',
+			'aria-label':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
 		});
 		rowDiv2.insert(addcommentdesc);
 
 		var rowDiv3 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.insert(rowDiv3);
 		var addcommentsave = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-primary',
 			'id':'addcomment',
 			'name':'addcomment',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
@@ -2124,31 +2056,21 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		'id':'ideaforagainstdiv'+uniQ,
 		'nodeid':node.nodeid,
 		'id':'arguments'+uniQ,
-		'class':'ideaforagainsttable',
+		'class':'ideaforagainsttable table',
 		'style':'display:none;'
 	});
-	kidsTable.width="100%";
-	kidsTable.style.paddingLeft = '3px';
 	itDiv.insert(kidsTable);
-	//kidsTable.border = "1";
 
 	var row = kidsTable.insertRow(-1);
 	row.width="100%";
 
 	var forCell = row.insertCell(-1);
-	forCell.vAlign="top";
-	forCell.align="left";
-	forCell.valign="top";
-	forCell.style.paddingRight = "10px";
-	forCell.style.width = '360px';
-	forCell.style.minWidth = '360px';
-	forCell.width = "360px";
+	forCell.vAlign = "top";
+	forCell.align = "left";
+	forCell.className = "for-against";
 
 	var forHeading = new Element('h3');
-	forHeading.style.marginBottom = "2px";
-	forHeading.style.marginTop = "5px";
-	forHeading.style.color = "green";
-	forHeading.style.fontWeight = "normal";
+	forHeading.classList.add("forHeading");
 	forHeading.insert('<?php echo $LNG->NODE_CHILDREN_EVIDENCE_PRO; ?> (');
 	var forCount = new Element('span', {'id':'count-support'+uniQ});
 	forCount.insert('0');
@@ -2156,9 +2078,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	forHeading.insert(')');
 	forCell.insert(forHeading);
 
-	var forKidsDiv = new Element('div', {'id':'supportkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
-	forKidsDiv.style.paddingTop = "5px";
-	forKidsDiv.style.borderTop = "1px solid #D8D8D8";
+	var forKidsDiv = new Element('div', {'id':'supportkidsdiv'+uniQ});
 	forCell.insert(forKidsDiv);
 
 	<?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']){ ?>
@@ -2166,16 +2086,16 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		var addProDiv = new Element("div", {
 			'name':'addformdivpro',
 			'id':'addformdivpro'+uniQ,
-			'style':'clear:both;float:left;display:block;'
 		});
 
 		var rowDiv1 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mt-2 mb-2',
 		});
 		addProDiv.insert(rowDiv1);
 
 		var addproname = new Element("input", {
-			'class':'hgrinput',
+			'aria-label':'<?php echo $LNG->FORM_PRO_LABEL_TITLE; ?>',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_PRO_LABEL_TITLE; ?>',
 			'id':'addproname'+uniQ,
 			'name':'addproname',
@@ -2184,12 +2104,13 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		rowDiv1.insert(addproname);
 
 		var rowDiv2 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		addProDiv.insert(rowDiv2);
 		var addprodesc = new Element("textarea", {
+			'aria-label':'<?php echo $LNG->FORM_PRO_LABEL_DESC; ?>',
 			'rows':'3',
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_PRO_LABEL_DESC; ?>',
 			'id':'addprodesc'+uniQ,
 			'name':'addprodesc',
@@ -2199,27 +2120,27 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		var rowDiv3 = new Element("div", {
 			'class':'formrowsm',
 			'id':'linksdivpro'+uniQ,
-			'style':'margin-bottom:0px;padding-bottom:0px;'
 		});
 		rowDiv3.linkcount = 0;
 		addProDiv.insert(rowDiv3);
 
 		var weblink = new Element("input", {
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			'id':'argumentlinkpro'+uniQ+0,
 			'name':'argumentlinkpro'+uniQ+'[]',
 			'value':'',
-			'style':'margin-bottom:2px;'
+			'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 		});
 		rowDiv3.insert(weblink);
 
-		var rowDiv4 = new Element("div", {'style':'margin:0px;padding:0px;'});
+		var rowDiv4 = new Element("div", {
+			'class':'my-3',
+		});
 		addProDiv.insert(rowDiv4);
 		var addURL = new Element("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
-			'style':'margin-top:0px;padding-top:0px;font-size:8pt'
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
 		Event.observe(addURL,'click',function (){
@@ -2233,7 +2154,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		addProDiv.insert(rowDiv5);
 		var addprosave = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-primary',
 			'id':'addprosave',
 			'name':'addprosave',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
@@ -2248,29 +2169,19 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php } ?>
 
 	var conCell = row.insertCell(-1);
-	conCell.vAlign="top";
-	conCell.align="left";
-	conCell.valign="top";
-	conCell.style.paddingLeft = "10px";
-	conCell.style.width = '360px';
-	conCell.style.minWidth = '360px';
-	conCell.width = "360px";
+	conCell.vAlign = "top";
+	conCell.align = "left";
+	conCell.className = "for-against";
 
-	var conHeading = new Element('h3');
-	conHeading.style.marginBottom = "2px";
-	conHeading.style.marginTop = "5px";
-	conHeading.style.color = "red";
-	conHeading.style.fontWeight = "normal";
+	var conHeading = new Element('h3', {'class':'conHeading'});
 	conHeading.insert('<?php echo $LNG->NODE_CHILDREN_EVIDENCE_CON; ?> (');
-	var conCount = new Element('span', {'id':'count-counter'+uniQ});
+	var conCount = new Element('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
 	conCount.insert('0');
 	conHeading.insert(conCount);
 	conHeading.insert(')');
 	conCell.insert(conHeading);
 
-	var conKidsDiv = new Element('div', {'id':'counterkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
-	conKidsDiv.style.paddingTop = "5px";
-	conKidsDiv.style.borderTop = "1px solid #D8D8D8";
+	var conKidsDiv = new Element('div', {'id':'counterkidsdiv'+uniQ });
 	conCell.insert(conKidsDiv);
 
 	<?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']){ ?>
@@ -2278,16 +2189,16 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		var addConDiv = new Element("div", {
 			'name':'addformdivcon',
 			'id':'addformdivcon'+uniQ,
-			'style':'clear:both;float:left;display:block;'
 		});
 
 		var rowDiv1 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mt-2 mb-2',
 		});
 		addConDiv.insert(rowDiv1);
 
 		var addconname = new Element("input", {
-			'class':'hgrinput',
+			'aria-label':'<?php echo $LNG->FORM_CON_LABEL_TITLE; ?>',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_CON_LABEL_TITLE; ?>',
 			'id':'addconname'+uniQ,
 			'name':'addconname',
@@ -2296,12 +2207,13 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		rowDiv1.insert(addconname);
 
 		var rowDiv2 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-2',
 		});
 		addConDiv.insert(rowDiv2);
 		var addcondesc = new Element("textarea", {
+			'aria-label':'<?php echo $LNG->FORM_CON_LABEL_DESC; ?>',
 			'rows':'3',
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_CON_LABEL_DESC; ?>',
 			'id':'addcondesc'+uniQ,
 			'name':'addcondesc',
@@ -2311,27 +2223,27 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		var rowDiv3 = new Element("div", {
 			'class':'formrowsm',
 			'id':'linksdivcon'+uniQ,
-			'style':'margin-bottom:0px;padding-bottom:0px;'
 		});
 		rowDiv3.linkcount = 0;
 		addConDiv.insert(rowDiv3);
 
 		var weblink = new Element("input", {
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			'id':'argumentlinkcon'+uniQ+0,
 			'name':'argumentlinkcon'+uniQ+'[]',
 			'value':'',
-			'style':'margin-bottom:2px;'
+			'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 		});
 		rowDiv3.insert(weblink);
 
-		var rowDiv4 = new Element("div", {'style':'margin:0px;padding:0px;'});
+		var rowDiv4 = new Element("div", {
+			'class':'my-3',
+		});
 		addConDiv.insert(rowDiv4);
 		var addURL = new Element("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
-			'style':'margin-top:0px;padding-top:0px;font-size:8pt'
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
 		Event.observe(addURL,'click',function (){
@@ -2345,7 +2257,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		addConDiv.insert(rowDiv5);
 		var addconsave = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-primary',
 			'id':'addconsave',
 			'name':'addconsave',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
@@ -2420,7 +2332,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		}
 	}
 
-	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker', 'style':'width:100%;padding:0px;'});
+	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker'});
 
 	var nodeTable = new Element('table', {'style':'width:100%;margin:3px;'});
 	nodeTable.className = "toConnectionsTable";
@@ -2446,7 +2358,6 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 
 	if (includeUser == true) {
 		var userCell = row.insertCell(-1);
-		userCell.setAttribute('style','width:40px;');
 		userCell.setAttribute('style','max-width:40px;');
 		userCell.vAlign="top";
 		userCell.align="left";
@@ -2461,10 +2372,9 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		var iuDiv = new Element("div", {
 			'id':'editformuserdividea'+uniQ,
 			'class':'idea-user2',
-			'style':'float:left;'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;padding-top:5px;', 'border':'0','src': nodeuser.thumb});
+		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;padding-top:5px;', 'src': nodeuser.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
@@ -2509,7 +2419,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 
 	// LEMONING
 	var lemonigDiv = new Element('div', {'name':'lemondiv','id':'lemondiv'+node.nodeid,'style':'float:right;padding:0px;margin:0px;'});
-	var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>', 'border':'0', 'class':'lemonimgoff' });
+	var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimgoff' });
 	lemonigDiv.insert(lemonimg);
 	var lemoncountnum = new Element('span',{'class':'lemoncount'});
 	lemoncountnum.insert(node.lemonvotes);
@@ -2582,7 +2492,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		'nodeid':node.nodeid,
 		'id':'comments'+uniQ,
 		'class':'ideadata',
-		'style':'clear:both;float:left;padding:0px;margin:0px;width:100%;display:none;'
+		'style':'display:none;'
 	});
 	itDiv.insert(expandDiv);
 
@@ -2668,10 +2578,9 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	var conHeading = new Element('h3');
 	conHeading.style.marginBottom = "2px";
 	conHeading.style.marginTop = "5px";
-	conHeading.style.color = "red";
 	conHeading.style.fontWeight = "normal";
 	conHeading.insert('<?php echo $LNG->NODE_CHILDREN_EVIDENCE_CON; ?> (');
-	var conCount = new Element('span', {'id':'count-counter'+uniQ});
+	var conCount = new Element('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
 	conCount.insert('0');
 	conHeading.insert(conCount);
 	conHeading.insert(')');
@@ -2754,6 +2663,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	var row = nodeTable.insertRow(-1);
 	row.setAttribute('name','argumentrowitem');
+	row.setAttribute('class','argumentrowitem');
 	row.setAttribute('id','argumentrowitem'+uniQ);
 	row.setAttribute('uniQ',uniQ);
 	row.setAttribute('nodeid',node.nodeid);
@@ -2774,7 +2684,6 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	var textDiv = new Element("div", {
 		'id':'textdivargument'+uniQ,
-		'style':'clear:both;float:left;width:100%;display:block;'
 	});
 	textCell.insert(textDiv);
 
@@ -2788,7 +2697,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	if (USER == nodeuser.userid && type == "active" && NODE_ARGS['issueDiscussing']) {
 		var editbutton = new Element("img", {
-			'border':'0',
+			
 			'class':'imagebuttonfaded',
 			'style':'padding-left:10px',
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
@@ -2805,7 +2714,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		});
 
 		var deletename = node.name;
-		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
 		Event.observe(del,'click',function (){
 			var callback = function () {
 				if (role.name == "Con") {
@@ -2824,7 +2733,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	}
 
 	if (node.urls && node.urls.length > 0) {
-		var menuButton = new Element('img',{'alt':'>', 'style':'padding-left:10px;width:16px;height:16px;','width':'16','height':'16','border':'0','src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'});
+		var menuButton = new Element('img',{'alt':'>', 'style':'padding-left:10px;width:16px;height:16px;','width':'16','height':'16','src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'});
 		textDiv.appendChild(menuButton);
 		Event.observe(menuButton,'mouseout',function (event){
 			hideBox('toolbardiv'+uniQ);
@@ -2885,19 +2794,16 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	if (type == 'active') {
 		var voteCell = row.insertCell(-1);
 		voteCell.setAttribute('name','argumentvotediv');
+		voteCell.setAttribute('class','argumentvotediv');
 		voteCell.setAttribute('id','argumentvotediv'+uniQ);
-		voteCell.setAttribute('style','display:none;width:40px');
+		voteCell.setAttribute('style','display:none;');
 		if (NODE_ARGS['issueVoting'] && NODE_ARGS['currentphase'] != DECIDE_PHASE) {
 			voteCell.style.display = "table-cell";
 		}
 
-		voteCell.setAttribute('width','40');
-		voteCell.setAttribute('align','left');
-		voteCell.setAttribute('vAlign','top');
-
 		var voteDiv = new Element("div", {
 			'id':'editformvotedivargument'+uniQ,
-			'style':'clear:both;float:left;display:block'
+			'class':'editformvotedivargument',
 		});
 		//voteDiv.insert('<span style="margin-right:5px;"><?php echo $LNG->NODE_VOTE_MENU_TEXT; ?></span>');
 		voteCell.insert(voteDiv);
@@ -2912,13 +2818,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		voteforimg.nodeid = node.nodeid;
 		voteforimg.connid = connection.connid;
 		voteforimg.vote='Y';
-		voteforimg.style.verticalAlign="bottom";
-		voteforimg.style.marginRight="3px";
 		voteDiv.insert(voteforimg);
 		if (!connection.positivevotes) {
 			connection.positivevotes = 0;
 		}
-		voteDiv.insert('<b><span style="font-size: 10pt; margin-right: 5px;" id="'+connection.connid+'votefor">'+connection.positivevotes+'</span></b>');
+		voteDiv.insert('<span class="vote-count" id="'+connection.connid+'votefor">'+connection.positivevotes+'</span>');
 
 		if (NODE_ARGS['issueVoting']) {
 			if(USER != ""){
@@ -2997,14 +2901,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		voteagainstimg.nodeid = node.nodeid;
 		voteagainstimg.connid = connection.connid;
 		voteagainstimg.vote='N';
-		voteagainstimg.style.verticalAlign="bottom";
-		voteagainstimg.style.marginTop="5px";
-		voteagainstimg.style.marginRight="3px";
 		voteDiv.insert(voteagainstimg);
 		if (!connection.negativevotes) {
 			connection.negativevotes = 0;
 		}
-		voteDiv.insert('<b><span style="font-size: 10pt; margin-right: 10px;" id="'+connection.connid+'voteagainst">'+connection.negativevotes+'</span></b>');
+		voteDiv.insert('<span class="vote-count" id="'+connection.connid+'voteagainst">'+connection.negativevotes+'</span>');
 
 		if (NODE_ARGS['issueVoting']) {
 			if(USER != ""){
@@ -3064,9 +2965,6 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	if (includeUser == true) {
 		var userCell = row.insertCell(-1);
-		userCell.vAlign="top";
-		userCell.align="left";
-		userCell.width="40px;";
 
 		if (connection) {
 			var cDate = new Date(connection.creationdate*1000);
@@ -3079,10 +2977,9 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		var iuDiv = new Element("div", {
 			'id':'editformuserdivargument'+uniQ,
 			'class':'idea-user2',
-			'style':'float:left;display:block'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;', 'border':'0','src': nodeuser.thumb});
+		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
@@ -3101,17 +2998,18 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	var row2 = nodeTable.insertRow(-1);
 	var editCell = row2.insertCell(-1);
-	editCell.colSpan = "3";
+	editCell.className = "edit-column";
 
 	/** ADD THE EDIT FORM FOR THE ARGUMENT **/
 	if (USER == user.userid && type == 'active') {
 		var editouterDiv = new Element("fieldset", {
 			'id':'editformdivargument'+uniQ,
-			'style':'clear:both;float:left;width:355px;display:none;padding:0px;border:none;border-bottom:1px solid #D8D8D8'
+			'class':'editformdivargument',
+			'style':'display:none;'
 		});
 
-		var legend = new Element("legend", {});
-		var legendtitle = new Element("h2", {'style':'margin-bottom:0px;',});
+		var legend = new Element("legend", { 'class':'edit-argument'});
+		var legendtitle = new Element("h2");
 		legendtitle.insert('<?php echo $LNG->EXPLORE_EDITING_ARGUMENT_TITLE; ?>');
 		legend.insert(legendtitle);
 		editouterDiv.insert(legend);
@@ -3119,21 +3017,9 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		editCell.insert(editouterDiv);
 
 		var editDiv = new Element("div", {
-			'style':'clear:both;float:left;margin:0px;margin-top:4px;margin-bottom:5px;'
+			'class':'edit-argument-form'
 		});
 		editouterDiv.insert(editDiv);
-
-		/*
-		var editForm = new Element("form", {
-			'name':'editformargument'+uniQ,
-			'id':'editformargument'+uniQ,
-			'action':'',
-			'method':'post',
-			'enctype':'multipart/form-data',
-			'onsubmit': "return checkArgumentEditForm('argument','"+uniQ+"','"+role.name+"');",
-		});
-		editDiv.insert(editForm);
-		*/
 
 		var editargumentid = new Element("input", {
 			'name':'editargumentid',
@@ -3151,37 +3037,37 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		editDiv.insert(editargumentroleid);
 
 		var rowDiv1 = new Element("div", {
-			'class':'formrowsm',
-			'style':'padding-top:0px;',
+			'class':'my-2',
 		});
 		editDiv.insert(rowDiv1);
 		var editargumentname = new Element("input", {
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 			'id':'editargumentname'+uniQ,
 			'name':'editargumentname',
 			'value':node.name,
+			'aria-label':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 		});
 		rowDiv1.insert(editargumentname);
 
 		var rowDiv2 = new Element("div", {
-			'class':'formrowsm',
+			'class':'my-2',
 		});
 		editDiv.insert(rowDiv2);
 		var editargumentdesc = new Element("textarea", {
 			'rows':'3',
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
 			'id':'editargumentdesc'+uniQ,
 			'name':'editargumentdesc',
+			'aria-label':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
 		});
 		editargumentdesc.insert(node.description);
 		rowDiv2.insert(editargumentdesc);
 
 		var rowDiv = new Element("div", {
-			'class':'formrowsm',
+			'class':'my-2',
 			'id':'linksdivedit'+uniQ,
-			'style':'margin-bottom:0px;padding-bottom:0px;'
 		});
 		rowDiv.linkcount = 0;
 		editDiv.insert(rowDiv);
@@ -3197,12 +3083,13 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 					editDiv.insert(rowDiv);
 
 					var weblink = new Element("input", {
-						'class':'hgrinput',
+						'class':'form-control',
 						'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 						'id':'argumentlinkedit'+uniQ+i,
 						'name':'argumentlinkedit'+uniQ+'[]',
 						'value':url,
-						'style':'margin-bottom:3px;'
+						'style':'margin-bottom:3px;',
+						'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 					});
 					weblink.urlid = urlid;
 					rowDiv.insert(weblink);
@@ -3211,22 +3098,22 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		} else {
 			rowDiv.linkcount = 0;
 			var weblink = new Element("input", {
-				'class':'hgrinput',
+				'class':'form-control',
 				'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 				'id':'argumentlinkedit'+uniQ+0,
 				'name':'argumentlinkedit'+uniQ+'[]',
 				'value':'',
-				'style':'margin-bottom:2px;'
+				'style':'margin-bottom:2px;',
+				'aria-label':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			});
 			rowDiv.insert(weblink);
 		}
 
-		var rowDiv5 = new Element("div", {'style':'margin:0px;padding:0px;'});
+		var rowDiv5 = new Element("div", {'class':'my-3'});
 		editDiv.insert(rowDiv5);
 		var addURL = new Element("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
-			'style':'margin-top:0px;padding-top:0px;font-size:8pt'
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
 		Event.observe(addURL,'click',function (){
@@ -3235,12 +3122,12 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		rowDiv5.insert(addURL);
 
 		var rowDiv6 = new Element("div", {
-			'class':'formrowsm',
+			'class':'formrowsm mb-3',
 		});
 		editDiv.insert(rowDiv6);
 		var editargumentsave = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-primary me-3',
 			'id':'editargument',
 			'name':'editargument',
 			'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>',
@@ -3256,11 +3143,10 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		rowDiv6.insert(editargumentsave);
 		var editargumentcancel = new Element("input", {
 			'type':'button',
-			'class':'submitright',
+			'class':'btn btn-secondary',
 			'id':'cancelargument',
 			'name':'editargument',
 			'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>',
-			'style':'margin-right:10px;',
 		});
 		Event.observe(editargumentcancel,'click',function (){
 			var innertype = "pro";
@@ -3358,7 +3244,6 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 
 	var textDiv = new Element("div", {
 		'id':'textdivcomment'+uniQ,
-		'style':'clear:both;float:left;width:100%;display:block;'
 	});
 	textCell.insert(textDiv);
 
@@ -3373,7 +3258,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 
 	if (USER == nodeuser.userid && type == "active") {
 		var editbutton = new Element("img", {
-			'border':'0',
+			
 			'class':'imagebuttonfaded',
 			'style':'padding-left:10px',
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
@@ -3385,7 +3270,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		});
 
 		var deletename = node.name;
-		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;margin-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;margin-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
 		Event.observe(del,'click',function (){
 			var callback = function () {
 				$('commentslist'+node.parentuniq).loaded = 'false';
@@ -3426,7 +3311,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 			'style':'float:left;display:block'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;', 'border':'0','src': nodeuser.thumb});
+		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
@@ -3493,11 +3378,12 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		});
 		editDiv.insert(rowDiv1);
 		var editideaname = new Element("input", {
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 			'id':'editcommentname'+uniQ,
 			'name':'editcommentname',
 			'value':node.name,
+			'aria-label':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 		});
 		rowDiv1.insert(editideaname);
 
@@ -3507,10 +3393,11 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		editDiv.insert(rowDiv2);
 		var editideadesc = new Element("textarea", {
 			'rows':'3',
-			'class':'hgrinput',
+			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
 			'id':'editcommentdesc'+uniQ,
 			'name':'editcommentdesc',
+			'aria-label':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
 		});
 		editideadesc.insert(node.description);
 		rowDiv2.insert(editideadesc);
@@ -3584,17 +3471,13 @@ function renderListNode(node, uniQ, role, includeUser){
 
 	uniQ = node.nodeid + uniQ;
 
-	var nodeTable = new Element('table', {'style':'width:100%'});
+	var nodeTable = new Element('table', {'class':'ideas-table'});
 	nodeTable.className = "toConnectionsTable";
-	nodeTable.width="100%";
 
 	var row = nodeTable.insertRow(-1);
 
 	if (includeUser) {
 		var userCell = row.insertCell(-1);
-		userCell.vAlign="top";
-		userCell.align="left";
-		userCell.width="40px;";
 
 		var cDate = new Date(node.creationdate*1000);
 		var dStr = "<?php echo $LNG->NODE_ADDED_BY; ?> "+user.name+ " on "+cDate.format(DATE_FORMAT)
@@ -3604,10 +3487,10 @@ function renderListNode(node, uniQ, role, includeUser){
 		var iuDiv = new Element("div", {
 			'id':'editformuserdivcomment'+uniQ,
 			'class':'idea-user2',
-			'style':'float:left;display:block'
+			'style':'display:block'
 		});
 
-		var userimageThumb = new Element('img',{'alt':user.name, 'style':'padding-left:5px;', 'border':'0','src': user.thumb});
+		var userimageThumb = new Element('img',{'alt':user.name, 'src': user.thumb});
 		if (type == "active") {
 			var imagelink = new Element('a', {
 				'href':URL_ROOT+"user.php?userid="+user.userid
@@ -3625,26 +3508,24 @@ function renderListNode(node, uniQ, role, includeUser){
 	}
 
 	var textCell = row.insertCell(-1);
-	textCell.vAlign="top";
-	textCell.align="left";
 
 	var textDiv = new Element("div", {
 		'id':'textdivcomment'+uniQ,
-		'style':'clear:both;float:left;width:100%;display:block;'
+		'class':'textdivcomment',
 	});
 	textCell.insert(textDiv);
 
 	var title = node.name;
 
 	var textspan = new Element("a", {
-		'style':'font-weight:normal;font-size:12pt;line-height:1em'
+		'class':'textdivcomment-title'
 	});
 	textspan.insert(title);
 	textspan.href = '<?php echo $CFG->homeAddress; ?>explore.php?id='+node.nodeid;
 	textDiv.insert(textspan);
 
 	if(node.description || node.hasdesc){
-		var dStr = '<div style="clear:both;margin:0px;padding:0px;margin-top:3px;font-size:10pt;" class="idea-desc" id="desc'+uniQ+'div"><span style="margin-top: 5px;">';
+		var dStr = '<div class="idea-desc" id="desc'+uniQ+'div"><span>';
 		if (node.description && node.description != "") {
 			dStr += node.description;
 		}
@@ -3707,12 +3588,12 @@ function renderReportNode(node, uniQ, role){
 			var iconlink = new Element('a', {
 				'href':originalurl,
 				'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
-			var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+			var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + node.imagethumbnail});
 			iconlink.insert(nodeicon);
 			itDiv.insert(iconlink);
 			itDiv.insert(alttext+": ");
 		} else if (role.image != null && role.image != "") {
-			var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'border':'0','src': URL_ROOT + role.image});
+			var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + role.image});
 			itDiv.insert(nodeicon);
 		} else {
 			itDiv.insert(alttext+": ");
@@ -4734,7 +4615,7 @@ function reportNodeSpamAlert(obj, nodetype, node) {
 					obj.innerHTML = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';
 				}
 				obj.className = "";
-				fadeMessage(name+"<br><br><?php echo $LNG->SPAM_SUCCESS_MESSAGE; ?>");
+				fadeMessage(name+"<br /><br /><?php echo $LNG->SPAM_SUCCESS_MESSAGE; ?>");
 			}
 		});
 	}
@@ -4837,30 +4718,34 @@ function drawVotesBar(container, uniQ, focalnodeid) {
 	if (total == 0) {
 		container.update("");
 	} else {
-		var positivePercent = (100/total)*positivetotal;
-		var negativePercent = (100/total)*negativetotal;
+		const positivePercent = (100/total)*positivetotal;
+		const negativePercent = (100/total)*negativetotal;
 
-		var	positiveHint = 0;
-		var	negativeHint = 0;
+		let positiveWidth = 0;
+		let negativeWidth = 0;
+		let	positiveHint = 0;
+		let	negativeHint = 0;
 
 		// If the percentages end a .5 round both overcounts the number
 		// So check and then always round up the larger percentage and round down the smaller.
 		if (positivePercent % 1 != 0.5) {
 			positiveHint = Math.round(positivePercent);
 			negativeHint = Math.round(negativePercent);
+			positiveWidth = Math.round(positivePercent);
+			negativeWidth = Math.round(negativePercent);
 		} else {
 			if (positivePercent > negativePercent) {
 				positiveHint = Math.round(positivePercent);
 				negativeHint = Math.floor(negativePercent);
+				positiveWidth = Math.round(positivePercent);
+				negativeWidth = Math.floor(negativePercent);
 			} else {
 				positiveHint = Math.floor(positivePercent);
 				negativeHint = Math.round(negativePercent);
+				positiveWidth = Math.floor(positivePercent);
+				negativeWidth = Math.round(negativePercent);
 			}
 		}
-
-		//Do not want percentages to accidentally be over 100%
-		var positiveWidth = Math.floor(positivePercent);
-		var negativeWidth = Math.floor(negativePercent);
 
 		var votebar = new Element("div", {'class':'progress'} );
 
@@ -4874,8 +4759,8 @@ function drawVotesBar(container, uniQ, focalnodeid) {
 			remainder.insert(negativeHint+"%");
 		} else {
 			// otherwise it wraps.
-			var positiveWidth = positiveWidth-2;
-			var negativeWidth = negativeWidth-2;
+			positiveWidth = positiveWidth-2;
+			negativeWidth = negativeWidth-2;
 
 			var bar = new Element("div", {'class':'bar', 'title':positiveHint+'%  <?php echo $LNG->STATS_PRO_HINT_TEXT;?>', 'style':'width:'+positiveWidth+'%'} );
 			var remainder = new Element("div", {'class':'remainder','title':negativeHint+'%  <?php echo $LNG->STATS_CON_HINT_TEXT;?>', 'style':'width:'+negativeWidth+'%'} );
@@ -4940,7 +4825,9 @@ function countDownIssueTimer(dt, container, message, withSeconds) {
 		var distance = end.getTime() - now.getTime();
 		if (distance < 0) {
 			clearInterval(timer);
-			$('div-'+containerid).style.className = "remainderall";
+			if (containerid) {
+				$('div-'+containerid).style.className = "remainderall";
+			}
 			container.update = '<?php echo $LNG->NODE_COUNTDOWN_CLOSED; ?>';
 			return;
 		}

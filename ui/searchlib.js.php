@@ -33,7 +33,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
  *	Add the filter and sort controls for the page.
  */
 function addControls(container) {
-	var tb3 = new Element("div", {'class':'toolbarrowsearch'});
+	var tb3 = new Element("div", {'class':'toolbarrowsearch row d-inline-block'});
 	var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 	tb3.insert(displaySortForm(sortOpts));
 	container.insert(tb3);
@@ -719,12 +719,12 @@ function reorderUsers(){
  */
 function displayUserSortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
 
     var selOrd = new Element("select");
     selOrd.id = "select-orderby-"+tab;
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
  	Event.observe(selOrd,'change',handler);
     sbTool.insert(selOrd);
@@ -740,7 +740,7 @@ function displayUserSortForm(sortOpts,args,tab,handler){
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
     sortBy.id = "select-sort-"+tab;
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
  	Event.observe(sortBy,'change',handler);
     sbTool.insert(sortBy);
@@ -802,12 +802,12 @@ function handleSort() {
  */
 function displaySortForm(sortOpts){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
 
     var selOrd = new Element("select");
     selOrd.id = "select-orderby-node";
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
     sbTool.insert(selOrd);
  	Event.observe(selOrd,'change',handleSort);
@@ -823,7 +823,7 @@ function displaySortForm(sortOpts){
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
     sortBy.id = "select-sort-node";
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
     sbTool.insert(sortBy);
  	Event.observe(sortBy,'change',handleSort);
@@ -845,7 +845,7 @@ function displaySortForm(sortOpts){
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow', 'style':'padding-top: 8px; padding-bottom: 8px;'});
+	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
@@ -854,7 +854,7 @@ function createNav(total, start, count, argArray, context, type){
 		//previous
 	    var prevSpan = new Element("span", {'id':"nav-previous"});
 	    if(start > 0){
-			prevSpan.update("<img alt='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' title='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("active");
 	        Event.observe(prevSpan,"click", function(){
 	            var newArr = argArray;
@@ -862,7 +862,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        });
 	    } else {
-			prevSpan.update("<img alt='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' title='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' disabled src='<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("inactive");
 	    }
 
@@ -884,9 +884,9 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next"});
+	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-		    nextSpan.update("<img alt='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' title='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
 	        Event.observe(nextSpan,"click", function(){
 	            var newArr = argArray;
@@ -894,7 +894,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        });
 	    } else {
-		    nextSpan.update("<img alt='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' title='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2-disabled.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("inactive");
 	    }
 

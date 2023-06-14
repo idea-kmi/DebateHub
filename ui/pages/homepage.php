@@ -195,7 +195,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 <div class="container-fluid">
 	<div class="row p-3">	
 		<div class="col">
-			<div class="h1"><?php echo $LNG->HOMEPAGE_TITLE; ?></div>
+			<h1><?php echo $LNG->HOMEPAGE_TITLE; ?></h1>
 			<p>
 				<?php echo $LNG->HOMEPAGE_FIRST_PARA; ?><br />
 				<span id="homeintrobutton" class="active" onclick="if ($('homeintromore').style.display == 'none') { $('homeintromore').style.display = 'block'; $('homeintrobutton').innerHTML = '<?php echo $LNG->HOMEPAGE_READ_LESS; ?>'; } else { $('homeintromore').style.display = 'none';  $('homeintrobutton').innerHTML = '<?php echo $LNG->HOMEPAGE_KEEP_READING; ?>';}"><?php echo $LNG->HOMEPAGE_KEEP_READING; ?></span>
@@ -209,7 +209,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 		<!-- MY GROUPS BAR AREA -->
 		<div id="tab-content-home-recent-mygroup-div" style="display:none" class="row p-3">
-			<h6><?php echo $LNG->HOME_MY_GROUPS_TITLE; ?>
+			<h2><?php echo $LNG->HOME_MY_GROUPS_TITLE; ?>
 				<span class="fs-6"><a href="user.php?userid=<?php echo $USER->userid; ?>#group"><?php echo $LNG->HOME_MY_GROUPS_AREA_LINK; ?></a></span>
 				<?php if ($CFG->groupCreationPublic || (!$CFG->groupCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
 					<span class="fs-6">(
@@ -228,7 +228,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 						} ?>
 					)</span>
 				<?php } ?>
-			</h6>
+			</h2>
 			<div id="mygroupsbarcontent" class="d-flex flex-row justify-content-between align-content-center home-groupsbar">
 				<div class="align-self-center me-4">
 					<img alt="scroll left" id="mygroupsBarLeftButton" src="<?php echo $HUB_FLM->getImagePath('back-arrow-grey.png'); ?>" onmouseover="scrollDivLeft('mygroupsBarDiv', 'mygroupsBarLeftButton', 'mygroupsBarRightButton', 'mygroupsBar')" onmouseout="stopScrollLeft('mygroupsBarDiv')" />
@@ -244,12 +244,12 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 		<!-- MY ISSUES BAR AREA -->
 		<div id="tab-content-home-recent-mydebate-div" style="display:none" class="row p-3">
-			<h6><?php echo $LNG->HOME_MY_DEBATES_TITLE; ?>
+			<h2><?php echo $LNG->HOME_MY_DEBATES_TITLE; ?>
 				<span class="fs-6"><a href="user.php?userid=<?php echo $USER->userid; ?>#data-issue"><?php echo $LNG->HOME_MY_DEBATES_AREA_LINK; ?></a></span>
 				<?php if ($CFG->issueCreationPublic || (!$CFG->issueCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
 					<span class="fs-6">(
 						<?php if (isset($USER->userid)) { ?>
-							<span class="active span-link" onclick="javascript:loadDialog('createdebate','<?php print($CFG->homeAddress);?>ui/popups/issueadd.php', 960, 600);"><?php echo $LNG->GROUP_DEBATE_CREATE_BUTTON; ?></span>
+							<span class="active span-link" onclick="javascript:loadDialog('createdebate','<?php print($CFG->homeAddress);?>ui/popups/issueadd.php', 780, 600);"><?php echo $LNG->GROUP_DEBATE_CREATE_BUTTON; ?></span>
 						<?php } else {
 							if ($CFG->signupstatus == $CFG->SIGNUP_OPEN) { ?>
 								<a title="<?php echo $LNG->HEADER_SIGN_IN_LINK_TEXT; ?>" href="<?php echo $CFG->homeAddress; ?>ui/pages/login.php?ref=<?php echo urlencode($ref); ?>"><?php echo $LNG->HEADER_SIGN_IN_LINK_TEXT; ?></a> | <a title="<?php echo $LNG->HEADER_SIGNUP_OPEN_LINK_TEXT; ?>" href="<?php echo $CFG->homeAddress; ?>ui/pages/registeropen.php"><?php echo $LNG->HEADER_SIGNUP_OPEN_LINK_TEXT; ?></a> <?php echo $LNG->DEBATE_CREATE_LOGGED_OUT_OPEN; ?>
@@ -261,7 +261,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 						} ?>
 					)</span>
 				<?php } ?>
-			</h6>
+			</h2>
 
 			<div id="myissuesbarcontent" class="d-flex flex-row justify-content-between align-content-center home-issuesbar">
 				<div class="align-self-center me-4">
@@ -280,13 +280,12 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 		<!-- HELP MOVIES -->
 		<div id="tab-content-home-movies-div" class="row p-3">
-			<hr class="my-4" />
 			<div class="col">
-				<h6 class="mb-4"><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h6>
+				<h2><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h2>
 				<iframe src="//www.youtube.com/embed/JrfX_zysLcQ" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 			</div>
 			<div class="col">
-				<h6 class="mb-4"><?php echo $LNG->HELP_MOVIES_TITLE_INTRO;?> <span class="text-secondary fs-6">(1m 48s)</span></h6>
+				<h2><?php echo $LNG->HELP_MOVIES_TITLE_INTRO;?> <span class="text-secondary fs-6">(1m 48s)</span></h2>
 				<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.png" width="480px" height="270px" autobuffer="autobuffer" controls="controls">
 					<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 				</video>
@@ -296,7 +295,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 		<!-- RECENT GROUPS BAR AREA -->
 		<div id="tab-content-home-recent-group-div" style="display:none" class="row p-3">
-			<h6><?php echo $LNG->HOME_MOST_POPULAR_GROUPS_TITLE ?>
+			<h2><?php echo $LNG->HOME_MOST_POPULAR_GROUPS_TITLE ?>
 				<span class="fs-6"><a href="index.php#group-list"><?php echo $LNG->HOMEPAGE_VIEW_ALL; ?></a></span>
 				<?php if ($CFG->groupCreationPublic || (!$CFG->groupCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
 					<span class="fs-6">(
@@ -313,7 +312,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 						<?php } ?>
 					)</span>
 				<?php } ?>
-			</h6>
+			</h2>
 
 			<!-- GROUPS BAR AREA -->
 			<div id="groupsbarcontent" class="d-flex flex-row justify-content-between align-content-center">

@@ -87,21 +87,6 @@ for ($i=0; $i<$count; $i++) {
 	}
 }
 
-//accumulate date data
-/*$keys = array_keys($dateArray);
-$count = 0;
-if (is_countable($keys)) {
-	$count = count($keys);
-}
-for($i=1; $i<$count; $i++) {
-	$prev = $dateArray[$keys[$i-1]];
-	$current = $dateArray[$keys[$i]];
-	foreach ($current as $key => $value) {
-		$current[$key] = $value+$prev[$key];
-	}
-	$dateArray[$keys[$i]] = $current;
-}*/
-
 // Turn data into json
 $count = 0;
 if (is_countable($dateArray)) {
@@ -172,29 +157,26 @@ if ($count > 0) {
 	$json .= "]}";
 }
 
-//error_log(print_r($json, true));
-
 include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 ?>
+
 <script type='text/javascript'>
-var NODE_ARGS = new Array();
+	var NODE_ARGS = new Array();
 
-Event.observe(window, 'load', function() {
-	NODE_ARGS['nodeid'] = '<?php echo $nodeid; ?>';
-	NODE_ARGS['jsondata'] = <?php echo $json; ?>;
+	Event.observe(window, 'load', function() {
+		NODE_ARGS['nodeid'] = '<?php echo $nodeid; ?>';
+		NODE_ARGS['jsondata'] = <?php echo $json; ?>;
 
-	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-stackedarea.js.php"); ?>', 'stats-debates-stackedarea-script');
-});
+		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-stackedarea.js.php"); ?>', 'stats-debates-stackedarea-script');
+	});
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div class="d-flex flex-column">
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 
-	<div id="stackedarea-div" style="clear:both;float:left;width:100%;height:100%;"></div>
+	<div id="stackedarea-div" class="d-flex justify-content-left gap-2 statsgraph" style="font-size:10pt"></div>
 </div>
 
 <?php

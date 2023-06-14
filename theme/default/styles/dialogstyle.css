@@ -1,0 +1,72 @@
+
+body { color: #696969; font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif; font-size: 1em; margin: 0px; }
+
+.toolbarrow .toolbar2 { display: inline-block; font-weight: bold; margin-bottom: 20px; margin-right: 20px; } 
+.page-nav { display: inline-block; margin: 20px 0; }
+.page-nav.page-chevron { background-color: #fff; border: 1px solid #ddd; border-radius: 5px; margin-left: 2px; margin-right: 2px; padding: 7px; }
+.page-nav .nav-page { background-color: #fff; border: 1px solid #ddd; border-radius: 5px; margin: 0 2px; padding: 10px; }
+.toolbar.form-select { display: inline; margin-right: 5px; width: auto; }
+
+.footerback { margin-top: 10px; padding-bottom: 20px; }
+
+.required { color: #A80000; font-weight: bold; }
+textarea { resize: vertical; }
+
+.hintRollover { border: 1px solid #308D88; font-size: 0.9em; left: 0px; max-width: 400px; padding: 10px; position: absolute; overflow: hidden; top: 0px; visibility: hidden; z-index: 20; }
+
+/**************/
+/* font sizes */
+/**************/
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.4em; }
+h4 { font-size: 1.3em; }
+h5 { font-size: 1.2em; }
+h6 { font-size: 1.1em; }
+
+p { font-size: 0.9em; }
+a { font-size: 0.9em; }
+p a { font-size: 1em; }
+input { font-size: 0.9em; cursor: pointer; }
+.form-control { font-size: 0.9em; }
+.form-check-label { font-size: 0.9em; } 
+.form-select { font-size: 0.9em; }
+#editprofile .form-select { font-size: 0.9em; }
+.col-form-label { font-size: 0.9em; }
+.col-form-label + .col-sm-5 .form-select { font-size: 0.9em; }
+.btn { font-size: 0.9em; }
+.toolbar2 { font-size: 0.9em; }
+
+dt { font-size: 0.9em; }
+dd { font-size: 0.9em; }
+dd a { font-size: 1em; }
+
+#members table { font-size: 0.9em; }
+#members table a { font-size: 1em; }
+
+ul li { font-size: 0.9em; }
+
+table { font-size: 0.9em; }
+
+.activityviewerusers .idea-title span { font-size: 1.4em !important; margin-left: 10px; }
+.activityviewerusers .idea-user div { font-size: 1.4em !important; }
+.activityviewerusers .idea-menus { display: block; font-size: 1.4em !important; padding: 5px 0; }
+
+span.nav { font-size: 0.9em; }
+span.page-nav { font-size: 0.9em; }
+span.page-nav i.fa-lg { font-size: 0.9em !important; }
+
+/*******************************************/
+/* for the scriptaculous auto complete box */
+/*******************************************/
+div.autocomplete { float: left; background-color: white; border: 1px solid #888; }
+div.autocomplete ul { list-style-type: none; margin: 0px; padding: 0px; }
+div.autocomplete ul li.selected { background-color: #ffb; }
+div.autocomplete ul li { list-style-type: none; display: block; margin: 0; padding: 2px; cursor: pointer; }
+/* END of style for the scriptaculous auto complete box */
+
+.likeabutton { appearance: button; -moz-appearance: button; -webkit-appearance: button; text-decoration: none; font: menu; color: ButtonText; display: inline-block; padding: 2px 8px; }
+
+.plainborder {
+	border: 2px solid #D0D0D0;
+} 

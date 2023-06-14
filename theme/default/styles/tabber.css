@@ -1,0 +1,10 @@
+#tabber .main-nav { background-color: transparent; }
+#tabber .main-nav li.nav-item { background-color: transparent; }
+#tabber .main-nav li.nav-item a.tab { background-color: transparent; }
+#tabber .main-nav li.nav-item a.tab.current { background-color: transparent; }
+#tabber .main-nav li.nav-item a.tab span.tab { background-color: transparent; display: block; padding: 2px 10px; }
+
+#tabber .tabcontent { background: #fff; }
+
+.myData-tabs li a.nav-link { border: 0; }
+.myData-tabs li a.nav-link.active { border-bottom: 1px solid; }

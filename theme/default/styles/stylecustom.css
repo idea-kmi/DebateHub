@@ -1,0 +1,317 @@
+/**
+ * These are the style that, in our experience, most commonly requiring per-site customization.
+ * We have separated these out to try and make updating the code with new versions easier.
+ *
+ * Eventually, we hope to have a more sophisicated style system in place to allow 
+ * easier customization of any styles.
+ */
+ 
+a,
+a:active,
+a:visited,
+a.active,
+.nav-link { color: #a91a70; cursor: pointer; font-weight: bold; text-decoration: none; }
+a:hover,
+a.active:hover { color: #4E725F; font-weight: bold; text-decoration: none; }
+
+.itemtext:hover { color: #a91a70; }
+h1 { margin-top: 5px; margin-bottom: 10px; color: #4E725F; }
+h2 { margin: 0px; margin-bottom: 10px; color: #4E725F; }
+
+.inactive{ cursor: default; color: #A4A4A4; }
+.footertitle { color: #4e247b; }
+#dialoglogo { float: left; margin-bottom: 3px; margin-top: 3px; margin-left: 3px; }
+#logo { float: left; padding-top: 0px; margin: 15px; margin-bottom: 0px; }
+.subform { border: 2px solid #40B5B2; }
+.subform2 { border: 2px solid #40B5B2; }
+.hgrsubform { border: 2px solid #40B5B2; }
+hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; width: 100%; }
+#tagcloud li a { text-decoration: none; color: #a91a70; padding: 2px; }
+#tagcloud li a:hover{ color: #a91a70; }
+
+.btn { outline: none; box-shadow: none; }
+.btn:focus { outline: none; box-shadow: none; }
+
+.btn-primary { background-color: #a91a70; border-color: #a91a70; }
+.btn-primary:hover { background-color: #4E725F; border-color: #4E725F; }
+
+.btn-secondary { background-color: #80B906; border-color: #80B906; color: #222; }
+.btn-secondary:hover { background-color: rgba(128,185,6, 0.8); color: #222; }
+
+.btn-moderator { background-color: #4E725F; border-color: #4E725F;  color: #fff; }
+.btn-moderator:hover { background-color: rgba(78,114,95, 0.8); color: #fff; }
+.btn-moderator.active { background-color: rgba(78,114,95, 0.7); border-style: inset; border-width: 1px; }
+
+/*************/
+/**** NAV ****/
+/*************/
+#menu.nav li.nav-item a { color: #a91a70; }
+#menu.nav li.nav-item a.current:hover { color: #a91a70; opacity: 0.5; }
+
+.myhubtitlediv { margin:0px; padding:0px; width:100%; background:#C0C0C0; }
+.myhubtitle { padding:5px; margin-top:0px; margin-bottom:0px; }
+
+/*******************/
+/**** HOME PAGE ****/
+/*******************/
+.hometitles { font-weight: bold; color: #4e247b; padding-left: 0px; }
+.homesubtitle { color: #008fb6; }
+.themecloudtext { color:#a91a70; }
+
+.tab-pane.active { cursor: auto; }
+
+/******************************/
+/**** CATEGORIES TAB PAGES ****/
+/******************************/
+
+/************************/
+/** Challenge tab area **/
+/************************/
+.challengeback { background: #4E725F; }
+.challengebackpale { background: #d5e9e9; }
+.challengebackpale2 { background: #d5e9e9; }
+.challengeborder { border: 1px solid #4E725F; }
+.challengeborder-bottom { border-bottom: 1px solid #4E725F; }
+.challengebackgradient { background: #4E725F; }
+.challengebackgradient2 { background: #ffffff; }
+
+/********************/
+/** Issue Tab Area **/
+/********************/
+.issueback,
+.themelist1back { background: #4E725F; }
+.issuebackpale { background: #E6F7FF; }
+.issueborder, 
+.themelist1border { border: 1px solid #4E725F; }
+.issueborder-bottom { border-bottom: 1px solid #4E725F; }
+.issuebackgradient, 
+.themelist1colour { background: #4E725F; }
+.issuebackgradient2 { background: #ffffff; }
+
+/***********************/
+/** Solution tab area **/
+/***********************/
+.solutionback, 
+.themelist4back { background: #80B906; }
+.solutionbackpale { background: #EEF7E2; }
+.solutionborder, 
+.themelist4border { border: 1px solid #80B906; }
+.solutionborder-bottom { border-bottom: 1px solid #80B906; }
+.solutionbackgradient, 
+.themelist4colour { background: #80B906; }
+.solutionbackgradient2 { background: #ffffff; }
+
+/********************/
+/** Claim tab area **/
+/********************/
+.claimback { background: #80B906; }
+.claimbackpale { background: #EEF7E2; }
+.claimborder { border: 1px solid #80B906; }
+.claimborder-bottom { border-bottom: 1px solid #80B906; }
+.claimbackgradient { background: #80B906; }
+.claimbackgradient2 { background: #ffffff; }
+
+/***************************/
+/** Organisation tab area **/
+/***************************/
+.orgback { background: #27318B; }
+.orgbackpale { background: #EAECF5; }
+.orgborder { border: 1px solid #27318B; }
+.orgborder-bottom { border-bottom: 1px solid #27318B; }
+.orgbackgradient { background: #27318B; }
+.orgbackgradient2 { background: #ffffff; }
+
+/****************************************************/
+/** Project tab area: CURRENTLY IN SAME TAB AS ORG **/
+/****************************************************/
+.projectback { background: #27318B; }
+.projectbackpale { background: #EAECF5; }
+.projectborder { border: 1px solid #27318B; }
+.projectborder-bottom { border-bottom: 1px solid #27318B; }
+.projectbackgradient { background: #27318B; }
+.projectbackgradient2 { background: #ffffff; }
+
+/*********************/
+/** People tab area **/
+/*********************/
+.peopleback { background: #27318B; }
+.peoplebackpale { background: #EAECF5; }
+.peopleborder { border: 1px solid #27318B; }
+.peopleborder-bottom { border-bottom: 1px solid #27318B; }
+.peoplebackgradient { background: #27318B; }
+.peoplebackgradient2 { background: #ffffff; }
+
+/***********************/
+/** Evidence tab area **/
+/***********************/
+.evidenceback, 
+.themelist4back { background: #730B4D; }
+.evidencebackpale { background: #EADDF1; }
+.evidenceborder, 
+.themelist4border { border: 1px solid #730B4D; }
+.evidenceborder-bottom { border-bottom: 1px solid #730B4D; }
+.evidencebackgradient, 
+.themelist4colour { background: #730B4D; }
+.evidencebackgradient2 { background: #ffffff; }
+
+/***********/
+/** Group **/
+/***********/
+.groupback { background: #8560AE; }
+.groupbackpale { background: #EADDF1; }
+.groupborder { border: 1px solid #8560AE; }
+.groupborder-bottom { border-bottom: 1px solid #8560AE; }
+.groupbackgradient { background: #8560AE; }
+.groupebackgradient2 { background: #ffffff; }
+
+/***********************/
+/** Resource tab area **/
+/***********************/
+.resourceback { background: #C1D7C1; }
+.resourcebackpale { background: #F8F8D2; }
+.resourceborder { border: 1px solid #C1D7C1; }
+.resourceborder-bottom { border-bottom: 1px solid #C1D7C1; }
+.resourcebackgradient { background: #C1D7C1; }
+.resourcebackgradient2 { background: #ffffff; }
+
+/************/
+/** Themes **/
+/************/
+.themelist.themelist2colour { background: #80B906; }
+.themeback, 
+.themelist3back { background: #80B906; }
+.themebackpale { background: #FCDDEC; }
+.themeborder, 
+.themelist3border { border: 1px solid #80B906; }
+.themeborder-bottom { border-bottom: 1px solid #80B906; }
+.themebackgradient, 
+.themelist3colour { background: #80B906; }
+.themebackgradient2 { background: #ffffff; }
+
+/*************/
+/** NEUTRAL **/
+/*************/
+.plainback { background: #B0B0B0; }
+.plainbackpale { background: #D0D0D0; }
+.plainborder { border: 1px solid #D0D0D0; }
+.plainborder-bottom { border-bottom: 1px solid #D0D0D0; }
+.plainbackgradient { background: #D0D0D0; }
+.plainbackgradient2 { background: #ffffff; }
+
+.themelist { cursor: pointer; display: flex; justify-content: center; align-content: center; flex-direction: column; height: 100px; hyphens: auto; margin: 5px; padding: 0; position: relative; text-align: center; width: 120px; }
+.themelistinner { background: none; background-color: transparent; display: block; }
+.themebutton { background: none; background-color: transparent; color: #4e247b; }
+.themelist1colour .themebutton { color: #fff; }
+.themebutton span { background: none; background-color: transparent; }
+.theme img { height: auto; width: 100%; }
+
+.overviewlegend { font-weight: bold; margin-left: 1em; padding: 0.2em 0.8em; }
+.widgettextcolor { color:#4e247b; }
+.overviewfieldset { border: 1px #4e247b solid; padding-top: 3px; }
+
+/***************************/
+/** TABBER Customizations **/
+/***************************/
+
+.pagination .page-link { color: #4E725F; font-weight: bold; }
+.pagination .page-link.active { color: #A6156C; }
+.pagination .page-link.inactive { color: #696969; }
+
+#tabber .main-nav li.nav-item a.tab span { border-bottom: 1px solid #fff; color: #696969; padding-bottom: 1px; }
+#tabber .main-nav li.nav-item a.tab.current span,
+#tabber .main-nav li.nav-item a.tab.active span,
+#tabber .main-nav li.nav-item a.tab:hover span { border-bottom: 1px solid; text-decoration: none; }
+
+#tabber .main-nav li.nav-item a.tab:hover span.tabhome { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabhome,
+#tabber .main-nav li.nav-item a.tab.active span.tabhome { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabevidence { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabevidence,
+#tabber .main-nav li.nav-item a.tab.active span.tabevidence { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabchallenge { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabchallenge,
+#tabber .main-nav li.nav-item a.tab.active span.tabchallenge { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabissue { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabissue,
+#tabber .main-nav li.nav-item a.tab.active span.tabissue { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabsolution { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabsolution,
+#tabber .main-nav li.nav-item a.tab.active span.tabsolution { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabclaim { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabclaim,
+#tabber .main-nav li.nav-item a.tab.active span.tabclaim { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabresource { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabresource,
+#tabber .main-nav li.nav-item a.tab.active span.tabresource { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.taborg { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.taborg,
+#tabber .main-nav li.nav-item a.tab.active span.taborg { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabproject { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabproject,
+#tabber .main-nav li.nav-item a.tab.active span.tabproject { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabuser { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabuser,
+#tabber .main-nav li.nav-item a.tab.active span.tabuser { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab:hover span.tabtheme { color: #A6156C; }
+#tabber .main-nav li.nav-item a.tab.current span.tabtheme,
+#tabber .main-nav li.nav-item a.tab.active span.tabtheme { color: #A6156C; }
+
+.homebutton1 { color: #4e247b; }
+.homebutton2 { color: white; }
+
+/***********/
+/** User **/
+/***********/
+.tabber-user a,
+.tabber-user a:visited { color: #555 !important; font-weight: normal !important; }
+.tabber-user a:hover { color: #DA569A !important; }
+.tabber-user a.active { color: #a91a70 !important; font-weight: bold !important; }
+
+.user-tabs2 a.nav-link,
+.user-tabs2 a:visited { color: #a91a70; }
+.user-tabs2 a:hover { color: #DA569A; text-decoration: underline; }
+
+.groupbutton { margin-top: 10px; margin-left: 5px; color: white; }
+.groupbuttoninner { color:white; font-weight:bold; text-align:center; vertical-align:middle; line-height:30px; cursor:pointer; }
+
+.modeback1 { background: #4E725F; }
+.modeborder1 { border: 4px solid #4E725F; }
+.modeborder1pressed { border: 4px inset #4E725F; }
+.modeback2 { background: #a6156c; }
+.modeborder2 { border: 4px solid #a6156c; }
+.modeborder2pressed { border: 4px inset #a6156c; }
+.modeback3 { background: #80B906; }
+.modeborder3 { border: 4px solid #80B906; }
+.modeborder3pressed { border: 4px inset #80B906; }
+.modeback4 { background: #730B4D; }
+.modeborder4 { border: 4px solid #730B4D; }
+.modeborder4pressed { border: 4px inset #730B4D; }
+
+.darkgreenbutton { color:white; height:20px; float:left; padding-top:1px; padding-bottom:1px; padding-left:4px; padding-right:4px; font-family:"Trebuchet MS", Helvetica, sans-serif; font-weight:bold; border: 1px solid #4E725F; border-radius: 6px; box-shadow: 2px 2px 2px #ABC7B8; background: #63AB85; }
+
+.lightgreenbutton { color:white; height:20px; float:left; padding-top:1px; padding-bottom:1px; padding-left:4px; padding-right:4px; font-family:"Trebuchet MS", Helvetica, sans-serif; font-weight:bold; border: 1px solid #80B906; border-radius: 6px; box-shadow: 2px 2px 2px #CCD4BC; background: #BEDD7B; }
+
+/** DEBATE PHASES ARROW BAR **/
+.phasearrow { display: flex; margin: 5px 0 15px 0; }
+.phasearrow .step { background-color: #ddd; color: #555; float: left; font-size: 18px; font-weight: bold; margin: 0 1px 0 0; padding: 7px 0px 7px 0px; position: relative; text-align: center; width: 20%; }
+.phasearrow .step:after,
+.phasearrow .step:before { border-top: 19px solid transparent; border-bottom: 17px solid transparent; border-left: 17px solid #ddd; content: ""; height: 0; position: absolute; right: -16px; top: 0; width: 0; z-index: 2; }
+.phasearrow .step:before { border-left: 17px solid #fff; left: 0; right: auto; z-index: 0; }
+.phasearrow .step:first-child:before { border: none; }  
+.phasearrow .step:last-child:after { border: none; }
+.phasearrow .step.current { background-color: #80B906; color: #000; }
+.phasearrow .step.current:after { border-left: 17px solid #80B906; }
+.phasearrow .step.selected { background-color: #4E725F; color: #000; }
+.phasearrow .step.selected:after { border-left: 17px solid #4E725F; }
+
+.lemoningbuttons { vertical-align:middle; color:#5B8B72; font-weight:bold; padding:0px; padding-left:7px; }
+.lemoningbuttons:hover,
+.lemoningbuttons:focus { cursor: pointer; color:#7FAE0E; }
+.lemoncount { vertical-align:middle; font-weight:bold; padding-left:7px; }
+.lemonimg { vertical-align:middle; padding-left:7px; padding-top:1px; -webkit-user-drag:element; }
+.lemonimgoff { vertical-align:middle; padding-left:7px; padding-top:1px; }
+
+/* Explore */
+.pageseparatorbar { height: 5px; margin-bottom: 20px; width: 100%; }
+
+.overviewfieldset .idea-list-li img { max-width: 20px; height: auto; margin-right: 10px; }

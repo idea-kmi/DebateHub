@@ -70,6 +70,10 @@ function display_tabber($context,$args, $wasEmpty){
  	}
  	$argsStr2 .= "}";
 
+	if (!isset($q)) {
+		$q = "";
+	}
+
 	echo "<script type='text/javascript'>";
 
 	echo "var CONTEXT = '".$context."';";
@@ -102,7 +106,7 @@ function display_tabber($context,$args, $wasEmpty){
 				<div class="row">
 					<div id="tab-content-group-div" class="tabcontent" style="display:none;padding:0px;">
 						<div id="tab-content-group-title" class="tab-content-title"></div>
-						<div id="tab-content-group-search">							
+						<div id="tab-content-group-search">
 							<?php if ($CFG->groupCreationPublic || (!$CFG->groupCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
 								<?php if(isset($USER->userid)){ ?>
 									<div class="toolbar col-12 addButton">

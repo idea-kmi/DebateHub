@@ -660,7 +660,6 @@ function renderMyGroup(group){
 	toolbarDiv.insert(jsonldButton);
 
 	iDiv.insert(nodetableDiv);
-	//iDiv.insert(statstableDiv);
 
 	return iDiv;
 }

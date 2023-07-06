@@ -217,6 +217,8 @@ hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; wid
 .pagination .page-link.active { color: #A6156C; }
 .pagination .page-link.inactive { color: #696969; }
 
+#tabber .currentpage { color: #4E725F; font-weight: bold; background-color: #e9ecef }
+
 #tabber .main-nav li.nav-item a.tab span { border-bottom: 1px solid #fff; color: #696969; padding-bottom: 1px; }
 #tabber .main-nav li.nav-item a.tab.current span,
 #tabber .main-nav li.nav-item a.tab.active span,

@@ -38,7 +38,7 @@
 ?>
 
 <h1 class="text-center">
-	<?php echo $LNG->STATS_GROUP_TITLE.$group->name; ?>
+	<?php if (!$group instanceof Hub_Error) { echo $LNG->STATS_GROUP_TITLE.$group->name; } else { echo $LNG->ITEM_NOT_FOUND_ERROR; } ?>
 	<a href="<?php echo $CFG->homeAddress.'group.php?groupid='.$groupid; ?>" class="fw-normal fs-6">[<?php echo $LNG->STATS_GO_BACK; ?>]</a>
 </h1>
 

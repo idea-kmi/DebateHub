@@ -1,7 +1,23 @@
+Debate Hub - Release 2.0
+==========================
+
+Coming Soon!
+
+We are in the process of updating this opriginal Debatehub repo with a merged in version of the current live post Catalyst repo.
+
+The installation instructions currently given will have out-of-date until the merge is complete and we have had time to update all the documentation.
+We will then do an official 2.0 release.
+
+
+Debate Hub - Release 1.1
+==========================
+
+Small tweaks release.
+
 Debate Hub - Release 1.0
 ==========================
 
-The Debate Hub is a new kind of website for your community to debate issues.
+Debate Hub is a new kind of website for your community to debate issues.
 <http://debatehub.net/>.
 
 Installation

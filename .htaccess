@@ -1,3 +1,7 @@
+
+#For HSTS
+Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
+
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html
@@ -18,13 +22,19 @@ AddOutputFilterByType DEFLATE font/opentype
 AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
 </IfModule>
 
-#RewriteEngine on
-#Below is an example for if you only want to bring certain sites down for maintenance.
-#RewriteCond %{HTTP_HOST} ^debatehub1.kmi.open.ac.uk$ [NC]
-#RewriteCond %{HTTP_HOST} ^debatehub2.kmi.open.ac.uk$ [NC]
+################################################################################
 
-#RewriteCond %{REQUEST_URI} !/index-maintenance.php$ 
-#RewriteRule $ /index-maintenance.php [R=302,L]
+#RewriteEngine on
+
+## This is for if you want to only put certain sites into maintenance mode.
+##Below is an example for if you only want to bring certain sites down for maintenance.
+##RewriteCond %{HTTP_HOST} ^debatehub1.kmi.open.ac.uk$ [NC]
+##RewriteCond %{HTTP_HOST} ^debatehub2.kmi.open.ac.uk$ [NC]
+
+##RewriteCond %{REQUEST_URI} !/index-maintenance.php$ 
+##RewriteRule $ /index-maintenance.php [R=302,L]
+
+################################################################################
 
 ErrorDocument 404 /404-error-page.php
 ErrorDocument 403 /403-error-page.php

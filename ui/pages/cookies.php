@@ -32,10 +32,15 @@
 	}
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
+?>
+	
+<div class="container-fluid">
+    <div class="page">
+		<h1><?php echo $LNG->PAGE_COOKIES_TITLE; ?></h1>
+		<?php echo $LNG->PAGE_COOKIES_BODY; ?>
+	</div>
+</div>
 
-	echo '<h1>'.$LNG->PAGE_COOKIES_TITLE.'</h1>';
-
-	echo $LNG->PAGE_COOKIES_BODY;
-
+<?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

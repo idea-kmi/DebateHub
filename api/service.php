@@ -43,7 +43,7 @@ $method = optional_param("method","",PARAM_ALPHA);
 // So unless your API request is to login, check they are logged in before proceeding.
 if ($CFG->privateSite && $method != "login" && (!isset($USER->userid) || $USER->userid == "")) {
     global $ERROR;
-    $ERROR = new error;
+    $ERROR = new Hub_Error;
     $ERROR->createAccessDeniedError();
 	include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
     die;
@@ -315,10 +315,10 @@ switch($method) {
         $description = optional_param('description',"",PARAM_TEXT);
 
         $link = getLinkTypeByLabel($linktypename);
-        if (!$link instanceof Error) {
+        if (!$link instanceof Hub_Error) {
         	$response = addConnection($fromnodeid,$fromroleid,$link->linktypeid,$tonodeid,$toroleid,$private,$description);
         } else {
-			$ERROR = new Error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createInvalidConnectionError();
         }
         break;
@@ -634,7 +634,7 @@ switch($method) {
     default:
         //error as method not defined.
         global $ERROR;
-        $ERROR = new error;
+        $ERROR = new Hub_Error;
         $ERROR->createInvalidMethodError();
         include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
         die;

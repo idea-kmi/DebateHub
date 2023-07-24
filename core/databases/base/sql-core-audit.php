@@ -61,4 +61,8 @@ $HUB_SQL->AUDIT_DASHBOARD_VIEW_INSERT ="INSERT into AuditDashboardView (UserID, 
 $HUB_SQL->AUDIT_TESTING_INSERT ="INSERT into AuditTesting (TrialName, UserID, ItemID, SessionID, IPAddress, Agent, ModificationDate, TestElementID, Event, State)
             					values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+$HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS = "SELECT * FROM Users LIMIT 1";
+
+$HUB_SQL->AUDIT_USER_SELECT_ORIGINALID = "SELECT * FROM Users WHERE OriginalID=?";
+
 ?>

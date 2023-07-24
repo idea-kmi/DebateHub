@@ -98,7 +98,7 @@
 
         if(empty($errors)){
 			$issuenode = getNode($nodeid);
-			if (!$issuenode instanceof Error) {
+			if (!$issuenode instanceof Hub_Error) {
 				$filename = "";
 				if (isset($issuenode->filename)) {
 					$filename = $issuenode->filename;
@@ -234,6 +234,22 @@
 		if (isset($node->properties['votingend']) && $node->properties['votingend'] != "") {
         	$utcvotingendtime = doubleval( $node->properties['votingend'] );
 		}
+
+		// repair for older debates pre-phasing
+		if ($utcvotingstarttime > 0 && $utcvotingendtime == 0 && $utcendtime > 0) {
+			$utcvotingendtime = $utcendtime;
+	    	$votingon = 'Y';
+    		$node->updateNodeProperty('votingend', $utcvotingendtime);
+    		$node->updateNodeProperty('votingon', $votingon);
+	    	if ($utcdiscussionendtime == 0) {
+	    		$utcdiscussionendtime = $utcvotingstarttime - 60;
+	    		$node->updateNodeProperty('discussionend', $utcdiscussionendtime);
+	    	}
+		} else if ($utcvotingstarttime > 0 && $utcvotingendtime == 0
+							&& $utcendtime == 0 && $utcstarttime == 0) {
+    		$node->updateNodeProperty('votingstart', 0);
+		}
+
     } else {
 		echo "<script type='text/javascript'>";
 		echo "alert('".$LNG->FORM_ISSUE_NOT_FOUND."');";
@@ -245,80 +261,86 @@
     /**********************************************************************************/
 ?>
 
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
-
 <script type="text/javascript">
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_EDIT; ?>');
+		initialisePhaseDates();
+	}
 
-function init() {
-	$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_EDIT; ?>');
-   	initialisePhaseDates();
-}
-
-function checkForm() {
-	var checkname = ($('issue').value).trim();
-	if (checkname == ""){
-	   alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
-	   return false;
-    }
-
-    $('issueform').style.cursor = 'wait';
-
-    return true;
-}
-
-window.onload = init;
-
+	function checkForm() {
+		var checkname = ($('issue').value).trim();
+		if (checkname == ""){
+		alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
+		return false;
+		}
+		$('issueform').style.cursor = 'wait';
+		return true;
+	}
+	window.onload = init;
 </script>
 
 <?php
-include("../popuplib.php");
+	include("../popuplib.php");
 ?>
 
-<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-	<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
-	<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
-	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+			<?php
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
+			<?php } ?>
 
-    <div class="hgrformrow">
-		<label class="formlabelbig"><?php echo $LNG->DEBATE_IMAGE_LABEL; ?></label>
-		<div style="margin-left:5px;padding:0px;position:relative;overflow:hidden;border:1px solid gray;width:150px;height:100;max-width:150px;max-height:100px;min-width:150px;min-height:100px;">
-			<img style="position:absolute; top:0px left:0px;cursor:move;" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
+			<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
+				<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
+				<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+
+				<div class="mb-3">
+					<img class="img-thumbnail" src="<?php print $node->image; ?>" alt="photo for debate" />
+				</div>
+				<div class="mb-3 row">
+					<label for="image" class="col-sm-3 col-form-label">
+						<?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?>
+					</label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="image" name="image" />
+						<small><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></small>
+					</div>
+				</div>	
+				<div class="mb-3 row">
+					<label for="issue" class="col-sm-3 col-form-label">
+						<?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?>
+						<a class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</a>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="issue" name="issue" value="<?php echo( $issue ); ?>" />
+					</div>
+				</div>
+
+				<?php insertDescription('IssueDesc'); ?>
+				<?php insertIssuePhases(); ?>
+
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editissue" name="editissue">
+				</div>
+			</form>
 		</div>
-    </div>
-    <div class="hgrformrow">
-		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
-		<input class="forminput" type="file" id="image" name="image" size="40">
-    </div>
-	<div class="formrow">
-		<label class="formlabelbig">&nbsp;</label>
-		<span class="forminput"><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></span>
 	</div>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>
-			<span class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="issue" name="issue" value="<?php echo $issue; ?>" />
-	</div>
-
-	<?php insertDescription('IssueDesc'); ?>
-
-	<?php insertIssuePhases(); ?>
-
-    <br>
-    <div class="hgrformrow">
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editissue" name="editissue">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

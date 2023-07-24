@@ -73,7 +73,7 @@ function nodeOrderString($o,$s){
         	break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidOrderbyError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -89,7 +89,7 @@ function nodeOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidSortError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -136,7 +136,7 @@ function userOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidOrderbyError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -152,7 +152,60 @@ function userOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
+            $ERROR->createInvalidSortError();
+            include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
+            die;
+    }
+
+    $str = $HUB_SQL->ORDER_BY.$orderby." ".$sort;
+
+    return $str;
+}
+
+/**
+ * Create the SQL ORDER BY clause for groups
+ *
+ * @param string $o order by column
+ * @param string $s sort order (ASC or DESC)
+ * @return string
+ */
+function groupOrderString($o,$s){
+    global $CFG, $HUB_FLM,$HUB_SQL;
+
+    //check order by param is valid
+    switch ($o) {
+        case "date":
+            $orderby = "t.CreationDate";
+            break;
+        case "moddate":
+            $orderby = "t.ModificationDate";
+            break;
+        case "name":
+        	$orderby = "t.Name";
+        	break;
+        case "members":
+            $orderby = "members";
+            break;
+        default:
+            global $ERROR;
+            $ERROR = new Hub_Error;
+            $ERROR->createInvalidOrderbyError();
+            include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
+            die;
+    }
+
+    //check sort param is valid
+    switch ($s) {
+        case "ASC":
+            $sort = $HUB_SQL->ASC;
+            break;
+        case "DESC":
+            $sort = $HUB_SQL->DESC;
+            break;
+        default:
+            global $ERROR;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidSortError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -186,7 +239,7 @@ function urlOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidOrderbyError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -202,7 +255,7 @@ function urlOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidSortError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -253,7 +306,7 @@ function connectionOrderString($o,$s){
         	break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidOrderbyError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -269,7 +322,7 @@ function connectionOrderString($o,$s){
             break;
         default:
             global $ERROR;
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidSortError();
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
             die;
@@ -314,7 +367,10 @@ function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelm
 		$resArray = $DB->select($sql, $params);
 		$array = array();
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$text = $array['Name'];
@@ -329,7 +385,7 @@ function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelm
 	$matchesFound = array();
 	if (($labelmatch == 'true' && $text != "") || ($labelmatch == 'false' && $nodeid != "")) {
 		$checkConnections = array();
-		$matchedConnections = null;
+		$matchedConnections = array();
 		if ($labelmatch == 'true') {
 			$nextNodes[0] = $text;
 		} else {
@@ -376,7 +432,10 @@ function getConnectionsByPathByDepthOR($scope='all', $labelmatch='false', $nodei
 		$resArray = $DB->select($sql, $params);
 		$array = array();
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$text = $array['Name'];
@@ -391,7 +450,7 @@ function getConnectionsByPathByDepthOR($scope='all', $labelmatch='false', $nodei
 
 	if (($labelmatch == 'true' && $text != "") || ($labelmatch == 'false' && $nodeid != "")) {
 		$checkConnections = array();
-		$matchedConnections = null;
+		$matchedConnections = array();
 		if ($labelmatch == 'true') {
 			$nextNodes[0] = $text;
 		} else {
@@ -429,8 +488,8 @@ function searchNetworkConnections($checkConnections, $matches, $nextNodes, $link
 		$currentuser = $USER->userid;
 	}
 
-    $tempNodes = null;
-	$allConnections = null;
+    $tempNodes = array();
+	$allConnections = array();
 
 	$searchNodeArray = array();
 	$searchNodes = "";
@@ -533,8 +592,14 @@ function searchNetworkConnections($checkConnections, $matches, $nextNodes, $link
 		}
 	}
 
-    $count = count($allConnections);
-    $innercount = count($nextNodes);
+	$count = 0;
+	if (is_countable($allConnections)) {
+		$count = count($allConnections);
+	}
+	$innercount = 0;
+	if (is_countable($nextNodes)) {
+		$innercount = count($nextNodes);
+	}
 	$found = false;
 
     for ($i=0; $i < $count; $i++) {
@@ -647,7 +712,10 @@ function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNode
 			$resArray = $DB->select($sql, $tempparams);
 			$array = array();
 			if ($resArray !== false) {
-				$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
 					$depthnodelabel = $array['Name'];
@@ -983,14 +1051,19 @@ function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes
 
    	$currentdepth++;
 
-	if (!$allConnections instanceof Error) {
-		$tempNodes = null;
+	if (!$allConnections instanceof Hub_Error) {
+		$tempNodes = array();
 		$foundArray = array();
 
 		//$unsetArray = array();
-
-		$count = count($allConnections);
-		$innercount = count($nextNodes);
+		$count = 0;
+		if (is_countable($allConnections)) {
+			$count = count($allConnections);
+		}
+		$innercount = 0;
+		if (is_countable($nextNodes)) {
+			$innercount = count($nextNodes);
+		}
 		$found = false;
 
 		$message .= ":".$count;
@@ -1409,7 +1482,11 @@ function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes
 		// Now remove all matches arrays whose count < currentdepth-1 as they are not full paths and are no longer needed.
 		// Can not remove these until now when all continuing paths have had a chance to copy them into thier new array if needed.
 		foreach ( $matches as $key=>$val ){
-			if (count($val) < $currentdepth-1) {
+			$count = 0;
+			if (is_countable($val)) {
+				$count = count($val);
+			}
+			if ($count < $currentdepth-1) {
 				unset($matches[$key]);
 			}
 		}
@@ -1478,11 +1555,17 @@ function searchNetworkConnectionsByDepthOR($checkConnections, $matches, $nextNod
 
    	$currentdepth++;
 
-	if (!$allConnections instanceof Error) {
+	if (!$allConnections instanceof Hub_Error) {
 
-		$tempNodes = null;
-		$count = count($allConnections);
-		$innercount = count($nextNodes);
+		$tempNodes = array();
+		$count = 0;
+		if (is_countable($allConnections)) {
+			$count = count($allConnections);
+		}
+		$innercount = 0;
+		if (is_countable($nextNodes)) {
+			$innercount = count($nextNodes);
+		}
 		$found = false;
 
 		$message .= ":".$count;
@@ -1724,7 +1807,10 @@ function getTagsForCloud($limit, $nameorder=true){
 	$resArray = $DB->select($sql, $params);
 	$array = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $resArray[$i];
     		array_push($array, $next);
@@ -1766,7 +1852,10 @@ function getUserTagsForCloud($limit){
 	$resArray = $DB->select($sql, $params);
 	$array = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $resArray[$i];
     		array_push($array, $next);
@@ -1807,7 +1896,10 @@ function getGroupTagsForCloud($GroupID, $limit, $orderby="Name", $dir="ASC"){
 	$resArray = $DB->select($sql, $params);
 	$array = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $resArray[$i];
     		array_push($array, $next);
@@ -1818,14 +1910,100 @@ function getGroupTagsForCloud($GroupID, $limit, $orderby="Name", $dir="ASC"){
 }
 
 /**
+ * Get the activity date ranges from Audit tables (node, nodeview, triple, voting, following).
+ * For Activity and user activity stats views
+ * @param itemids, a comma separated list of strings of nodeids or itemids
+ */
+function getActivityDateRange($itemids="") {
+	global $DB, $HUB_SQL;
+
+
+	$obj = new stdClass();
+	$obj->max = 0;
+	$obj->min = 0;
+
+	$WHERE_STRING = "";
+
+	$params = array();
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODEVIEW;
+	if ($itemids !="") {
+		$sql .= " WHERE NodeID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		$obj->max = $resArray[0]['max'];
+		$obj->min = $resArray[0]['min'];
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_VOTING;
+	if ($itemids !="") {
+		$sql .= " WHERE ItemID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_TRIPLE;
+	if ($itemids !="") {
+		$sql .= " WHERE (FromID IN (".$itemids.") || ToID IN (".$itemids."))";
+	}
+
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODE;
+	if ($itemids !="") {
+		$sql .= " WHERE NodeID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_FOLLOWING;
+	if ($itemids !="") {
+		$sql .= " WHERE ItemID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	return $obj;
+}
+
+
+/**
  * Return the Activity objects that represent the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
- * @param integer $start (optional - default: 0)
- * @param integer $max (optional - default: 20), -1 means all
- * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
+ * @param integer $from (optional - default: 0) only get records from the given timestamp
+ * @param integer $to (optional - default: 0 - do not apply) only get records to from the given timestamp
  * @return ActivitySet or Error
  */
-function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long') {
+function getAllNodeActivity($nodeid, $from = 0, $to = 0) {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -1841,9 +2019,11 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 		$startime = $now - $timeback;
 	}*/
 
+	/*
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1;
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1852,6 +2032,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 
 	$params[count($params)] = $nodeid;
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1859,6 +2040,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1866,6 +2048,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1873,6 +2056,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1881,12 +2065,87 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20, $style='long'
 
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART7;
 
-    if ($max > -1) {
-		// ADD LIMITING
-		$sql = $DB->addLimitingResults($sql, $start, $max);
-	}
+	$as->load($sql, $params);
+	*/
 
-	$as->load($sql, $params, $style);
+	// make as separate calls to reduce database load
+
+	// load AuditNode records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+
+	$as->load($sql, $params);
+
+	// load AuditTriple records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load AuditVoting records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load Following records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_TO;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load AuditNodeView records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
 
     return $as;
 }
@@ -2074,7 +2333,10 @@ function getCountriesForCloudByType($filternodetypes, $limit=20) {
 	$resArray = $DB->select($finalsql, $params);
 	$array = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $resArray[$i];
     		array_push($array, $next);
@@ -2108,7 +2370,10 @@ function getCountriesForCloudByUsers($limit=20) {
 	$array = array();
 
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $resArray[$i];
     		array_push($array, $next);
@@ -2291,7 +2556,7 @@ function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
 	    $us = new UserSet();
 	    return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
 	 } else {
-        $ERROR = new error();
+        $ERROR = new Hub_Error();
         return $ERROR->createAccessDeniedError();
 	 }
 }
@@ -2472,8 +2737,11 @@ function getUserNodeTypeCreationCounts($userid){
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$countloop = count($resArray);
-		for ($i=0; $i<$countloop; $i++) {
+		$counti = 0;
+		if (is_countable($resArray)) {
+			$counti = count($resArray);
+		}
+		for ($i=0; $i<$counti; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Name'];
 			$count = $array['num'];
@@ -2502,7 +2770,10 @@ function getUsersBeingFollowedByMe($userid) {
 	$resArray = $DB->select($sql, $params);
 	$userArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($userArray, $array);
@@ -2528,7 +2799,10 @@ function getItemsBeingFollowedByMe($userid) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($nodeArray, $array);
@@ -2606,7 +2880,7 @@ function adminDeleteNews($nodeid) {
 
 	if (isset($USER) && $USER != "" && $USER->getIsAdmin() == "Y") {
 		$n = new CNode($nodeid);
-		if (!$n instanceof Error) {
+		if (!$n instanceof Hub_Error) {
 			$n = $n->load();
 			if ($n->role->name == "News") {
 				$xml = format_object('xml',$n);
@@ -2772,8 +3046,8 @@ function createObfuscationEntry($obfuscationkey, $obfuscationiv, $request) {
 
 	$params = array();
 	$params[0] = $id;
-	$params[1] = $obfuscationkey;
-	$params[2] = $obfuscationiv;
+	$params[1] = utf8_encode($obfuscationkey); // Needed otherwise does not store
+	$params[2] = utf8_encode($obfuscationiv); // Needed otherwise does not store
 	$params[3] = $request;
 	$params[4] = $dataid;
 	$params[5] = $dt;
@@ -2814,7 +3088,13 @@ function getObfuscationKeyByDataID($dataid) {
 		//error_log(print_r($resArray, true));
 
 		// should only be one results ever;
-		if (count($resArray) > 0 && $resArray[0]) {
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
+		if ($count > 0 && $resArray[0]) {
+			$resArray[0]['ObfuscationKey'] = utf8_decode($resArray[0]['ObfuscationKey']);
+			$resArray[0]['ObfuscationIV'] = utf8_decode($resArray[0]['ObfuscationIV']);
 			return $resArray[0];
 		} else {
 			return database_error();
@@ -2879,6 +3159,8 @@ function getObfuscationKey($obfuscationid) {
 	if ($resArray !== false) {
 		// should only be one results ever;
 		if ($resArray[0]) {
+			$resArray[0]['ObfuscationKey'] = utf8_decode($resArray[0]['ObfuscationKey']);
+			$resArray[0]['ObfuscationIV'] = utf8_decode($resArray[0]['ObfuscationIV']);
 			return $resArray[0];
 		} else {
 			return database_error();

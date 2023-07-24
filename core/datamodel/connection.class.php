@@ -88,9 +88,12 @@ class Connection {
 		$params = array();
 		$params[0] = $this->connid;
     	$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         if($count == 0){
-	 		$ERROR = new error;
+	 		$ERROR = new Hub_Error;
 	    	$ERROR->createConnectionNotFoundError($this->connid);
 	        return $ERROR;
         }
@@ -132,7 +135,10 @@ class Connection {
         if ($style == 'long'){
 	        // add in the groups
 			$resArray2 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_GROUP, $params);
-			$count2 = count($resArray2);
+			$count2 = 0;
+			if (is_countable($resArray2)) {
+				$count2 = count($resArray2);
+			}
 	        if($count2 > 0){
 	            $this->groups = array();
 				for ($i=0; $i<$count2; $i++) {
@@ -144,7 +150,10 @@ class Connection {
 
 	        //now add in any tags
 			$resArray3 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_TAGS, $params);
-			$count3 = count($resArray3);
+			$count3 = 0;
+			if (is_countable($resArray3)) {
+				$count3 = count($resArray3);
+			}
 	        if($count3 > 0){
 	            $this->tags = array();
 				for ($i=0; $i<$count3; $i++) {
@@ -173,7 +182,10 @@ class Connection {
 
         //load positive votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_POS, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -185,7 +197,10 @@ class Connection {
 
         //load negative votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_NEG, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -208,7 +223,10 @@ class Connection {
 		$params[1] = $this->connid;
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTETYPE, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -301,7 +319,10 @@ class Connection {
 		$params[5] = $toroleid;
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_CHECK, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         if ($resArray !== false) {
 			if($count > 0){
 				for ($i=0; $i<$count; $i++) {
@@ -416,7 +437,10 @@ class Connection {
         if (!$resArray) {
             return database_error();
         } else {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$groupid = $array['GroupID'];
@@ -544,7 +568,10 @@ class Connection {
 		$params[0] = $currentuser;
 		$params[1] = $this->connid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_VOTE_SELECT, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		if ($count == 0) {
 	        $dt = time();
 			$params = array();
@@ -632,7 +659,10 @@ class Connection {
 		$params[0] = $this->connid;
 		$params[1] = $groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_GROUP_ADD_CHECK, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		if ($count == 0) {
             $dt = time();
 
@@ -745,7 +775,10 @@ class Connection {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_TAG_ADD_CHECK, $params);
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if($count == 0 ) {
 				$params = array();
 				$params[0] = $currentuser;
@@ -855,7 +888,10 @@ class Connection {
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_CAN_VIEW, $params);
 
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 	       	if($count == 0){
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -872,7 +908,7 @@ class Connection {
     function canadd(){
         global $LNG;
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -885,7 +921,7 @@ class Connection {
     function cancopy(){
         global $LNG;
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -897,7 +933,7 @@ class Connection {
      */
     function canedit(){
         global $DB,$USER,$LNG,$HUB_SQL;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -912,7 +948,10 @@ class Connection {
 		$params[1] = $this->connid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_CAN_EDIT, $params);
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 	       	if($count == 0){
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -928,7 +967,7 @@ class Connection {
      */
     function candelete(){
         global $DB,$USER,$LNG,$HUB_SQL;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -943,7 +982,10 @@ class Connection {
 		$params[1] = $this->connid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_CAN_DELETE, $params);
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 	       	if($count == 0){
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }

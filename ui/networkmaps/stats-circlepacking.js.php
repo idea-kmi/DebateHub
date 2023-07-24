@@ -33,20 +33,20 @@ function loadCirclePacking(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("circlepacking-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		$("circlepacking-div").insert('<div style="font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
 	/**** SETUP THE VIS ****/
-	var circlepackingdiv = new Element('div', {'id':'circlepackingdiv', 'style': 'clear:both;float:left;'});
-	var width = 980;
-	var height = 750;
+	var circlepackingdiv = new Element('div', {'id':'circlepackingdiv'});
+	var width = 100;
+	var height = 100;
 
-	circlepackingdiv.style.width = width+"px";
-	circlepackingdiv.style.height = height+"px";
+	circlepackingdiv.style.width = width+"%";
+	circlepackingdiv.style.height = height+"%";
 
-	var messagearea = new Element("div", {'id':'circlepackingmessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'circlepackingdiv-outer', 'style': 'float:left;overflow:hidden'});
+	var messagearea = new Element("div", {'id':'circlepackingmessage','class':'toolbitem','style':'font-weight:bold'});
+	var outerDiv = new Element('div', {'id':'circlepackingdiv-outer', 'style': 'overflow:hidden'});
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(circlepackingdiv);

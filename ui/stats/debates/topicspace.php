@@ -49,9 +49,13 @@ if (!isset($replyObj[0]->error)) {
 		$nodeid = $nodearray[0];
 		if (strpos($nodeString, '/') !== FALSE) {
 			$bits = explode('/', $nodeString);
-			$nodeid = $bits[count($bits)-1];
+			$countbits = 0;
+			if (is_countable($bits)) {
+				$countbits = count($bits);
+			}
+			$nodeid = $bits[$countbits-1];
 			$node = getNode($nodeid);
-			if (!$node instanceof Error) {
+			if (!$node instanceof Hub_Error) {
 				$nodeString = $node->name;
 				$role = $node->role->name;
 				$homepage = "";
@@ -102,11 +106,9 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 var NODE_ARGS = new Array();
 
 Event.observe(window, 'load', function() {
-	NODE_ARGS['data'] = <?php echo json_encode($data); ?>;
+	NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-scatterplot.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-scatterplot.js.php"); ?>', 'stats-debates-scatterplot-script');
 });
 </script>
 

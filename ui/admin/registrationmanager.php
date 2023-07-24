@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -225,7 +225,11 @@ if(!empty($errors)){
 
         <?php
 
-        	if (count($users) == 0) {
+			$count = 0;
+			if (is_countable($users)) {
+				$count = count($users);
+			}
+        	if ($count == 0) {
 				echo "<p>".$LNG->REGSITRATION_ADMIN_NONE_MESSAGE."</p>";
         	} else {
 				echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
@@ -297,7 +301,11 @@ if(!empty($errors)){
 
         <?php
 
-        	if (count($users2) == 0) {
+			$count = 0;
+			if (is_countable($users2)) {
+				$count = count($users2);
+			}
+        	if ($count == 0) {
 				echo "<p>".$LNG->REGSITRATION_ADMIN_VALIDATION_NONE_MESSAGE."</p>";
         	} else {
 				echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
@@ -362,7 +370,7 @@ if(!empty($errors)){
    </div>
 
     <div class="formrow">
-    <input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>

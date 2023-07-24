@@ -57,7 +57,7 @@ class Activity {
      * @param String $userid the id of the user who caused the audit to happen. Who performed the activity.
      * @param String $type the type of audited item ('Vote', 'Node', 'Connection', 'Follow', 'View')
      * @param int $modificationdate the time of the audit in seconds from epoch
-     * @param String $changetype the type of activity (view, edit, add, delete etc)
+     * @param String $changetype the type of activity (view, edit, add, delete etc or for voting Y,N,L)
      * @param String $xml the xml for the audited history object
      * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
 	 */
@@ -80,7 +80,7 @@ class Activity {
 					$this->node = getIdeaFromAuditXML($this->xml);
 				}
 				$this->currentnode = getNode($this->itemid, $style);
-				if ($this->currentnode instanceof Error) {
+				if ($this->currentnode instanceof Hub_Error) {
 					if ($this->currentnode->code == 7007) { // NODE NOT FOUND
 						$this->tombstone == true;
 					}
@@ -91,7 +91,7 @@ class Activity {
 					$this->con = getConnectionFromAuditXML($this->xml);
 				}
 				$this->currentcon = getConnection($this->itemid, $style);
-				if ($this->currentcon instanceof Error) {
+				if ($this->currentcon instanceof Hub_Error) {
 					if ($this->currentcon->code == 7008) { // CONNECTION NODE FOUND
 						$this->tombstone == true;
 					}
@@ -135,7 +135,7 @@ class Activity {
 		switch($this->type) {
 			case "Node":
 				if ($style == 'cif') {
-					if ($this->currentnode instanceof Error) {
+					if ($this->currentnode instanceof Hub_Error) {
 						throw new Exception("access denied");
 					}
 				} else {
@@ -150,7 +150,7 @@ class Activity {
 						} else {
 							// if it is a current node,
 							// check including group checking was done on loading
-							if ($this->currentnode instanceof Error) {
+							if ($this->currentnode instanceof Hub_Error) {
 								throw new Exception("access denied");
 							}
 						}
@@ -163,7 +163,7 @@ class Activity {
 			case "Connection":
 				if ($style == 'cif') {
 					// if it is a current node, do full check including group checking
-					if ($this->currentcon instanceof Error) {
+					if ($this->currentcon instanceof Hub_Error) {
 						throw new Exception("access denied");
 					}
 				} else {
@@ -171,7 +171,7 @@ class Activity {
 					if ($con instanceof Connection) {
 						if ($this->tombstone) {
 							// if it is a current node, do full check including group checking
-							if ($this->currentcon instanceof Error) {
+							if ($this->currentcon instanceof Hub_Error) {
 								throw new Exception("access denied");
 							}
 						} else {
@@ -206,7 +206,7 @@ class Activity {
 				break;
 		}
 
-        //if(api_check_login() instanceof Error){
+        //if(api_check_login() instanceof Hub_Error){
         //    throw new Exception("access denied");
         //}
     }

@@ -92,7 +92,7 @@
 			// CREATE THE ISSUE NODE
 			$issuenode = addNode($issue, $desc, 'N', $roleIssue);
 
-			if (!$issuenode instanceof Error) {
+			if (!$issuenode instanceof Hub_Error) {
 				// ISSUE DATES
 		        $issuenode->updateStartDate($utcstarttime);
 		        $issuenode->updateEndDate($utcendtime);
@@ -144,93 +144,109 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
+
 
 <script type="text/javascript">
-function init() {
-   	$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
-   	initialisePhaseDates();
-}
-
-function checkForm() {
-	var checkname = ($('issue').value).trim();
-	if (checkname == ""){
-	   alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
-	   return false;
-    }
-
-	//check dates
-	var startdate = ($('startdate').value).trim();
-	var enddate = ($('enddate').value).trim();
-	var votingstart = ($('votingstart').value).trim();
-
-	if (startdate != "" && enddate != "") {
-		var sdate = Date.parse(startdate);
-		var edate = Date.parse(enddate);
-
-		if (sdate >= edate) {
-	   		alert("<?php echo $LNG->FORM_ISSUE_START_END_DATE_ERROR; ?>");
-	  		return false;
-	  	}
-
-		if (votingstart != "") {
-			var vdate = Date.parse(votingstart);
-			if (vdate > edate || vdate < sdate) {
-	   			alert("<?php echo $LNG->FORM_ISSUE_VOTE_START_DATE_ERROR; ?>");
-	   			return false;
-	   		}
-		}
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
+		initialisePhaseDates();
 	}
 
-    $('issueform').style.cursor = 'wait';
+	function checkForm() {
+		var checkname = ($('issue').value).trim();
+		if (checkname == ""){
+		alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
+		return false;
+		}
 
-	return true;
-}
+		//check dates
+		var startdate = ($('startdate').value).trim();
+		var enddate = ($('enddate').value).trim();
+		var votingstart = ($('votingstart').value).trim();
 
-window.onload = init;
+		if (startdate != "" && enddate != "") {
+			var sdate = Date.parse(startdate);
+			var edate = Date.parse(enddate);
 
+			if (sdate >= edate) {
+				alert("<?php echo $LNG->FORM_ISSUE_START_END_DATE_ERROR; ?>");
+				return false;
+			}
+
+			if (votingstart != "") {
+				var vdate = Date.parse(votingstart);
+				if (vdate > edate || vdate < sdate) {
+					alert("<?php echo $LNG->FORM_ISSUE_VOTE_START_DATE_ERROR; ?>");
+					return false;
+				}
+			}
+		}
+
+		$('issueform').style.cursor = 'wait';
+		return true;
+	}
+	window.onload = init;
 </script>
 
-<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+			<?php
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
+			<?php } ?>
+			<?php insertFormHeaderMessage(); ?>
 
-	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+			<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
 
-	<div class="hgrformrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->DEBATE_IMAGE_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('IssuePhoto', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
+				<div class="mb-3 row">
+					<label for="image" class="col-sm-3 col-form-label">
+						<?php echo $LNG->DEBATE_IMAGE_LABEL; ?>
+						<a class="active" onMouseOver="showFormHint('IssuePhoto', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</a>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="image" name="image" />
+						<small><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></small>
+					</div>
+				</div>				
+				<div class="mb-3 row">
+					<label for="issue" class="col-sm-3 col-form-label">
+						<?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?>
+						<a class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</a>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="issue" name="issue" value="<?php echo( $issue ); ?>" />
+					</div>
+				</div>
+
+				<?php insertDescription('IssueDesc'); ?>
+				<?php insertIssuePhases(); ?>
+
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addissue" name="addissue">
+				</div>
+			</form>
+		</div>
 	</div>
-	<div class="hgrformrow">
-		<label class="formlabelbig">&nbsp;</label>
-		<span class="forminput"><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></span>
-	</div>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>
-			<span class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="issue" name="issue" value="<?php echo( $issue ); ?>" />
-	</div>
-
-	<?php insertDescription('IssueDesc'); ?>
-
-	<?php insertIssuePhases(); ?>
-
-    <br>
-    <div class="hgrformrow">
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addissue" name="addissue">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

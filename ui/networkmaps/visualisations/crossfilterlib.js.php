@@ -144,7 +144,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(monthGroup)
 		.dimension(monthFilter)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key.split(".")[1]; })
 		.labelOffsetX(5)
 		.labelOffsetY(13)
@@ -176,7 +176,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(dayOfWeekGroup)
 		.dimension(dayOfWeek)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key.split(".")[1]; })
 		.labelOffsetX(5)
 		.labelOffsetY(13)
@@ -206,7 +206,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(nodetypeGroup)
 		.dimension(nodetype)
-		.colors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A"])
+		.ordinalColors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A"])
 		.label(function (d) { return d.key.split(".")[1];  })
 		.labelOffsetX(5)
 		.labelOffsetY(20)
@@ -226,7 +226,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(activitytypeGroup)
 		.dimension(activitytype)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key; })
 		.labelOffsetX(5)
 		.labelOffsetY(20)
@@ -241,7 +241,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.width(180)
 		.height(180)
 		.transitionDuration(500)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		// (optional) define color domain to match your data domain if you want to bind data or color
 		.colorDomain([-1750, 1644])
 		// (optional) define color value accessor
@@ -455,7 +455,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.stack(usersGrouped, getNodeTitleAntecedence("Pro", false), function(d){return d.value.totalPro;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Con", false), function(d){return d.value.totalCon;})
 		.stack(usersGrouped, "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>", function(d){return d.value.totalVote;})
-		.colors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
+		.ordinalColors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
 		.dimension(user)
 		.elasticY(false)
 		.yAxisPadding(0)
@@ -524,7 +524,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	});
 	var nodetypeGroup = nodetype.group();
 
-	//	.colors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
+	//	.ordinalColors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
 	var colorChoice = d3.scale.ordinal().domain([0,1,2,3,4,5])
           .range(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"]);
 
@@ -586,33 +586,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.group(all);
 
 	dc.renderAll();
-
-	//ADD TOOLTIPS
-    /*var tipCrossFilter = d3.tip()
-		.attr('class', 'd3-tip')
-		.offset([10, 50])
-		.html(function(d) {
-			alert('d:'+d.toSource());
-			//var hint = '<div class="selectedback" style="padding:2px;border:1px solid dimgray">';
-			//if (d.id != d.name) {
-			//	hint += d.name + " (click to view)";
-			//} else {
-			//	hint += d.name;
-			//}
-			//hint += '</div>';
-
-			//return hint;
-		})
-
-	d3.select("svg").call(tipCrossFilter);
-    d3.select("#user-chart .bar")
-		.on('mouseover', function (d,i) {
-			tipCrossFilter.show(d)
-		})
-		.on('mouseout', function (d,i) {
-		  	tipCrossFilter.hide(d)
-		});
-	*/
 
 	/** LEGEND **/
 	var colorrange = ["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"];

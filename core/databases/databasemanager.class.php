@@ -80,13 +80,12 @@ class DatabaseManager {
 	function createMySQLConnection() {
 		global $CFG, $LNG;
 
-		$this->conn = mysql_connect( $CFG->databaseaddress , $CFG->databaseuser, $CFG->databasepass );
-		if(!$this->conn){
-			 die($LNG->DATABASE_CONNECTION_ERROR);
-		} else {
-	    	//connect to specified database
-	    	mysql_select_db($CFG->databasename, $this->conn) or die($LNG->DATABASE_CONNECTION_ERROR);
-	    }
+		$this->conn = new mysqli($CFG->databaseaddress, $CFG->databaseuser, $CFG->databasepass, $CFG->databasename);
+		if($this->conn->connect_errno > 0){
+			error_log("Errno: " . $this->conn->connect_errno);
+			error_log("Error: " . $this->conn->connect_error);
+			die($LNG->DATABASE_CONNECTION_ERROR);
+		}
 	}
 
 	function createODBCConnection() {
@@ -131,6 +130,18 @@ class DatabaseManager {
 	}
 
 	/**
+	 * Create the SQL ORDER BY clause for groups
+	 *
+	 * @param string $sql the sql string being ordered.
+	 * @param string $o order by column
+	 * @param string $s sort order (ASC or DESC)
+	 * @return string
+	 */
+	function groupOrderString($sql, $o, $s) {
+		return $sql.groupOrderString($o,$s);
+	}
+
+	/**
 	 * Create the SQL ORDER BY clause for urls
 	 *
 	 * @param string $sql the sql string being ordered.
@@ -164,6 +175,14 @@ class DatabaseManager {
 	 */
 	function addLimitingResults($sql, $start, $max) {
 		$newsql = $sql;
+
+		if (!isset($start)) {
+			$start = 0;
+		}
+		if (!isset($max)) {
+			$max = 20;
+		}
+
 		if ($max > -1 && $start > -1) {
 			if ($this->databasetype == $this->DATABASE_TYPE_MYSQL) {
 				$newsql .= " LIMIT ".$start.",".$max;
@@ -183,7 +202,7 @@ class DatabaseManager {
 	function cleanString($text) {
 		$newtext = $text;
 		if ($this->databasetype == $this->DATABASE_TYPE_MYSQL) {
-			$newtext = mysql_real_escape_string($text);
+			$newtext = $this->conn->real_escape_string($text);
 		} else if ($this->databasetype == $this->DATABASE_TYPE_VIRTUOSO) {
 			$newtext = addslashes($text);
 		}
@@ -205,7 +224,7 @@ class DatabaseManager {
 		while( ($nextpos = strpos($sql, '?', $pos)) !== false) {
 			$next = $params[$i];
 			if (is_string($next)) {
-				$next = "'".mysql_real_escape_string($next)."'";
+				$next = "'".$this->conn->real_escape_string($next)."'";
 			}
 			$sql = substr_replace ($sql, $next, $nextpos, 1);
 			$pos = $nextpos+strlen($next);
@@ -213,10 +232,13 @@ class DatabaseManager {
 		}
     	//echo $sql;
 
-    	$results = mysql_query( $sql, $this->conn);
-
-    	//error_log(print_r($sql, true));
-    	//error_log(print_r($results, true));
+    	$results = $this->conn->query($sql);
+    	if (!$results) {
+	    	error_log(print_r($sql, true));
+	    	error_log(print_r($results, true));
+			error_log("Errno: " . $this->conn->errno);
+			error_log("Error: " . $this->conn->error);
+    	}
 
 		return $results;
 	}
@@ -255,14 +277,18 @@ class DatabaseManager {
 		while( ($nextpos = strpos($sql, '?', $pos)) !== false) {
 			//error_log($pos);
 
-			$next = $params[$i];
-			if (is_string($next)) {
-				$next = "'".mysql_real_escape_string($next)."'";
+			if (isset($params[$i])) {
+				$next = $params[$i];
+				if (is_string($next)) {
+					$next = "'".$this->conn->real_escape_string($next)."'";
+				}
+			} else {
+				unset($next);
 			}
 			/*else if ($next instanceof stdClass) {
 				// used when string does not want to have speech marks added - as with like statements using %
 				if (isset($next->value)) {
-					$next = mysql_real_escape_string($next->value);
+					$next = $this->conn->real_escape_string($next->value);
 				} else {
 					$next = '';
 				}
@@ -278,21 +304,18 @@ class DatabaseManager {
 			$i++;
 		}
 
-	    //error_log(print_r($sql, true));
-
-    	$results = mysql_query( $sql, $this->conn);
-
-	    //error_log(print_r($results, true));
+    	$results = $this->conn->query($sql);
 
 		if (!$results) {
 	    	error_log(print_r($sql, true));
 	    	error_log(print_r($results, true));
+			error_log("Errno: " . $this->conn->errno);
+			error_log("Error: " . $this->conn->error);
 			return false;
 		} else {
-		    //error_log(print_r("HERE", true));
 			//load results into an array of row arrays
 			$resultArray = array();
-			while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+			while ($row = $results->fetch_assoc()) {
 				array_push($resultArray, $row);
 			}
         	return $resultArray;
@@ -305,7 +328,11 @@ class DatabaseManager {
 		//error_log(print_r(debug_backtrace(), true));
 
 		// pre-process params to remove stdClass - needed in MySQL version
-		/*$count = count($params);
+		/*
+		$count = 0;
+		if (is_countable($params)) {
+			$count = count($params);
+		}
 		for ($i=0; $i < $count; $i++) {
 			$next = $params[$i];
 			if ($next instanceof stdClass) {
@@ -360,7 +387,7 @@ class DatabaseManager {
 		while( ($nextpos = strpos($sql, '?', $pos)) !== false) {
 			$next = $params[$i];
 			if (is_string($next)) {
-				$next = "'".mysql_real_escape_string($next)."'";
+				$next = "'".$this->conn->real_escape_string($next)."'";
 			}
 			$sql = substr_replace ($sql, $next, $nextpos, 1);
 			$pos = $nextpos+strlen($next);
@@ -368,7 +395,7 @@ class DatabaseManager {
 		}
     	//echo $sql;
 
-    	$results = mysql_query( $sql, $this->conn);
+    	$results = $this->conn->query($sql);
 		return $results;
 	}
 

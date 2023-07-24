@@ -37,16 +37,20 @@
 function display_tabber($context,$args, $wasEmpty){
     global $CFG, $LNG, $USER, $CONTEXTUSER, $HUB_FLM;
 
-     // now trigger the js to load data
-     $argsStr = "{";
-     $keys = array_keys($args);
-     for($i=0;$i< sizeof($keys); $i++){
-         $argsStr .= '"'.$keys[$i].'":"'.$args[$keys[$i]].'"';
-         if ($i != (sizeof($keys)-1)){
-             $argsStr .= ',';
-         }
-     }
-     $argsStr .= "}";
+	// now trigger the js to load data
+	$argsStr = "{";
+	$keys = array_keys($args);
+	$count = 0;
+	if (is_countable($keys)) {
+		$count = count($keys);
+	}
+	for($i=0;$i< $count; $i++){
+		$argsStr .= '"'.$keys[$i].'":"'.$args[$keys[$i]].'"';
+		if ($i != ($count-1)){
+			$argsStr .= ',';
+		}
+	}
+	$argsStr .= "}";
 
  	if ($wasEmpty) {
      	$args["orderby"] = 'date';
@@ -54,13 +58,21 @@ function display_tabber($context,$args, $wasEmpty){
 
  	$argsStr2 = "{";
  	$keys = array_keys($args);
- 	for($i=0;$i< sizeof($keys); $i++){
+	$count = 0;
+	if (is_countable($keys)) {
+		$count = count($keys);
+	}
+ 	for($i=0;$i< $count; $i++){
  		$argsStr2 .= '"'.$keys[$i].'":"'.$args[$keys[$i]].'"';
- 		if ($i != (sizeof($keys)-1)){
+ 		if ($i != ($count-1)){
  			$argsStr2 .= ',';
  		}
  	}
  	$argsStr2 .= "}";
+
+	if (!isset($q)) {
+		$q = "";
+	}
 
 	echo "<script type='text/javascript'>";
 
@@ -72,108 +84,100 @@ function display_tabber($context,$args, $wasEmpty){
 	echo "</script>";
     ?>
 
-    <div id="tabber" style="clear:both;float:left; width: 100%;">
-		<div style="height:1px;clear:both;float:left;width:100%;margin:0px;background:#E8E8E8"></div>
-        <ul id="tabs" class="tab" class="issueborder">
-			<li class="tab"><a class="tab" id="tab-home" href="<?php echo $CFG->homeAddress; ?>index.php#home-list"><span class="tab tabissue"><?php echo $LNG->TAB_HOME; ?></span></a></li>
-			<li class="tab"><a class="tab" id="tab-group" href="<?php echo $CFG->homeAddress; ?>index.php#group-list"><span class="tab tabissue"><?php echo $LNG->TAB_GROUP; ?></span></a></li>
-			<li class="tab"><a class="tab" id="tab-issue" href="<?php echo $CFG->homeAddress; ?>index.php#issue-list"><span class="tab tabissue"><?php echo $LNG->TAB_ISSUE; ?></span></a></li>
+	<div id="tabber">
+		<ul class="nav nav-tabs p-3 main-nav" id="tabs" role="tablist">
+			<li class="nav-item" role="presentation"><a class="tab h5" id="tab-home" href="<?php echo $CFG->homeAddress; ?>index.php#home-list"><span class="tab tabissue"><?php echo $LNG->TAB_HOME; ?></span></a></li>
+			<li class="nav-item" role="presentation"><a class="tab h5" id="tab-group" href="<?php echo $CFG->homeAddress; ?>index.php#group-list"><span class="tab tabissue"><?php echo $LNG->TAB_GROUP; ?></span></a></li>
+			<li class="nav-item" role="presentation"><a class="tab h5" id="tab-issue" href="<?php echo $CFG->homeAddress; ?>index.php#issue-list"><span class="tab tabissue"><?php echo $LNG->TAB_ISSUE; ?></span></a></li>
         </ul>
 
-        <div id="tabs-content" style="float: left; width: 100%;">
+        <div id="tabs-content">
 
 			<!-- HOME TAB PAGES -->
-            <div id='tab-content-home-div' class='tabcontent' style="padding:0px;">
-	  			<div id="tab-content-home-title" style="background:#E8E8E8;height:2px;clear:both;float:left;width:100%;margin:0px;"></div>
-	            <div id='tab-content-home'>
+            <div id="tab-content-home-div" class="tabcontent">
+	  			<div id="tab-content-home-title"></div>
+	            <div id="tab-content-home">
 					<?php include($HUB_FLM->getCodeDirPath("ui/homepage.php")); ?>
 	            </div>
 			</div>
 
-			<!-- ISSUE TAB PAGE -->
-            <div id='tab-content-issue-div' class='tabcontent' style="display:none;padding:0px;">
-	  			<div id="tab-content-issue-title" style="background:#E8E8E8;height:2px;clear:both;float:left;width:100%;margin:0px;"></div>
-            	<div id='tab-content-issue-search' style='margin:5px;padding-top:5px;clear:both; float:left;'>
-
-					<?php if ($CFG->issueCreationPublic || (!$CFG->issueCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
-						<?php if(isset($USER->userid)){ ?>
-						<span class="toolbar" style="margin-top:0px;">
-							<span class="active" style="font-size: 11pt" onclick="javascript:loadDialog('createissue','<?php echo $CFG->homeAddress; ?>ui/popups/issueadd.php', 760,600);" title='<?php echo $LNG->TAB_ADD_ISSUE_HINT; ?>'><img style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" border="0" style="margin:0px;margin-left: 5px;padding:0px" /> <?php echo $LNG->TAB_ADD_ISSUE_LINK; ?></span>
-						</span>
-						<?php } ?>
-					<?php } ?>
-					<div id="searchissue" style="float:left;margin-left: 10px;">
-						<label for="q" style="float: left; margin-right: 3px; margin-top: 3px;"><?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?></label>
-
-						<?php
-							// if search term is present in URL then show in search box
-							$q = stripslashes(optional_param("q","",PARAM_TEXT));
-						?>
-
-						<div style="float: left;">
-							<input type="text" style="margin-right:3px; width:250px" onkeyup="if (checkKeyPressed(event)) { $('issue-go-button').onclick();}" id="qissue" name="q" value="<?php print( htmlspecialchars($q) ); ?>"/>
-							<div style="clear: both;"></div>
-						<div id="q_choices" class="autocomplete" style="border-color: white;"></div>
-						</div>
-						<div style="float:left;">
-							<img id="issue-go-button" src="<?php echo $HUB_FLM->getImagePath('search.png'); ?>" class="active" width="20" height="20" onclick="javascript: filterSearchIssues();" title="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" />
-						</div>
-						<div style="float:left;margin-left: 10px;">
-							<img src="<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>" class="active" width="20" height="20" onclick="javascript: ISSUE_ARGS['q'] = ''; ISSUE_ARGS['scope'] = 'all'; $('qissue').value='';if ($('scopechallangeall'))  $('scopechallangeall').checked=true; refreshIssues();" title="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" />
-						</div>
-					 </div>
-            	</div>
-
-            	<div id='tab-content-toolbar-issue' style='clear:both; float:left; width: 100%; height: 100%'>
-						<div id="tab-content-issue" class="tabcontentouter">
-          					<div id='tab-content-issue-list' class='tabcontentinner'></div>
-						</div>
-            	</div>
-			</div>
-
 			<!-- GROUP TAB PAGE -->
-            <div id='tab-content-group-div' class='tabcontent' style="display:none;padding:0px;">
-	  			<div id="tab-content-group-title" style="background:#E8E8E8;height:2px;clear:both;float:left;width:100%;margin:0px;"></div>
-            	<div id='tab-content-group-search' style='margin:5px; padding-top: 5px;clear:both; float:left;'>
-
-					<?php if ($CFG->groupCreationPublic || (!$CFG->groupCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
-						<?php if(isset($USER->userid)){ ?>
-						<span class="toolbar" style="margin-top:0px;">
-							<span class="active" style="font-size: 11pt" onclick="javascript:loadDialog('creategroup','<?php echo $CFG->homeAddress; ?>ui/popups/groupadd.php', 720,700);" title='<?php echo $LNG->TAB_ADD_GROUP_HINT; ?>'><img style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" border="0" style="margin:0px;margin-left: 5px;padding:0px" /> <?php echo $LNG->TAB_ADD_GROUP_LINK; ?></span>
-						</span>
-						<?php } ?>
-					<?php } ?>
-
-					<div id="searchuser" style="float:left;margin-left:10px;">
-
-						<label for="q" style="float: left; margin-right: 3px; margin-top: 3px;"><?php echo $LNG->TAB_SEARCH_USER_LABEL; ?></label>
-
-						<?php
-							// if search term is present in URL then show in search box
-							$q = stripslashes(optional_param("q","",PARAM_TEXT));
-						?>
-
-						<div style="float: left;">
-							<input type="text" style="margin-right:3px; width:250px" onkeyup="if (checkKeyPressed(event)) { $('group-go-button').onclick();}" id="qgroup" name="q" value="<?php print( htmlspecialchars($q) ); ?>"/>
-							<div style="clear: both;">
+			<div class="container-fluid">
+				<div class="row">
+					<div id="tab-content-group-div" class="tabcontent" style="display:none;padding:0px;">
+						<div id="tab-content-group-title" class="tab-content-title"></div>
+						<div id="tab-content-group-search">
+							<?php if ($CFG->groupCreationPublic || (!$CFG->groupCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
+								<?php if(isset($USER->userid)){ ?>
+									<div class="toolbar col-12 addButton">
+										<a class="active" onclick="javascript:loadDialog('creategroup','<?php echo $CFG->homeAddress; ?>ui/popups/groupadd.php', 720,700);" title='<?php echo $LNG->TAB_ADD_GROUP_HINT; ?>'><img src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" alt="" /> <?php echo $LNG->TAB_ADD_GROUP_LINK; ?></a>
+									</div>
+								<?php } ?>
+							<?php } ?>
+							<div id="searchuser" class="col-12 toolbarIcons">
+								<div class="row">
+									<div class="col-lg-4 col-md-12">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_USER_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_USER_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('group-go-button').onclick();}" id="qgroup" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+											<div id="q_choices" class="autocomplete"></div>
+											<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="filterSearchGroups();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
+											<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="GROUP_ARGS['q'] = ''; GROUP_ARGS['scope'] = 'all'; $('qgroup').value=''; refreshGroups();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+										</div>
+										<?php
+											// if search term is present in URL then show in search box
+											$q = stripslashes(optional_param("q","",PARAM_TEXT));
+										?>
+									</div>
+								</div>
 							</div>
-							<div id="q_choices" class="autocomplete" style="border-color: white;"></div>
 						</div>
-						<div style="float:left;">
-							<img id="group-go-button" src="<?php echo $HUB_FLM->getImagePath('search.png'); ?>" class="active" width="20" height="20" onclick="javascript: filterSearchGroups();" title="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" />
+						<div id="tab-content-toolbar-group" class="col-12">
+							<div id="tab-content-group" class="tabcontentouter p-4">
+								<div id="tab-content-group-list" class="tabcontentinner discussionGroups"></div>
+							</div>
 						</div>
-						<div style="float:left;margin-left: 10px;">
-							<img src="<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>" class="active" width="20" height="20" onclick="javascript: GROUP_ARGS['q'] = ''; GROUP_ARGS['scope'] = 'all';$('qgroup').value=''; refreshGroups();" title="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" />
-						</div>
-					 </div>
-            	</div>
-
-            	<div id='tab-content-toolbar-group' style='clear:both; float:left; width: 100%; height: 100%'>
-					<div id="tab-content-group" class="tabcontentouter">
-           				<div id='tab-content-group-list' class='tabcontentinner'></div>
 					</div>
 				</div>
-            </div>
+			</div>
+
+			<!-- ISSUE TAB PAGE -->
+			<div class="container-fluid">
+				<div class="row">
+					<div id="tab-content-issue-div" class="tabcontent" style="display:none;padding:0px;">
+						<div id="tab-content-issue-title" class="tab-content-title"></div>
+						<div id="tab-content-issue-search">
+							<?php if ($CFG->issueCreationPublic || (!$CFG->issueCreationPublic && $USER->getIsAdmin() == "Y" )) { ?>
+								<?php if(isset($USER->userid)){ ?>
+									<div class="toolbar col-12 addButton">
+										<a class="active" onclick="javascript:loadDialog('createissue','<?php echo $CFG->homeAddress; ?>ui/popups/issueadd.php', 760,600);" title='<?php echo $LNG->TAB_ADD_ISSUE_HINT; ?>'><img src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" alt="" /> <?php echo $LNG->TAB_ADD_ISSUE_LINK; ?></a>
+									</div>
+								<?php } ?>
+							<?php } ?>
+							<div id="searchissue" class="col-12 toolbarIcons">
+								<div class="row">
+									<div class="col-lg-4 col-md-12">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('issue-go-button').onclick();}" id="qissue" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+											<div id="q_choices" class="autocomplete"></div>
+											<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="filterSearchIssues();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
+											<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="ISSUE_ARGS['q'] = ''; ISSUE_ARGS['scope'] = 'all'; $('qissue').value=''; if ($('scopechallangeall'))  $('scopechallangeall').checked=true; refreshIssues();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+										</div>
+										<?php
+											// if search term is present in URL then show in search box
+											$q = stripslashes(optional_param("q","",PARAM_TEXT));
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tab-content-toolbar-issue" class="col-12">
+							<div id="tab-content-issue" class="tabcontentouter p-4">
+								<div id='tab-content-issue-list' class='tabcontentinner issueGroups'></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 

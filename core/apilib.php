@@ -312,8 +312,11 @@ function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",
     $n = new CNode($nodeid);
     $n = $n->load();
     $node = $n->edit($name,$desc,$private,$nodetypeid,$imageurlid,$imagethumbnail);
-
-    if (isset($resources) && $resources !== "" && count($resources) > 0) {
+	$count = 0;
+	if (is_countable($resources)) {
+		$count = count($resources);
+	}
+    if (isset($resources) && $resources !== "" && $count > 0) {
 
 		// remove all the existing urls
 		$node = $node->removeAllURLs();
@@ -332,7 +335,7 @@ function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",
 
 				$urlobj = new URL();
 				$urlobj->add($url, $title, "", $private, "", "");
-				if (!$urlobj instanceof Error) {
+				if (!$urlobj instanceof Hub_Error) {
 					$node->addURL($urlobj->urlid, "");
 				} else {
 					return $urlobj;
@@ -961,13 +964,13 @@ function getMostConnectedNodes($scope='all', $start = 0,$max = 20, $style='long'
  */
 function addWebResource($url, $title, $desc, $private='Y', $clip="", $clippath="") {
 	$r = getRoleByName('Web Resource');
-	if (!$r instanceof Error) {
+	if (!$r instanceof Hub_Error) {
 		$refrole = $r->roleid;
 		$refnode = addNode($url, $title, $private, $refrole);
-		if (!$refnode instanceof Error) {
+		if (!$refnode instanceof Hub_Error) {
     		$urlobj = new URL();
     		$urlobj->add($url, $title, $desc, $private, $clip, $clippath, "", "", "");
-	    	if (!$urlobj instanceof Error) {
+	    	if (!$urlobj instanceof Hub_Error) {
 	    		$refnode->addURL($urlobj->urlid, "");
 	    	}
 		}
@@ -1161,16 +1164,16 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 
 	//echo $linkType->label;
 
-	if ($fromNode instanceof Error) {
-		$ERROR = new Error();
+	if ($fromNode instanceof Hub_Error) {
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("fromnodeid:".$fromnodeid);
 	}
-	if ($toNode instanceof Error) {
-		$ERROR = new Error();
+	if ($toNode instanceof Hub_Error) {
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("tonodeid:".$tonodeid);
 	}
 
-	if (!$linkType instanceof Error) {
+	if (!$linkType instanceof Hub_Error) {
 		if ($fromNode->role->name == $fromRole->name && $toNode->role->name == $toRole->name) {
 			//error_log("HERE1");
 			//error_log($fromRole->name);
@@ -1188,7 +1191,7 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 
 		if (!$allowed) {
 			//error_log("NOT ALLOWED");
-			$ERROR = new Error();
+			$ERROR = new Hub_Error();
 			return $ERROR->createInvalidConnectionError();
 		} else {
 			//error_log("ALLOWED");
@@ -1197,7 +1200,7 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 	    }
 	} else {
 		//error_log("NOT ALLOWED - LINK ERROR");
-		$ERROR = new Error();
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("linktypeid".$linktypeid);
 	}
 }
@@ -1301,7 +1304,10 @@ function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='
 		if ($resArray !== false) {
 			$nodes = array();
 			$loopCount = 0;
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i < $count; $i++) {
 				$array = $resArray[$i];
 				$NodeID = $array['NodeID'];
@@ -1442,7 +1448,10 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
 		if ($resArray !== false) {
 			$nodes = array();
 			$loopCount = 0;
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i < $count; $i++) {
 				$array = $resArray[$i];
 				$NodeID = $array['NodeID'];
@@ -1935,7 +1944,11 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
 		$params[0] = $nodeid;
 		$qry = $HUB_SQL->APILIB_NODE_NAME_BY_ID_SELECT;
 		$resArray = $DB->select($sql, $params);
-		if ($resArray !== false && count($resArray) > 0) {
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
+		if ($resArray !== false && $count > 0) {
 			$text = $resArray[0]['Name'];
 		} else {
 			return database_error();
@@ -2145,7 +2158,10 @@ function getActiveConnectionUsers($start = 0,$max = 20,$style='long') {
 	$resArray = $DB->select($sql, $params);
 
     $us = new UserSet();
-	$count = count($resArray);
+	$count = 0;
+	if (is_countable($resArray)) {
+		$count = count($resArray);
+	}
 	$us->totalno = $count;
 	$us->start = $start;
 	$us->count = $count;
@@ -2180,7 +2196,10 @@ function getActiveIdeaUsers($start = 0,$max = 20,$style='long') {
 	$resArray = $DB->select($sql, $params);
 
     $us = new UserSet();
-	$count = count($resArray);
+	$count = 0;
+	if (is_countable($resArray)) {
+		$count = count($resArray);
+	}
 	$us->totalno = $count;
 	$us->start = $start;
 	$us->count = $count;
@@ -2356,7 +2375,7 @@ function validateUserSession($userid){
 	$validateSession = validateSession($userid);
 
 	if(strcmp($validateSession,$LNG->CORE_SESSION_OK) != 0) {
-		$ERROR = new error();
+		$ERROR = new Hub_Error();
 		$ERROR->createValidateSessionError($validateSession);
 		return $ERROR;
     }
@@ -2377,19 +2396,19 @@ function login($username,$password){
 	global $CFG;
 
     if($password == "" || $username == ""){
-       $ERROR = new Error();
+       $ERROR = new Hub_Error();
        $ERROR->createLoginFailedError();
        return $ERROR;
     }
 
     $user = userLogin($username,$password);
-    if($user instanceof Error){
+    if($user instanceof Hub_Error){
        	return $user;
     } else if ($user instanceof User) {
     	$user->setPHPSessID(session_id());
     	return $user;
 	} else {
-        $ERROR = new Error();
+        $ERROR = new Hub_Error();
         return $ERROR->createLoginFailedError();
 	}
 }
@@ -2495,7 +2514,10 @@ function getTreeData($fromdate="", $todate="") {
 	$answer = 0;
 	$resArray = $DB->select($sql, $params);
     if ($resArray !== false) {
-    	$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
     	for ($i=0; $i<$count; $i++) {
         	$array = $resArray[$i];
         	$answer = $array['count'];
@@ -2658,7 +2680,7 @@ function addGroupToNode($nodeid,$groupid){
  * @return Result or Error
  */
 function addGroupToNodes($nodeids,$groupid){
-    $nodesArr = split(",",$nodeids);
+    $nodesArr = explode(",",$nodeids);
     foreach ($nodesArr as $nodeid){
         $n = new CNode($nodeid);
         $n = $n->load();
@@ -2688,7 +2710,7 @@ function removeGroupFromNode($nodeid,$groupid){
  * @return Result or Error
  */
 function removeGroupFromNodes($nodeids,$groupid){
-    $nodesArr = split(",",$nodeids);
+    $nodesArr = explode(",",$nodeids);
     foreach ($nodesArr as $nodeid){
         $n = new CNode($nodeid);
         $n = $n->load();
@@ -2734,7 +2756,10 @@ function setGroupPrivacy($groupid,$private){
     $sql = $HUB_SQL->APILIB_NODE_GROUP_PRIVACY_SELECT;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$n = new CNode($array['NodeID']);
@@ -2747,7 +2772,10 @@ function setGroupPrivacy($groupid,$private){
     $sql = APILIB_CONNECTION_GROUP_PRIVACY_SELECT;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$c = new Connection($array['TripleID']);
@@ -2780,7 +2808,7 @@ function addGroupToConnection($connid,$groupid){
  * @return Result or Error
  */
 function addGroupToConnections($connids,$groupid){
-    $connsArr = split(",",$connids);
+    $connsArr = explode(",",$connids);
     foreach ($connsArr as $connid){
         $c = new Connection($connid);
         $c = $c->load();
@@ -2809,7 +2837,7 @@ function removeGroupFromConnection($connid,$groupid){
  * @return Result or Error
  */
 function removeGroupFromConnections($connids,$groupid){
-    $connsArr = split(",",$connids);
+    $connsArr = explode(",",$connids);
     foreach ($connsArr as $connid){
         $c = new Connection($connid);
    		$c = $c->load();
@@ -3089,6 +3117,8 @@ function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC'
 		$sql .= $HUB_SQL->AND.$querySQL;
 	}
 
+	$sql .= $HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2;
+
     $gs = new GroupSet();
     return $gs->loadFromUsers($sql,$params,$start,$max,$orderby,$sort,$style);
 }
@@ -3204,9 +3234,9 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 	// if groupid given, check current user in group before going any further.
 	if ($groupid != "") {
 		$group = new Group($groupid);
-		if (!$group instanceof Error) {
+		if (!$group instanceof Hub_Error) {
 			if (!$group->ismember($USER->userid)) {
-				$error = new Error();
+				$error = new Hub_Error();
 				return $error->createNotInGroup($group->name);
 			}
 		} else {
@@ -3216,13 +3246,13 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 
 	$r = getRoleByName($nodetypename);
 
-	if (!$r instanceof Error) {
+	if (!$r instanceof Hub_Error) {
 		$nodetypeid = $r->roleid;
 
 		$n = new CNode();
 		$node = $n->add($name,$desc,$private,$nodetypeid,$imageurlid,$imagethumbnail);
 
-		if (!$node instanceof Error) {
+		if (!$node instanceof Hub_Error) {
 			// Add to group
 			if (isset($groupid) && $groupid != "") {
 				addGroupToNode($node->nodeid,$groupid);
@@ -3236,7 +3266,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 
 						$urlobj = new URL();
 						$urlobj->add($url, $title, "", $private, "", "");
-						if (!$urlobj instanceof Error) {
+						if (!$urlobj instanceof Hub_Error) {
 							$node->addURL($urlobj->urlid, "");
 						} else {
 							return $urlobj;
@@ -3248,7 +3278,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 			// Connect to focal node
 			$focalnode = new CNode($focalnodeid);
 			$focalnode = $focalnode->load();
-			if (!$focalnode instanceof Error) {
+			if (!$focalnode instanceof Hub_Error) {
 
 				$focalrole = getRoleByName($focalnode->role->name);
 				$focalroleid = $focalrole->roleid;
@@ -3261,7 +3291,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 				} else {
 					$connection = addConnection($focalnodeid, $focalroleid, $linkType, $node->nodeid, $nodetypeid, $private, $conndesc);
 				}
-				if (!$connection instanceof Error) {
+				if (!$connection instanceof Hub_Error) {
 					// add to group
 					if (isset($groupid) && $groupid != "") {
 						addGroupToConnection($connection->connid,$groupid);
@@ -3291,7 +3321,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 	// CREATE THE solution NODE
 	$solutionnode = addNode($title,$desc, 'N', $rolesolution);
-	if (!$solutionnode instanceof Error) {
+	if (!$solutionnode instanceof Hub_Error) {
 
 		// Add to group
 		if (isset($groupid) && $groupid != "") {
@@ -3308,7 +3338,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 		$connection = addConnection($solutionnode->nodeid, $rolesolution, $linkType, $issuenodeid, $focalroleid, "N", $conndesc);
 
-		if (!$connection instanceof Error) {
+		if (!$connection instanceof Hub_Error) {
 
 			// add to group
 			if (isset($groupid) && $groupid != "") {
@@ -3321,7 +3351,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 			//error_log(print_r($linkTypeBuiltFrom, true));
 
-			$nodesArr = split(",",$ids);
+			$nodesArr = explode(",",$ids);
 			foreach ($nodesArr as $nodeid2){
 				$n = new CNode($nodeid2);
 				$n = $n->load();
@@ -3332,7 +3362,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 				//error_log(print_r($connection2, true));
 
-				if (!$connection2 instanceof Error) {
+				if (!$connection2 instanceof Hub_Error) {
 
 					// add to group
 					if (isset($groupid) && $groupid != "") {
@@ -3363,7 +3393,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 						// Connect the children of each node being merged to the new node
 						$connection3 = addConnection($from->nodeid, $fromroleid, $linkType3, $solutionnode->nodeid, $rolesolution, "N", $conndesc);
-						if (!$connection3 instanceof Error) {
+						if (!$connection3 instanceof Hub_Error) {
 							// add to group
 							if (isset($groupid) && $groupid != "") {
 								addGroupToConnection($connection3->connid,$groupid);
@@ -3477,7 +3507,10 @@ function getDebateMiniStats($nodeid, $style='mini') {
 
 	$consSet = getDebate($nodeid, $style);
 	$cons = $consSet->connections;
-	$count = count($cons);
+	$count = 0;
+	if (is_countable($cons)) {
+		$count = count($cons);
+	}
 	$userCheck = array();
 	$nodeCheck = array();
 	array_push($userCheck, $node->users[0]->userid);
@@ -3544,19 +3577,25 @@ function getDebateMiniStats($nodeid, $style='mini') {
 		}
 
 		$votesObj = getVotes($next->connid);
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 			$lemonvotes = $votesObj->lemonvoteslist;
 
-			$count2 = count($posvotes);
+			$count2 = 0;
+			if (is_countable($posvotes)) {
+				$count2 = count($posvotes);
+			}
 			for ($j=0; $j<$count2; $j++) {
 				$vote = $posvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count3 = count($negvotes);
+			$count3 = 0;
+			if (is_countable($negvotes)) {
+				$count3 = count($negvotes);
+			}
 			for ($j=0; $j<$count3; $j++) {
 				$vote = $negvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
@@ -3566,26 +3605,35 @@ function getDebateMiniStats($nodeid, $style='mini') {
 		}
 
 		$votesObj = getVotes($from->nodeid);
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 			$lemonvotes = $votesObj->lemonvoteslist;
 
-			$count4 = count($posvotes);
+			$count4 = 0;
+			if (is_countable($posvotes)) {
+				$count4 = count($posvotes);
+			}
 			for ($j=0; $j<$count4; $j++) {
 				$vote = $posvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count5 = count($negvotes);
+			$count5 = 0;
+			if (is_countable($negvotes)) {
+				$count5 = count($negvotes);
+			}
 			for ($j=0; $j<$count5; $j++) {
 				$vote = $negvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count6 = count($lemonvotes);
+			$count6 = 0;
+			if (is_countable($lemonvotes)) {
+				$count6 = count($lemonvotes);
+			}
 			for ($j=0; $j<$count6; $j++) {
 				$vote = $lemonvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
@@ -3612,7 +3660,10 @@ function getDebateMiniStats($nodeid, $style='mini') {
 	$stats->ideacount = $ideacount;
 	$stats->procount = $procount;
 	$stats->concount = $concount;
-	$stats->peoplecount = count($userCheck);
+	$stats->peoplecount = 0;
+	if (is_countable($userCheck)) {
+		$stats->peoplecount = count($userCheck);
+	}
 
 	return $stats;
 }
@@ -3631,7 +3682,10 @@ function getDebateParticipationStats($nodeid, $style='mini') {
 
 	$consSet = getDebate($nodeid, $style);
 	$cons = $consSet->connections;
-	$count = count($cons);
+	$count = 0;
+	if (is_countable($cons)) {
+		$count = count($cons);
+	}
 	$userCheck = array();
 	array_push($userCheck, $node->users[0]->userid);
 
@@ -3652,18 +3706,24 @@ function getDebateParticipationStats($nodeid, $style='mini') {
 
 		$votesObj = getVotes($next->connid);
 		//error_log(print_r($votesObj, true));
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 
-			$count2 = count($posvotes);
+			$count2 = 0;
+			if (is_countable($posvotes)) {
+				$count2 = count($posvotes);
+			}
 			for ($j=0; $j<$count2; $j++) {
 				$vote = $posvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count3 = count($negvotes);
+			$count3 = 0;
+			if (is_countable($negvotes)) {
+				$count3 = count($negvotes);
+			}
 			for ($j=0; $j<$count3; $j++) {
 				$vote = $negvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
@@ -3674,26 +3734,35 @@ function getDebateParticipationStats($nodeid, $style='mini') {
 
 		$votesObj = getVotes($from->nodeid);
 		//error_log(print_r($votesObj, true));
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 			$lemonvotes = $votesObj->lemonvoteslist;
 
-			$count4 = count($posvotes);
+			$count4 = 0;
+			if (is_countable($posvotes)) {
+				$count4 = count($posvotes);
+			}
 			for ($j=0; $j<$count4; $j++) {
 				$vote = $posvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count5 = count($negvotes);
+			$count5 = 0;
+			if (is_countable($negvotes)) {
+				$count5 = count($negvotes);
+			}
 			for ($j=0; $j<$count5; $j++) {
 				$vote = $negvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
 					array_push($userCheck, $vote->userid);
 				}
 			}
-			$count6 = count($lemonvotes);
+			$count6 = 0;
+			if (is_countable($lemonvotes)) {
+				$count6 = count($lemonvotes);
+			}
 			for ($j=0; $j<$count6; $j++) {
 				$vote = $lemonvotes[$j];
 				if (!in_array($vote->userid, $userCheck)) {
@@ -3708,7 +3777,10 @@ function getDebateParticipationStats($nodeid, $style='mini') {
 	}
 
 	$stats=new debateparticipationstats();
-	$stats->peoplecount = count($userCheck);
+	$stats->peoplecount = 0;
+	if (is_countable($userCheck)) {
+		$stats->peoplecount = count($userCheck);
+	}
 
 	return $stats;
 }
@@ -3727,7 +3799,10 @@ function getDebateContributionStats($nodeid, $style='mini') {
 
 	$consSet = getDebate($nodeid, $style);
 	$cons = $consSet->connections;
-	$count = count($cons);
+	$count = 0;
+	if (is_countable($cons)) {
+		$count = count($cons);
+	}
 	$nodeCheck = array();
 
 	$positivevotes = 0;
@@ -3816,13 +3891,19 @@ function getDebateViewingStats($nodeid, $groupid) {
 	$group = getGroup($groupid);
 	$userset = $group->members;
 	$members = $userset->users;
-	$memberscount = count($members);
+	$memberscount = 0;
+	if (is_countable($members)) {
+		$memberscount = count($members);
+	}
 
 	$node = getNode($nodeid, 'shortactivity');
 	$activitySet = $node->activity;
 	$activities = $activitySet->activities;
 
-	$count = count($activities);
+	$count = 0;
+	if (is_countable($activities)) {
+		$count = count($activities);
+	}
 	$userCheck = array();
 
 	for ($i=0; $i<$count;$i++) {
@@ -3842,7 +3923,10 @@ function getDebateViewingStats($nodeid, $groupid) {
 
 	$stats=new debateviewingstats();
 	$stats->groupmembercount = $memberscount;
-	$stats->viewingmembercount = count($userCheck);
+	$stats->viewingmembercount = 0;
+	if (is_countable($userCheck)) {
+		$stats->viewingmembercount = count($userCheck);
+	}
 
 	return $stats;
 }
@@ -3872,12 +3956,15 @@ function getAlertsData($issueid,$url,$alerttypes,$timeout=60,$userids="",$root="
 	$data = new alertdata();
 
 	$consSet = getDebate($issueid);
-	if (!$consSet instanceof Error) {
+	if (!$consSet instanceof Hub_Error) {
 		$nodeArray = array();
 		$userArray = array();
 
 		$conns = $consSet->connections;
-		$count = count($conns);
+		$count = 0;
+		if (is_countable($conns)) {
+			$count = count($conns);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$con = $conns[$i];
 
@@ -3904,191 +3991,213 @@ function getAlertsData($issueid,$url,$alerttypes,$timeout=60,$userids="",$root="
 		$obfuscationkey = $cipher->getKey();
 		$obfuscationiv = $cipher->getIV();
 		$reply = createObfuscationEntry($obfuscationkey, $obfuscationiv, $url);
+		if ($reply instanceof Hub_Error) {
+			return $data;
+		}
+
 		$url = $url."/?id=".$reply['dataid'];
 
 		// GET METRICS
 		$reply = getAlertMetrics($url, $cipher, $alerttypes, $timeout, $userids, $root);
 		$replyObj = json_decode($reply);
 
+		// check if something went wrong getting alert data.
+   		if (!$replyObj) {
+   			return $data;
+   		}
+
    		// {warnings: [string,* ], responses: [ result,* ] }
-		$results = $replyObj->responses;
+   		if (isset($replyObj->responses)) {
+   			$results = $replyObj->responses;
 
-		//error_log(print_r($reply, true));
-		if (!isset($results[0]->error) && isset($results[0]->data)) {
-			$replydata = $results[0]->data;
+			//error_log(print_r($reply, true));
+			if (!isset($results[0]->error) && isset($results[0]->data)) {
+				$replydata = $results[0]->data;
 
-			$alertArray = array(); //post by alert type
-			$userArray = array(); // post by user by alert type
-			$finalNodeArray = new NodeSet();
-			$finalUserArray = new UserSet();
-			$finalUserCheckArray = array();
+				$alertArray = array(); //post by alert type
+				$userArray = array(); // post by user by alert type
+				$finalNodeArray = new NodeSet();
+				$finalUserArray = new UserSet();
+				$finalUserCheckArray = array();
 
-			$count = count($replydata);
-			for ($i=0; $i<$count; $i++) {
-				$next = $replydata[$i];
-
-				//error_log(print_r($next, true));
-
-				$userid = $next->userID;
-
-				if ($userid != '*') {
-					$bits = explode('/', $userid);
-					$userid = $bits[count($bits)-1];
-					//I encode psuedo user ids on the way out.
-					//Not sure why. Possibly something to do with the cipher encoding.
-					$userid = urldecode($userid);
-					$userid = $cipher->decrypt($userid);
-					if (isset($userArray[$userid])) {
-						$user = $userArray[$userid];
-					} else {
-						$user = getUser($userid);
-					}
-					if (!$user instanceof Error ) {
-						if (!isset($finalUserCheckArray[$userid])) {
-							$finalUserArray->add($user);
-							$finalUserCheckArray[$userid] = $userid;
-						}
-					} else {
-						continue;
-						error_log("USER NOT FOUND: ".$nextpost);
-					}
+				$count = 0;
+				if (is_countable($replydata)) {
+					$count = count($replydata);
 				}
+				for ($i=0; $i<$count; $i++) {
+					$next = $replydata[$i];
 
-				$suggestionsArray = $next->suggestions;
+					//error_log(print_r($next, true));
 
-				$countj = count($suggestionsArray);
-				for ($j=0; $j<$countj; $j++) {
-					$suggestion = $suggestionsArray[$j];
-					$alertype = $suggestion->{'@type'};
+					$userid = $next->userID;
 
-					//error_log($alertype);
-
-					$nextpost = $suggestion->targetID;
-
-					//if (isset($suggestion->arguments)) {
-					//	$argumentsArray = $suggestion->arguments;
-					//}
-
-					//strip the id off the end of the post id (userid will need decrypting)
-					$bits = explode('/', $nextpost);
-					$nextpost = $bits[count($bits)-1];
-					$targetType = $suggestion->targetType;
-
-					//I encode psuedo user ids on the way out.
-					//Not sure why. Possibly something to do with the cipher encoding.
-					$nextpost = urldecode($nextpost);
-
-					if ($targetType == 'user' && isset($cipher) && $nextpost != 'anonymous') {
-						$nextpost = $cipher->decrypt($nextpost);
+					if ($userid != '*') {
+						$bits = explode('/', $userid);
+						$countbits = 0;
+						if (is_countable($bits)) {
+							$countbits = count($bits);
+						}
+						$userid = $bits[$countbits-1];
+						//I encode psuedo user ids on the way out.
+						//Not sure why. Possibly something to do with the cipher encoding.
+						$userid = urldecode($userid);
+						$userid = $cipher->decrypt($userid);
+						if (isset($userArray[$userid])) {
+							$user = $userArray[$userid];
+						} else {
+							$user = getUser($userid);
+						}
+						if (!$user instanceof Hub_Error ) {
+							if (!isset($finalUserCheckArray[$userid])) {
+								$finalUserArray->add($user);
+								$finalUserCheckArray[$userid] = $userid;
+							}
+						} else {
+							continue;
+							error_log("USER NOT FOUND: ".$nextpost);
+						}
 					}
 
-					if ($targetType == 'post' && isset($nodeArray[$nextpost])) {
-						$nextObj = $nodeArray[$nextpost];
-						$finalNodeArray->add($nextObj);
-					} else if ($targetType == 'user' && $nextpost != 'anonymous') {
-						if (!isset($finalUserCheckArray[$nextpost])) {
-							if (isset($userArray[$nextpost])){
-								$nextObj = $userArray[$nextpost];
-								$finalUserArray->add($nextObj);
-								$finalUserCheckArray[$nextpost] = $nextpost;
-							} else {
-								//error_log("USER not found for:".$nextpost);
-								$user = getUser($nextpost);
-								if (!$user instanceof Error ) {
-									$finalUserArray->add($user);
+					$suggestionsArray = $next->suggestions;
+
+					$countj = 0;
+					if (is_countable($suggestionsArray)) {
+						$countj = count($suggestionsArray);
+					}
+					for ($j=0; $j<$countj; $j++) {
+						$suggestion = $suggestionsArray[$j];
+						$alertype = $suggestion->{'@type'};
+
+						//error_log($alertype);
+
+						$nextpost = $suggestion->targetID;
+
+						//if (isset($suggestion->arguments)) {
+						//	$argumentsArray = $suggestion->arguments;
+						//}
+
+						//strip the id off the end of the post id (userid will need decrypting)
+						$bits = explode('/', $nextpost);
+						$countbits = 0;
+						if (is_countable($bits)) {
+							$countbits = count($bits);
+						}
+						$nextpost = $bits[$countbits-1];
+						$targetType = $suggestion->targetType;
+
+						//I encode psuedo user ids on the way out.
+						//Not sure why. Possibly something to do with the cipher encoding.
+						$nextpost = urldecode($nextpost);
+
+						if ($targetType == 'user' && isset($cipher) && $nextpost != 'anonymous') {
+							$nextpost = $cipher->decrypt($nextpost);
+						}
+
+						if ($targetType == 'post' && isset($nodeArray[$nextpost])) {
+							$nextObj = $nodeArray[$nextpost];
+							$finalNodeArray->add($nextObj);
+						} else if ($targetType == 'user' && $nextpost != 'anonymous') {
+							if (!isset($finalUserCheckArray[$nextpost])) {
+								if (isset($userArray[$nextpost])){
+									$nextObj = $userArray[$nextpost];
+									$finalUserArray->add($nextObj);
 									$finalUserCheckArray[$nextpost] = $nextpost;
 								} else {
-									continue;
-									error_log("USER NOT FOUND: ".$nextpost);
+									//error_log("USER not found for:".$nextpost);
+									$user = getUser($nextpost);
+									if (!$user instanceof Hub_Error ) {
+										$finalUserArray->add($user);
+										$finalUserCheckArray[$nextpost] = $nextpost;
+									} else {
+										continue;
+										error_log("USER NOT FOUND: ".$nextpost);
+									}
 								}
 							}
+						} else {
+							continue;
+							error_log("NOT FOUND: ".$nextpost);
 						}
-					} else {
-						continue;
-						error_log("NOT FOUND: ".$nextpost);
-					}
 
-					switch ($alertype) {
-						// MAP ALERTS
-						case $CFG->ALERT_LURKING_USER;
-						case $CFG->ALERT_INACTIVE_USER;
-						case $CFG->ALERT_IGNORED_POST:
-						case $CFG->ALERT_MATURE_ISSUE:
-						case $CFG->ALERT_IMMATURE_ISSUE:
-						case $CFG->ALERT_ORPHANED_IDEA:
-						case $CFG->ALERT_EMERGING_WINNER:
-						case $CFG->ALERT_CONTENTIOUS_ISSUE:
-						case $CFG->ALERT_INCONSISTENT_SUPPORT:
-						case $CFG->ALERT_HOT_POST:
-						case $CFG->ALERT_CONTROVERSIAL_IDEA:
-						case $CFG->ALERT_USER_GONE_INACTIVE:
-						case $CFG->ALERT_WELL_EVALUATED_IDEA:
-						case $CFG->ALERT_POORLY_EVALUATED_IDEA:
-						case $CFG->ALERT_RATING_IGNORED_ARGUMENT:
-						case $CFG->ALERT_USER_IGNORED_COMPETITORS:
-						case $CFG->ALERT_USER_IGNORED_ARGUMENTS:
-						case $CFG->ALERT_USER_IGNORED_RESPONSES:
-							// Store data just by alert type
-							if (array_key_exists($alertype,$alertArray)) {
-								$array = $alertArray[$alertype];
-								array_push($array, $nextpost);
-								$alertArray[$alertype] = $array;
-							} else {
-								$array = array();
-								array_push($array, $nextpost);
-								$alertArray[$alertype] = $array;
-							}
-							break;
+						switch ($alertype) {
+							// MAP ALERTS
+							case $CFG->ALERT_LURKING_USER;
+							case $CFG->ALERT_INACTIVE_USER;
+							case $CFG->ALERT_IGNORED_POST:
+							case $CFG->ALERT_MATURE_ISSUE:
+							case $CFG->ALERT_IMMATURE_ISSUE:
+							case $CFG->ALERT_ORPHANED_IDEA:
+							case $CFG->ALERT_EMERGING_WINNER:
+							case $CFG->ALERT_CONTENTIOUS_ISSUE:
+							case $CFG->ALERT_INCONSISTENT_SUPPORT:
+							case $CFG->ALERT_HOT_POST:
+							case $CFG->ALERT_CONTROVERSIAL_IDEA:
+							case $CFG->ALERT_USER_GONE_INACTIVE:
+							case $CFG->ALERT_WELL_EVALUATED_IDEA:
+							case $CFG->ALERT_POORLY_EVALUATED_IDEA:
+							case $CFG->ALERT_RATING_IGNORED_ARGUMENT:
+							case $CFG->ALERT_USER_IGNORED_COMPETITORS:
+							case $CFG->ALERT_USER_IGNORED_ARGUMENTS:
+							case $CFG->ALERT_USER_IGNORED_RESPONSES:
+								// Store data just by alert type
+								if (array_key_exists($alertype,$alertArray)) {
+									$array = $alertArray[$alertype];
+									array_push($array, $nextpost);
+									$alertArray[$alertype] = $array;
+								} else {
+									$array = array();
+									array_push($array, $nextpost);
+									$alertArray[$alertype] = $array;
+								}
+								break;
 
-						// USER SPECIFIC ALERTS
-						case $CFG->ALERT_UNSEEN_BY_ME:
-						case $CFG->ALERT_RESPONSE_TO_ME:
-						case $CFG->ALERT_UNRATED_BY_ME:
-						case $CFG->ALERT_INTERESTING_TO_ME:
-						case $CFG->ALERT_INTERESTING_TO_PEOPLE_LIKE_ME:
-						case $CFG->ALERT_SUPPORTED_BY_PEOPLE_LIKE_ME:
-						case $CFG->ALERT_PEOPLE_WITH_INTERESTS_LIKE_MINE:
-						case $CFG->ALERT_PEOPLE_WHO_AGREE_WITH_ME:
-						case $CFG->ALERT_UNSEEN_RESPONSE:
-						case $CFG->ALERT_UNSEEN_COMPETITOR:
-							if ($userid != null && $userid != "") {
-								if (array_key_exists($userid, $userArray)) {
-									$typesarray = $userArray[$userid];
-									if (array_key_exists($alertype,$typesarray)) {
-										$postArray = $typesarray[$alertype];
-										array_push($postArray, $nextpost);
-										$typesarray[$alertype] = $postArray;
-										$userArray[$userid] = $typesarray;
+							// USER SPECIFIC ALERTS
+							case $CFG->ALERT_UNSEEN_BY_ME:
+							case $CFG->ALERT_RESPONSE_TO_ME:
+							case $CFG->ALERT_UNRATED_BY_ME:
+							case $CFG->ALERT_INTERESTING_TO_ME:
+							case $CFG->ALERT_INTERESTING_TO_PEOPLE_LIKE_ME:
+							case $CFG->ALERT_SUPPORTED_BY_PEOPLE_LIKE_ME:
+							case $CFG->ALERT_PEOPLE_WITH_INTERESTS_LIKE_MINE:
+							case $CFG->ALERT_PEOPLE_WHO_AGREE_WITH_ME:
+							case $CFG->ALERT_UNSEEN_RESPONSE:
+							case $CFG->ALERT_UNSEEN_COMPETITOR:
+								if ($userid != null && $userid != "") {
+									if (array_key_exists($userid, $userArray)) {
+										$typesarray = $userArray[$userid];
+										if (array_key_exists($alertype,$typesarray)) {
+											$postArray = $typesarray[$alertype];
+											array_push($postArray, $nextpost);
+											$typesarray[$alertype] = $postArray;
+											$userArray[$userid] = $typesarray;
+										} else {
+											$postArray = array();
+											array_push($postArray, $nextpost);
+											$typesarray[$alertype] = $postArray;
+											$userArray[$userid] = $typesarray;
+										}
 									} else {
+										$typesarray = array();
 										$postArray = array();
 										array_push($postArray, $nextpost);
 										$typesarray[$alertype] = $postArray;
 										$userArray[$userid] = $typesarray;
 									}
-								} else {
-									$typesarray = array();
-									$postArray = array();
-									array_push($postArray, $nextpost);
-									$typesarray[$alertype] = $postArray;
-									$userArray[$userid] = $typesarray;
 								}
-							}
-							break;
-						default:
-							// Do nothing
+								break;
+							default:
+								// Do nothing
+						}
 					}
 				}
+
+				$data = new alertdata();
+				$data->alertarray = $alertArray; //nodes by alert type
+				$data->userarray = $userArray; // nodes by user by alert type
+				$data->nodes = $finalNodeArray;
+				$data->users = $finalUserArray;
+				//$data->users = $reader->userSet; //users
 			}
-
-			$data = new alertdata();
-			$data->alertarray = $alertArray; //nodes by alert type
-			$data->userarray = $userArray; // nodes by user by alert type
-			$data->nodes = $finalNodeArray;
-			$data->users = $finalUserArray;
-			//$data->users = $reader->userSet; //users
-
-			//error_log(count($finalNodeArray->nodes));
-			//error_log(print_r($data, true));
 		}
 	} else {
 		//error_log("DATA FOUND: getUserAlertData");
@@ -4122,7 +4231,10 @@ function getDebateIdeaConnections($issueid, $orderby = 'date',$sort ='ASC',$stat
 function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort ='ASC'){
 	$connectionSet = getConnectionsByNode($issueid, 0, -1, $orderby, $sort, 'selected', 'responds to', 'Solution', 'long', 0);
 	$conns = $connectionSet->connections;
-	$count = count($conns);
+	$count = 0;
+	if (is_countable($conns)) {
+		$count = count($conns);
+	}
 
 	$connectionSet->totalno = $count;
 
@@ -4152,7 +4264,11 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 	}
 
 	// If there are no lemon votes, just return the normal list of connections.
-	$lemonvotecount = count($connectionsWithLemonsList);
+	$lemonvotecount = 0;
+	if (is_countable($connectionsWithLemonsList)) {
+		$lemonvotecount = count($connectionsWithLemonsList);
+	}
+
 	if ($lemonvotecount == 0) {
 		return $connectionSet;
 	}
@@ -4163,7 +4279,10 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 	// if up to 60% of ideas have lemons, just return all nodes without lemons.
 	if ($lemonvotecount <= $sixtycount) {
 		$connectionSet->connections = $connectionsWithoutLemonsList;
-		$countnolemons = count($connectionsWithoutLemonsList);
+		$countnolemons = 0;
+		if (is_countable($connectionsWithoutLemonsList)) {
+			$countnolemons = count($connectionsWithoutLemonsList);
+		}
 		$connectionSet->count = $countnolemons;
 		return $connectionSet;
 	} else {
@@ -4171,7 +4290,10 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 		$runningtotal = 0;
 		krsort($connectionsGroupedByLemons, SORT_NUMERIC);
 		foreach ($connectionsGroupedByLemons as $key => $batch) {
-			$batchcount = count($batch);
+			$batchcount = 0;
+			if (is_countable($batch)) {
+				$batchcount = count($batch);
+			}
 			$potentialcount = ($runningtotal+$batchcount);
 			if ($potentialcount > $sixtycount) {
 				break;
@@ -4188,7 +4310,10 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 		);
 
 		$connectionSet->connections = $finalarray;
-		$connectionSet->count = count($finalarray);
+		$connectionSet->count = 0;
+		if (is_countable($finalarray)) {
+			$connectionSet->count = count($finalarray);
+		}
 
 		return $connectionSet;
 	}
@@ -4203,7 +4328,11 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 function getDebateIdeaConnectionsRemoved($issueid){
 	$connectionSet = getConnectionsByNode($issueid, 0, -1, 'date', 'ASC', 'selected', 'responds to', 'Solution', 'long', 0);
 	$conns = $connectionSet->connections;
-	$count = count($conns);
+
+	$count = 0;
+	if (is_countable($conns)) {
+		$count = count($conns);
+	}
 	$connectionSet->totalno = $count;
 
 	$connectionsWithoutLemonsList = array();
@@ -4232,8 +4361,11 @@ function getDebateIdeaConnectionsRemoved($issueid){
 	}
 
 	// If there are no lemon votes, just return an empty list as nothing would be removed.
-	$lemonvotecount = count($connectionsWithLemonsList);
-	if ($lemonvotecount == 0) {
+	$lemonvotecount->count = 0;
+	if (is_countable($connectionsWithLemonsList)) {
+		$lemonvotecount->count = count($connectionsWithLemonsList);
+	}
+	if ($lemonvotecount->count == 0) {
 		return new ConnectionSet();
 	}
 
@@ -4245,7 +4377,10 @@ function getDebateIdeaConnectionsRemoved($issueid){
 	$runningtotal = 0;
 	krsort($connectionsGroupedByLemons, SORT_NUMERIC);
 	foreach ($connectionsGroupedByLemons as $key => $batch) {
-		$batchcount = count($batch);
+		$batchcount->count = 0;
+		if (is_countable($batch)) {
+			$batchcount->count = count($batch);
+		}
 		$potentialcount = ($runningtotal+$batchcount);
 		if ($potentialcount > $sixtycount) {
 			break;
@@ -4256,7 +4391,10 @@ function getDebateIdeaConnectionsRemoved($issueid){
 	}
 
 	$connectionSet->connections = $dumpedconns;
-	$connectionSet->count = count($dumpedconns);
+	$connectionSet->count = 0;
+	if (is_countable($dumpedconns)) {
+		$connectionSet->count = count($dumpedconns);
+	}
 	return $connectionSet;
 }
 

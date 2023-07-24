@@ -40,7 +40,7 @@ set_restapi_header();
 // Check they are logged in before proceeding.
 if ($CFG->privateSite && (!isset($USER->userid) || $USER->userid == "")) {
     global $ERROR;
-    $ERROR = new error;
+    $ERROR = new Hub_Error;
     $ERROR->createAccessDeniedError();
 	include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
     die;
@@ -60,13 +60,21 @@ if (isset($responseParsed["query"])) {
 	//error_log($query);
 	if (isset($query) && $query !="") {
 		$queryBitsArray = explode('&', $query);
-		$countq = count($queryBitsArray);
+
+		$countq = 0;
+		if (is_countable($queryBitsArray)) {
+			$countq = count($queryBitsArray);
+		}
 		for ($q=0; $q<$countq; $q++) {
 			$nextbit = $queryBitsArray[$q];
 			$nextArray = explode('=', $nextbit);
-			if (count($nextArray) > 1 && $nextArray[0] == 'id') {
+			$countn = 0;
+			if (is_countable($nextArray)) {
+				$countn = count($nextArray);
+			}
+			if ($countn > 1 && $nextArray[0] == 'id') {
 				$unobfuscationid = $nextArray[1];
-			} else if (count($nextArray) > 1 && $nextArray[0] == 'callback') {
+			} else if ($countn > 1 && $nextArray[0] == 'callback') {
 				$callback = $nextArray[1];
 			}
 		}
@@ -101,20 +109,23 @@ if ($jsonld === FALSE) {
 	$area = $parts[0];
 	if ($area != 'api') {
 		global $ERROR;
-		$ERROR = new error;
+		$ERROR = new Hub_Error;
 		$ERROR->createAccessDeniedError();
 		include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 		die;
 	}
 
 	$type = check_param($parts[1], PARAM_ALPHA);
-	$len = count($parts);
+	$len = 0;
+	if (is_countable($parts)) {
+		$len = count($parts);
+	}
 	$cipher = "";
 
 	// Do we have a data unobfuscation id to get the cipher key?
 	if ($unobfuscationid != "" && $type != "unobfuscatedusers") {
 		$keyArray = getObfuscationKeyByDataID($unobfuscationid, $request);
-		if (!$keyArray instanceof Error) {
+		if (!$keyArray instanceof Hub_Error) {
 			$key = $keyArray['ObfuscationKey'];
 			$iv = $keyArray['ObfuscationIV'];
 			//error_log("key for data=".$key);
@@ -158,7 +169,7 @@ if ($jsonld === FALSE) {
 			if ($len == 2) {
 				if (isset($unobfuscationid) && $unobfuscationid != "") {
 					$keyArray = getObfuscationKey($unobfuscationid, $request);
-					if (!$keyArray instanceof Error) {
+					if (!$keyArray instanceof Hub_Error) {
 						$key = $keyArray['ObfuscationKey'];
 						$iv = $keyArray['ObfuscationIV'];
 						//error_log("key for users=".$key);
@@ -173,7 +184,7 @@ if ($jsonld === FALSE) {
 					if ($cipher == "") {
 						error_log("unobfuscation key invalid or expired");
 						global $ERROR;
-						$ERROR = new error;
+						$ERROR = new Hub_Error;
 						$ERROR->createAccessDeniedError();
 						include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 						die;
@@ -187,7 +198,10 @@ if ($jsonld === FALSE) {
 
 						$userArray = explode(',', $users);
 
-						$count = count($userArray);
+						$count = 0;
+						if (is_countable($userArray)) {
+							$count = count($userArray);
+						}
 						for($i=0; $i<$count; $i++) {
 							$userid = $userArray[$i];
 							if ($userid == 'anonymous') {
@@ -204,7 +218,7 @@ if ($jsonld === FALSE) {
 					}
 				} else {
 					global $ERROR;
-					$ERROR = new error;
+					$ERROR = new Hub_Error;
 					$ERROR->createAccessDeniedError();
 					include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 					die;
@@ -280,7 +294,7 @@ if ($jsonld === FALSE) {
 
 		case "views":
 			$checkNodes = array();
-			// All Isses Grouped and not grouped
+			// All Issues Grouped and not grouped
 			if ($len == 2) {
 				$viewSet = new ViewSet();
 				$viewSet->cipher = $cipher;
@@ -291,16 +305,22 @@ if ($jsonld === FALSE) {
 
 				$allIssues = getNodesByGlobal(0,-1,'date','ASC', "Issue");
 
-				if (!$allIssues instanceof Error) {
-					$count = count($allIssues->nodes);
+				if (!$allIssues instanceof Hub_Error) {
+					$count = 0;
+					if (is_countable($allIssues->nodes)) {
+						$count = count($allIssues->nodes);
+					}
 
 					for ($i=0; $i<$count; $i++) {
 						$issue = $allIssues->nodes[$i];
-						if (!$issue instanceof Error) {
+						if (!$issue instanceof Hub_Error) {
 							$conSet = getDebate($issue->nodeid, 'cif');
-							if (!$conSet instanceof Error) {
+							if (!$conSet instanceof Hub_Error) {
 								$view = new View($issue->nodeid);
-								$countj = count($conSet->connections);
+								$countj = 0;
+								if (is_countable($conSet->connections)) {
+									$countj = count($conSet->connections);
+								}
 								for ($j=0; $j<$countj;$j++) {
 									$con = $conSet->connections[$j];
 									$view->addConnection($con);
@@ -342,7 +362,11 @@ if ($jsonld === FALSE) {
 					$groupid = "";
 					$groups = $node->groups;
 					// there should only be one group per node.
-					if (count($groups) > 0) {
+					$countg = 0;
+					if (is_countable($groups)) {
+						$countg = count($groups);
+					}
+					if ($countg > 0) {
 						$groupid = $groups[0]->groupid;
 					}
 					$view->conversationid = $groupid;
@@ -350,8 +374,11 @@ if ($jsonld === FALSE) {
 					$view->conversationid = $id;
 				}
 
-				if (!$conSet instanceof Error) {
-					$countj = count($conSet->connections);
+				if (!$conSet instanceof Hub_Error) {
+					$countj = 0;
+					if (is_countable($conSet->connections)) {
+						$countj = count($conSet->connections);
+					}
 					for ($j=0; $j<$countj; $j++) {
 						$con = $conSet->connections[$j];
 						$view->addConnection($con);
@@ -379,7 +406,7 @@ if ($jsonld === FALSE) {
 				}
 			} else {
 				global $ERROR;
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createAccessDeniedError();
 				include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 				die;
@@ -402,12 +429,36 @@ if ($jsonld === FALSE) {
 				global $HUB_SQL, $DB;
 
 				$group = getGroup($id);
-				if($group instanceof Error){
-					global $ERROR;
-					$ERROR = new error;
-					$ERROR->createGroupNotFoundError($id);
-					include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
-					die;
+				if($group instanceof Hub_Error){
+					// Check if Users table has OriginalID field and if so check if this groupid is an old ID and adjust.
+					$params = array();
+					$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+					if ($resArray !== false) {
+						$count = 0;
+						if (is_countable($resArray)) {
+							$count = count($resArray);
+						}
+						if ($count > 0) {
+							$array = $resArray[0];
+							if (isset($array['OriginalID'])) {
+								$params = array();
+								$params[0] = $id;
+								$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+								if ($resArray2 !== false) {
+									$count2 = 0;
+									if (is_countable($resArray2)) {
+										$count2 = count($resArray2);
+									}
+									if ($count2 > 0) {
+										$array2 = $resArray2[0];
+										$groupid = $array2['UserID'];
+										header("Location: ".$CFG->homeAddress."api/conversations/".$groupid);
+										die;
+									}
+								}
+							}
+						}
+					}
 				}
 
 				$group = getConversationData($id);
@@ -424,7 +475,7 @@ if ($jsonld === FALSE) {
 				$response = $group;
 			} else {
 				global $ERROR;
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createAccessDeniedError();
 				include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 				die;
@@ -434,7 +485,7 @@ if ($jsonld === FALSE) {
 		default:
 			//error as method not defined.
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			$ERROR->createInvalidMethodError();
 			include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 			die;
@@ -472,14 +523,21 @@ function getConversationSetData($parts) {
 	$groupSet = new GroupSet();
 
 	$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-	if (!$allGroups instanceof Error) {
-		$count = count($allGroups->groups);
+	if (!$allGroups instanceof Hub_Error) {
+		$count = 0;
+		if (is_countable($allGroups->groups)) {
+			$count = count($allGroups->groups);
+		}
 
 		for ($i=0; $i<$count; $i++) {
 			$group = $allGroups->groups[$i];
-			if (!$group instanceof Error) {
+			if (!$group instanceof Hub_Error) {
 				$groupdata = getConversationData($group->groupid);
-				if (count($parts) > 3) {
+				$countparts = 0;
+				if (is_countable($parts)) {
+					$countparts = count($parts);
+				}
+				if ($countparts > 3) {
 					$subtype = check_param($parts[3], PARAM_ALPHA);
 					$group->filter = $subtype;
 				}
@@ -507,21 +565,27 @@ function getConversationData($groupid) {
 	$group = new Group($groupid);
 	$view = new View($groupid);
 
-	if (!$issueNodes instanceof Error) {
+	if (!$issueNodes instanceof Hub_Error) {
 		$nodes = $issueNodes->nodes;
-		$count = count($nodes);
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
-			if (!$node instanceof Error) {
+			if (!$node instanceof Hub_Error) {
 				if (array_key_exists($node->nodeid, $checkNodes) === FALSE) {
 					$checkNodes[$node->nodeid] = $node->nodeid;
 					$view->addNode($node);
 				}
 
 				$conSet = getDebate($node->nodeid, 'cif');
-				if (!$conSet instanceof Error) {
-					$countj = count($conSet->connections);
+				if (!$conSet instanceof Hub_Error) {
+					$countj = 0;
+					if (is_countable($conSet->connections)) {
+						$countj = count($conSet->connections);
+					}
 					for ($j=0; $j<$countj;$j++) {
 						$con = $conSet->connections[$j];
 						if (array_key_exists($con->connid, $checkConns) === FALSE) {
@@ -529,13 +593,13 @@ function getConversationData($groupid) {
 							$view->addConnection($con);
 						}
 						$from = $con->from;
-						if (!$from instanceof Error &&
+						if (!$from instanceof Hub_Error &&
 									array_key_exists($from->nodeid, $checkNodes) === FALSE) {
 							$checkNodes[$from->nodeid] = $from->nodeid;
 							$view->addNode($from);
 						}
 						$to = $con->to;
-						if (!$to instanceof Error &&
+						if (!$to instanceof Hub_Error &&
 									array_key_exists($to->nodeid, $checkNodes) === FALSE) {
 							$checkNodes[$to->nodeid] = $to->nodeid;
 							$view->addNode($to);
@@ -568,7 +632,10 @@ class UnobfuscatedUserSet {
      */
     function add($user){
         array_push($this->users,$user);
-        $this->count = count($this->users);
+		$this->count = 0;
+		if (is_countable($this->users)) {
+			$this->count = count($this->users);
+		}
     }
 }
 
@@ -603,7 +670,10 @@ class ViewSet {
      */
     function add($view){
         array_push($this->views,$view);
-        $this->count = count($this->views);
+		$this->count = 0;
+		if (is_countable($this->views)) {
+			$this->count = count($this->views);
+		}
     }
 }
 

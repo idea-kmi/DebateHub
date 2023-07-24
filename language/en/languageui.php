@@ -48,6 +48,8 @@ $LNG->HEADER_SIGNUP_OPEN_LINK_TEXT = 'Sign Up';
 $LNG->HEADER_SIGNUP_OPEN_LINK_HINT = 'Register now instantly, so you can sign in and add data';
 $LNG->HEADER_SIGNUP_REQUEST_LINK_TEXT = 'Sign Up';
 $LNG->HEADER_SIGNUP_REQUEST_LINK_HINT = 'Request an account, so you can sign in and add data';
+$LNG->HEADER_HOME_PAGE_LINK_TEXT = 'Home';
+$LNG->HEADER_HOME_PAGE_LINK_HINT = 'Go to home page';
 $LNG->HEADER_HELP_PAGE_LINK_TEXT = 'Help';
 $LNG->HEADER_HELP_PAGE_LINK_HINT = 'Go to the Help page';
 $LNG->HEADER_ABOUT_PAGE_LINK_TEXT = 'About';
@@ -56,22 +58,27 @@ $LNG->HEADER_ADMIN_PAGE_LINK_TEXT = 'Admin';
 $LNG->HEADER_ADMIN_PAGE_LINK_HINT = 'Go to the Admin page';
 $LNG->HEADER_MY_HUB_LINK = 'My Hub';
 
+$LNG->HEADER_SEARCH_BOX_LABEL = 'Search';
+$LNG->DEFAULT_SEARCH_TEXT = 'Enter "phrase search" or separate words';
 $LNG->HEADER_SEARCH_RUN_ICON_HINT = 'Run Search';
 $LNG->HEADER_SEARCH_RUN_ICON_ALT = 'Run';
 
 $LNG->HEADER_SEARCH_INFO_HINT = "<div  style='padding:10px;'>The default search will separate words using the spaces and perform an OR search, e.g. <b>'school system'</b> will search for the words <b>'school' OR 'system'</b> in either the item title, item description or any associated web clip texts.";
-$LNG->HEADER_SEARCH_INFO_HINT .= "<br><br>Use a '+' between words is you wish to perform an AND search, e.g. <b>'school+system'</b> will search for both the words <b>'school' and 'system'</b> somewhere in either the item title, item description or any associated web clip texts.";
-$LNG->HEADER_SEARCH_INFO_HINT .= "<br><br>Use double quotes around the search string to perform a phrase search, e.g. <b>\"school system\"</b> will search for the <b>exact phrase 'school system'</b> in either the item title, item description or any associated web clip texts.</div>";
+$LNG->HEADER_SEARCH_INFO_HINT .= "<br /><br />Use a '+' between words is you wish to perform an AND search, e.g. <b>'school+system'</b> will search for both the words <b>'school' and 'system'</b> somewhere in either the item title, item description or any associated web clip texts.";
+$LNG->HEADER_SEARCH_INFO_HINT .= "<br /><br />Use double quotes around the search string to perform a phrase search, e.g. <b>\"school system\"</b> will search for the <b>exact phrase 'school system'</b> in either the item title, item description or any associated web clip texts.</div>";
 
 /** FOOTER **/
 $LNG->FOOTER_TERMS_LINK = 'Terms of Use';
 $LNG->FOOTER_PRIVACY_LINK = 'Privacy';
 $LNG->FOOTER_CONTACT_LINK = 'Contact';
 $LNG->FOOTER_COOKIES_LINK = 'Cookies';
+$LNG->FOOTER_ACCESSIBILITY = 'Accessibility';
+$LNG->FOOTER_HINT = 'Collective Intelligence and Online Deliberation Research Website';
 
 /** REPORT FOOTER **/
 $LNG->FOOTER_REPORT_PRINTED_ON = 'Report printed on:';
 
+$LNG->HOME_MOST_POPULAR_GROUPS_TITLE = 'Most Popular '.$LNG->GROUPS_NAME;
 $LNG->HOME_MOST_RECENT_GROUPS_TITLE = 'Newest '.$LNG->GROUPS_NAME;
 $LNG->HOME_MOST_RECENT_DEBATES_TITLE = 'Newest '.$LNG->DEBATES_NAME;
 $LNG->HOME_MY_GROUPS_TITLE = 'My '.$LNG->GROUPS_NAME;
@@ -140,9 +147,9 @@ $LNG->GROUP_FORM_REJECT_MESSAGE_PART2 = 'as a member of this '.$LNG->GROUP_NAME.
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART1 = 'Are you sure you want to approve';
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART2 = 'to be a member of this '.$LNG->GROUP_NAME.'?';
 $LNG->GROUP_FORM_IS_JOINING_OPEN_LABEL = 'Is '.$LNG->GROUP_NAME.' joining open?';
-$LNG->GROUP_FORM_IS_JOINING_OPEN_HELP = 'Select the checkbox if you want people to decide to join the group themselves.<br>Leave the checkbox unselected if you wish to moderate group join requests and therefore control who can join the group.';
+$LNG->GROUP_FORM_IS_JOINING_OPEN_HELP = 'Select the checkbox if you want people to decide to join the group themselves.<br />Leave the checkbox unselected if you wish to moderate group join requests and therefore control who can join the group.';
 
-$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br><br>Thank you for your interest in this '.$LNG->GROUP_NAME;
+$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br /><br />Thank you for your interest in this '.$LNG->GROUP_NAME;
 $LNG->GROUP_JOIN_PENDING_MESSAGE = 'Membership Pending';
 $LNG->GROUP_MY_ADMIN_GROUPS_TITLE = $LNG->GROUPS_NAME.' I manage:';
 $LNG->GROUP_MY_MEMBER_GROUPS_TITLE = $LNG->GROUPS_NAME.' I am a member of:';
@@ -163,7 +170,7 @@ $LNG->GROUP_FORM_REJECT_MESSAGE_PART1 = 'Are you sure you want to reject';
 $LNG->GROUP_FORM_REJECT_MESSAGE_PART2 = 'as a member of this '.$LNG->GROUP_NAME.'?';
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART1 = 'Are you sure you want to approve';
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART2 = 'to be a member of this '.$LNG->GROUP_NAME.'?';
-$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br><br>Thank you for your interest in this '.$LNG->GROUP_NAME;
+$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br /><br />Thank you for your interest in this '.$LNG->GROUP_NAME;
 $LNG->GROUP_JOIN_PENDING_MESSAGE = 'Membership Pending';
 
 $LNG->GROUP_FORM_MEMBERS = "Add Members:<br/>(comma separated)";
@@ -271,7 +278,7 @@ $LNG->ISSUE_OPEN_TITLE = 'Continuous '.$LNG->DEBATE_NAME.'&nbsp;&nbsp; (default)
 $LNG->ISSUE_OPEN_HELP = 'By default, '.$LNG->DEBATES_NAME.' are always open and ongoing with discussion contributions and voting always available.';
 
 $LNG->ISSUE_TIMING_TITLE = 'Timed '.$LNG->DEBATE_NAME.'&nbsp;&nbsp; (optional)';
-$LNG->ISSUE_TIMING_HELP = 'Here you can optionally set the dates on which the '.$LNG->DEBATE_NAME.' starts and ends.<br>By default, discussion contributions and voting will be always available, unless you choose to <b>Phase</b> the debate below.';
+$LNG->ISSUE_TIMING_HELP = 'Here you can optionally set the dates on which the '.$LNG->DEBATE_NAME.' starts and ends.<br />By default, discussion contributions and voting will be always available, unless you choose to <b>Phase</b> the debate below.';
 $LNG->ISSUE_PHASING_TITLE = 'Timed '.$LNG->DEBATE_NAME.' with Phasing&nbsp;&nbsp; (optional)';
 $LNG->ISSUE_PHASING_HELP = 'Here you can optionally phase a Timed '.$LNG->DEBATE_NAME.'. There is always a compulsory phase of discussion where '.$LNG->SOLUTIONS_NAME.', '.$LNG->PROS_NAME.' and '.$LNG->CONS_NAME.' are added to the '.$LNG->DEBATE_NAME.'. There are then two optional phases. The \'Reduce\' phase allows people to allocate lemons to their least liked '.$LNG->SOLUTIONS_NAME.'. These lemon votes are then used to reduce the list of '.$LNG->SOLUTIONS_NAME.'. The \'Decide\' phase allows open voting for and against the final list of '.$LNG->SOLUTIONS_NAME.'.';
 $LNG->ISSUE_PHASING_ON = 'Phase this '.$LNG->DEBATE_NAME.'?';
@@ -314,6 +321,7 @@ $LNG->NODE_COUNTDOWN_START = "Starts In:";
 $LNG->NODE_COUNTDOWN_END = "Ends In:";
 $LNG->NODE_COUNTDOWN_CLOSED = "Closed";
 $LNG->NODE_COUNTDOWN_OPEN= "Always Open";
+$LNG->NODE_COUNTDOWN_TIMED= "Open - Timed";
 $LNG->NODE_COUNTDOWN_DAY = "day";
 $LNG->NODE_COUNTDOWN_DAYS = "days";
 $LNG->NODE_COUNTDOWN_HOUR = "hr";
@@ -452,7 +460,7 @@ $LNG->LOGIN_FORGOT_PASSWORD_LINK = 'Forgotten password?';
 $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART1 = 'Forgotten password? Please';
 $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART2 = 'Contact Us';
 $LNG->LOGIN_PASSWORD_LENGTH = 'Your password must be at least 8 characters long.';
-$LNG->LOGIN_PASSWORD_LENGTH_UPDATE = 'For added security we now enforce a minimum password length of 8 characters on new accounts.<br>We recommend to existing account holders with passwords under 8 characters in length that they reset their passwords now.<br>Thank you for your co-operation in increasing security on this site.';
+$LNG->LOGIN_PASSWORD_LENGTH_UPDATE = 'For added security we now enforce a minimum password length of 8 characters on new accounts.<br />We recommend to existing account holders with passwords under 8 characters in length that they reset their passwords now.<br />Thank you for your co-operation in increasing security on this site.';
 $LNG->LOGIN_SOCIAL_SIGNON = 'Or use another service';
 
 /** PROFILE PAGE **/
@@ -516,6 +524,7 @@ $LNG->SORT_ASC = 'Ascending';
 $LNG->SORT_DESC = 'Descending';
 $LNG->SORT_CREATIONDATE = 'Creation Date';
 $LNG->SORT_MODDATE = 'Modification Date';
+$LNG->SORT_MEMBERS = 'Member Count';
 $LNG->SORT_TITLE = 'Title';
 $LNG->SORT_NAME = 'Name';
 $LNG->SORT_CONNECTIONS = 'Connections';
@@ -566,7 +575,7 @@ $LNG->REGISTRATION_FAILED_INVALID = 'Your registration could not be completed as
 $LNG->REGISTRATION_SUCCESSFUL_LOGIN = "You can now <a href='".$CFG->homeAddress."ui/pages/login.php'>log in</a>";
 
 $LNG->REGISTRATION_REQUEST_SUCCESSFUL_TITLE = 'Registration Request Recieved';
-$LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE = 'Thank you for your interest in contributing to this Debate Hub.<br>Your registration request has been sent and you will be contacted shortly.';
+$LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE = 'Thank you for your interest in contributing to this Debate Hub.<br />Your registration request has been sent and you will be contacted shortly.';
 
 $LNG->REGISTRATION_REQUEST_SUCCESSFUL_TITLE_ADMIN = 'Registration of new user successful';
 $LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE_ADMIN = "An email has been sent to the new User with their Sign In details";
@@ -622,8 +631,10 @@ $LNG->FORM_ACTIVITY_ACTION_STARTED_FOLLOWING = 'started following';
 $LNG->FORM_ACTIVITY_ACTION_STARTED_FOLLOWING_ITEM = 'started following this item';
 $LNG->FORM_ACTIVITY_ACTION_VOTE_PROMOTED = 'promoted';
 $LNG->FORM_ACTIVITY_ACTION_VOTE_DEMOTED = 'demoted';
+$LNG->FORM_ACTIVITY_ACTION_VOTE_LEMONED = 'lemoned';
 $LNG->FORM_ACTIVITY_ACTION_VOTE_PROMOTED_ITEM = 'promoted this item';
 $LNG->FORM_ACTIVITY_ACTION_VOTE_DEMOTED_ITEM = 'demoted this item';
+$LNG->FORM_ACTIVITY_ACTION_VOTE_LEMONDED_ITEM = 'lemoned this item in the debate reduction phase';
 $LNG->FORM_ACTIVITY_ACTION_ADDED = 'added';
 $LNG->FORM_ACTIVITY_ACTION_EDITED = 'edited';
 $LNG->FORM_ACTIVITY_ACTION_ADDED_ITEM = 'added this item';
@@ -668,13 +679,13 @@ $LNG->ISSUE_DESC_FORM_HINT = '(optional) - Enter a longer description of the '.$
 
 /**** EMAIL TEXT *****/
 $LNG->WELCOME_REGISTER_OPEN_SUBJECT = "Welcome to the ".$CFG->SITE_TITLE;
-$LNG->WELCOME_REGISTER_OPEN_BODY = 'Thank you for registering with us.<br><br>For more information about what the Debate Hub is, why not read our <a href="'.$CFG->homeAddress.'ui/pages/about.php">about page</a>.<br>For help in getting started using the hub why not visit our <a href="'.$CFG->homeAddress.'help/">help page</a>.<br>Why not start using the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a> today.';
+$LNG->WELCOME_REGISTER_OPEN_BODY = 'Thank you for registering with us.<br /><br />For more information about what the Debate Hub is, why not read our <a href="'.$CFG->homeAddress.'ui/pages/about.php">about page</a>.<br />For help in getting started using the hub why not visit our <a href="'.$CFG->homeAddress.'ui/pages/help.php">help page</a>.<br />Why not start using the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a> today.';
 
 $LNG->VALIDATE_REGISTER_SUBJECT = "Completing your registration on ".$CFG->SITE_TITLE;
 
 $LNG->WELCOME_REGISTER_REQUEST_SUBJECT = "Registration request for the ".$CFG->SITE_TITLE;
-$LNG->WELCOME_REGISTER_REQUEST_BODY = 'Thank you for requesting an account on the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a>.<br>This is to acknowledge that we have received your request.<br>We will attempt to process your request within 24 hours, but at busy times it may take longer.<br>You will receive a further email with your Sign In details, if your request is successful.<br><br>Thanks again for your interest.';
-$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "The above user has requested an account. Please use the Admin area to accept or reject this new User.";
+$LNG->WELCOME_REGISTER_REQUEST_BODY = 'Thank you for requesting an account on the <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a>.<br />This is to acknowledge that we have received your request.<br />We will attempt to process your request within 24 hours, but at busy times it may take longer.<br />You will receive a further email with your Sign In details, if your request is successful.<br /><br />Thanks again for your interest.';
+$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "A new User has requested an account. Please use the Admin area to accept or reject this new User.";
 
 $LNG->WELCOME_REGISTER_CLOSED_SUBJECT = "Registration on the ".$CFG->SITE_TITLE;
 
@@ -759,7 +770,7 @@ $LNG->TAB_ADD_ISSUE_HINT = 'Add '.$LNG->DEBATE_NAME;
 $LNG->TAB_ADD_GROUP_HINT = 'Add '.$LNG->GROUP_NAME;
 
 /** HOMEPAGE **/
-$LNG->HOMEPAGE_TITLE = '';
+$LNG->HOMEPAGE_TITLE = ' ';
 
 $LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> is an open, online, collaborative tool to support collective ideation, deliberation and democratic decision making.';
 $LNG->HOMEPAGE_FIRST_PARA .= ' It allows you to set up staged online challenges/debates, that can be launched and addressed in the following way: users can collectively propose new ideas to tackle open challenges/debates; they can discuss and argument in favour or against the proposed ideas; they can then reduce and select the most promising ideas by building on the analysis of the arguments raised in favour and against each idea; they can finally vote for the most promising ideas that are worth pursuing further.';
@@ -767,17 +778,8 @@ $LNG->HOMEPAGE_FIRST_PARA .= ' It allows you to set up staged online challenges/
 $LNG->HOMEPAGE_SECOND_PARA_PART2 = $CFG->SITE_TITLE.' has a very simple User Interface, which may look like a common web forum, but is enhanced by a semantic data model. This allows a better informed idea selection support as well as the development of advanced analytics on your group, debate and challenge data, which are delivered to you with a visualisation dashboard.</p>';
 $LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' also has moderator features (such as idea merging, splitting and moving) to help reducing idea duplication in online discussion, which is one of the main weaknesses of existing online ideation and debate platforms.</p>';
 $LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>At present '.$CFG->SITE_TITLE.' has 500 users, from 6 countries, 40 community groups and 100 debates. Users indicate that '.$CFG->SITE_TITLE.' is a very useful platform in supporting and effectively managing collaborative decision-making.';
-
-//$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> gives online communities a place to: i. raise issues; ii. share ideas; iii. debate the pros and cons; iv. and vote contributions in order to collectively organize and progress good ideas forward.  DebateHub is distinctive in its use of advanced analytics to show you the best argued ideas, and visualisations of your community.';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 = '<b>For Community Members:</b><br>Debate Hub helps you share new ideas, but also opens them up for debate. This helps you make the case for your viewpoint, and identify the most robust ideas in all the noise.';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>For Community Managers:</b><br>Debate Hub provides new tools to organise your community\'s contributions, reduces idea duplication, and supports content analysis and summarisation. The analytics dashboard onto your groups helps you spot connections between people and ideas, detect gaps in knowledge, discover new patterns of (dis)agreement, and produce visual summaries of the community debate.</p>';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= 'To do so you can:';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<ul>';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<li>Map your ideas - add '.$LNG->ISSUES_NAME.', ';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->SOLUTIONS_NAME.', ';
-//$LNG->HOMEPAGE_SECOND_PARA_PART2 .= $LNG->ARGUMENTS_NAME.' and '.$LNG->RESOURCES_NAME.'</li></ul>';
-
 $LNG->FOOTER_PARTNERSHIP_LABEL = 'In Partnership with';
+$LNG->FOOTER_DEVELOPED_BY = 'Developed By';
 $LNG->HOMEPAGE_KEEP_READING = 'keep reading';
 $LNG->HOMEPAGE_READ_LESS = 'read less';
 
@@ -866,17 +868,17 @@ $LNG->ADMIN_NEWS_USERS = 'User List';
 
 /** HELP PAGES **/
 $LNG->HELP_NETWORKMAP_TITLE = 'Network Map';
-$LNG->HELP_NETWORKMAP_BODY = '<b>Background:</b><br><br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>L-drag to pan</b><br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>R-click</b> to fit network on screen (Apple-Click on Macs)<br>&nbsp;&nbsp&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>R-drag to zoom in/out</b> (Apple-Drag on Macs)<br><br>';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>Ideas:</b><br><br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click</b> to highlight what\'s connected<br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click</b> to view/edit its profile<br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>Duplicate Ideas</b> (created by >1 user) have a border<br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click duplicate Ideas</b> to view profiles in Idea List<br><br>';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>Connections:</b><br><br>&nbsp;&nbsp;&nbsp;';
-$LNG->HELP_NETWORKMAP_BODY .= '<b>Mouse over blobs</b> to view an Idea\'s<br>&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY = '<b>Background:</b><br /><br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>L-drag to pan</b><br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>R-click</b> to fit network on screen (Apple-Click on Macs)<br />&nbsp;&nbsp&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>R-drag to zoom in/out</b> (Apple-Drag on Macs)<br /><br />';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>Ideas:</b><br /><br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click</b> to highlight what\'s connected<br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click</b> to view/edit its profile<br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>Duplicate Ideas</b> (created by >1 user) have a border<br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>L-click duplicate Ideas</b> to view profiles in Idea List<br /><br />';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>Connections:</b><br /><br />&nbsp;&nbsp;&nbsp;';
+$LNG->HELP_NETWORKMAP_BODY .= '<b>Mouse over blobs</b> to view an Idea\'s<br />&nbsp;&nbsp;&nbsp;';
 
 /** CORE **/
 $LNG->CORE_UNKNOWN_USER_ERROR = 'User unknown';
@@ -932,7 +934,7 @@ $LNG->ERROR_ACCESS_DENIED_MESSAGE = "Access denied";
 $LNG->ERROR_LOGIN_FAILED_MESSAGE = "Sign In failed: Your email or password are wrong. Please try again.";
 $LNG->ERROR_LOGIN_FAILED_SUSPENDED_MESSAGE = "Sign In failed: This account has been suspended";
 $LNG->ERROR_LOGIN_FAILED_UNVALIDATED_MESSAGE = "Sign In failed: This account has not completed the registration process by having its Email address validated.";
-$LNG->ERROR_LOGIN_FAILED_EXTERNAL_MESSAGE = "The account with the given email address was created with an external service and does not have a local password.<br>You must sign in to this account using:";
+$LNG->ERROR_LOGIN_FAILED_EXTERNAL_MESSAGE = "The account with the given email address was created with an external service and does not have a local password.<br />You must sign in to this account using:";
 
 $LNG->ERROR_INVALID_JSON_ERROR_NONE = "No JSON errors";
 $LNG->ERROR_INVALID_JSON_ERROR_DEPTH = "Maximum stack depth exceeded in the JSON";
@@ -1024,31 +1026,31 @@ $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_5 = 'Authentication failed. The user has c
 $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_6 = 'User profile request failed. Most likely the user is not connected to the provider and he should try to authenticate again';
 $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_7 = 'User not connected to the provider.';
 
-$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_UNVALIDATED = 'An Debate Hub user account already exists on this site using the email address from your external profile, but that user account has not completed the registration process.<br>If you own that user account you need to reply to the email you where sent to complete your registration, before you can Sign In.';
-$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_UNVALIDATED_EXISTING = 'An Debate Hub user account already exists on this site using the email address from your external profile, but that Debate Hub user account has not had the email address verify yet.<br><br>If you own that Debate Hub user account you first need to <a href="'.$CFG->homeAddress.'ui/pages/login.php">Sign In</a> using that account and verify your email address from your profile page, before you can use any external services to Sign In to this Hub in the future.';
+$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_UNVALIDATED = 'An Debate Hub user account already exists on this site using the email address from your external profile, but that user account has not completed the registration process.<br />If you own that user account you need to reply to the email you where sent to complete your registration, before you can Sign In.';
+$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_UNVALIDATED_EXISTING = 'An Debate Hub user account already exists on this site using the email address from your external profile, but that Debate Hub user account has not had the email address verify yet.<br /><br />If you own that Debate Hub user account you first need to <a href="'.$CFG->homeAddress.'ui/pages/login.php">Sign In</a> using that account and verify your email address from your profile page, before you can use any external services to Sign In to this Hub in the future.';
 $LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_UNAUTHORIZED = 'An Debate Hub user account already exists using the email address from your external profile, however that account is awaiting authorization, so we cannot log you in at this time.';
 $LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_SUSPENDED = 'An Debate Hub user account already exists on this site using the email address on your external profile, however the account has currently been suspended, so we cannot log you in at this time.';
 $LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED = 'It seems you have tried to sign in with'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
 $LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED_PART2 = 'before but did not complete the email validation required.';
-$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED_PART2 .= '<br><br>Please respond to the email you where sent, before you try to Sign In with this service again.';
-$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED_PART2 .= '<br><br>Alternatively, request another validation email by clicking the button below.';
+$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED_PART2 .= '<br /><br />Please respond to the email you where sent, before you try to Sign In with this service again.';
+$LNG->LOGIN_EXTERNAL_ERROR_ACCOUNT_PROVIDER_UNVALIDATED_PART2 .= '<br /><br />Alternatively, request another validation email by clicking the button below.';
 $LNG->LOGIN_EXTERNAL_ERROR_USER_LOAD_FAILED = 'Failed to load user acount: ';
-$LNG->LOGIN_EXTERNAL_ERROR_REGISTRATION_CLOSED = "Based on the email address given we can see that you do not have an account with us yet.<br><br>Unfortunately registration on this site is currently by invitation only.";
-$LNG->LOGIN_EXTERNAL_ERROR_REQUIRES_AUTHORISATION = 'Based on the email address given we can see that you do not have an account with us yet.<br><br>This Debate Hub currently requires registration requests to be authorised.<br>So please go to the <a href="'.$CFG->homeAddress.'ui/pages/registerrequest.php">Sign Up</a> page and complete the registration request form.';
+$LNG->LOGIN_EXTERNAL_ERROR_REGISTRATION_CLOSED = "Based on the email address given we can see that you do not have an account with us yet.<br /><br />Unfortunately registration on this site is currently by invitation only.";
+$LNG->LOGIN_EXTERNAL_ERROR_REQUIRES_AUTHORISATION = 'Based on the email address given we can see that you do not have an account with us yet.<br /><br />This Debate Hub currently requires registration requests to be authorised.<br />So please go to the <a href="'.$CFG->homeAddress.'ui/pages/registerrequest.php">Sign Up</a> page and complete the registration request form.';
 
 $LNG->LOGIN_EXTERNAL_FIRST_TIME = 'We can see that this is the first time you have tried to sign in to this site using'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
-$LNG->LOGIN_EXTERNAL_ERROR_EMAIL_UNVALIDATED_PART1 = '<br><br>Unfortunately the email address on the profile information they hold on you has not been verified by them. So before we can associated this external profile to an account in our Hub we need to validate the email address.<br><br>Therefore you have now been sent an email. Please click on the link in the email to complete the registration of your'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
+$LNG->LOGIN_EXTERNAL_ERROR_EMAIL_UNVALIDATED_PART1 = '<br /><br />Unfortunately the email address on the profile information they hold on you has not been verified by them. So before we can associated this external profile to an account in our Hub we need to validate the email address.<br /><br />Therefore you have now been sent an email. Please click on the link in the email to complete the registration of your'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
 $LNG->LOGIN_EXTERNAL_ERROR_EMAIL_UNVALIDATED_PART2 = 'profile on this Hub.';
 
-$LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART1 = '<br><br>Unfortunately'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
-$LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART2 = 'has not given us your email address, so we cannot check if you have an account with us already or create a new one if required.<br><br>Therefore, please enter the Email address you wish to use on this Debate Hub below and press Login.';
+$LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART1 = '<br /><br />Unfortunately'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
+$LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART2 = 'has not given us your email address, so we cannot check if you have an account with us already or create a new one if required.<br /><br />Therefore, please enter the Email address you wish to use on this Debate Hub below and press Login.';
 
-$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE .= 'You will shortly receive an email.';
-$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE .= '<br>You must click on the link inside to complete your registration on this Hub.';
+$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE = 'You will shortly receive an email.';
+$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE .= '<br />You must click on the link inside to complete your registration on this Hub.';
 
 $LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 = 'There was no existing Hub user account for the email address on your external profile, so we have now created one and associated it to that external profile.';
-$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 .= '<br>However, the email address has not been validated by the external service provider, so before we can complete your registration we must first validate that email address belongs to you.';
-$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 .= '<br><br>'.$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE;
+$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 .= '<br />However, the email address has not been validated by the external service provider, so before we can complete your registration we must first validate that email address belongs to you.';
+$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 .= '<br /><br />'.$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE;
 
 $LNG->LOGIN_EXTERNAL_TITLE = 'Social Sign On';
 
@@ -1056,8 +1058,8 @@ $LNG->LOGIN_EXTERNAL_COMPLETE_TITLE = 'SOCIAL SIGN ON - Completing Email Validat
 $LNG->LOGIN_EXTERNAL_COMPLETE_FAILED = 'The Social sign on record associated with the given id is no longer available. Please try Signing Up/In again';
 $LNG->LOGIN_EXTERNAL_COMPLETE_FAILED = 'Your email validation could not be completed as the record id given was invalid. Please try Signing Up/In again';
 $LNG->LOGIN_EXTERNAL_COMPLETE_FAILED_USER = 'The existing User account that is associated with the given email address is no longer available';
-$LNG->LOGIN_EXTERNAL_COMPLETE_FAILED_INVALID = 'Your email validation could not be completed as the validation key given was invalid for the given external provider record id. <br><br>Please try again using a different provider, or create a local Debate Hub account';
-$LNG->LOGIN_EXTERNAL_REGISTER_COMPLETE_FAILED = 'Your registration could not be completed as the user id given did not belong to the external provider record given.<br><br>Please try again using a different provider, or create a local Debate Hub account';
+$LNG->LOGIN_EXTERNAL_COMPLETE_FAILED_INVALID = 'Your email validation could not be completed as the validation key given was invalid for the given external provider record id. <br /><br />Please try again using a different provider, or create a local Debate Hub account';
+$LNG->LOGIN_EXTERNAL_REGISTER_COMPLETE_FAILED = 'Your registration could not be completed as the user id given did not belong to the external provider record given.<br /><br />Please try again using a different provider, or create a local Debate Hub account';
 
 // Messages used when the provider didn't supply the email address so the user was asked to
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS = 'An LiteMap user account already exists on this site using the email address you have given us';
@@ -1065,21 +1067,21 @@ $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS = 'An LiteMap user account already 
 $LNG->LOGIN_EXTERNAL_UNVALIDATED_TITLE = 'Validate Your Debate Hub Email Address';
 
 
-$LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_UNVALIDATED = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', but that user account has not completed its registration process.<br><br>If you own that Debate Hub user account you need to reply to the email you where sent to complete your registration, before you can use any external services to Sign In to this Hub.';
-$LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_UNVALIDATED_EXISTING = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', but that Debate Hub user account has not had its email address validated yet.<br><br>If you own that Debate Hub user account you first need to <a href="'.$CFG->homeAddress.'ui/pages/login.php">Sign In</a> using that account and validate your email address from your profile page, before you can use any external services to Sign In to this Hub in the future.';
+$LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_UNVALIDATED = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', but that user account has not completed its registration process.<br /><br />If you own that Debate Hub user account you need to reply to the email you where sent to complete your registration, before you can use any external services to Sign In to this Hub.';
+$LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_UNVALIDATED_EXISTING = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', but that Debate Hub user account has not had its email address validated yet.<br /><br />If you own that Debate Hub user account you first need to <a href="'.$CFG->homeAddress.'ui/pages/login.php">Sign In</a> using that account and validate your email address from your profile page, before you can use any external services to Sign In to this Hub in the future.';
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_UNAUTHORIZED = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', however that account is awaiting authorization, so we cannot log you in at this time.';
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_ERROR_ACCOUNT_SUSPENDED = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.', however the account has currently been suspended, so we cannot log you in at this time.';
 
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_EXISTING_VALIDATE_TITLE_PART1 = 'Validate Your';
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_EXISTING_VALIDATE_TITLE_PART2 = 'Email Address';
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_EXISTING_VALIDATE_MESSAGE_PART1 = $LNG->LOGIN_EXTERNAL_NO_EMAIL_ACCOUNT_EXISTS.'. In order for us to associate your'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
-$LNG->LOGIN_EXTERNAL_NO_EMAIL_EXISTING_VALIDATE_MESSAGE_PART2 = 'account with this Debate Hub user account we first need to validate that you are the owner of the email address you have given us.<br><br>Therefore we have sent you an email. Please click on the link inside to validate your email address and complete the registration of your external profile with us.';
+$LNG->LOGIN_EXTERNAL_NO_EMAIL_EXISTING_VALIDATE_MESSAGE_PART2 = 'account with this Debate Hub user account we first need to validate that you are the owner of the email address you have given us.<br /><br />Therefore we have sent you an email. Please click on the link inside to validate your email address and complete the registration of your external profile with us.';
 
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_TITLE = 'Registration Successful';
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART1 = 'There was no existing Debate Hub user account for the email address you have given us, so we have now created one and associated it to your'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
 $LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART2 = 'profile.';
-$LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART3 = '<br>However, to complete your registration with us we must first validate that you are the owner of the email address you have given us.';
-$LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART3 .= '<br><br>'.$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE;
+$LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART3 = '<br />However, to complete your registration with us we must first validate that you are the owner of the email address you have given us.';
+$LNG->LOGIN_EXTERNAL_NO_EMAIL_VERIFICALTION_MESSAGE_PART3 .= '<br /><br />'.$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE;
 
 $LNG->LOGIN_EXTERNAL_WELCOME_TITLE = 'Welcome to the Debate Hub';
 $LNG->LOGIN_EXTERNAL_WELCOME_MESSAGE_PART1 = 'There was no existing Debate Hub user account for the email address:';
@@ -1129,7 +1131,7 @@ $LNG->REGSITRATION_ADMIN_USER_EMAILED_REJECTION = 'has been emailed that their r
 $LNG->REGSITRATION_ADMIN_EMAIL_REQUEST_SUBJECT = $LNG->WELCOME_REGISTER_REQUEST_SUBJECT;
 
 // %s will be replace with the name of the current Debate Hub. When translating please leave this in the sentence appropariately placed.
-$LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Thank you for requesting registration on the %s.<br>Unfortunately, on this occasion, your request for a user account has not been successful.';
+$LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Thank you for requesting registration on the %s.<br />Unfortunately, on this occasion, your request for a user account has not been successful.';
 
 $LNG->RECENT_EMAIL_DIGEST_LABEL = 'Email Digest:';
 $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE = "Tick to receive a monthly email digest of recent activity.";

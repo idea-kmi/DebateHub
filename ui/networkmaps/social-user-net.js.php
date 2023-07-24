@@ -48,7 +48,7 @@ function loadSocialNet() {
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;margin-left:5px;margin-bottom:5px;overflow:hidden'});
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
 	$("tab-content-social").insert(outerDiv);
@@ -128,6 +128,7 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 				//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
       			//alert("connection count = "+conns.length);
+				let concount = 0;
       			if (conns.length > 0) {
       				var connectionadded = false;
 	      			for(var i=0; i< conns.length; i++){
@@ -135,18 +136,20 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 	      				var fN = c.from[0].cnode;
 	      				var tN = c.to[0].cnode;
 						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
-							connectionadded = true;
+							concount++;
 						}
 	      			}
+	      		}
 
-					if (connectionadded) {
-						computeMostConnectedNode(forcedirectedGraph);
-						layoutAndAnimateSocial(forcedirectedGraph, messagearea);
-						toolbar.style.display = 'block';
-					} else {
-						messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-						toolbar.style.display = 'none';
-					}
+				let socialcount = 0;
+				for(var i in forcedirectedGraph.graph.nodes) {
+					socialcount++;
+				}
+
+				if (concount > 0 && socialcount > 0) {
+					computeMostConnectedNode(forcedirectedGraph);
+					layoutAndAnimateSocial(forcedirectedGraph, messagearea);
+					toolbar.style.display = 'block';
 				} else {
 					messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
 					toolbar.style.display = 'none';

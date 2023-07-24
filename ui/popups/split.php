@@ -50,7 +50,7 @@
 
 	$node = getNode($nodeid);
 	$text="";
-	if (!$node instanceof Error) {
+	if (!$node instanceof Hub_Error) {
 		if ($node->description == "") {
 			$text = $node->name;
 		} else {
@@ -62,7 +62,11 @@
 	$ideadescarray = optional_param("ideadescarray","",PARAM_HTML);
 
     if( isset($_POST["publish"]) ) {
-        if (sizeof($ideanamearray) <= 1 || ($ideanamearray[0] == "" || $ideanamearray[1] == "") ){
+		$countideas = 0;
+		if (is_countable($ideanamearray)) {
+			$countideas = count($ideanamearray);
+		}
+        if ($countideas <= 1 || ($ideanamearray[0] == "" || $ideanamearray[1] == "") ){
             array_push($errors,$LNG->$LNG->FORM_SPLIT_IDEA_ERROR);
         }
 
@@ -74,7 +78,10 @@
 			$roleid = $r->roleid;
 
 			$i = 0;
-			$count = count($ideanamearray);
+			$count = 0;
+			if (is_countable($ideanamearray)) {
+				$count = count($ideanamearray);
+			}
 			for($i=0; $i<$count;$i++) {
 				$name = $ideanamearray[$i];
 				$desc = $ideadescarray[$i];
@@ -88,7 +95,7 @@
 
 				$connection = addConnection($newnode->nodeid, $newnode->role->roleid, $linkTypeBuiltFrom, $orinode->nodeid, $roleid, "N", "");
 				// add to group
-				if (!$connection instanceof Error && isset($groupid) && $groupid != "") {
+				if (!$connection instanceof Hub_Error && isset($groupid) && $groupid != "") {
 					addGroupToConnection($connection->connid,$groupid);
 				}
 			}
@@ -132,7 +139,7 @@ if(!empty($errors)){
 
 <script type="text/javascript">
 
-var noIdeas = <?php echo sizeof($ideanamearray);?>;
+var noIdeas = <?php $count = 0; if (is_countable($ideanamearray)) { $count = count($ideanamearray); } echo $count; ?>;
 
 function init() {
    	$('dialogheader').insert("Split this idea into two or more ideas.");

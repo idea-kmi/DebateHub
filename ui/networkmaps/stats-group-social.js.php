@@ -128,15 +128,22 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 				//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
       			//alert("connection count = "+conns.length);
+				let concount = 0;
       			if (conns.length > 0) {
 	      			for(var i=0; i< conns.length; i++){
 	      				var c = conns[i].connection;
-						addConnectionToFDGraphSocial(c, forcedirectedGraph);
+						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
+							concount++;
+						}
 	      			}
+	      		}
+				let socialcount = 0;
+				for(var i in forcedirectedGraph.graph.nodes) {
+					socialcount++;
+				}
 
-					if (!forcedirectedGraph.root) {
-						computeMostConnectedNode(forcedirectedGraph);
-					}
+				if (concount > 0 && socialcount > 0) {
+					computeMostConnectedNode(forcedirectedGraph);
 					layoutAndAnimateFD(forcedirectedGraph, messagearea);
 					toolbar.style.display = 'block';
 				} else {

@@ -47,7 +47,10 @@
 	}
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
-    require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/recaptchalib.php"));
+
+    //require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/recaptchalib.php"));
+    require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/autoload.php"));
+
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
     $errors = array();
@@ -68,7 +71,7 @@
     $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
 
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
-    $recentactivitiesemail = optional_param("recentactivitiesemail",$CFG->RECENT_EMAIL_SENDING_SELECTED,PARAM_TEXT);
+    $recentactivitiesemail = optional_param("recentactivitiesemail","N",PARAM_TEXT);
     if ($recentactivitiesemail == "") {
     	$recentactivitiesemail = 'N';
     }
@@ -123,13 +126,28 @@
 						array_push($errors, $LNG->FORM_ERROR_EMAIL_USED);
 					} else {
 						if($CFG->CAPTCHA_ON) {
+							/*
 							$reCaptcha = new ReCaptcha($CFG->CAPTCHA_PRIVATE);
 							$response = $reCaptcha->verifyResponse(
 								$_SERVER["REMOTE_ADDR"],
 								$recaptcha_response_field
 							);
+							if ($recaptcha_response_field == "" || $response == null || !$response->isSuccess()) {
+								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
+							}
+							*/
 
-							if ($recaptcha_response_field == "" || $response == null || !$response->success) {
+							$reCaptcha = new \ReCaptcha\ReCaptcha($CFG->CAPTCHA_PRIVATE);
+							$response = $reCaptcha->setExpectedHostname($CFG->homeAddress)
+								->verify(
+									$recaptcha_response_field,
+									$_SERVER["REMOTE_ADDR"]
+							);
+
+							if ($response == null || !$response->isSuccess()) {
+								if (isset($response) && $response != null) {
+									console.log($response->getErrorCodes());
+								}
 								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
 							}
 						}
@@ -178,15 +196,7 @@
 									$country = $countries[$loccountry];
 								}
 
-								$message = "<br /><br />email: ".$email;
-								$message .= "<br />name: ".$fullname;
-								$message .= "<br />desc: ".$description;
-								$message .= "<br />interest: ".$interest;
-								$message .= "<br />location: ".$location;
-								$message .= "<br />country: ".$country;
-								$message .= "<br />homepage: ".$homepage;
-
-								$message .= "<br /><br />".$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN;
+								$message = $LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN;
 								$message = $head.$message.$foot;
 
 								$headers = "Content-type: text/html; charset=utf-8\r\n";

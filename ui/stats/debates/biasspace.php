@@ -47,9 +47,13 @@ if (!isset($replyObj[0]->error)) {
 		$nodeid = $nodearray[0];
 		if (strpos($nodeString, '/') !== FALSE) {
 			$bits = explode('/', $nodeString);
-			$nodeid = $bits[count($bits)-1];
+			$countbits = 0;
+			if (is_countable($bits)) {
+				$countbits = count($bits);
+			}
+			$nodeid = $bits[$countbits-1];
 			$node = getNode($nodeid);
-			if (!$node instanceof Error) {
+			if (!$node instanceof Hub_Error) {
 				$nodeString = $node->name;
 				$role = $node->role->name;
 				$homepage = "";
@@ -100,21 +104,19 @@ var NODE_ARGS = new Array();
 
 Event.observe(window, 'load', function() {
 
-	NODE_ARGS['data'] = <?php echo json_encode($data); ?>;
+	NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-scatterplot.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-scatterplot.js.php"); ?>', 'stats-debates-biasspace-script');
 });
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
+<div style="margin:5px;margin-left:10px;">
 	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
 		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
 	</h1>
 	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
 
-	<div id="scatterplot-div" style="clear:both;float:left;height:100%;"></div>
+	<div id="scatterplot-div" style="height:100%;"></div>
 </div>
 
 <?php

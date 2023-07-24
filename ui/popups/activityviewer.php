@@ -66,7 +66,7 @@
 			$i=0;
             foreach($activities as $activity) {
 
-				$userObj = json_encode($activity->user);
+				$userObj = json_encode($activity->user, JSON_INVALID_UTF8_IGNORE);
                 echo "<script type='text/javascript'>";
 				echo "var user = ";
 				echo $userObj;
@@ -109,10 +109,14 @@
 
 					echo "<td>";
 					echo "<span class='labelinput' style='font-size: 100%;'>";
-					if ($activity->changetype == 'Y') {
+					if ($activity->xml == 'Y') {
 						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_PROMOTED_ITEM;
-					} else if ($activity->changetype == 'N') {
+					} else if ($activity->xml == 'N') {
 						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_DEMOTED_ITEM;
+					} else if ($activity->xml == 'L') {
+						echo $LNG->FORM_ACTIVITY_ACTION_VOTE_LEMONED_ITEM;
+					} else {
+						echo "Unknown";
 					}
 					echo "</span>";
 					echo "</td>";
@@ -143,7 +147,7 @@
 						) {
 
 						try {
-							$jsonnode = json_encode($innernode);
+							$jsonnode = json_encode($innernode, JSON_INVALID_UTF8_IGNORE);
 						} catch (Exception $e) {
 							echo 'Caught exception:'.$e->getMessage."<br>";
 						}
@@ -190,15 +194,14 @@
 							}
 							echo "</ul></div></td></tr>";
 						}
-					} else if ((in_array($con->from->role->name, $CFG->BASE_TYPES) ||
-							in_array($con->from->role->name, $CFG->EVIDENCE_TYPES)
+					} else if (
+							( in_array($con->from->role->name, $CFG->BASE_TYPES) || in_array($con->from->role->name, $CFG->EVIDENCE_TYPES) )
 						&&
-							(in_array($con->to->role->name, $CFG->BASE_TYPES) ||
-							in_array($con->to->role->name, $CFG->EVIDENCE_TYPES)
+							( in_array($con->to->role->name, $CFG->BASE_TYPES) || in_array($con->to->role->name, $CFG->EVIDENCE_TYPES) )
 						) {
 
 						try {
-							$jsoncon = json_encode($con);
+							$jsoncon = json_encode($con, JSON_INVALID_UTF8_IGNORE);
 						} catch (Exception $e) {
 							echo 'Caught exception: ',  $e->getMessage(), "<br>";
 						}
@@ -279,11 +282,12 @@
         ?>
         </div>
     </div>
-
-    <div class="formrow">
-   		<input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
-    </div>
-
+		
+	<div class="mb-3 row">
+		<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+			<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">

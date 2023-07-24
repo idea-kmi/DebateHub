@@ -31,7 +31,8 @@
 
 /** shared SQL bits **/
 
-$HUB_SQL->APILIB_NODE_ORDERBY_VOTE_PART1 = "Select ot.NodeID, ot.CreationDate, ot.kids, case 'ItemID' when null then 0 else Count(ItemID) end as vote, (Sum(case when VoteType='Y' then 1 else 0 end) - Sum(case when VoteType='N' then 1 else 0 end)) as weight From (";
+//$HUB_SQL->APILIB_NODE_ORDERBY_VOTE_PART1 = "Select ot.NodeID, ot.CreationDate, ot.kids, case 'ItemID' when null then 0 else Count(ItemID) end as vote, (Sum(case when VoteType='Y' then 1 else 0 end) - Sum(case when VoteType='N' then 1 else 0 end)) as weight From (";
+$HUB_SQL->APILIB_NODE_ORDERBY_VOTE_PART1 = "Select ot.NodeID, ot.CreationDate, case 'ItemID' when null then 0 else Count(ItemID) end as vote, (Sum(case when VoteType='Y' then 1 else 0 end) - Sum(case when VoteType='N' then 1 else 0 end)) as weight From (";
 $HUB_SQL->APILIB_NODE_ORDERBY_VOTE_PART2 = ") ot left join Voting on NodeID = Voting.ItemID group by NodeID";
 
 $HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART1 = "Select ot.TripleID, ot.CreationDate, case 'ItemID' when null then 0 else Count(ItemID) end as vote, (Sum(case when VoteType='Y' then 1 else 0 end) - Sum(case when VoteType='N' then 1 else 0 end)) as weight From (";
@@ -414,12 +415,20 @@ $HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SELECT = $HUB_SQL->APILIB_GET_MY_GROUPS_SEL
 
 $HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SORT = 'order by u.CreationDate DESC';
 
-$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1	= "SELECT DISTINCT t.UserID FROM Users t
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1_OLD	= "SELECT DISTINCT t.UserID FROM Users t
         									LEFT JOIN TagUsers tn ON t.UserID = tn.UserID
         									LEFT JOIN Tag u ON u.tagID = tn.TagID
 											WHERE (t.CurrentStatus=? OR
 											t.CurrentStatus=?)
 											AND t.USERID <> ? AND t.IsGroup='Y'";
 
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1	= "SELECT DISTINCT t.UserID, count(ug.GroupID) as members FROM Users t
+        									LEFT JOIN TagUsers tn ON t.UserID = tn.UserID
+        									LEFT JOIN Tag u ON u.tagID = tn.TagID
+        									LEFT JOIN UserGroup ug ON t.UserID = ug.GroupID
+											WHERE (t.CurrentStatus=? OR
+											t.CurrentStatus=?)
+											AND t.USERID <> ? AND t.IsGroup='Y'";
 
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2 = " GROUP BY ug.GroupID";
 ?>

@@ -39,6 +39,12 @@ global $HUB_FLM;
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
 <head>
+<?php
+	if ($CFG->GOOGLE_ANALYTICS_ON) {
+		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
+	}
+?>
+
 <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title><?php echo $CFG->SITE_TITLE; ?></title>
@@ -58,8 +64,6 @@ global $HUB_FLM;
 <script src="<?php echo $HUB_FLM->getCodeWebPath('ui/users.js.php'); ?>" type="text/javascript"></script>
 
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/jsr_class.js" type="text/javascript"></script>
-<script src='<?php echo $CFG->homeAddress; ?>ui/lib/scriptaculous/scriptaculous.js' type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/jit-2.0.2/Jit/jit.js" type="text/javascript"></script>
@@ -95,12 +99,6 @@ window.onload = init;
             echo $header;
         }
     }
-?>
-
-<?php
-	if ($CFG->GOOGLE_ANALYTICS_ON) {
-		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
-	}
 ?>
 
 </head>

@@ -41,7 +41,10 @@ function getTotalItemVotes() {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($totals, $array);
@@ -61,7 +64,10 @@ function getTotalConnectionVotes() {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($totals, $array);
@@ -81,7 +87,10 @@ function getTotalVotes() {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($totals, $array);
@@ -113,7 +122,10 @@ function getTotalTopVotes($count) {
 	/*$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVotedNodes, $array);
@@ -147,7 +159,10 @@ function getTopNodeForVotes($count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVotedForNodes, $array);
@@ -181,7 +196,10 @@ function getTopNodeAgainstVotes($count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVotedAgainstNodes, $array);
@@ -209,7 +227,10 @@ function getTopVoters($count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVoters, $array);
@@ -234,7 +255,10 @@ function getTopForVoters($count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVotersFor, $array);
@@ -259,7 +283,10 @@ function getTopAgainstVoters($count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($topVotersAgainst, $array);
@@ -297,7 +324,10 @@ function getAllVoting(&$direction, $sort, $oldsort) {
 	/*$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($allNodeVotes, $array);
@@ -345,7 +375,10 @@ function getTotalVotesForUser($userid) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($totals, $array);
@@ -425,12 +458,14 @@ function getTopTagForUser($userid, $count) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Name'];
-			$count = $array['UseCount'];
-			$tags[$name] = $count;
+			$tags[$name] = $array['UseCount'];
 		}
 	}
 
@@ -450,7 +485,10 @@ function getLinkTypesForUser($userid) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Label'];
@@ -475,12 +513,14 @@ function getNodeTypesForUser($userid) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Name'];
-			$count = $array['num'];
-			$nodeArray[$name] = $count;
+			$nodeArray[$name] = $array['num'];
 		}
 	}
 
@@ -528,19 +568,29 @@ function getComparedThinkingForUser($userid) {
 	$resArray = $DB->select($sql, $params);
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$id = $array['TripleID'];
 			$con = new Connection();
 			$con->connid = $id;
 			$con = $con->load();
-			if (!$con instanceof error) {
-				$comparedArray[count($comparedArray)] = $con;
+			if (!$con instanceof Hub_Error) {
+				$countarray = 0;
+				if (is_countable($comparedArray)) {
+					$countarray = count($comparedArray);
+				}
+				$comparedArray[$countarray] = $con;
 			}
 		}
 
-		$connectionSet->totalno = count($connectionSet->connections);
+		$connectionSet->totalno = 0;
+		if (is_countable($connectionSet->connections)) {
+			$connectionSet->totalno = count($connectionSet->connections);
+		}
 		$connectionSet->start = 0;
 		$connectionSet->count = $connectionSet->totalno;
 	}
@@ -587,19 +637,25 @@ function getInformationBrokeringForUser($userid) {
 
 	$nodeArray = array();
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$id = $array['TripleID'];
 			$con = new Connection();
 			$con->connid = $id;
 			$con = $con->load();
-			if (!$con instanceof error) {
+			if (!$con instanceof Hub_Error) {
 				$brokerConnectionSet->add($con);
 			}
 		}
 
-		$brokerConnectionSet->totalno = count($brokerConnectionSet->connections);
+		$brokerConnectionSet->totalno = 0;
+		if (is_countable($brokerConnectionSet->connections)) {
+			$brokerConnectionSet->totalno = count($brokerConnectionSet->connections);
+		}
 		$brokerConnectionSet->start = 0;
 		$brokerConnectionSet->count = $brokerConnectionSet->totalno;
 	}
@@ -629,7 +685,10 @@ function getMostUsedLinkType() {
 		// Get Node Types
 		$nodetypesArray = array();
 		$nodetypes = "";
-		$count = count($CFG->BASE_TYPES);
+		$count = 0;
+		if (is_countable($CFG->BASE_TYPES)) {
+			$count = count($CFG->BASE_TYPES);
+		}
 		for($i=0; $i<$count; $i++){
 			$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$i];
 			if ($i == 0) {
@@ -638,7 +697,10 @@ function getMostUsedLinkType() {
 				$nodetypes .= ",?";
 			}
 		}
-		$count = count($CFG->EVIDENCE_TYPES);
+		$count = 0;
+		if (is_countable($CFG->EVIDENCE_TYPES)) {
+			$count = count($CFG->EVIDENCE_TYPES);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$i];
 			$nodetypes .= ",?";
@@ -648,7 +710,10 @@ function getMostUsedLinkType() {
 		$nodetypesArray[count($nodetypesArray)] = 'Con';
 		$nodetypes .= ",?";
 
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Label'];
@@ -668,7 +733,10 @@ function getMostUsedLinkType() {
 
 			$resArray2 = $DB->select($qry4, $params);
 			if ($resArray2 !== false) {
-				$countk = count($resArray2);
+				$countk = 0;
+				if (is_countable($resArray2)) {
+					$countk = count($resArray2);
+				}
 				for ($k=0; $k<$countk; $k++) {
 					$array = $resArray2[$k];
 					$counts = $array['num'];
@@ -699,7 +767,10 @@ function getMostUsedNodeType() {
 	// Get Node Types
 	$nodetypesArray = array();
 	$nodetypes = "";
-	$count = count($CFG->BASE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
 	for($i=0; $i<$count; $i++){
 		$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$i];
 		if ($i == 0) {
@@ -708,7 +779,10 @@ function getMostUsedNodeType() {
 			$nodetypes .= ",?";
 		}
 	}
-	$count = count($CFG->EVIDENCE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$i];
 		$nodetypes .= ",?";
@@ -728,7 +802,10 @@ function getMostUsedNodeType() {
 
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		$roleIDs = "";
 		$previousName = "";
 		for ($i=0; $i<$count; $i++) {
@@ -759,7 +836,10 @@ function getMostUsedNodeType() {
 
 				$resArray2 = $DB->select($qry4, $params);
 				if ($resArray2 !== false) {
-					$countk = count($resArray2);
+					$countk = 0;
+					if (is_countable($resArray2)) {
+						$countk = count($resArray2);
+					}
 					for ($k=0; $k<$countk; $k++) {
 						$array2 = $resArray2[$k];
 						$counts = $array2['num'];
@@ -804,7 +884,10 @@ function getMostConnectedNode() {
 	// Get Node Types
 	$nodetypesArray = array();
 	$nodetypes = "";
-	$count = count($CFG->BASE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
 	for($i=0; $i<$count; $i++){
 		$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$i];
 		if ($i == 0) {
@@ -813,7 +896,10 @@ function getMostConnectedNode() {
 			$nodetypes .= ",?";
 		}
 	}
-	$count = count($CFG->EVIDENCE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$i];
 		$nodetypes .= ",?";
@@ -870,14 +956,17 @@ function getMostConnectedNode() {
 
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$id = $array['ID'];
 			$node = new CNode();
 			$node->nodeid = $id;
 			$node = $node->load();
-			if (!$node instanceof error) {
+			if (!$node instanceof Hub_Error) {
 				$countr = $array['num'];
 				$mostconidea = $node->name;
 				$mostcontype = $node->role->name;
@@ -942,7 +1031,10 @@ function getLinkTypeUsage() {
 		$linktypeUse = array();
 		$resArray = $DB->select($qryFinal, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$linktypeUse[count($linktypeUse)] = $array;
@@ -956,7 +1048,10 @@ function getLinkTypeUsage() {
 		$linktypeName = array();
 		$resArray = $DB->select($qry, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$linktypeName[$array['UserID']] = $array['Name'];
@@ -981,7 +1076,10 @@ function getTotalUsersCount() {
 	$count = 0;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$icount = count($resArray);
+		$icount = 0;
+		if (is_countable($resArray)) {
+			$icount = count($resArray);
+		}
 		for ($i=0; $i<$icount; $i++) {
 			$array = $resArray[$i];
 			$count = $array['num'];
@@ -1034,7 +1132,10 @@ function getRegisteredUsers($direction, $sort, $oldsort) {
 	$registeredUsers = array();
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			array_push($registeredUsers,$array);
@@ -1072,7 +1173,10 @@ function getRegisteredUserCount($mintime, $maxtime) {
 	$num = 0;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$icount = count($resArray);
+		$icount = 0;
+		if (is_countable($resArray)) {
+			$icount = count($resArray);
+		}
 		for ($i=0; $i<$icount; $i++) {
 			$array = $resArray[$i];
 			$num = $array['num'];
@@ -1095,8 +1199,11 @@ function getNodeCreationCount($nodetypenames,$mintime, $maxtime="") {
 
 	$nodetypes = "";
 	$nodetypesArray = array();
-    $types = split("," , $nodetypenames);
-	$count = count( $types);
+    $types = explode("," , $nodetypenames);
+	$count = 0;
+	if (is_countable($types)) {
+		$count = count($types);
+	}
 	for($k=0; $k<$count; $k++){
 		$nodetypesArray[count($nodetypesArray)] = $types[$k];
 		if ($k == 0) {
@@ -1122,7 +1229,10 @@ function getNodeCreationCount($nodetypenames,$mintime, $maxtime="") {
 	$num = 0;
 	$resArray = $DB->select($qry, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$num = $array['num'];
@@ -1155,7 +1265,10 @@ function getMostUsedLinkTypeByGroup($nodetypes, $groupid) {
 		// Get Node Types
 		$nodetypesArray = array();
 		$nodetypes = "";
-		$count = count($CFG->BASE_TYPES);
+		$count = 0;
+		if (is_countable($CFG->BASE_TYPES)) {
+			$count = count($CFG->BASE_TYPES);
+		}
 		for($k=0; $k<$count; $k++){
 			$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$k];
 			if ($k == 0) {
@@ -1164,7 +1277,10 @@ function getMostUsedLinkTypeByGroup($nodetypes, $groupid) {
 				$nodetypes .= ",?";
 			}
 		}
-		$count = count($CFG->EVIDENCE_TYPES);
+		$count = 0;
+		if (is_countable($CFG->EVIDENCE_TYPES)) {
+			$count = count($CFG->EVIDENCE_TYPES);
+		}
 		for ($k=0; $k<$count; $k++) {
 			$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$k];
 			$nodetypes .= ",?";
@@ -1174,7 +1290,10 @@ function getMostUsedLinkTypeByGroup($nodetypes, $groupid) {
 		$nodetypesArray[count($nodetypesArray)] = 'Con';
 		$nodetypes .= ",?";
 
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$name = $array['Label'];
@@ -1197,7 +1316,10 @@ function getMostUsedLinkTypeByGroup($nodetypes, $groupid) {
 
 			$resArray2 = $DB->select($qry4, $params);
 			if ($resArray2 !== false) {
-				$counti = count($resArray2);
+				$counti = 0;
+				if (is_countable($resArray2)) {
+					$counti = count($resArray2);
+				}
 				for ($k=0; $k<$counti; $k++) {
 					$array = $resArray2[$k];
 					$countk = $array['num'];
@@ -1230,7 +1352,10 @@ function getMostUsedNodeTypeByGroup($nodetypes, $groupid) {
 	// Get Node Types
 	$nodetypesArray = array();
 	$nodetypes = "";
-	$count = count($CFG->BASE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
 	for($i=0; $i<$count; $i++){
 		$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$i];
 		if ($i == 0) {
@@ -1239,7 +1364,10 @@ function getMostUsedNodeTypeByGroup($nodetypes, $groupid) {
 			$nodetypes .= ",?";
 		}
 	}
-	$count = count($CFG->EVIDENCE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$i];
 		$nodetypes .= ",?";
@@ -1259,7 +1387,10 @@ function getMostUsedNodeTypeByGroup($nodetypes, $groupid) {
 
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		$roleIDs = "";
 		$previousName = "";
 		for ($i=0; $i<$count; $i++) {
@@ -1293,7 +1424,10 @@ function getMostUsedNodeTypeByGroup($nodetypes, $groupid) {
 
 				$resArray2 = $DB->select($qry4, $params);
 				if ($resArray2 !== false) {
-					$countk = count($resArray2);
+					$countk = 0;
+					if (is_countable($resArray2)) {
+						$countk = count($resArray2);
+					}
 					for ($k=0; $k<$countk; $k++) {
 						$array2 = $resArray2[$k];
 						$counts = $array2['num'];
@@ -1376,7 +1510,10 @@ function getLinkTypeUsageByGroup($groupid) {
 
 		$resArray = $DB->select($qryFinal, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$linktypeUse[count($linktypeUse)] = $array;
@@ -1390,7 +1527,10 @@ function getLinkTypeUsageByGroup($groupid) {
 		$linktypeName = array();
 		$resArray = $DB->select($qry, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$linktypeName[$array['UserID']] = $array['Name'];
@@ -1421,7 +1561,10 @@ function getMostConnectedNodeByGroup($nodetypes, $groupid) {
 	// Get Node Types
 	$nodetypesArray = array();
 	$nodetypes = "";
-	$count = count($CFG->BASE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
 	for($i=0; $i<$count; $i++){
 		$nodetypesArray[count($nodetypesArray)] = $CFG->BASE_TYPES[$i];
 		if ($i == 0) {
@@ -1430,7 +1573,10 @@ function getMostConnectedNodeByGroup($nodetypes, $groupid) {
 			$nodetypes .= ",?";
 		}
 	}
-	$count = count($CFG->EVIDENCE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nodetypesArray[count($nodetypesArray)] = $CFG->EVIDENCE_TYPES[$i];
 		$nodetypes .= ",?";
@@ -1493,14 +1639,17 @@ function getMostConnectedNodeByGroup($nodetypes, $groupid) {
 
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$id = $array['ID'];
 			$node = new CNode();
 			$node->nodeid = $id;
 			$node = $node->load();
-			if (!$node instanceof error) {
+			if (!$node instanceof Hub_Error) {
 				$countr = $array['num'];
 				$mostconidea = $node->name;
 				$mostcontype = $node->role->name;

@@ -28,7 +28,7 @@ $page = optional_param("page","home",PARAM_ALPHANUM);
 $nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
 $node = getNode($nodeid);
 
-if($node instanceof Error){
+if($node instanceof Hub_Error){
 	include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 	echo "<h1>Issue not found</h1>";
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

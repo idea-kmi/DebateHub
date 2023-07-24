@@ -31,10 +31,14 @@
 
     $evidenceArrayStr = "";
     $evidenceStr = "";
-    for($i=0;$i< sizeof($CFG->EVIDENCE_TYPES); $i++){
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
+    for($i=0;$i< $count; $i++){
         $evidenceArrayStr .= '"'.$CFG->EVIDENCE_TYPES[$i].'"';
         $evidenceStr .= $CFG->EVIDENCE_TYPES[$i];
-        if ($i != (sizeof($CFG->EVIDENCE_TYPES)-1)){
+        if ($i != ($count-1)){
             $evidenceArrayStr .= ',';
             $evidenceStr .= ',';
         }
@@ -44,10 +48,14 @@
 
     $baseArray = "";
     $baseStr = "";
-    for($j=0; $j<sizeof($CFG->BASE_TYPES); $j++){
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
+    for($j=0; $j<$count; $j++){
         $baseArray .= '"'.$CFG->BASE_TYPES[$j].'"';
         $baseStr .= $CFG->BASE_TYPES[$j];
-        if ($j != (sizeof($CFG->BASE_TYPES)-1)) {
+        if ($j != ($count-1)) {
             $baseArray .= ',';
             $baseStr .= ',';
         }
@@ -653,18 +661,21 @@ function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler
 
 	$('prompttext').insert("<br />");
 
-    var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
+    var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
 	Event.observe(buttonOK,'click', function() {
 		var valuechosen = $('radiopromptchoice').value;
 		eval( refresher + '("'+focalnodeid+'","'+filternodetypes+'","'+focalnodeend+'","'+handler+'","'+key+'","'+nodetofocusid+'","'+valuechosen+'")' );
 		textAreaCancel();
 	});
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert(buttonOK);
-	$('prompttext').insert(buttonCancel);
+	var buttonDiv = new Element('div', { 'class':'col-auto'});
+	buttonDiv.insert(buttonOK);
+	buttonDiv.insert(buttonCancel);
+
+	$('prompttext').insert(buttonDiv);
 	$('prompttext').style.display = "block";
 }
 
@@ -692,26 +703,29 @@ function textAreaPrompt(messageStr, text, connid, handler, refresher, width, hei
 	$('prompttext').style.left = x+getPageOffsetX()+"px";
 	$('prompttext').style.top = y+getPageOffsetY()+"px";
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'7','style':'color: black; width:390px; border: 1px solid gray; padding: 3px; overflow:hidden'});
+	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'messagetextarea'});
 	textarea1.value=text;
 
 	if (connid != "") {
-		var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
+		var buttonOK = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
 		Event.observe(buttonOK,'click', function() {
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert('<h2>'+messageStr+'</h2>');
-	$('prompttext').insert(textarea1);
+	var buttonDiv = new Element('div', { 'class':'col-auto'});
 	if (connid != "") {
-		$('prompttext').insert(buttonOK);
+		$('buttonDiv').insert(buttonOK);
 	}
-	$('prompttext').insert(buttonCancel);
+	buttonDiv.insert(buttonCancel);
+
+	$('prompttext').insert('<div class="fw-bold p-2" style="color: #4E725F">'+messageStr+'</div>');
+	$('prompttext').insert(textarea1);
+	$('prompttext').insert(buttonDiv);
 	$('prompttext').style.display = "block";
 }
 
@@ -730,12 +744,39 @@ function fadeMessage(messageStr) {
 }
 
 function fadein(){
-    new Effect.Opacity("message", {duration:1.0, from:0.0, to:1.0});
+	var element = document.getElementById("message");
+	element.style.opacity = 0.0;
+	fadeinloop();
+}
+
+function fadeinloop(){
+	var element = document.getElementById("message");
+
+	element.style.opacity += 0.1;
+	if(element.style.opacity > 1.0) {
+		element.style.opacity = 1.0;
+	} else {
+		setTimeout("fadeinloop()", 100);
+	}
 }
 
 function fadeout(){
-    new Effect.Opacity("message", {duration:1.5, from:1.0, to:0.0});
+	var element = document.getElementById("message");
+	element.style.opacity = 1.0;
+	fadeoutloop();
 }
+
+function fadeoutloop(){
+	var element = document.getElementById("message");
+
+	element.style.opacity -= 0.1;
+	if(element.style.opacity < 0.0) {
+		element.style.opacity = 0.0;
+	} else {
+		setTimeout("fadeoutloop()", 100);
+	}
+}
+
 
 function getLoading(infoText){
     var loadDiv = new Element("div",{'class':'loading'});
@@ -1604,7 +1645,7 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 					options['endcolor'] = '#FDFDE3';
 					options['restorecolor'] = 'transparent';
 					options['duration'] = 5;
-					new Effect.Highlight(item, options);
+					highlightElement(item, options);
 					break;
 				}
 			}
@@ -1622,7 +1663,7 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 						options['endcolor'] = '#FDFDE3';
 						options['restorecolor'] = 'transparent';
 						options['duration'] = 5;
-						new Effect.Highlight(item, options);
+						highlightElement(item, options);
 					}
 				}
 			}
@@ -1989,4 +2030,71 @@ function calculateIssuePhase(node) {
 	}
 
 	return thisphase;
+}
+
+/**
+ * Replacing function from Scriptaculous. Can now be done with css.
+ * Hightlight an element transitioning between two highlight colours and finally restore it to a given colour.
+ * @param item, the item to tranition the background colour on.
+ * @param options, the options to use - object containing 'startcolor', 'endcolor', 'restorecolor', 'duration'
+ */
+function highlightElement(item, options) {
+
+	// Prevent executing on elements not in the layout flow
+	if (item.style.display == 'none') { return; }
+
+	if (!options.restorecolor)
+		options.restorecolor = item.style.backgroundColor;
+
+    item.style.backgroundColor = options['startcolor'];
+
+	item.style.webkitTransform = 'background-color '+options.duration+'s linear';
+	item.style.MozTransform = 'background-color '+options.duration+'s linear';
+	item.style.msTransform = 'background-color '+options.duration+'s linear';
+	item.style.OTransform = 'background-color '+options.duration+'s linear';
+	item.style.transition = 'background-color '+options.duration+'s linear';
+
+	// Needed so that initial color and transition are applied before the transition is later triggered.
+    setTimeout(function() {
+		 highlightElementComplete(item, options);
+    }, 100);
+
+}
+
+function highlightElementComplete(item, options) {
+
+	// trigger transition
+	item.style.backgroundColor = options['endcolor'];
+
+	// Put it all back to normal about when transition should end plus a bit.
+	var totalwait = parseInt((options.duration+1) * 1000); //convert seconds to milliseconds
+    setTimeout(function() {
+		item.style.transition = 'none';
+		item.style.webkitTransform = 'none';
+		item.style.MozTransform = 'none';
+		item.style.msTransform = 'none';
+		item.style.OTransform = 'none';
+   		item.style.backgroundColor = options['restorecolor'];
+    },totalwait);
+}
+
+/**
+ * Add new new Script tag to the current HTML page dynamically to load a local javascript file on demand.
+ *
+ * @param url The url to add as the src on the new script tag
+ * @param id If given set as the id of the new script tag
+ */
+function addScriptDynamically(url, id) {
+
+	// only allow the import of local code;
+	if (url.indexOf(URL_ROOT) == 0) {
+		var headarea = document.getElementsByTagName("head").item(0);
+		var scriptobj = document.createElement("script");
+		scriptobj.setAttribute("type", "text/javascript");
+		scriptobj.setAttribute("src", url);
+		if (id) {
+			scriptobj.setAttribute("id", id);
+		}
+		headarea.appendChild(scriptobj);
+	}
 }

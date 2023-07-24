@@ -65,7 +65,7 @@ function loadJsonLDFromURL($url) {
  */
 function database_error($error="", $code=""){
     global $ERROR;
-    $ERROR = new error;
+    $ERROR = new Hub_Error;
     $ERROR->createDatabaseError();
     if ($error != "") {
 	    $ERROR->message = $error;
@@ -83,7 +83,7 @@ function database_error($error="", $code=""){
  */
 function access_denied_error(){
     global $ERROR;
-    $ERROR = new error;
+    $ERROR = new Hub_Error;
     $ERROR->createAccessDeniedError();
     return $ERROR;
 }
@@ -95,7 +95,7 @@ function access_denied_error(){
  */
 function duplication_error($error="") {
     global $ERROR;
-    $ERROR = new error;
+    $ERROR = new Hub_Error;
     $ERROR->createDuplicationError();
     if ($error != "") {
 	    $ERROR->message = $error;
@@ -151,7 +151,6 @@ function parseToJSON($str) {
  * @return string in UUID v4 format
  */
 function getUniqueID() {
-	include_once("lib/random_compat-1.0.4/lib/random.php");
 
 	try {
 		return implode('-', [
@@ -389,7 +388,7 @@ function uploadImageToFit($field,&$errors,$directory=""){
  */
 function resize_image($in,$out,$size){
 
-	$imagetype = exif_imagetype($in);
+	$imagetype = @exif_imagetype($in);
 	if ($imagetype == IMAGETYPE_JPEG) {
 		$image = @imagecreatefromjpeg($in);
 	} else if ($imagetype == IMAGETYPE_GIF) {
@@ -447,7 +446,7 @@ function resize_image($in,$out,$size){
  */
 function crop_image($in,$out,$x, $y, $width, $height){
 
-	$imagetype = exif_imagetype($in);
+	$imagetype = @exif_imagetype($in);
 	if ($imagetype == IMAGETYPE_JPEG) {
 		$image = @imagecreatefromjpeg($in);
 	} else if ($imagetype == IMAGETYPE_GIF) {
@@ -480,7 +479,7 @@ function crop_image($in,$out,$x, $y, $width, $height){
 
 function image_scale_up($in,$out, $width, $height) {
 
-	$imagetype = exif_imagetype($in);
+	$imagetype = @exif_imagetype($in);
 	if ($imagetype == IMAGETYPE_JPEG) {
 		$image = @imagecreatefromjpeg($in);
 	} else if ($imagetype == IMAGETYPE_GIF) {
@@ -684,33 +683,39 @@ function geoCodeAddress($address1, $address2, $postcode, $loc, $cc) {
 
     $geo = array("lat"=>"", "lng"=>"");
 
-    $address = "";
-    if (isset($address1) && $address1 != "") {
-    	$address .= $address1.",";
-    }
-    if (isset($address2) && $address2 != "") {
-    	$address .= $address2.",";
-    }
-    if (isset($postcode) && $postcode != "") {
-    	$address .= $postcode.",";
-    }
-    if (isset($loc) && $loc != "") {
-    	$address .= $loc.",";
-    }
-    if (isset($cc) && $cc != "") {
-    	$address .= $cc.",";
-    }
+	if (isset($CFG->BINGMAPS_KEY) && $CFG->BINGMAPS_KEY !== "") {
 
-    $geocodeURL  = "https://maps.googleapis.com/maps/api/geocode/json?key=".$CFG->GOOGLE_MAPS_KEY."&address=".urlencode($address);
+		$address = "";
+		if (isset($address1) && $address1 != "") {
+			$address .= $address1.",";
+		}
+		if (isset($address2) && $address2 != "") {
+			$address .= $address2.",";
+		}
+		if (isset($postcode) && $postcode != "") {
+			$address .= $postcode.",";
+		}
+		if (isset($loc) && $loc != "") {
+			$address .= $loc.",";
+		}
+		if (isset($cc) && $cc != "") {
+			$address .= $cc.",";
+		}
 
-    $response = callGeoURL($geocodeURL);
+		// BING
+		$geocodeURL = "http://dev.virtualearth.net/REST/v1/Locations?q=".urlencode($address)."&key=".$CFG->BINGMAPS_KEY;
+		//https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query
+		//https://www.bingmapsportal.com/Application#
 
-	$output = json_decode($response);
-	//error_log(print_r($output, true));
+		$response = callGeoURL($geocodeURL);
 
-	if (isset($output->results[0])) {
-		$geo["lat"] = $output->results[0]->geometry->location->lat;
-		$geo["lng"] = $output->results[0]->geometry->location->lng;
+		if ($response !== false) {
+			if ($geodata = json_decode($response)) {
+				$geoPoint = $geodata->resourceSets[0]->resources[0]->point->coordinates;
+				$geo["lat"] = sprintf($geoPoint[0]);
+				$geo["lng"] = sprintf($geoPoint[1]);
+			}
+		}
 	}
 
     return $geo;
@@ -793,11 +798,18 @@ function trimFinalComma($str) {
  */
 function getDepthConnectionResults(&$results, $nextArray) {
 	foreach ( $nextArray as $key=>$val ){
-		$count = count($val);
+		$count = 0;
+		if (is_countable($val)) {
+			$count = count($val);
+		}
 		for ($j = 0; $j<$count; $j++) {
 			$next = $val[$j];
 			if (isset($next["TripleID"])) {
-				$results[count($results)] = $next;
+				$countresults = 0;
+				if (is_countable($results)) {
+					$countresults = count($results);
+				}
+				$results[$countresults] = $next;
 			} else {
 				getDepthConnectionResults($results, $next);
 			}
@@ -812,8 +824,10 @@ function updateConnectionsForTypeChange($nodeid, $type) {
 
     $connectionSet = getConnectionsByNode($nodeid, 0, -1);
     $connections = $connectionSet->connections;
-	$count = count($connections);
-
+	$count = 0;
+	if (is_countable($connections)) {
+		$count = count($connections);
+	}
 	for ($i= 0; $i < $count; $i++) {
 		$con = $connections[$i];
 		if ($con->from->nodeid == $nodeid) {
@@ -950,7 +964,7 @@ function deleteDirectory($dir) {
 function getTagString($nodeid) {
 	$node = getNode($nodeid);
 	$tagstr = "";
-	if ($nodeid != "" && !$node instanceof Error) {
+	if ($nodeid != "" && !$node instanceof Hub_Error) {
 		if (isset($node->tags)) {
 			$tags = $node->tags;
 			$tagstr = "";
@@ -1128,7 +1142,10 @@ function getAllNodeTypeNames() {
 
 	$nodetypes = "";
 
-	$count = count($CFG->BASE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->BASE_TYPES)) {
+		$count = count($CFG->BASE_TYPES);
+	}
 	for($i=0; $i<$count; $i++){
 		if ($i == 0) {
 			$nodetypes .= $CFG->BASE_TYPES[$i];
@@ -1136,7 +1153,10 @@ function getAllNodeTypeNames() {
 			$nodetypes .= ",".$CFG->BASE_TYPES[$i];
 		}
 	}
-	$count = count($CFG->EVIDENCE_TYPES);
+	$count = 0;
+	if (is_countable($CFG->EVIDENCE_TYPES)) {
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nodetypes .= ",".$CFG->EVIDENCE_TYPES[$i];
 	}

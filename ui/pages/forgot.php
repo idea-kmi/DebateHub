@@ -40,62 +40,65 @@
     }
 ?>
 
-<h1><?php echo $LNG->FORGOT_PASSWORD_TITLE; ?></h1>
+<div class="container-fluid">
+	<div class="row p-4 justify-content-center">	
+		<div class="col-sm-12 col-lg-8">
+            <h1><?php echo $LNG->FORGOT_PASSWORD_TITLE; ?></h1>
 
-<?php
-    $errors = array();
+            <?php
+                $errors = array();
 
-    // check to see if form submitted
-    if(isset($_POST["reset"])){
-        $email = required_param("email",PARAM_TEXT);
+                // check to see if form submitted
+                if(isset($_POST["reset"])){
+                    $email = required_param("email",PARAM_TEXT);
 
-        $u = new User();
-        $u->setEmail($email);
-        $user = $u->getByEmail();
+                    $u = new User();
+                    $u->setEmail($email);
+                    $user = $u->getByEmail();
 
-        //check user exists
-        if(!$user instanceof User || $user->getAuthType() != $CFG->AUTH_TYPE_EVHUB){
-            array_push($errors,$LNG->FORGOT_PASSWORD_EMAIL_NOT_FOUND_ERROR);
-        } else {
-            //set validation code
-            if($user->getInvitationCode() == ""){
-                $user->setInvitationCode();
-            }
-            //send email
-            $paramArray = array ($user->name,$CFG->homeAddress,$user->userid,$user->getInvitationCode());
-            sendMail("resetpassword",$LNG->FORGOT_PASSWORD_EMAIL_SUMMARY,$user->getEmail(),$paramArray);
-            echo $LNG->FORGOT_PASSWORD_EMAIL_SENT_MESSAGE;
-            include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-            die;
-        }
-    }
+                    //check user exists
+                    if(!$user instanceof User || $user->getAuthType() != $CFG->AUTH_TYPE_EVHUB){
+                        array_push($errors,$LNG->FORGOT_PASSWORD_EMAIL_NOT_FOUND_ERROR);
+                    } else {
+                        //set validation code
+                        if($user->getInvitationCode() == ""){
+                            $user->setInvitationCode();
+                        }
+                        //send email
+                        $paramArray = array ($user->name,$CFG->homeAddress,$user->userid,$user->getInvitationCode());
+                        sendMail("resetpassword",$LNG->FORGOT_PASSWORD_EMAIL_SUMMARY,$user->getEmail(),$paramArray);
+                        echo $LNG->FORGOT_PASSWORD_EMAIL_SENT_MESSAGE;
+                        include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+                        die;
+                    }
+                }
+            ?>
 
+            <?php
+                if(!empty($errors)){
+                    echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+                    foreach ($errors as $error){
+                        echo "<li>".$error."</li>";
+                    }
+                    echo "</ul></div>";
+                }
+            ?>
 
-?>
+            <p><?php echo $LNG->FORGOT_PASSWORD_HEADER_MESSAGE; ?></p>
 
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
-
-<p><?php echo $LNG->FORGOT_PASSWORD_HEADER_MESSAGE; ?></p>
-
-<form name="forgot" action="<?php echo $CFG->homeAddress; ?>ui/pages/forgot.php" method="post">
-    <div class="formrow">
-        <label class="formlabel" for="email"><?php echo $LNG->FORGOT_PASSWORD_EMAIL_LABEL; ?></label>
-        <input class="forminput" id="email" name="email" size="30" value="">
-
-    </div>
-    <div class="formrow">
-        <input class="formsubmit" type="submit" value="<?php echo $LNG->FORGOT_PASSWORD_SUBMIT_BUTTON; ?>" id="reset" name="reset">
-    </div>
-
-</form>
+            <form name="forgot" action="<?php echo $CFG->homeAddress; ?>ui/pages/forgot.php" method="post">
+                <div class="mb-3 row">
+					<label for="email" class="col-sm-3 col-form-label"><?php echo $LNG->FORGOT_PASSWORD_EMAIL_LABEL; ?></label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="email" name="email" value="" />
+					</div>
+                </div>
+                <div class="mb-3 row">
+					<div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                        <input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORGOT_PASSWORD_SUBMIT_BUTTON; ?>" id="reset" name="reset">
+                    </div>
+                </div>
+            </form>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

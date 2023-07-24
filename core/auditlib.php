@@ -320,7 +320,10 @@ function auditViewMulti($userid="", $nodeids, $viewtype) {
     $wentOK = true;
 	if ($userid != "" || isProbablyRealWebUser()) {
 		$nodes = explode(",", $nodeids);
-		$count = count($nodes);
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		for ($i = 0; $i < $count; $i++) {
 			$nodeid = $nodes[$i];
 			if (isset($nodeid) && $nodeid != "") {
@@ -329,7 +332,10 @@ function auditViewMulti($userid="", $nodeids, $viewtype) {
 				$params[0] = $nodeid;
 				$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_SELECT, $params);
 				if ($resArray !== false) {
-					$count2 = count($resArray);
+					$count2 = 0;
+					if (is_countable($resArray)) {
+						$count2 = count($resArray);
+					}
 					if ($count2 > 0) {
 						$sesion = session_id();
 						$ip = $_SERVER['REMOTE_ADDR'];
@@ -380,7 +386,10 @@ function auditView($userid="", $nodeid, $viewtype) {
 			$params[0] = $nodeid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_SELECT, $params);
 			if ($resArray !== false) {
-				$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
 				if ($count > 0) {
 					$sesion = session_id();
 					$ip = $_SERVER['REMOTE_ADDR'];
@@ -1267,14 +1276,22 @@ function loadUserFromDomNode($node, &$errors) {
 				$params = array();
 				$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
 				if ($resArray !== false) {
-					if (count($resArray) > 0) {
+					$count = 0;
+					if (is_countable($resArray)) {
+						$count = count($resArray);
+					}
+					if ($count > 0) {
 						$array = $resArray[0];
 						if (isset($array['OriginalID'])) {
 							$params = array();
 							$params[0] = $nodeData['userid'];
 							$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
 							if ($resArray2 !== false) {
-								if (count($resArray2) > 0) {
+								$count2 = 0;
+								if (is_countable($resArray2)) {
+									$count2 = count($resArray2);
+								}
+								if ($count2 > 0) {
 									$array2 = $resArray2[0];
 									$userObj->olduserid = $nodeData['userid'];
 									$userObj->userid = $array2['UserID'];
@@ -1410,14 +1427,22 @@ function loadGroupFromDomNode($node, &$errors) {
 				$params = array();
 				$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
 				if ($resArray !== false) {
-					if (count($resArray) > 0) {
+					$count = 0;
+					if (is_countable($resArray)) {
+						$count = count($resArray);
+					}
+					if ($count > 0) {
 						$array = $resArray[0];
 						if (isset($array['OriginalID'])) {
 							$params = array();
 							$params[0] = $nodeData['groupid'];
 							$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
 							if ($resArray2 !== false) {
-								if (count($resArray2) > 0) {
+								$count2 = 0;
+								if (is_countable($resArray2)) {
+									$count2 = count($resArray2);
+								}
+								if ($count2 > 0) {
 									$array2 = $resArray2[0];
 									$groupObj->oldid = $nodeData['groupid'];
 									$groupObj->groupid = $array2['UserID'];

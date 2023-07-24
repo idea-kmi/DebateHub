@@ -27,7 +27,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 $group = getGroup($groupid);
 
-if($group instanceof Error){
+if($group instanceof Hub_Error){
 	include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 	echo "<h1>Group not found</h1>";
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

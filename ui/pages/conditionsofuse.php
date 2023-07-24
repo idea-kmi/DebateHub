@@ -32,10 +32,15 @@
 	}
 
 	include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
-
-	echo '<h1>'.$LNG->PAGE_CONDITIONS_OF_USE_TITLE.'</h1>';
-
-	echo $LNG->PAGE_CONDITIONS_OF_USE_BODY;
-
+?>
+	
+<div class="container-fluid">
+	<div class="page">
+		<h1><?php echo $LNG->PAGE_CONDITIONS_OF_USE_TITLE; ?></h1>
+		<?php echo $LNG->PAGE_CONDITIONS_OF_USE_BODY; ?>
+	</div>
+</div>
+	
+<?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

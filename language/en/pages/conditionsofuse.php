@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2013 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -28,8 +28,11 @@ $LNG->PAGE_CONDITIONS_OF_USE_TITLE = "Terms and Conditions of Use for the ".$CFG
 $LNG->PAGE_CONDITIONS_OF_USE_BODY = '<h2>1. Introduction</h2>';
 
 $LNG->PAGE_CONDITIONS_OF_USE_BODY .= '<p class="paraindent1">1.1.<span> </span>The '.$CFG->SITE_TITLE;
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= ' ('.$CFG->homeAddress.') (\'Site\') aims to provide an environment to hold  '.$LNG->ISSUES_NAME.', gather '.$LNG->SOLUTIONS_NAME.', '.$LNG->PROS_NAME.' and '.$LNG->CONS_NAME.' from the community. ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'The Site is operated by The ';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= ' ('.$CFG->homeAddress.') (\'Site\') aims to provide an environment to gather ';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'data from this community on the people, projects, organizations, ';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'challenges, issues, solutions, claims and evidence that scaffold the movement. ';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'Ultimately the Site will take a social approach to represent the collective ';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'knowledge of this community. The Site is operated by The ';
 $LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'Knowledge Media Institute at the Open University (\'we\' or \'us\') whose principal ';
 $LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'contact address is Milton Keynes, MK7 6AA, United Kingdom </p>';
 
@@ -100,17 +103,9 @@ $LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'to other users.)</p>';
 
 $LNG->PAGE_CONDITIONS_OF_USE_BODY .= '<h2>3. Your personal information</h2>';
 
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= '<p class="paraindent1">3.1.<span> </span>All of the personal information ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'you upload to the Site is available to everyone who uses it, with one exception, ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'your email address. We store this so that we can operate the Site and contact ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'you when we need to about the Site. We will never pass it on to anyone for ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'marketing purposes. We use Google Analytics on the Site, which captures ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'information about its usage, to help us monitor and improve it. None of the ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'information captured by Google Analytics is personally-identifiable information ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= '- i.e., nothing that can identify you as an individual is stored. By putting ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'personal information on the Site, you agree to it being available in this way. ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'You can change or delete your personal information yourself at any time, by ';
-$LNG->PAGE_CONDITIONS_OF_USE_BODY .= 'editing your profile.</p>';
+$LNG->PAGE_CONDITIONS_OF_USE_BODY .= '<p class="paraindent1">3.1.<span> </span>How we store and use your personal information
+is fully described in our <a href="'.$CFG->homeAddress.'ui/pages/privacy.php">Privacy Statement</a>. Please read this carefully
+before signing up to this site.</p>';
 
 $LNG->PAGE_CONDITIONS_OF_USE_BODY .= '<h2>4. Acceptable use and behaviour</h2>';
 

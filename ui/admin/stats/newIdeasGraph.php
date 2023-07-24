@@ -1,7 +1,7 @@
 <?php // $Id: graph-downloads.php,v 1.3 2007/02/28 15:28:16 msb262 Exp $
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2013 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -161,7 +161,10 @@ $graph->parameter['x_axis_angle']       =  90;            // rotation of axis te
 $graph->offset_relation = null;
 
 $evtypes = "";
-$count = count($CFG->EVIDENCE_TYPES);
+$count = 0;
+if (is_countable($CFG->EVIDENCE_TYPES)) {
+	$count = count($CFG->EVIDENCE_TYPES);
+}
 for($i=0; $i<$count; $i++){
 	if ($i == 0) {
 		$evtypes .= "'".$CFG->EVIDENCE_TYPES[$i]."'";

@@ -23,30 +23,32 @@
  *                                                                              *
  ********************************************************************************/
 
-//if (isset($_SESSION['embedded']) && $_SESSION['embedded']) {
-//    include_once($HUB_FLM->getCodeDirPath("ui/footerembed.php"));
-//    return;
-//}
-?>
-</div> <!-- end innertube -->
-</div> <!-- end content -->
-</div> <!-- end contentwrapper -->
-</div> <!-- end main -->
+		?>
+		</div> <!-- end innertube -->
+		</div> <!-- end content -->
+		</div> <!-- end contentwrapper -->
+		</div> <!-- end main -->
+		</div>
 
-<div id="footer" style="height:40px;" class="footerback">
-	<div style="height:25px; margin-left: 15px; margin-right: 10px; margin-top: 20px;">
-		<div style="float:right;border:margin-right:5px;">
-			<div style="clear:both;float:right; line-height:14px; margin-top:10px;">
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/conditionsofuse.php"><?php echo $LNG->FOOTER_TERMS_LINK; ?></a> |
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/privacy.php"><?php echo $LNG->FOOTER_PRIVACY_LINK; ?></a> |
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php"><?php echo $LNG->FOOTER_COOKIES_LINK; ?></a> |
-				<a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->FOOTER_CONTACT_LINK; ?></a>
+		<div id="footer" class="footerback footer bg-light border-top">
+			<div class="container-fluid">
+				<div class="d-flex d-column p-4 justify-content-between">
+					<div class="d-block px-4">
+						<span><?php echo $LNG->FOOTER_DEVELOPED_BY; ?> </span>
+						<a href="http://idea.kmi.open.ac.uk/" title="<?php echo $LNG->FOOTER_HINT; ?>">
+							<img alt="Idea logo" class="footer-logo" src="<?php echo $HUB_FLM->getImagePath('IDea-logo-URL-hi-res.png'); ?>" />
+						</a>
+					</div>
+					<div class="d-block px-4 mb-2 text-end">
+						<a href="<?php print($CFG->homeAddress);?>ui/pages/conditionsofuse.php"><?php echo $LNG->FOOTER_TERMS_LINK; ?></a> |
+						<a href="http://kmi.open.ac.uk/accessibility/"><?php echo $LNG->FOOTER_ACCESSIBILITY; ?></a> |
+						<a href="<?php print($CFG->homeAddress);?>ui/pages/privacy.php"><?php echo $LNG->FOOTER_PRIVACY_LINK; ?></a> |
+						<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php"><?php echo $LNG->FOOTER_COOKIES_LINK; ?></a> |
+						<a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $LNG->FOOTER_CONTACT_LINK; ?></a>
+					</div>
+				</div>
+				<div class="d-block text-center"><small><a href="<?php echo $HUB_FLM->getCodeWebPath('ui/pages/releases.php'); ?>" target="blank">version: <?php echo $CFG->VERSION; ?></a></small></div>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div style="margin:0 auto; margin-top:5px;margin-bottom:5px;width:95px;clear:both;font-style:italic;font-weight:bold"><a href="<?php echo $HUB_FLM->getCodeWebPath('ui/pages/releases.php'); ?>" target="blank">(v <?php echo $CFG->VERSION; ?>)</a></div>
-</div>
-</body>
+	</body>
 </html>

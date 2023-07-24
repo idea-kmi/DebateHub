@@ -51,21 +51,21 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 <table width="160" style="float:left;margin-right:50px;">
 	<tr><td colspan="2" width="100%" style="font-weight:bold;"><?php echo $LNG->STATS_GLOBAL_ITEM_VOTES_MENU_TITLE; ?></b></td></tr>
 	<tr><td width="70%"><b style="color:green"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_FOR_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsItems[0]['up']; ?></td></tr>
-	<tr><td width="70%"><b style="color:red"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsItems[0]['down']; ?></td></tr>
+	<tr><td width="70%"><b style="color: #990000;"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsItems[0]['down']; ?></td></tr>
 	<tr><td width="70%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsItems[0]['vote']; ?></td></tr>
 </table>
 
 <table width="160" style="float:left;margin-right:50px;">
 	<tr><td colspan="2" width="100%" style="font-weight:bold;"><?php echo $LNG->STATS_GLOBAL_CONNECTION_VOTES_MENU_TITLE; ?></b></td></tr>
 	<tr><td width="70%"><b style="color:green"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_FOR_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsConns[0]['up']; ?></td></tr>
-	<tr><td width="70%"><b style="color:red"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsConns[0]['down']; ?></td></tr>
+	<tr><td width="70%"><b style="color: #990000;"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsConns[0]['down']; ?></td></tr>
 	<tr><td width="70%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totalsConns[0]['vote']; ?></td></tr>
 </table>
 
 <table width="160" style="float:left;">
 	<tr><td colspan="2" width="100%" style="font-weight:bold;"><?php echo $LNG->STATS_GLOBAL_ALL_VOTES_MENU_TITLE; ?></b></td></tr>
 	<tr><td width="70%"><b style="color:green"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_FOR_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totals[0]['up']; ?></td></tr>
-	<tr><td width="70%"><b style="color:red"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totals[0]['down']; ?></td></tr>
+	<tr><td width="70%"><b style="color: #990000;"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_AGAINST_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totals[0]['down']; ?></td></tr>
 	<tr><td width="70%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td><td align="right" width="30%"><?php echo $totals[0]['vote']; ?></td></tr>
 </table>
 
@@ -107,9 +107,9 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
 				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
 				<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+				<td align="right"><span style="color: #990000;"><?php echo $n->down ?></span></td>
 				<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+				<td align="right"><span style="color: #990000;"><?php echo $n->cdown ?></span></td>
 				<td align="right"><b><?php echo $n->vote ?></b></td>
 			</tr>
 	<?php } ?>
@@ -146,7 +146,7 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 </table>
 
 <a name="votingagainst"></a>
-<h3 style="color: red">
+<h3 style="color: #990000;">
 <a style="margin-right:10px;" href="#top"><img title="<?php echo $LNG->STATS_GLOBAL_VOTES_BACK_UP; ?>" border="0" src="<?php echo $HUB_FLM->getImagePath('arrow-up2.png'); ?>" /></a>
 <?php echo $LNG->STATS_GLOBAL_VOTES_TOP_AGAINST_NODES; ?>
 </h3>
@@ -168,8 +168,8 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 			<tr>
 				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
 				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+				<td align="right"><span style="color: #990000;"><?php echo $n->down ?></span></td>
+				<td align="right"><span style="color: #990000;"><?php echo $n->cdown ?></span></td>
 				<td align="right"><b><?php echo $n->vote ?></b></td>
 			</tr>
 	<?php } ?>
@@ -191,13 +191,16 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVoters);
+					$count = 0;
+					if (is_countable($topVoters)) {
+						$count = count($topVoters);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVoters[$i]; ?>
 						<tr>
 							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $n['Name']; ?></a></td>
 							<td align="right"><span style="color: green"><?php echo $n['up'] ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n['down'] ?></span></td>
+							<td align="right"><span style="color: #990000;"><?php echo $n['down'] ?></span></td>
 							<td align="right"><b><?php echo $n['vote'] ?></b></td>
 						</tr>
 				<?php } ?>
@@ -212,7 +215,10 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVotersFor);
+					$count = 0;
+					if (is_countable($topVotersFor)) {
+						$count = count($topVotersFor);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersFor[$i];
 						$title = $n['Name'];
@@ -226,21 +232,24 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 		</td>
 
 		<td valign="top" align="left" width="33%">
-			<h3 style="color: red"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_VOTERS_AGAINST; ?></h3>
+			<h3 style="color: #990000;"><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_VOTERS_AGAINST; ?></h3>
 			<table border="1" cellpadding="5" style="float:left; border-collapse:collapse;width:100%" width="100%">
 				<tr class="challengeback" style="color:white">
 					<td align="left" width="55%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TITLE_HEADING; ?></b></td>
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVotersAgainst);
+					$count = 0;
+					if (is_countable($topVotersAgainst)) {
+						$count = count($topVotersAgainst);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersAgainst[$i];
 						$title = $n['Name'];
 						?>
 						<tr>
 							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><b style="color: red"><?php echo $n['vote'] ?></b></td>
+							<td align="right"><b style="color: #990000;"><?php echo $n['vote'] ?></b></td>
 						</tr>
 				<?php } ?>
 			</table>
@@ -261,63 +270,63 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 					<?php echo '<td align="left" valign="bottom" width="15%" class="adminTableHead"><a href="votes.php?&sort=NodeType&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_CATEGORY_HEADING.'</b>';
 					if ($sort === 'NodeType') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="55%" class="adminTableHead"><a href="votes.php?&sort=Name&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TITLE_HEADING.'</b>';
 					if ($sort === 'Name') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=up&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_FOR_HEADING.'</b>';
 					if ($sort === 'up') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=down&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_AGAINST_HEADING.'</b>';
 					if ($sort === 'down') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=cup&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_FOR_HEADING.'</b>';
 					if ($sort === 'cup') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=cdown&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_AGAINST_HEADING.'</b>';
 					if ($sort === 'cdown') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
 					echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="votes.php?&sort=vote&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING.'</b>';
 					if ($sort === 'vote') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/uparrow.gif" width="16" height="8" alt="asc" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img src="../../images/downarrow.gif" width="16" height="8" alt="desc" />';
 						}
 					}
 					echo '</td>';
@@ -334,9 +343,9 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 							<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
 							<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
 							<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+							<td align="right"><span style="color: #990000;"><?php echo $n->down ?></span></td>
 							<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+							<td align="right"><span style="color: #990000;"><?php echo $n->cdown ?></span></td>
 							<td align="right"><b><?php echo $n->vote ?></b></td>
 						</tr>
 				<?php } ?>

@@ -48,7 +48,11 @@ if (!array_key_exists($node->users[0]->userid, $userHashtable)) {
 
 $debateConnections = getDebate($nodeid);
 $cons = $debateConnections->connections;
-$countcons = count($cons);
+$countcons = 0;
+if (is_countable($cons)) {
+	$countcons = count($cons);
+}
+
 $localusers = array();
 
 $debateowner = clone $node->users[0];
@@ -116,7 +120,10 @@ for ($j=0; $j<$countcons; $j++) {
 $usersToDebates[$node->nodeid] = $localusers;
 
 $conSet = new ConnectionSet();
-$count = count($usersToDebates);
+$count = 0;
+if (is_countable($usersToDebates)) {
+	$count = count($usersToDebates);
+}
 
 //$userHashtable = $userCheck;
 
@@ -182,9 +189,13 @@ $args["nodeid"] = $nodeid;
 
 $argsStr = "{";
 $keys = array_keys($args);
-for($i=0;$i< sizeof($keys); $i++){
+$count = 0;
+if (is_countable($keys)) {
+	$count = count($keys);
+}
+for($i=0;$i< $count; $i++){
  $argsStr .= '"'.$keys[$i].'":"'.$args[$keys[$i]].'"';
- if ($i != (sizeof($keys)-1)){
+ if ($i != ($count-1)){
 	 $argsStr .= ',';
  }
 }
@@ -194,6 +205,7 @@ echo "<script type='text/javascript'>";
 echo "var NODE_ARGS = ".$argsStr.";";
 echo "</script>";
 ?>
+
 <script type='text/javascript'>
 Event.observe(window, 'load', function() {
 
@@ -201,22 +213,17 @@ Event.observe(window, 'load', function() {
 	NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');
 	NODE_ARGS['jsoncons'] = JSON.parse('<?php echo addslashes($jsoncons); ?>');
 
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>', 'stats-debates-sunburst-script');
 });
 </script>
 
-<div style="float:left;margin:5px;margin-left:10px;">
-	<h1 style="margin:0px;margin-bottom:5px;"><?php echo $dashboarddata[$pageindex][0]; ?>
-		<span><img style="padding-left:10px;vertical-align:middle;" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-	</h1>
-	<div class="boxshadowsquare" id="vishelp" style="font-size:12pt;"><?php echo $dashboarddata[$pageindex][5]; ?></div>
+<div class="d-flex flex-column">
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 
-	<div id="sunburst-div" style="clear:both;float:left;width:100%;height:100%;"></div>
+	<div id="sunburst-div" class="d-flex flex-row justify-content-left statsgraph"></div>
 </div>
 
-</div>
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
 ?>

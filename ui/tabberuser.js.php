@@ -308,7 +308,7 @@ function loadmygroups(context,args){
 				var count = groups.length;
 				//preprosses nodes to add searchid if it is there
 				if (args['searchid'] && args['searchid'] != "") {
-					for (var i=0; i<count; i++) {
+					for (var i=0; i < count; i++) {
 						var group = groups[i].group;
 						group.searchid = args['searchid'];
 					}
@@ -328,16 +328,16 @@ function loadmygroups(context,args){
 						var innertotal = innerjson.groupset[0].groups.length;
 						if(innertotal > 0) {
 							var admingroups = innerjson.groupset[0].groups;
-							for (var i=0; i<innertotal; i++) {
+							for (var i=0; i < innertotal; i++) {
 								var group = admingroups[i].group;
 								group.searchid = args['searchid'];
 							}
 
 							var finalgroups = new Array();
-							for (var k=0; k<count; k++) {
+							for (var k=0; k < count; k++) {
 								var group = groups[k].group;
 								var found = false;
-								for (var j=0; j<innertotal; j++) {
+								for (var j=0; j < innertotal; j++) {
 									var innergroup = admingroups[j].group;
 									if (innergroup.groupid == group.groupid) {
 										found = true;
@@ -415,7 +415,7 @@ function loadcons(context,args){
 					if (args['searchid'] && args['searchid'] != "") {
 						var nodes = json.nodeset[0].nodes;
 						var count = nodes.length;
-						for (var i=0; i<count; i++) {
+						for (var i=0; i < count; i++) {
 							var node = nodes[i];
 							node.cnode.searchid = args['searchid'];
 						}
@@ -484,7 +484,7 @@ function loadpros(context,args){
 					if (args['searchid'] && args['searchid'] != "") {
 						var nodes = json.nodeset[0].nodes;
 						var count = nodes.length;
-						for (var i=0; i<count; i++) {
+						for (var i=0; i < count; i++) {
 							var node = nodes[i];
 							node.cnode.searchid = args['searchid'];
 						}
@@ -547,7 +547,7 @@ function loadissues(context,args){
 					if (args['searchid'] && args['searchid'] != "") {
 						var nodes = json.nodeset[0].nodes;
 						var count = nodes.length;
-						for (var i=0; i<count; i++) {
+						for (var i=0; i < count; i++) {
 							var node = nodes[i];
 							node.cnode.searchid = args['searchid'];
 						}
@@ -611,7 +611,7 @@ function loadsolutions(context,args){
 					if (args['searchid'] && args['searchid'] != "") {
 						var nodes = json.nodeset[0].nodes;
 						var count = nodes.length;
-						for (var i=0; i<count; i++) {
+						for (var i=0; i < count; i++) {
 							var node = nodes[i];
 							node.cnode.searchid = args['searchid'];
 						}
@@ -679,7 +679,7 @@ function loadcomments(context,args) {
 				//preprosses nodes to add searchid if it is there
 				if (args['searchid'] && args['searchid'] != "") {
 					var count = nodes.length;
-					for (var i=0; i<count; i++) {
+					for (var i=0; i < count; i++) {
 						var node = nodes[i];
 						node.cnode.searchid = args['searchid'];
 					}
@@ -1042,9 +1042,12 @@ function createNav(total, start, count, argArray, context, type){
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
 
+	var pageNav = new Element ("nav",{'aria-label':'Page navigation' }); 
+	var pageUL = new Element ("ul",{'class':'pagination' }); 
+
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
+	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("active");
@@ -1057,13 +1060,15 @@ function createNav(total, start, count, argArray, context, type){
 			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("inactive");
 	    }
+		
+		pageUL.insert(prevSpan);
 
 	    //pages
 	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
-	    for (var i = 1; i<totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    for (var i = 1; i < totalPages +1; i++){
+	    	var page = new Element("li", {'class':"page-link"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);
@@ -1072,11 +1077,11 @@ function createNav(total, start, count, argArray, context, type){
 	    	} else {
 	    		page.addClassName("currentpage");
 	    	}
-	    	pageSpan.insert(page);
+	    	pageUL.insert(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
+	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
@@ -1089,9 +1094,11 @@ function createNav(total, start, count, argArray, context, type){
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("inactive");
 	    }
+		pageUL.insert(nextSpan);
 
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-	    	nav.insert(prevSpan).insert(pageSpan).insert(nextSpan);
+			pageNav.insert(pageUL);
+			nav.insert(pageNav);
 	    }
 	}
 
@@ -1107,24 +1114,24 @@ function createNavCounter(total, start, count, type){
     	var objH = new Element("span",{'class':'nav'});
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>");
+        objH.insert("<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>");
     } else {
     	var objH = new Element("span");
 		switch(type){
 			case 'con':
-				objH.insert("<p><b><?php echo $LNG->LIST_NAV_USER_NO_CON; ?></b></p>");
+				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_CON; ?></strong></p>");
 				break;
 			case 'pro':
-				objH.insert("<p><b><?php echo $LNG->LIST_NAV_USER_NO_PRO; ?></b></p>");
+				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_PRO; ?></strong></p>");
 				break;
 			case 'issues':
-				objH.insert("<p><b><?php echo $LNG->LIST_NAV_USER_NO_ISSUE; ?></b></p>");
+				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_ISSUE; ?></strong></p>");
 				break;
 			case 'solutions':
-				objH.insert("<p><b><?php echo $LNG->LIST_NAV_USER_NO_SOLUTION; ?></b></p>");
+				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_SOLUTION; ?></strong></p>");
 				break;
 			case 'comment':
-				objH.insert("<p><b><?php echo $LNG->LIST_NAV_USER_NO_COMMENT; ?></b></p>");
+				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_COMMENT; ?></strong></p>");
 				break;
 		}
     }

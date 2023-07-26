@@ -450,7 +450,7 @@ function createNav(total, start, count, argArray, context, type){
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
 
-	var pageNav = new Element ("nav",{'aria-label':'Page navigation example' }); 
+	var pageNav = new Element ("nav",{'aria-label':'Page navigation' }); 
 	var pageUL = new Element ("ul",{'class':'pagination' }); 
 
 	if (total > parseInt( argArray["max"] )) {
@@ -474,7 +474,7 @@ function createNav(total, start, count, argArray, context, type){
 	    //pages
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
-	    for (var i = 1; i<totalPages+1; i++){
+	    for (var i = 1; i < totalPages +1; i++){
 	    	var page = new Element("li", {'class':"page-link"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
@@ -504,7 +504,7 @@ function createNav(total, start, count, argArray, context, type){
 
 		pageUL.insert(nextSpan);
 
-	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
+	    if( start > 0 || (parseInt(start)+parseInt(count) < parseInt(total))){
 			pageNav.insert(pageUL);
 			nav.insert(pageNav);
 	    }

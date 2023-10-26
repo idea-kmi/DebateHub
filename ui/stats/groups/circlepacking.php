@@ -25,6 +25,7 @@
  /** Author: Michelle Bachler, KMi, The Open University **/
 
 include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+checkDashboardAccess('GROUP');
 require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/analyticservices.php"));
 
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);

@@ -252,16 +252,23 @@ echo "</script>";
 					<?php } ?>
 				<?php } ?>
 			</fieldset>
-			<?php $nowtime = time();
-				if (isset($USER) && isset($USER->userid) && $USER->getTestGroup() == 2 && $nowtime >= $CFG->TEST_TRIAL_START && $nowtime < $CFG->TEST_TRIAL_END) { ?>
-				<div id="radiobuttonsum" class="d-grid gap-2 m-2">
-					<div class="btn btn-secondary text-dark fw-bold"><span onclick="return auditDashboardButton(NODE_ARGS['groupid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/groups/dashboard.php?groupid=<?php echo $groupid; ?>', 'group', 'dashboardButton_Group_V1')"><?php echo $LNG->TESTING_ANALYTICS_BUTTON; ?></span></div>
-				</div>
-			<?php } else { ?>
-				<div id="radiobuttonsum" class="d-grid gap-2 m-2">
-					<div class="btn btn-secondary text-dark fw-bold"><span onclick="return auditDashboardButton(NODE_ARGS['groupid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>', 'group', 'dashboardButton_Group_V1')"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></span></div>
-				</div>
+
+			<?php if (($CFG->GROUP_DASHBOARD_VIEW == 'public') || (isset($USER->userid) && ($CFG->GROUP_DASHBOARD_VIEW == 'private')) ) { ?>
+				xx<?php echo $CFG->GROUP_DASHBOARD_VIEW; ?>xx
+				<?php $nowtime = time();
+					if (isset($USER) && isset($USER->userid) && $USER->getTestGroup() == 2 && $nowtime >= $CFG->TEST_TRIAL_START && $nowtime < $CFG->TEST_TRIAL_END) { ?>
+					yy
+					<div id="radiobuttonsum" class="d-grid gap-2 m-2">
+						<div class="btn btn-secondary text-dark fw-bold"><span onclick="return auditDashboardButton(NODE_ARGS['groupid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/groups/dashboard.php?groupid=<?php echo $groupid; ?>', 'group', 'dashboardButton_Group_V1')"><?php echo $LNG->TESTING_ANALYTICS_BUTTON; ?></span></div>
+					</div>
+				<?php } else { ?>
+					ccc
+					<div id="radiobuttonsum" class="d-grid gap-2 m-2">
+						<div class="btn btn-secondary text-dark fw-bold"><span onclick="return auditDashboardButton(NODE_ARGS['groupid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>', 'group', 'dashboardButton_Group_V1')"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></span></div>
+					</div>
+				<?php } ?>
 			<?php } ?>
+
 		</div>
 	</div>
 

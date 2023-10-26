@@ -25,6 +25,7 @@
 	/** Author: Michelle Bachler, KMi, The Open University **/
 
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GLOBAL');
 	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/analyticservices.php"));
 
 	$issueNodes = getNodesByGlobal(0,-1,'date','DESC', 'Issue', 'mini');

@@ -23,6 +23,7 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('DEBATE');
 
 	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
 

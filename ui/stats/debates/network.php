@@ -23,6 +23,7 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('DEBATE');
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 	global $CFG;

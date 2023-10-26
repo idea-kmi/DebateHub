@@ -477,11 +477,13 @@ echo "</script>";
 				</div>
 			<?php } ?>
 
-			<div id="dashboardbutton" class="d-grid gap-2 m-2">
-				<button class="btn btn-secondary text-dark fw-bold" onclick="return auditDashboardButton(NODE_ARGS['nodeid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/debates/index.php?nodeid=<?php echo $nodeid; ?>', 'issue', 'dashboardButton_Issue_V1')">
-					<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>
-				</button>
-			</div>
+			<?php if (($CFG->DEBATE_DASHBOARD_VIEW == 'public') || (isset($USER->userid) && ($CFG->DEBATE_DASHBOARD_VIEW == 'private')) ) { ?>
+				<div id="dashboardbutton" class="d-grid gap-2 m-2">
+					<button class="btn btn-secondary text-dark fw-bold" onclick="return auditDashboardButton(NODE_ARGS['nodeid'], this.innerHTML, '<?php echo $CFG->homeAddress; ?>ui/stats/debates/index.php?nodeid=<?php echo $nodeid; ?>', 'issue', 'dashboardButton_Issue_V1')">
+						<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>
+					</button>
+				</div>
+			<?php } ?>
 
 			<div id="healthindicatorsdiv" class="d-grid gap-2 m-2">
 				<div id="health-indicators" class="border border-2 p-3">

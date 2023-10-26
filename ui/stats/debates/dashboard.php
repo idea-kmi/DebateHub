@@ -23,6 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+checkDashboardAccess('DEBATE');
 
 $page = optional_param("page","home",PARAM_ALPHANUM);
 $nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);

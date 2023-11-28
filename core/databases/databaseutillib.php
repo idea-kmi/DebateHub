@@ -2593,6 +2593,10 @@ function getSearchQueryString(&$params, $q="", $includeTag=false, $includeClip=f
 	if ($startChar == "\"" && $lastChar == "\"") {
 		// remove speech marks before search
 		$q = mb_substr($q, 1, $len-2);
+
+		// remove question marks or it messes up the database manager processing for cleaning and replacing ? in the sql
+		$q = str_replace("?", "", $q);
+
 		$sql .= $HUB_SQL->OPENING_BRACKET;
 
 		//$params[count($params)] = $searchObj;
@@ -2627,6 +2631,9 @@ function getSearchQueryString(&$params, $q="", $includeTag=false, $includeClip=f
 			foreach ($pieces as $value) {
 				$value = trim($value);
 				$value = $DB->cleanString($value);
+
+				// remove question marks or it messes up the database manager processing for cleaning and replacing ? in the sql
+				$value = str_replace("?", "", $value);
 
 				if ($value != "") {
 

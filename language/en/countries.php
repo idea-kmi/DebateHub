@@ -276,4 +276,9 @@ $LNG->COUNTRIES_LIST['EH'] = 'Western Sahara';
 $LNG->COUNTRIES_LIST['YE'] = 'Yemen';
 $LNG->COUNTRIES_LIST['ZM'] = 'Zambia';
 $LNG->COUNTRIES_LIST['ZW'] = 'Zimbabwe';
+
+
+
+// Do not delete this when updating the above list of code.
+$LNG->DEFAULT_COUNTRY = $LNG->COUNTRIES_LIST['GB'];
 ?>

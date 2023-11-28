@@ -687,33 +687,34 @@ function geoCodeAddress($address1, $address2, $postcode, $loc, $cc) {
 
 		$address = "";
 		if (isset($address1) && $address1 != "") {
-			$address .= $address1.",";
+			$address .= $address1."+";
 		}
 		if (isset($address2) && $address2 != "") {
-			$address .= $address2.",";
+			$address .= $address2."+";
 		}
 		if (isset($postcode) && $postcode != "") {
-			$address .= $postcode.",";
+			$address .= $postcode."+";
 		}
 		if (isset($loc) && $loc != "") {
 			$address .= $loc.",";
 		}
 		if (isset($cc) && $cc != "") {
-			$address .= $cc.",";
+			$address .= $cc." ";
 		}
 
 		// BING
-		$geocodeURL = "http://dev.virtualearth.net/REST/v1/Locations?q=".urlencode($address)."&key=".$CFG->BINGMAPS_KEY;
+		//$geocodeURL = "http://dev.virtualearth.net/REST/v1/Locations?q=".urlencode($address)."&key=".$CFG->BINGMAPS_KEY;
 		//https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query
 		//https://www.bingmapsportal.com/Application#
 
+		//27/11/2023 - bing timing out - trying this one.
+		$geocodeURL = "https://geocode.maps.co/search?q=".$address;
 		$response = callGeoURL($geocodeURL);
-
 		if ($response !== false) {
-			if ($geodata = json_decode($response)) {
-				$geoPoint = $geodata->resourceSets[0]->resources[0]->point->coordinates;
-				$geo["lat"] = sprintf($geoPoint[0]);
-				$geo["lng"] = sprintf($geoPoint[1]);
+			if ($geodata = json_decode($response)) { 
+				$geoPoint = $geodata[0];
+				$geo["lat"] = $geoPoint->lat;
+				$geo["lng"] = $geoPoint->lon;
 			}
 		}
 	}
@@ -728,6 +729,10 @@ function callGeoURL($url) {
     curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+	// for https://geocode.maps.co
+	curl_setopt($curl, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
+
 	$response = curl_exec($curl);
 	$httpCode = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
 	curl_close($curl);

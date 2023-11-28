@@ -261,7 +261,6 @@
 					</div>
 					<div class="col-sm-4">
 						<select id="loccountry" name="loccountry" class="form-select" aria-label="select country">
-							<option value="" ><?php echo $LNG->PROFILE_COUNTRY; ?></option>
 							<?php
 								foreach($countries as $code=>$c){
 									echo "<option value='".$code."'";

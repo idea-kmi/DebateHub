@@ -206,8 +206,8 @@ div.conn-li-wrapper{ width: 100%; clear: both; }
 /*****************/
 /** Search page **/
 /*****************/
-.searchresulttitle { font-weight: bold; padding-left: 0 !important; }
-.searchresultblock { width: 100%; display: block; margin-bottom: 15px; }
+.searchresulttitle { font-size: 1.5em; font-weight: bold; padding-left: 0 !important; }
+.searchresultblock { border: 1px solid #ddd; display: block; margin: 15px auto; padding: 10px 20px; width: 100%; }
 .searchresultcontent { margin: 0px; padding: 0px; }
 .searchresultuparrow { vertical-align: middle; margin-left: 5px; }
 
@@ -216,7 +216,7 @@ div.conn-li-wrapper{ width: 100%; clear: both; }
 .nodeComment { margin-left: 30px; }
 ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 
-.searchresultcontent ul { width: auto !important; }
+
 .searchresultcontent .idea-wrapper { display: block; }
 .searchresultcontent .idea-wrapper .idea-main { display: block; }
 .searchresultcontent .idea-wrapper .idea-main .idea-detail .ideadata .commentdiv { display: block !important; height: unset; margin-bottom: 20px; }

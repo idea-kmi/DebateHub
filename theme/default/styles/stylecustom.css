@@ -327,11 +327,11 @@ hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; wid
 .searchresultcontent ul li .idea-blob-list table.toConnectionsTable tr td .textdivcomment { padding-left: 10px; }
 .searchresultcontent ul li .idea-blob-list table.toConnectionsTable tr td .textdivcomment .textdivcomment-title { font-size: 1.2em; }
 
-.searchresultcontent ul.pagination { margin: 0; padding: 0; }
-.searchresultcontent ul.pagination li { position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; background-color: #fff; border: 1px solid #dee2e6; font-weight: bold; }
-.searchresultcontent ul.pagination li:hover { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
-.searchresultcontent ul.pagination li.currentpage { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
-.searchresultcontent ul.pagination li.inactive:hover { text-decoration: none; background-color: transparent; }
+.searchresultblock ul.pagination { margin: 0; padding: 0; }
+.searchresultblock ul.pagination li { position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; background-color: #fff; border: 1px solid #dee2e6; font-weight: bold; }
+.searchresultblock ul.pagination li:hover { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+.searchresultblock ul.pagination li.currentpage { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+.searchresultblock ul.pagination li.inactive:hover { text-decoration: none; background-color: transparent; }
 
 .searchresultblock .search-backtotop { font-size: 0.5em; }
 .searchresultblock fieldset.overviewfieldset { border: none !important; padding: 0 !important; }

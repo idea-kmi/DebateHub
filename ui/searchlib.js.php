@@ -432,7 +432,6 @@ function loadusers(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
 					$("content-user-list").insert(tb2);
-					$("content-user-list").insert("<br><br>");
 				}
 
 				displayUsers($("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
@@ -521,7 +520,6 @@ function loadgroups(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
 					$("content-group-list").insert(tb2);
-					$("content-group-list").insert("<br><br>");
 				}
 
 				displayGroups($("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
@@ -876,7 +874,7 @@ function createNav(total, start, count, argArray, context, type){
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i < totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    	var page = new Element("li", {'class':"nav-page"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);

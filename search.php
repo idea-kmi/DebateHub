@@ -142,6 +142,7 @@
 				<div class="row">
 					<div id="content-controls"></div>
 				</div>
+
 				<div id="q_results" name="q_results" class="row searchResultsMenu">
 					<div class="col-auto"><a id="issue-result-menu" href="#issueresult"><?php echo $LNG->ISSUES_NAME; ?>: <span id="issue-list-count-main"></span></a><span class="ms-4">|</span></div>
 					<div class="col-auto"><a id="solution-result-menu" href="#solutionresult"><?php echo $LNG->SOLUTIONS_NAME; ?>: <span id="solution-list-count-main"></span></a><span class="ms-4">|</span></div>
@@ -152,47 +153,76 @@
 					<div class="col-auto"><a id="group-result-menu" href="#groupresult"><?php echo $LNG->GROUPS_NAME; ?>: <span id="group-list-count-main"></span></a></div>
 				</div>
 
-				<div id="content-issue-main" class="searchresultblock">
-					<a name="issueresult"></a>
-					<div class="strapline searchresulttitle"><span id="issue-list-count">0</span> <span id="issue-list-title"><?php echo $LNG->ISSUES_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+				<div id="content-issue-main" class="searchresultblock">					
+					<div class="strapline searchresulttitle">
+						<span id="issue-list-count">0</span> 
+						<span id="issue-list-title"><?php echo $LNG->ISSUES_NAME; ?></span>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a name="issueresult"></a>
+					</div>
 					<div class="searchresultcontent" id="content-issue-list"></div>
 				</div>
 
 				<div id="content-solution-main" class="searchresultblock">
-					<a name="solutionresult"></a>
-					<div class="strapline searchresulttitle"><span id="solution-list-count">0</span> <span id="solution-list-title"><?php echo $LNG->SOLUTIONS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="strapline searchresulttitle">
+						<span id="solution-list-count">0</span> 
+						<span id="solution-list-title"><?php echo $LNG->SOLUTIONS_NAME; ?></span>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a name="solutionresult"></a>
+					</div>
 					<div class="searchresultcontent" id="content-solution-list"></div>
 				</div>
 
 				<div id="content-pro-main" class="searchresultblock">
-					<a name="proresult"></a>
-					<div class="strapline searchresulttitle"><span id="pro-list-count">0</span> <span id="pro-list-title"><?php echo $LNG->PROS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="strapline searchresulttitle">
+						<span id="pro-list-count">0</span> 
+						<span id="pro-list-title"><?php echo $LNG->PROS_NAME; ?></span>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a name="proresult"></a>
+					</div>
 					<div class="searchresultcontent" id="content-pro-list"></div>
 				</div>
+
 				<div id="content-con-main" class="searchresultblock">
-					<a name="conresult"></a>
-					<div class="strapline searchresulttitle"><span id="con-list-count">0</span> <span id="con-list-title"><?php echo $LNG->CONS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="strapline searchresulttitle">
+						<span id="con-list-count">0</span> 
+						<span id="con-list-title"><?php echo $LNG->CONS_NAME; ?></span>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a name="conresult"></a>
+					</div>
 					<div class="searchresultcontent" id="content-con-list"></div>
 				</div>
 
 				<div id="content-comment-main" class="searchresultblock">
-					<a name="commentresult"></a>
-					<div class="strapline searchresulttitle"><span id="comment-list-count">0</span> <span id="comment-list-title"><?php echo $LNG->COMMENTS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="strapline searchresulttitle">
+						<span id="comment-list-count">0</span> 
+						<span id="comment-list-title"><?php echo $LNG->COMMENTS_NAME; ?></span>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a name="commentresult"></a>
+					</div>
 					<div class="searchresultcontent" id="content-comment-list"></div>
 				</div>
 
 				<div id="content-user-main" class="searchresultblock">
-					<a name="userresult"></a>
 					<fieldset class="overviewfieldset">
-						<legend class="overviewlegend widgettextcolor"><span id="user-list-count">0</span> <span id="user-list-title"><?php echo $LNG->USERS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></legend>
+						<legend class="overviewlegend widgettextcolor">
+							<span id="user-list-count">0</span> 
+							<span id="user-list-title"><?php echo $LNG->USERS_NAME; ?></span>
+							<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+							<a name="userresult"></a>
+						</legend>
 						<div id="content-user-list"></div>
 					</fieldset>
 				</div>
 
 				<div id="content-group-main" class="searchresultblock">
-					<a name="groupresult"></a>
 					<fieldset class="overviewfieldset">
-						<legend class="overviewlegend widgettextcolor"><span id="group-list-count">0</span> <span id="group-list-title"><?php echo $LNG->GROUPS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></legend>
+						<legend class="overviewlegend widgettextcolor">
+							<span id="group-list-count">0</span> 
+							<span id="group-list-title"><?php echo $LNG->GROUPS_NAME; ?></span>
+							<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+							<a name="groupresult"></a>
+						</legend>
 						<div id="content-group-list"></div>
 					</fieldset>
 				</div>

@@ -317,3 +317,43 @@ hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; wid
 .pageseparatorbar { height: 5px; margin-bottom: 20px; width: 100%; }
 
 .overviewfieldset .idea-list-li img { max-width: 20px; height: auto; margin-right: 10px; }
+
+/* Search */
+.searchresultcontent ul { list-style: none; padding: 0; width: auto !important; }
+.searchresultcontent ul li { list-style: none; margin-bottom: 20px; padding: 0; width: auto !important; }
+.searchresultcontent ul li .idea-blob-list { margin: 0; padding: 0; }
+.searchresultcontent ul li .idea-blob-list table.toConnectionsTable { width: auto; }
+.searchresultcontent ul li .idea-blob-list table.toConnectionsTable tr td { vertical-align: top; }
+.searchresultcontent ul li .idea-blob-list table.toConnectionsTable tr td .textdivcomment { padding-left: 10px; }
+.searchresultcontent ul li .idea-blob-list table.toConnectionsTable tr td .textdivcomment .textdivcomment-title { font-size: 1.2em; }
+
+.searchresultcontent ul.pagination { margin: 0; padding: 0; }
+.searchresultcontent ul.pagination li { position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; background-color: #fff; border: 1px solid #dee2e6; font-weight: bold; }
+.searchresultcontent ul.pagination li:hover { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+.searchresultcontent ul.pagination li.currentpage { z-index: 2; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+.searchresultcontent ul.pagination li.inactive:hover { text-decoration: none; background-color: transparent; }
+
+.searchresultblock .search-backtotop { font-size: 0.5em; }
+.searchresultblock fieldset.overviewfieldset { border: none !important; padding: 0 !important; }
+.searchresultblock fieldset.overviewfieldset legend.overviewlegend  { font-size: 1.5em; margin: 0 !important; padding: 15px 0; }
+.searchresultblock fieldset.overviewfieldset .toolbarrow  { margin-bottom: 10px; }
+
+.searchresultblock .overviewfieldset .user-list-ol { background: transparent; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li { border-bottom: 0; margin-bottom: 10px; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable { display: block; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable .nodetablerow { display: flex; justify-content: start; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable .nodetablerow .nodetablecelltop { display: inline; padding: 5px; width: auto; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable .nodetablerow .nodetablecelltop:first-child { width: 150px; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable .nodetablerow .nodetablecelltop .contextinfo { font-size: 14px; padding-left: 15px; }
+.searchresultblock .overviewfieldset .user-list-ol .user-list-li .user-blob .nodetable .nodetablerow .nodetablecelltop .contextinfo > b { font-size: 1.2em; }
+
+.searchresultblock#content-group-main .overviewfieldset { margin: 0 !important; padding: 0 !important; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div { margin: 0 !important; padding: 0 !important; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card { margin: 0 !important; padding: 0 !important; width: 100%; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .d-inline-block.m-2 { display: block; margin: 0 !important; padding: 0 !important; width: 100%; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card h1 { font-size: 1.2em; font-weight: bold; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card .card-body { margin: 0 0 5px 0 !important; padding: 0 !important; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card .card-footer { margin: 0 0 5px 0 !important; padding: 0 !important; }
+.searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card div { font-size: 14px; }
+
+

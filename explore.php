@@ -105,8 +105,16 @@ if ($nodetype != "Issue") {
 						die;
 					}
 				}
+			} else {
+				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
+				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+				die;
 			}
-		}
+		} else {
+			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+			die;
+  	    }
 	} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
 		$selectednodeid = $nodeid;
 		$conSetSol = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all', '', 'Solution');
@@ -130,8 +138,16 @@ if ($nodetype != "Issue") {
 						die;
 					}
 				}
+			} else {
+				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
+				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+				die;
 			}
-		}
+		} else {
+			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+			die;
+  	    }
 	}
 }
 

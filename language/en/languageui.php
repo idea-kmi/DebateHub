@@ -500,6 +500,7 @@ $LNG->TAB_USER = $LNG->USERS_NAME;
 /** ERROR MESSAGES */
 $LNG->DATABASE_CONNECTION_ERROR = 'Could not connect to database - please check the server configuration.';
 $LNG->ITEM_NOT_FOUND_ERROR = 'Item not found';
+$LNG->ITEM_NOT_AVAILABLE_ERROR = 'Item not available';
 
 /** BUTTONS AND LINK HINTS **/
 $LNG->EDIT_BUTTON_TEXT = 'Edit';
@@ -966,7 +967,7 @@ $LNG->TAB_USER_SOCIAL = 'My Social Network';
 /** SPAM REPORTING **/
 $LNG->SPAM_CONFIRM_MESSAGE_PART1= 'Are you sure you want to report';
 $LNG->SPAM_CONFIRM_MESSAGE_PART2= 'as Spam / Inappropriate?';
-$LNG->SPAM_SUCCESS_MESSAGE = 'has been reported as spam';
+$LNG->SPAM_SUCCESS_MESSAGE = 'has been reported';
 $LNG->SPAM_REPORTED_TEXT = 'Reported as Spam';
 $LNG->SPAM_REPORTED_HINT = 'This has been reported as Spam / Inappropriate content';
 $LNG->SPAM_REPORT_TEXT = 'Report as Spam';
@@ -975,16 +976,22 @@ $LNG->SPAM_LOGIN_REPORT_TEXT = 'Sign In to Report as Spam';
 $LNG->SPAM_LOGIN_REPORT_HINT = 'Sign In to Report this as Spam / Inappropriate content';
 $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Reported Items";
 $LNG->SPAM_ADMIN_TITLE = "Item Report Manager";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Reported Items";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Archived Items";
 $LNG->SPAM_ADMIN_ID_ERROR = "Can not process request as nodeid is missing";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Reported By";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Title";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Node Type";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Action";
 $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "Are you sure you want to delete the item?: ";
 $LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "Are you sure you want to set as NOT SPAM?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Not Spam";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "Are you sure you want to archive this item?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Restore";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "Delete";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "View Details";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Archive";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'There are currently no items reported as Spam / Inappropriate';
+$LNG->SPAM_ADMIN_NONE_ARCHIVED_MESSAGE = 'There are currently no items archived';
 
 $LNG->SPAM_USER_REPORTED = 'User has been reported as a Spammer / Inappropriate';
 $LNG->SPAM_USER_REPORT = 'Report this User as a Spammer / Inappropriate';
@@ -1015,6 +1022,36 @@ $LNG->SPAM_USER_ADMIN_ID_ERROR = "Can not process request as userid is missing";
 $LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE = 'There are currently no users suspended';
 $LNG->SPAM_USER_ADMIN_SPAM_TITLE = 'Users Reported';
 $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE = 'Users Suspended';
+
+$LNG->SPAM_GROUP_REPORTED = 'Group has been reported as a Spammer / Inappropriate';
+$LNG->SPAM_GROUP_REPORT = 'Report this Group as Spam / Inappropriate';
+$LNG->SPAM_GROUP_LOGIN_REPORT = 'Login to report this Group as Spam / Inappropriate';
+$LNG->SPAM_GROUP_REPORTED_ALT = 'Reported';
+$LNG->SPAM_GROUP_REPORT_ALT = 'Report';
+$LNG->SPAM_GROUP_LOGIN_REPORT_ALT = 'Login to Report';
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0 = "Reported By";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 = "User Name";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 = "Action";
+$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON = "View Group Home";
+$LNG->SPAM_GROUP_ADMIN_VIEW_HINT = "Open a new Window showing this group's home page";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON = "Restore Group";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT = "Restore this group to active";
+$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON = "Delete Group";
+$LNG->SPAM_GROUP_ADMIN_DELETE_HINT = "Delete this group";
+$LNG->SPAM_GROUP_ADMIN_SUSPEND_BUTTON = "Suspend Group";
+$LNG->SPAM_GROUP_ADMIN_SUSPEND_HINT = "Suspend this group";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART1 = "Are you sure you want to delete the user: ";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART2 = "Be warned: group members will be removed from the group and node and triple's associated with the group will lose that association. If you have not done so, you should check the group members and contents first by clicking '".$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON."'";;
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART1 = "Are you sure you want to restore the group: ";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART2 = "This will remove this group from this list";
+$LNG->SPAM_GROUP_ADMIN_SUSPEND_CHECK_MESSAGE = "Are you sure you want to suspend the group: ";
+$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE = 'There are currently no groups reported as Spammers / Inappropriate';
+$LNG->SPAM_GROUP_ADMIN_TITLE = "Group Report Manager";
+$LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK = "Reported Groups";
+$LNG->SPAM_GROUP_ADMIN_ID_ERROR = "Can not process request as groupid is missing";
+$LNG->SPAM_GROUP_ADMIN_NONE_SUSPENDED_MESSAGE = 'There are currently no groups suspended';
+$LNG->SPAM_GROUP_ADMIN_SPAM_TITLE = 'Groups Reported';
+$LNG->SPAM_GROUP_ADMIN_SUSPENDED_TITLE = 'Groups Suspended';
 
 /** EXTERNAL LOGIN **/
 $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_0 = 'Unspecified error.';
@@ -1136,4 +1173,16 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Thank you for requesting registrat
 $LNG->RECENT_EMAIL_DIGEST_LABEL = 'Email Digest:';
 $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE = "Tick to receive a monthly email digest of recent activity.";
 $LNG->RECENT_EMAIL_DIGEST_PROFILE_MESSAGE = "Opt in/out of receiving a monthly email digest of recent activity.";
+
+
+/** FROM LITEMAP FOR TREE IN ADMIN AREA*/
+$LNG->NODE_DEBATE_TOGGLE = 'Show/hide connected items';
+$LNG->NODE_TOGGLE_HINT = 'Click to show/hide futher details';
+$LNG->NODE_CONNECTED_BY = 'Connected by';
+$LNG->NODE_RESOURCE_LINK_HINT = 'View site';
+$LNG->NODE_DEBATE_TREE_COUNT_HINT = 'The number of connected items on this element';
+$LNG->NODE_GOTO_PARENT_HINT = '- Click to scroll to this';
+$LNG->NODE_DESC_HEADING = 'Description:';
+$LNG->NODE_DETAIL_MENU_TEXT = 'Full Details';
+
 ?>

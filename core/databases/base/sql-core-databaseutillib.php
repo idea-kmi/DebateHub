@@ -296,7 +296,7 @@ $HUB_SQL->UTILLIB_NODES_BY_STATUS = $HUB_SQL->APILIB_NODES_SELECT_START."WHERE t
 /** Get Users By Status **/
 
 $HUB_SQL->UTILLIB_USERS_BY_STATUS = "SELECT DISTINCT t.UserID FROM Users t WHERE t.CurrentStatus=?";
-
+$HUB_SQL->UTILLIB_USERS_FILTER_GROUP = " AND t.IsGroup=?";
 
 /** Get Search Query String **/
 

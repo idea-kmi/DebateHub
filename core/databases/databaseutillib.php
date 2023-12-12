@@ -352,7 +352,7 @@ function connectionOrderString($o,$s){
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status){
@@ -400,7 +400,7 @@ function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelm
 	getDepthConnectionResults($results, $matchesFound);
 
 	$cs = new ConnectionSet();
-	return $cs->loadConnections($results, $style);
+	return $cs->loadConnections($results, $style, $status);
 
 }
 
@@ -461,7 +461,7 @@ function getConnectionsByPathByDepthOR($scope='all', $labelmatch='false', $nodei
 	//return database_error($messages);
 
 	$cs = new ConnectionSet();
-	return $cs->loadConnections($matchesFound, $style);
+	return $cs->loadConnections($matchesFound, $style, $status);
 }
 
 /**
@@ -1025,7 +1025,7 @@ function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNode
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param string $uniquepath "true"/"false" (default="true"). Should the paths followed consist of unique connections or can they repeat connections on a path if it follows the depth rules requested.
  * @param string $scope (either 'all' or 'my', deafult 'all')
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @param array &$messages passed in to store any return messages.
  */
 function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes, $labelmatch='false', $depth, $currentdepth=0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $scope, $status=0, &$message) {
@@ -1530,7 +1530,7 @@ function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param string $uniquepath "true"/"false" (default="true"). Should the paths followed consist of unique connections or can they repeat connections on a pth if it follows the depth rules requested.
  * @param string $scope (either 'all' or 'my', deafult 'all')
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @param array &$messages passed in to store any return messages.
  */
 function searchNetworkConnectionsByDepthOR($checkConnections, $matches, $nextNodes, $labelmatch='false', $depth, $currentdepth=0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $scope, $status=0, &$message) {
@@ -2546,13 +2546,17 @@ function getNodesByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
  * @return NodeSet or Error
  */
-function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long') {
+function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long', $isGroup='N') {
     global $CFG,$USER,$HUB_SQL;
 
 	if ($USER->getIsAdmin() == "Y") {
 		$params = array();
 		$params[0] = $status;
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+
+		$params[1] = $isGroup;
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
 	    $us = new UserSet();
 	    return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
 	 } else {

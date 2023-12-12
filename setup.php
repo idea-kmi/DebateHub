@@ -66,16 +66,19 @@
 
 	// FOR Nodes, Connections, URLs
 	$CFG->STATUS_ACTIVE = 0;
-	$CFG->STATUS_SPAM = 1; // Nodes only - not used in Debate Hub yet.
+	$CFG->STATUS_REPORTED = 1;
 	$CFG->STATUS_RETIRED = 2;
 	$CFG->STATUS_DISCARDED = 3; //lemoned off
+	$CFG->STATUS_SUSPENDED = 4; // if user suspended, their content is suspended
+	$CFG->STATUS_ARCHIVED = 5; // no longer visible - but not deleted.
 
-	// For Users
+	// For Users and Groups
 	$CFG->USER_STATUS_ACTIVE = 0;
 	$CFG->USER_STATUS_REPORTED = 1;
 	$CFG->USER_STATUS_UNVALIDATED = 2;
 	$CFG->USER_STATUS_UNAUTHORIZED = 3;
 	$CFG->USER_STATUS_SUSPENDED = 4;
+	$CFG->USER_STATUS_ARCHIVED = 5; // no longer visible - but not deleted - for groups
 
 	// In the UserGroupJoin table these statuses mean:
 	/*
@@ -83,14 +86,6 @@
 	UNAUTHORIZED = Pending approval
 	SUSPENDED = Join Group Request Rejected
 	REPORTED = User was approved but then later Removed from the Group.
-	*/
-
-	// In the UserGroupJoin table these statuses mean:
-	/*
-	ACTIVE = Approved
-	UNAUTHORIZED = Pending approval
-	SUSPENDED = Request Rejected
-	REPORTED = User was Removed from the GroupUser table.
 	*/
 
 	$CFG->GLOBAL_CONTEXT = "global";

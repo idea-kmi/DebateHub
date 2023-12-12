@@ -36,12 +36,74 @@
     include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
-        echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
+         echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
         include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
         die;
 	}
 
     $errors = array();
+
+	function encodeURIComponent($str) {
+		$revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
+		return strtr(rawurlencode($str), $revert);
+	}
+
+	function loadChildNodes($node, $status) {
+		global $CFG;
+		
+		$nodetype = $node->role->name;
+		$children = [];
+
+		// If the node being archived is a Debate Node
+		if ($nodetype == "Issue") {
+
+			//get the Ideas for this Debate.
+			$connSetSolutions = getConnectionsByNode($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'long', $status);
+
+			if (isset($connSetSolutions->connections[0])) {
+				$count = 0;
+				if (is_countable($connSetSolutions->connections)) {
+					$count = count($connSetSolutions->connections);
+				}
+				for ($i=0; $i<$count; $i++) {
+					$con = $connSetSolutions->connections[$i];
+					// connection connect from the child to the parent so get the from end of the connection
+					if (isset($con->from)) {
+						$solutionnode = $con->from;
+						if(!$solutionnode instanceof Hub_Error){								
+							$solutionnode->children = loadChildNodes($solutionnode, $status);
+							array_push($children, $solutionnode);
+						}
+					} 
+				}
+			}
+		} else if ($nodetype == "Solution") {
+
+			// get any pros, cons and moderator comments for a given Idea
+			$connSetArguments = getConnectionsByNode($node->nodeid,0,-1,'date','ASC', 'all','','Pro,Con,Comment', 'long', $status);
+			if (isset($connSetArguments->connections[0])) {
+				$count = 0;
+				if (is_countable($connSetArguments->connections)) {
+					$count = count($connSetArguments->connections);
+				}
+				for ($j=0; $j<$count; $j++) {
+					$con = $connSetArguments->connections[$j];
+					// connections connect from the child to the parent so get the from end of the connection
+					if (isset($con->from)) {
+						$argumentnode = $con->from;
+						if(!$argumentnode instanceof Hub_Error){								
+							array_push($children, $argumentnode); // has no children
+						}
+					}
+				}
+			}
+		} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+			//nothing more to do! status already changed above for the node.
+		}
+
+		return $children;
+	}
+
 
     if(isset($_POST["deletenode"])){
 		$nodeid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
@@ -51,17 +113,185 @@
     	} else {
             array_push($errors,$LNG->SPAM_ADMIN_ID_ERROR);
     	}
-    } else if(isset($_POST["restorenode"])){
+	} else if(isset($_POST["archivenode"])){
 		$nodeid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
+
     	if ($nodeid != "") {
     		$node = new CNode($nodeid);
-	   		$node = $node->updateStatus($CFG->STATUS_ACTIVE);
-    	} else {
+			
+			// to get the connections - set archived at the end
+			$node = $node->updateStatus($CFG->STATUS_ACTIVE);
+
+			// marks all child nodes as also archived, if parent archived.
+
+			$nodetype = $node->role->name;
+
+			// If the node being archived is a Debate Node
+			if ($nodetype == "Issue") {
+
+				//get the Ideas for this Debate.
+				$connSetSolutions = getConnectionsByNode($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'short', $CFG->STATUS_ACTIVE);
+				if (isset($connSetSolutions->connections[0])) {
+					$count = 0;
+					if (is_countable($connSetSolutions->connections)) {
+						$count = count($connSetSolutions->connections);
+					}
+					for ($i=0; $i<$count; $i++) {
+						$con = $connSetSolutions->connections[$i];
+						$con->updateStatus($CFG->STATUS_ARCHIVED);
+
+						// connection connect from the child to the parent so get the from end of the connection
+						if (isset($con->from)) {
+							$solutionnode = $con->from;
+							if(!$solutionnode instanceof Hub_Error){								
+								$solutionnode->updateStatus($CFG->STATUS_ARCHIVED);
+
+								// get any pros, cons and moderator comments for a given Idea
+								$connSetArguments = getConnectionsByNode($solutionnodeid->nodeid, 0, 1, 'date', 'ASC', 'all', '', 'Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+								if (isset($connSetArguments->connections[0])) {
+									$count2 = 0;
+									if (is_countable($connSetArguments->connections)) {
+										$count2 = count($connSetArguments->connections);
+									}
+									for ($j=0; $j<$count2; $j++) {
+										$con2 = $connSetArguments->connections[$j];
+										$con2->updateStatus($CFG->STATUS_ARCHIVED);
+
+										// connection connect from the child to the parent so get the from end of the connection
+										if (isset($con2->from)) {
+											$argumentnode = $con2->from;
+											if(!$argumentnode instanceof Hub_Error){								
+												$argumentnode->updateStatus($CFG->STATUS_ARCHIVED);
+											}
+										}
+									}
+								}
+							}
+						} 
+					}
+				}
+			} else if ($nodetype == "Solution") {
+
+				// get any pros, cons and moderator comments for a given Idea
+				$connSetArguments = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+				if (isset($connSetArguments->connections[0])) {
+					$count = 0;
+					if (is_countable($connSetArguments->connections)) {
+						$count = count($connSetArguments->connections);
+					}
+					for ($j=0; $j<$count; $j++) {
+						$con = $connSetArguments->connections[$j];
+						$con->updateStatus($CFG->STATUS_ARCHIVED);
+
+						// connection connect from the child to the parent so get the from end of the connection
+						if (isset($con->from)) {
+							$argumentnode = $con->from;
+							if(!$argumentnode instanceof Hub_Error){								
+								$argumentnode->updateStatus($CFG->STATUS_ARCHIVED);
+							}
+						}
+					}
+				}
+			} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+				//nothing more to do! status already changed above for the node.
+			}
+
+			$node = $node->updateStatus($CFG->STATUS_ARCHIVED);
+		}
+    } else if(isset($_POST["restorenode"])){
+		$nodeid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
+
+    	if ($nodeid != "") {
+    		$node = new CNode($nodeid);
+
+			$originalStatus = $node->status;
+
+			// only need to restore child nodes if we are dealing with an archived item
+			if ($originalStatus == $CFG->STATUS_ARCHIVED) {
+
+				// marks all child nodes as also archived, if parent archived.
+				$nodetype = $node->role->name;
+
+				// If the node being archived is a Debate Node
+				if ($nodetype == "Issue") {
+
+					//get the Ideas for this Debate.
+					$connSetSolutions = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all','','Solution', 'short',  $CFG->STATUS_ARCHIVED);
+					if (isset($connSetSolutions->connections[0])) {
+						$count = 0;
+						if (is_countable($connSetSolutions->connections)) {
+							$count = count($connSetSolutions->connections);
+						}
+						for ($i=0; $i<$count; $i++) {
+							$con = $connSetSolutions->connections[$i];
+							$con->updateStatus($CFG->STATUS_ACTIVE);
+
+							// connection connect from the child to the parent so get the from end of the connection
+							if (isset($con->from)) {
+								$solutionnode = $con->from;
+								if(!$solutionnode instanceof Hub_Error){								
+									$solutionnode->updateStatus($CFG->STATUS_ACTIVE);
+
+									// get any pros, cons and moderator comments for a given Idea
+									$connSetArguments = getConnectionsByNode($solutionnode->nodeid,0,1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ARCHIVED);
+									if (isset($connSetArguments->connections[0])) {
+										$count2 = 0;
+										if (is_countable($connSetArguments->connections)) {
+											$count2 = count($connSetArguments->connections);
+										}
+										for ($j=0; $j<$count2; $j++) {
+											$con2 = $connSetArguments->connections[$j];
+											$con2->updateStatus($CFG->STATUS_ACTIVE);
+
+											// connection connect from the child to the parent so get the from end of the connection
+											if (isset($con2->from)) {
+												$argumentnode = $con2->from;
+												if(!$argumentnode instanceof Hub_Error){								
+													$argumentnode->updateStatus($CFG->STATUS_ACTIVE);
+												}
+											}
+										}
+									}
+								}
+							} 
+						}
+					}
+				} else if ($nodetype == "Solution") {
+
+					// get any pros, cons and moderator comments for a given Idea
+					$connSetArguments = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all','','Pro,Con,Comment', 'short',  $CFG->STATUS_ARCHIVED);
+					if (isset($connSetArguments->connections[0])) {
+						$count = 0;
+						if (is_countable($connSetArguments->connections)) {
+							$count = count($connSetArguments->connections);
+						}
+						for ($j=0; $j<$count; $j++) {
+							$con = $connSetArguments->connections[$j];
+							$con->updateStatus($CFG->STATUS_ACTIVE);
+
+							// connection connect from the child to the parent so get the from end of the connection
+							if (isset($con->from)) {
+								$argumentnode = $con->from;
+								if(!$argumentnode instanceof Hub_Error){								
+									$argumentnode->updateStatus($CFG->STATUS_ACTIVE);
+								}
+							}
+						}
+					}
+				} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+					//nothing more to do! status already changed above for the node.
+				}
+			}
+
+			$node = $node->updateStatus($CFG->STATUS_ACTIVE);
+		} else {
             array_push($errors,$LNG->SPAM_ADMIN_ID_ERROR);
     	}
     }
 
-	$ns = getNodesByStatus($CFG->STATUS_SPAM, 0,-1,'name','ASC','long');
+	$allNodes = array();
+
+	$ns = getNodesByStatus($CFG->STATUS_REPORTED, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
 
 	$count = 0;
@@ -70,17 +300,45 @@
 	}
     for ($i=0; $i<$count;$i++) {
     	$node = $nodes[$i];
-    	$reporterid = getSpamReporter($node->nodeid);
+		$node->children = loadChildNodes($node, $CFG->STATUS_ACTIVE);
+	   	$reporterid = getSpamReporter($node->nodeid);
     	if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$node->reporter = $reporter;
+			$node->istop = true;	// only top if it was the reported item
     	}
+		$allNodes[$node->nodeid] = $node;
     }
 
+	$ns2 = getNodesByStatus($CFG->STATUS_ARCHIVED, 0,-1,'name','ASC','long');
+    $nodesarchivedinitial = $ns2->nodes;
+
+	$count2 = 0;
+	if (is_countable($nodesarchivedinitial)) {
+		$count2 = count($nodesarchivedinitial);
+	}
+	
+	$nodesarchived = [];
+    for ($i=0; $i<$count2;$i++) {
+    	$node = $nodesarchivedinitial[$i];
+   		$reporterid = getSpamReporter($node->nodeid);
+		//only hold top level nodes - rest shown in tree
+    	if ($reporterid != false) {
+    		$reporter = new User($reporterid);
+    		$reporter = $reporter->load();
+    		$node->reporter = $reporter;
+			$node->children = loadChildNodes($node, $CFG->STATUS_ARCHIVED);
+			$node->istop = true; // only top if it was the reported item
+			array_push($nodesarchived, $node);
+    	}
+ 		$allNodes[$node->nodeid] = $node;
+    }
 ?>
 
 <script type="text/javascript">
+
+	const allnodes = <?php echo json_encode($allNodes); ?>;
 
 	function init() {
 		$('dialogheader').insert('<?php echo $LNG->SPAM_ADMIN_TITLE; ?>');
@@ -133,6 +391,15 @@
 		}
 	}
 
+	function checkFormArchive(name) {
+		var ans = confirm("<?php echo $LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE; ?>\n\n"+name+"\n\n");
+		if (ans){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function checkFormDelete(name) {
 		var ans = confirm("<?php echo $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE; ?>\n\n"+name+"\n\n");
 		if (ans){
@@ -142,8 +409,22 @@
 		}
 	}
 
-	window.onload = init;
+	function viewItemTree(nodeid, nodetype, containerid) {
+		var node = allnodes[nodeid];
+		console.log(node);
 
+		const containerObj = document.getElementById(containerid);
+		if (containerObj.style.display == 'block') {
+			containerObj.style.display = 'none';
+		} else {
+			containerObj.style.display = 'block';
+		}
+		
+		if (containerObj.innerHTML == "&nbsp;") {
+			containerObj.innerHTML = "";
+			displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
+		}
+	}
 </script>
 
 <?php
@@ -158,6 +439,8 @@ if(!empty($errors)){
 
 <div id="spamdiv" style="margin-left:10px;">
 
+    <h2 style="margin-left:10px;"><?php echo $LNG->SPAM_ADMIN_SPAM_TITLE; ?></h2>
+
     <div class="formrow">
         <div id="nodes" class="forminput">
 
@@ -171,7 +454,8 @@ if(!empty($errors)){
         	} else {
 				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
 				echo "<tr>";
-				echo "<th width='50%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
+				echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
 				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
 				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
 				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
@@ -179,14 +463,109 @@ if(!empty($errors)){
 
 				echo "</tr>";
 				foreach($nodes as $node){
+
 					echo '<tr>';
 
 					echo '<td style="font-size:11pt">';
 					echo $node->name;
 					echo '</td>';
 
+					echo '<td style="font-size:11pt">';
+					$nodetypename = '';
+					if ($node->role->name == 'Issue') {
+						$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
+					} else {
+						$nodetypename = getNodeTypeText($node->role->name, false);
+					}
+					echo $nodetypename;
+					echo '</td>';
+
 					echo '<td>';
-					echo '<span class="active" style="font-size:10pt;" onclick="viewSpamItemDetails(\''.$node->nodeid.'\', \''.$node->role->name.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
+					//echo '<span class="active" style="font-size:10pt;" onclick="viewSpamItemDetails(\''.$node->nodeid.'\', \''.$node->role->name.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
+					echo '<span class="active" style="font-size:10pt;" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv1\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
+					echo '</td>';
+
+					echo '<td>';
+					echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">';
+					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+					echo '<input type="hidden" id="restorenode" name="restorenode" value="" />';
+					echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</a>';
+					//echo '<input type="submit" style="font-size:10pt;border:none;padding:0px;background:transparent" class="active" id="restorenode" name="restorenode" value="'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'"/>';
+					echo '</form>';
+					echo '</td>';
+
+					echo '<td>';
+					echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormArchive(\''.htmlspecialchars($node->name).'\');">';
+					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+					echo '<input type="hidden" id="archivenode" name="archivenode" value="" />';
+					echo '<span class="active" onclick="if (checkFormArchive(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="archivenode" name="archivenode">'.$LNG->SPAM_ADMIN_ARCHIVE_BUTTON.'</a>';
+					echo '</form>';
+					echo '</td>';
+
+					echo '<td>';
+					if (isset($node->reporter)) {
+						echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$node->reporter->userid.'\');">'.$node->reporter->name.'</span>';
+					} else {
+						echo $LNG->CORE_UNKNOWN_USER_ERROR;
+					}
+					echo '</td>';
+
+					echo '</tr>';
+
+					// add the tree display area row
+					echo '<tr><td colspan="6">';
+					echo '<div id="'.$node->nodeid.'treediv1" style="display:none">&nbsp;</div>';
+					echo '</td></tr>';
+
+				}
+				echo "</table>";
+			}
+        ?>
+        </div>
+    </div>
+
+    <h2 style="margin-left:10px;"><?php echo $LNG->SPAM_ADMIN_ARCHIVE_TITLE; ?></h2>
+
+	<div class="formrow">
+		<div id="nodesarchived" class="forminput">
+
+		<?php
+			$count = 0;
+			if (is_countable($nodesarchived)) {
+				$count = count($nodesarchived);
+			}
+			if ($count == 0) {
+				echo "<p>".$LNG->SPAM_ADMIN_NONE_ARCHIVED_MESSAGE."</p>";
+			} else {
+				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+				echo "<tr>";
+				echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='20%'>".$LNG->SPAM_ADMIN_TABLE_HEADING0."</th>";
+
+				echo "</tr>";
+				foreach($nodesarchived as $node) {
+					echo '<tr>';
+
+					echo '<td style="font-size:11pt">';
+					echo $node->name;
+					echo '</td>';
+
+					echo '<td style="font-size:11pt">';
+					$nodetypename = '';
+					if ($node->role->name == 'Issue') {
+						$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
+					} else {
+						$nodetypename = getNodeTypeText($node->role->name, false);
+					}
+					echo $nodetypename;
+					echo '</td>';
+
+					echo '<td>';
+					echo '<span class="active" style="font-size:10pt;" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
 					echo '</td>';
 
 					echo '<td>';
@@ -215,19 +594,24 @@ if(!empty($errors)){
 					echo '</td>';
 
 					echo '</tr>';
+
+					// add the tree display area row
+					echo '<tr><td colspan="6">';
+					echo '<div id="'.$node->nodeid.'treediv" style="display:none">&nbsp;</div>';
+					echo '</td></tr>';
+
 				}
 				echo "</table>";
 			}
-        ?>
-        </div>
-   </div>
+		?>
+		</div>
+	</div>
 
-    <div class="formrow">
+    <div class="formrow" style="margin-top:10px;">
 	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>
-
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

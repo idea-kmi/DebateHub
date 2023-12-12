@@ -35,7 +35,8 @@ var timers = new Array();
 /**
  * Render a list of nodes
  */
-function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status){
+function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status) {
+
 	if (includeUser == undefined) {
 		includeUser = true;
 	}
@@ -65,6 +66,7 @@ function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status){
 			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
 			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list d-flex flex-column'});
+
 			var blobNode = renderIdeaList(node, myuniqueid, node.role[0].role,includeUser,type,status, i);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
@@ -878,6 +880,12 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		}
 	}
 
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
+		toolbarDiv.insert(createSpamButton(node, role));
+	}
+	<?php } ?>
+
 	if (type == "active" && !issueClosed) {
 		if (USER != "") {
 			var followbutton = new Element('img', {'class':' '});
@@ -1506,7 +1514,6 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	});
 	textCell.insert(textDiv);
 	
-
 	var title = node.name;
 
 	var textspan = new Element("span", {
@@ -1558,6 +1565,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			textDiv.insert(del);
 		}
 	}
+
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	if (type == "active" && USER != "" && USER != nodeuser.userid) { // IF LOGGED IN AND NOT YOU
+		textDiv.insert(createSpamButton(node, role));
+	}
+	<?php } ?>
 
 	if (node.urls && node.urls.length > 0) {
 		var menuButton = new Element('img',{
@@ -2068,7 +2081,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	forCell.vAlign = "top";
 	forCell.align = "left";
 	forCell.className = "for-against";
-
+	
 	var forHeading = new Element('h3');
 	forHeading.classList.add("forHeading");
 	forHeading.insert('<?php echo $LNG->NODE_CHILDREN_EVIDENCE_PRO; ?> (');
@@ -2659,7 +2672,6 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	var nodeTable = new Element('table', {'style':'width:100%'});
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
-	//nodeTable.border = "1";
 
 	var row = nodeTable.insertRow(-1);
 	row.setAttribute('name','argumentrowitem');
@@ -2679,27 +2691,26 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	}
 
 	var textCell = row.insertCell(-1);
-	textCell.vAlign="top";
-	textCell.align="left";
+	textCell.classList.add("idea-section");
 
 	var textDiv = new Element("div", {
 		'id':'textdivargument'+uniQ,
+		'class':'textdividea'
 	});
 	textCell.insert(textDiv);
 
 	var title = node.name;
 	var textspan = new Element("span", {
-		'style':'font-weight:normal;font-size:11pt',
 		'id':'desctoggle'+uniQ,
+		'class': 'idea-title'
 	});
 	textspan.insert(title);
 	textDiv.insert(textspan);
 
 	if (USER == nodeuser.userid && type == "active" && NODE_ARGS['issueDiscussing']) {
-		var editbutton = new Element("img", {
-			
-			'class':'imagebuttonfaded',
-			'style':'padding-left:10px',
+		var editbutton = new Element("img", {			
+			'class':'idea-edit',
+			'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
 			'title':'<?php echo $LNG->NODE_EDIT_SOLUTION_ICON_HINT; ?>',
 		});
@@ -2714,7 +2725,12 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		});
 
 		var deletename = node.name;
-		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+		var del = new Element('img',{		
+			'class':'idea-delete',
+			'alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 
+			'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
+			'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'
+		});
 		Event.observe(del,'click',function (){
 			var callback = function () {
 				if (role.name == "Con") {
@@ -2732,9 +2748,19 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		textDiv.insert(del);
 	}
 
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	if (type == "active" && USER != "" && USER != nodeuser.userid) { // IF LOGGED IN AND NOT YOU
+		textDiv.insert(createSpamButton(node, role));
+	}
+	<?php } ?>
+
 	if (node.urls && node.urls.length > 0) {
-		var menuButton = new Element('img',{'alt':'>', 'style':'padding-left:10px;width:16px;height:16px;','width':'16','height':'16','src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'});
-		textDiv.appendChild(menuButton);
+		var menuButton = new Element('img',{
+			'class':'idea-url',
+			'alt':'>','width':'16','height':'16',
+			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
+		});
+		textDiv.appendChild(menuButton);		
 		Event.observe(menuButton,'mouseout',function (event){
 			hideBox('toolbardiv'+uniQ);
 		});
@@ -3523,6 +3549,14 @@ function renderListNode(node, uniQ, role, includeUser){
 	textspan.insert(title);
 	textspan.href = '<?php echo $CFG->homeAddress; ?>explore.php?id='+node.nodeid;
 	textDiv.insert(textspan);
+
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
+		const item = createSpamButton(node, role);
+		item.style.paddingLeft = "10px";
+		textDiv.insert(item);
+	}
+	<?php } ?>
 
 	if(node.description || node.hasdesc){
 		var dStr = '<div class="idea-desc" id="desc'+uniQ+'div"><span>';
@@ -4622,6 +4656,68 @@ function reportNodeSpamAlert(obj, nodetype, node) {
 }
 
 /**
+ * Create a span menu option to report spam / show spam reported / or say login to report.
+ *
+ * @param node the node to report
+ * @param nodetype the nodetype of the node to report
+ */
+function createSpamMenuOption(node, nodetype) {
+
+	var spaming = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;font-size:10pt'} );
+
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
+		spaming.insert("<?php echo $LNG->SPAM_REPORTED_TEXT; ?>");
+		spaming.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
+		spaming.className = "";
+	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
+		if (USER != "") {
+			spaming.insert("<?php echo $LNG->SPAM_REPORT_TEXT; ?>");
+			spaming.title = '<?php echo $LNG->SPAM_REPORT_HINT; ?>';
+			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
+		} else {
+			spaming.insert("<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>");
+			spaming.title = '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>';
+			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
+		}
+	}
+
+	return spaming;
+}
+
+/**
+ * Create a span button to report spam / show spam reported / or say login to report.
+ *
+ * @param node the node to report
+ * @param nodetype the nodetype of the node to report
+ */
+function createSpamButton(node, nodetype) {
+	// Add spam icon
+	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
+		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
+		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
+		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>');
+	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
+		if(USER != ""){
+			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
+			spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag.png'); ?>');
+			spaming.className = "idea-report";
+			spaming.style.cursor = 'pointer';
+			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
+		} else {
+			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
+			spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('falg-grey.png'); ?>');
+			spaming.className = "idea-report";
+			spaming.style.cursor = 'pointer';
+			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
+		}
+	}
+	return spaming;
+}
+
+/**
  * If the idea trees contain the argument or comment with the given id, open comment, or argument area.
  * The id of the argument of comment to focus on.
  */
@@ -5027,5 +5123,447 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 			countdowntableDiv.insert(bar);
 			countDownIssueVoteTimer(votestart.getTime(), bar, "<?php echo $LNG->NODE_VOTE_COUNTDOWN_START; ?>");
 		}
+	}
+}
+
+/** MODIFIED FROM LITEMAP **/
+//Called using passed data therefore no cnode and array levels for node items and other object types
+/**
+ * Render a list of connection nodes
+ */
+function displayConnectionNodes(objDiv, nodes, start,includeUser,uniqueid, childCountSpan, parentrefreshhandler){
+	if (uniqueid == undefined) {
+		uniqueid = 'idea-list';
+	}
+
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	for(var i=0; i< nodes.length; i++){
+		if(nodes[i]){
+			var iUL = new Element("li", {'id':nodes[i].nodeid, 'class':'idea-list-li'});
+			lOL.insert(iUL);
+			var blobDiv = new Element("div", {'class':'idea-blob-list'});
+			var blobNode = renderConnectionNode(nodes[i], uniqueid, nodes[i].role, includeUser, childCountSpan, parentrefreshhandler);
+			blobDiv.insert(blobNode);
+			iUL.insert(blobDiv);
+		}
+	}
+
+	objDiv.insert(lOL);
+}
+
+/**
+ * Render the given node from an associated connection in the knowledge tree.
+ * @param node the node object do render
+ * @param uniQ is a unique id element prepended to the nodeid to form an overall unique id within the currently visible site elements
+ * @param role the role object for this node
+ * @param includeUser whether to include the user image and link
+ * @param childCountSpan The element into which to put the running total of children in this conneciotn tree..
+ * @param parentrefreshhandler a statment to eval after actions have occurred to refresh this list. - NOT USED?
+ */
+function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, parentrefreshhandler){
+
+	if (childCountSpan === undefined) {
+		childCountSpan = null;
+	}
+
+	var originaluniQ = uniQ;
+
+	if(role === undefined){
+		role = node.role;
+	}
+
+	var nodeuser = null;
+	// JSON structure different if coming from popup where json_encode used.
+	if (node.users.userid) {
+		nodeuser = node.users[0];
+	} else {
+		nodeuser = node.users[0];
+	}
+	var connection = node.connection;
+	var user = null;
+	if (connection && connection.users) {
+		user = connection.users[0];
+	}
+
+	//needs to check if embedded as a snippet
+	var breakout = "";
+	if(top.location != self.location){
+		breakout = " target='_blank'";
+	}
+
+	var focalnodeid = "";
+	if (node.focalnodeid) {
+		focalnodeid = node.focalnodeid;
+	}
+	var focalrole = "";
+	var connrole = role;
+	var otherend = "";
+	if (connection) {
+		uniQ = connection.connid+uniQ;
+		var fN = connection.from;
+		var tN = connection.to;
+		if (node.nodeid == fN.nodeid) {
+			connrole = connection.fromrole;
+			focalrole = tN.role;
+			otherend = tN;
+		} else {
+			connrole = connection.torole;
+			focalrole = fN.role;
+			otherend = fN;
+		}
+	} else {
+		uniQ = node.nodeid + uniQ;
+	}
+
+	var iDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
+	var ihDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
+	var itDiv = new Element("div", {'class':'idea-title','style':'padding:0px;'});
+
+	var nodeTable = new Element( 'table' );
+	nodeTable.className = "toConnectionsTable";
+	nodeTable.width="100%";
+	//nodeTable.border = "1";
+
+	itDiv.insert(nodeTable);
+
+	var row = nodeTable.insertRow(-1);
+
+	var lineCell = row.insertCell(-1);
+	//lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
+	lineCell.width="15px;"
+	lineCell.vAlign="middle";
+	var lineDiv = new Element('div',{'class':'graylinewide', 'style':'width:100%;'});
+	lineCell.insert(lineDiv);
+
+	var textCell = row.insertCell(-1);
+	textCell.vAlign="middle";
+	textCell.align="left";
+	var textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell', 'class':'whiteborder', 'style':'padding:3px;'});
+	textCellDiv.nodeid = node.nodeid;
+	textCellDiv.focalnodeid = node.focalnodeid;
+	textCellDiv.nodetype = role.name;
+	textCellDiv.parentuniQ = originaluniQ;
+	if (connection) {
+		textCellDiv.connection = connection;
+	}
+
+	if (node.nodeid == node.focalnodeid) {
+		var bordercolor = 'plainborder';
+		var backcolor = 'whiteback';
+		var nodetype = role.name;
+		if (nodetype == 'Issue') {
+			bordercolor = 'issueborder';
+			backcolor = 'issueback';
+		} else if (nodetype == 'Idea') {
+			bordercolor = 'ideaborder';
+			backcolor = 'ideaback';
+		} else if (nodetype == 'Solution') {
+			bordercolor = 'solutionborder';
+			backcolor = 'solutionback';
+		} else if (nodetype == 'Pro') {
+			bordercolor = 'proborder';
+			backcolor = 'proback';
+		} else if (nodetype == 'Con') {
+			bordercolor = 'conborder';
+			backcolor = 'conback';
+		} else if (nodetype == 'Comment') {
+			bordercolor = 'plainborder';
+			backcolor = 'plainback';
+		} 
+
+		textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell','class':bordercolor+' '+backcolor, 'style':'padding:3px;'});
+		textCellDiv.nodeid = node.nodeid;
+		textCellDiv.nodetype = role.name;
+		textCellDiv.focalnodeid = node.focalnodeid;
+		textCellDiv.parentuniQ = originaluniQ;
+		if (connection) {
+			textCellDiv.connection = connection;
+		}
+	}
+
+	var toolbarCell = row.insertCell(-1);
+	toolbarCell.vAlign="middle";
+	toolbarCell.align="left";
+	toolbarCell.width="80";
+
+	textCell.insert(textCellDiv);
+
+	var dStr = "";
+	if (user != null) {
+		var cDate = new Date(connection.creationdate*1000);
+		var dStr = "<?php echo $LNG->NODE_CONNECTED_BY; ?> "+user.name+ " on "+cDate.format(DATE_FORMAT)+' - <?php echo $LNG->NODE_TOGGLE_HINT;?>'
+	}
+
+	// ADD THE NODE ICON
+	var nodeArea = new Element("a", {'class':'itemtext', 'name':'nodeArea', 'style':'padding-top:2px;','title':dStr} );
+	nodeArea.nodeid = node.nodeid;
+	if (typeof node.focalnodeid != 'undefined') {
+		nodeArea.focalnodeid = node.focalnodeid;
+	}
+
+	var alttext = getNodeTitleAntecedence(role.name, false);
+	if (connrole.image != null && connrole.image != "") {
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'height:24px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + connrole.image});
+		nodeArea.insert(nodeicon);
+	} else {
+		nodeArea.insert(alttext+": ");
+	}
+
+	// ADD THE NODE LABEL
+	textCellDiv.insert(nodeArea);
+	if (node.nodeid == node.focalnodeid) {
+		nodeArea.className = "itemtextwhite";
+	} else {
+		nodeArea.className = "itemtext unselectedlabel";
+	}
+
+	var nodeextra = ""; //getNodeTitleAntecedence(role.name, true);
+	nodeArea.insert("<span style='font-style:italic'>"+nodeextra+"</span>"+node.name);
+
+	nodeArea.href= "#";
+	Event.observe(nodeArea,'click',function (){
+		ideatoggle3("desc"+uniQ, uniQ, node.nodeid,"desc",role.name);
+	});
+
+	if (node.istop) {
+		var expandArrow = null;
+		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
+			|| role.name == "Issue" || role.name == "Solution" || role.name == "Idea"
+			|| role.name == "Pro"  || role.name == "Con" || role.name == "Comment") {
+
+			var childCount = new Element('div',{'style':' margin-left:5px;margin-right:5px;margin-top:2px;', 'title':'<?php echo $LNG->NODE_DEBATE_TREE_COUNT_HINT; ?>'});
+			childCount.insert("(");
+			childCountSpan = new Element('span',{'name':'toptreecount'});
+			childCountSpan.id = 'toptreecount'+uniQ;
+			childCountSpan.insert(1);
+			childCountSpan.uniqueid = uniQ;
+			childCount.insert(childCountSpan);
+			childCount.insert(")");
+			toolbarCell.insert(childCount);
+		}
+	}
+	
+	ihDiv.insert(itDiv);
+
+	var iwDiv = new Element("div", {'class':'idea-wrapper'});
+	var imDiv = new Element("div", {'class':'idea-main'});
+	var idDiv = new Element("div", {'class':'idea-detail'});
+
+	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
+	/*
+	if (node.istop) {
+		if (DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] == true) {
+			expandDiv.style.display = 'block';
+		} else {
+			expandDiv.style.display = 'none';
+		}
+	} else {
+	*/
+		expandDiv.style.display = 'block';
+	//}
+	var hint = alttext+": "+node.name;
+	hint += " <?php echo $LNG->NODE_GOTO_PARENT_HINT; ?>"
+
+	/**
+	 * This is for the rollover hint around the vertical line - background image 21px wide 1px line in middle
+	 * This was the only way to get it to work in all four main browsers!!!!!
+   	 **/
+	var expandTable = new Element( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
+	expandTable.height="100%";
+	//expandTable.border="1";
+	var expandrow = expandTable.insertRow(-1);
+	expandrow.style.height="100%";
+	if (node.istop) {
+		expandTable.style.marginLeft = "5px";
+	} else {
+		expandTable.style.marginLeft = "20px";
+	}
+
+	var lineCell = expandrow.insertCell(-1);
+	lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
+	lineCell.width="5px;";
+	lineCell.style.marginLeft="3px";
+
+	lineCell.title=hint;
+	lineCell.className="grayline";
+	Event.observe(lineCell,'click',function (){
+		var pos = getPosition(textCellDiv);
+		window.scroll(0,pos.y-3);
+	});
+
+	var childCell = expandrow.insertCell(-1);
+	childCell.vAlign="top";
+	childCell.align="left";
+	childCell.style.padding="0px";
+	childCell.style.margin="0px";
+
+	expandDiv.insert(expandTable);
+
+	if (node.istop) {
+		expandDiv.style.marginLeft = "22px";
+	} else {
+		expandDiv.style.marginLeft = "4px";
+	}
+
+	/** EXPAND DIV **/
+	var innerexpandDiv = new Element("div", {'id':'desc'+uniQ,'class':'ideadata', 'style':'padding-left:20px;color:Gray;display:none;'} );
+
+	var nodeTable = new Element( 'table' );
+	nodeTable.className = "toConnectionsTable";
+	nodeTable.width="100%";
+
+	innerexpandDiv.insert(nodeTable);
+
+	var row = nodeTable.insertRow(-1);
+	var nextCell = row.insertCell(-1);
+	nextCell.vAlign="middle";
+	nextCell.align="left";
+
+	// USER ICON NAME AND CREATIONS DATES
+	var userbar = new Element("div", {'style':'clear:both;margin-bottom:5px;'} );
+	if (includeUser == true) {
+		// Add right side with user image and date below
+		var iuDiv = new Element("div", {'class':'idea-user2', 'style':'clear:both;'});
+		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'title': nodeuser.name, 'style':'padding-right:5px;', 'border':'0','src': nodeuser.thumb});
+		iuDiv.insert(userimageThumb)
+		userbar.insert(iuDiv);
+	}
+
+	var iuDiv = new Element("div", {'style':''});
+
+	var dStr = "";
+	var cDate = new Date(node.creationdate*1000);
+	dStr += "<b><?php echo $LNG->NODE_ADDED_ON; ?> </b>"+ cDate.format(DATE_FORMAT) + "<br/>";
+	dStr += "<b><?php echo $LNG->NODE_ADDED_BY; ?> </b>"+ nodeuser.name + "";
+	iuDiv.insert(dStr);
+
+	userbar.insert(iuDiv);
+
+	nextCell.insert(userbar);
+
+	// image
+
+	if (node.imagethumbnail != null && node.imagethumbnail != "") {
+		var imageDiv = new Element("div");
+
+		var originalurl = "";
+		if(node.urls && node.urls.length > 0){
+			for (var i=0 ; i< node.urls.length; i++){
+				var urlid = node.urls[i].url.urlid;
+				if (urlid == node.imageurlid) {
+					originalurl = node.urls[i].url.url;
+					break;
+				}
+			}
+		}
+		if (originalurl == "") {
+			originalurl = node.imagethumbnail;
+		}
+		var iconlink = new Element('a', {
+			'href':originalurl,
+			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
+		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'clear:both;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+		iconlink.insert(nodeicon);
+		imageDiv.insert(iconlink);
+		userbar.insert(imageDiv);
+		//nodeArea.insert(alttext+": ");
+	} else if (node.image != null && node.image != "") {
+		var imageDiv = new Element("div");
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'clear:both;padding-right:5px;','align':'left','border':'0','src': node.image});
+		imageDiv.insert(nodeicon);
+		userbar.insert(imageDiv);
+	} 
+
+	// META DATA - DESCRIPTION, URLS ETC
+
+ 	// add urls
+
+	if (node.urls && node.urls.length > 0) {
+		var iUL = new Element("ul", {});
+		for (var i=0 ; i< node.urls.length; i++){
+
+			innerexpandDiv.insert('<span style="margin-right:5px;"><b><?php echo $LNG->NODE_URL_HEADING; ?></b></span>');
+			var link = new Element("a", {'href':node.urls[i].url.url,'target':'_blank','title':'<?php echo $LNG->NODE_RESOURCE_LINK_HINT; ?>'} );
+			link.insert(node.urls[i].url.title);
+			innerexpandDiv.insert(link);
+		}
+		innerexpandDiv.insert(iUL);
+	}
+
+	var dStr = "";
+
+	if(node.description || node.hasdesc){
+		dStr += '<div style="margin:0px;padding:0px;" class="idea-desc" id="desc'+uniQ+'div"><span style="margin-top: 5px;"><b><?php echo $LNG->NODE_DESC_HEADING; ?> </b></span><br>';
+		if (node.description && node.description != "") {
+			innerexpandDiv.description = true;
+			dStr += node.description;
+		}
+		dStr += '</div>';
+		innerexpandDiv.insert(dStr);
+	}
+
+	// CHILD LISTS
+	var nodes = node.children;
+	if (nodes != undefined && nodes.length > 0) {
+
+		childCell.insert('<div style="clear:both;"></div>');
+		var childrenDiv = new Element("div", {'id':'children'+uniQ, 'style':'clear:both;margin-left:0px;padding-left:0px;margin-bottom:5px;color:Gray;display:block;'} );
+		childCell.insert(childrenDiv);
+		childCell.insert('<div style="clear:both;"></div>');
+		if (expandArrow) {
+			expandArrow.style.visibility = 'visible';
+		}
+		var parentrefreshhanlder = "";
+		//"refreshchildren(\'children"+uniQ+"\', \'"+nodeid+"\', \'"+title+"\', \'"+linktype+"\', \'"+role.name+"\')";
+
+		if (node.istop) {
+			childCountSpan.update(nodes.length+1);
+		} else {
+			if (childCountSpan != null) {
+				var countnow = parseInt(childCountSpan.innerHTML);
+				var finalcount = countnow+nodes.length;
+				childCountSpan.innerHTML = finalcount;
+			}
+		}
+		displayConnectionNodes(childrenDiv, nodes, parseInt(0), true, uniQ, childCountSpan, parentrefreshhanlder);
+	}
+
+	idDiv.insert(innerexpandDiv);
+	idDiv.insert(expandDiv);
+	imDiv.insert(idDiv);
+	iwDiv.insert(imDiv);
+	iDiv.insert(ihDiv);
+	iDiv.insert(iwDiv);
+
+	return iDiv;
+}
+
+/**
+ * Open and close the meta data sections - get additional stuff if required.
+ */
+function ideatoggle3(section, uniQ, id, sect, rolename) {
+    $(section).toggle();
+    if($('open'+section)){
+        if($(section).visible()){
+            $('open'+section).update("&laquo; ");
+        } else {
+            $('open'+section).update("&raquo;");
+        }
+	}
+
+    if(sect == "desc" && $(section).visible() && !$(section).description){
+		var reqUrl = SERVICE_ROOT + "&method=getnode&nodeid=" + encodeURIComponent(id);
+		new Ajax.Request(reqUrl, { method:'get',
+			onSuccess: function(transport){
+				var json = transport.responseText.evalJSON();
+				if(json.error){
+					alert(json.error[0].message);
+					return;
+				}
+
+				Element.insert($(section+'div'), {'bottom':json.cnode[0].description});
+				$(section).description = 'true';
+			}
+		});
 	}
 }

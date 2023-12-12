@@ -1057,6 +1057,18 @@ function alphanodesort(a, b) {
 	return 0 ;
 }
 
+function alphanodesortfront(a, b) {
+	var nameA=a.name.toLowerCase();
+	var nameB=b.name.toLowerCase();
+	if (nameA < nameB) {
+		return -1;
+	}
+	if (nameA > nameB) {
+		return 1;
+	}
+	return 0 ;
+}
+
 function creationdatenodesortasc(a, b) {
 	var nameA=a.cnode.creationdate;
 	var nameB=b.cnode.creationdate;

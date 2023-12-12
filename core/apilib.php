@@ -423,7 +423,7 @@ function deleteNode($nodeid){
  * @param string $scope (optional, either 'my' or 'all' - default: 'all')
  * @param boolean $tagsonly (optional, either true or false) if true, only return nodes where they have tags mathing the passed query terms
  * @param string $connectionfilter filter by connections. Defaults to empty string which means disregard connection count. Possible values; '','connected','unconnected'.
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long',$q='', $scope='all',$tagsonly=false, $connectionfilter='',$status=0) {
@@ -528,7 +528,7 @@ function getNodesByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
  * @param string $q the query term(s)
  * @param string $connectionfilter filter by connections. Defaults to empty string which means disregard connection count. Possible values; '','connected','unconnected'.
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long', $q="", $connectionfilter='',$status=0){
@@ -609,7 +609,7 @@ function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByDate($date,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long',$status=0){
@@ -645,7 +645,7 @@ function getNodesByDate($date,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByName($name,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long',$status=0){
@@ -683,7 +683,7 @@ function getNodesByName($name,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByFirstCharacters($q,$scope,$start = 0,$max = 20 ,$orderby = 'name',$sort ='ASC', $filternodetypes="", $style='long',$status=0){
@@ -760,7 +760,7 @@ function getNodesByFirstCharacters($q,$scope,$start = 0,$max = 20 ,$orderby = 'n
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByTag($tagid, $start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $style='long', $status=0){
@@ -798,7 +798,7 @@ function getNodesByTag($tagid, $start = 0,$max = 20 ,$orderby = 'date', $sort ='
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getNodesByURL($url,$start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $filternodetypes="", $style='long',$status=0){
@@ -911,7 +911,7 @@ function getMultiNodes($nodeids, $start = 0,$max = -1 ,$orderby = 'date',$sort =
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20)
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  */
 function getMostConnectedNodes($scope='all', $start = 0,$max = 20, $style='long',$status=0){
@@ -1244,7 +1244,7 @@ function deleteConnection($connid){
  * @param string $q the query term(s)
  * @param string $scope (optional, either 'my' or 'all' - default: 'all')
  * @param boolean $tagsonly (optional, either true or false) if true, only return nodes where they have tags mathing the passed query terms
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $q='', $scope='all',$tagsonly=false,$status=0){
@@ -1387,7 +1387,7 @@ function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='
 	//print_r($params);
 
     $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 /**
@@ -1402,7 +1402,7 @@ function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='
  * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $q="",$status=0){
@@ -1531,7 +1531,7 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
     $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 /**
@@ -1546,7 +1546,7 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
  * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $status=0){
@@ -1617,7 +1617,7 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 		$params[count($params)] = $currentuser;
 		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
 
-		// FILTER STATUS
+		// FILTER STATUS - ON THE CONNECTION
 		$params[count($params)] = $status;
 		$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
@@ -1634,7 +1634,7 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 
 	    //echo $sql;
 
-	    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+	    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 	} else {
 		return new ConnectionSet();
 	}
@@ -1652,7 +1652,7 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
  * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $status=0){
@@ -1733,7 +1733,7 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
     $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 /**
@@ -1748,7 +1748,7 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param string $userid the id of the user to filter by (this will check the ownership of the nodes in the connection, not the connection itself).
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $linklabels = '', $filternodetypes='', $userid='', $style='long', $status=0){
@@ -1821,7 +1821,7 @@ function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$
 
 	//echo $sql;
 
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 /**
@@ -1833,9 +1833,10 @@ function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$
  * @param string $orderby (optional, either 'date', 'name' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getMultiConnections($connectionids, $start = 0,$max = -1 ,$orderby = 'date',$sort ='ASC', $style='long') {
+function getMultiConnections($connectionids, $start = 0,$max = -1 ,$orderby = 'date',$sort ='ASC', $style='long', $status=0) {
     global $USER,$CFG,$HUB_SQL;
 
 	$currentuser = '';
@@ -1878,7 +1879,7 @@ function getMultiConnections($connectionids, $start = 0,$max = -1 ,$orderby = 'd
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
 
     $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 /**
@@ -1971,7 +1972,7 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
 	//print_r($matchesFound);
 
 	$cs = new ConnectionSet($matchesFound);
-	return $cs->loadConnections($matchesFound, $style);
+	return $cs->loadConnections($matchesFound, $style, $status);
 }
 
 /**
@@ -1988,7 +1989,7 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getConnectionsByPathByDepth($logictype = 'or', $scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status=0){
@@ -2338,9 +2339,10 @@ function getUsersMostActive($limit=5, $from, $style='long') {
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param string $style (optional - default 'long') may be 'short' or 'long'  - how much of a user's details to load (long includes: tags and groups).
  * @param string $q the query term(s)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retunvalidated, 3 - unauthorized, 4 - suspended, 5 - archived) 
  * @return UserSet or Error
  */
-function getUsersByGlobal($includegroups = false, $start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q=''){
+function getUsersByGlobal($includegroups = false, $start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q='',$status=0){
 	global $CFG,$HUB_SQL;
 
 	$params = array();
@@ -2352,6 +2354,10 @@ function getUsersByGlobal($includegroups = false, $start = 0,$max = 20 ,$orderby
 		$sql .= $HUB_SQL->APILIB_USERS_BY_GLOBAL_FILTER_GROUPS;
 	}
 
+	// FILTER STATUS
+	$params[count($params)] = $status;
+	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;	
+	
 	if ($q != "") {
 		$querySQL = getSearchQueryString($params, $q, true, false);
      	if ($querySQL != "") {
@@ -2359,6 +2365,7 @@ function getUsersByGlobal($includegroups = false, $start = 0,$max = 20 ,$orderby
 	     	$sql .= $querySQL;
      	}
 	}
+
 
     $us = new UserSet();
     return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
@@ -2550,7 +2557,7 @@ function getTreeData($fromdate="", $todate="") {
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
  * @param string $q the query term(s)
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return NodeSet or Error
  * @param string $connectionfilter filter by connections. Defaults to empty string which means disregard connection count. Possible values; '','connected','unconnected'.
  */
@@ -3100,9 +3107,10 @@ function isGroupMember($groupid,$userid) {
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param string $style (optional - default 'long') may be 'short' or 'long'  - how much of a user's details to load (long includes: tags and groups).
  * @param string $q the query term(s)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retunvalidated, 3 - unauthorized, 4 - suspended, 5 - archived)
  * @return GroupSet or Error
  */
-function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q=''){
+function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q='', $status=0){
 	global $CFG,$HUB_SQL;
 
 	$params = array();
@@ -3116,6 +3124,10 @@ function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC'
     	$querySQL = getSearchQueryString($params,$q, true, false);
 		$sql .= $HUB_SQL->AND.$querySQL;
 	}
+
+	// FILTER STATUS
+	$params[count($params)] = $status;
+	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
 	$sql .= $HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2;
 
@@ -3135,9 +3147,10 @@ function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC'
  * @param string $linklabels (optional, comma separated strings of the connection labels to filter the results by)
  * @param string $filternodetypes (optional, a list of node type names to filter by)
  * @param String $style (optional - default 'long') may be 'short' or 'long'
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retunvalidated, 3 - unauthorized, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getConnectionsByGroup($groupid, $scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $linklabels = '', $filternodetypes='', $style='long'){
+function getConnectionsByGroup($groupid, $scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $linklabels = '', $filternodetypes='', $style='long', $status=0){
     global $DB, $USER,$CFG,$HUB_SQL;
 
 	$params = array();
@@ -3202,7 +3215,7 @@ function getConnectionsByGroup($groupid, $scope,$start = 0,$max = 20 ,$orderby =
 
 	//error_log(print_r($sql, true));
 
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 }
 
 
@@ -3447,7 +3460,7 @@ function getDebate($nodeid, $style='mini') {
  	$labelmatch='false';
  	$depth=2;
  	$uniquepath ='true';
- 	$status=0;
+ 	$status=0; //  hardocded to active nodes only
 
  	$nodetypes = array('Solution','Pro,Con,Comment');
  	$linklabels = array('','supports,challenges');
@@ -4213,7 +4226,7 @@ function getAlertsData($issueid,$url,$alerttypes,$timeout=60,$userids="",$root="
  * @param string $issueid the id of the issue to get ideas for
  * @param string $orderby (optional, either 'vote', 'date', 'name' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
 function getDebateIdeaConnections($issueid, $orderby = 'date',$sort ='ASC',$status=0){

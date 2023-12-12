@@ -41,6 +41,8 @@ class Group {
     public $negativevotes = 0;
     public $votes = 0;
     public $isopenjoining = 'N';
+    
+    public $status = 0;
 
     //public $location;
     //public $countrycode;
@@ -136,6 +138,10 @@ class Group {
                 if(isset($array['LocationLng'])){
                     $this->locationlng = $array['LocationLng'];
                 }
+
+                if (isset($array['CurrentStatus'])) {
+                    $this->status = (int) $array['CurrentStatus'];
+                }                
             }
         } else {
             return database_error();

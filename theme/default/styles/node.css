@@ -70,7 +70,7 @@ div.idea-user {
 
 div.idea-user2 {
 	padding-right: 5px;
-	text-align: right;
+	text-align: left; // not right
 } 
 
 div.idea-user img {
@@ -295,8 +295,10 @@ div.idea-li-wrapper{
 .toConnectionsTable tbody .idea-section { padding-left: 10px; }
 .toConnectionsTable tbody .idea-section .textdividea { text-align: left; }
 .toConnectionsTable tbody .idea-section .textdividea span.desctoggle { margin-right: 10px; font-weight: bold; font-size: 14pt; cursor: pointer; }
+.toConnectionsTable tbody .idea-section .textdividea span.idea-title { margin-right: 10px; font-weight: normal; font-size: 11pt; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-edit { margin-right: 10px; margin-top: -7px; cursor: pointer; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-delete { margin-right: 10px; margin-top: -7px; cursor: pointer; }
+.toConnectionsTable tbody .idea-section .textdividea .idea-report { margin-right: 10px; margin-top: -7px; cursor: pointer; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-url { margin-right: 10px;  margin-top: -7px; cursor: pointer; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-built { margin-right: 10px; margin-top: -7px; }
 .toConnectionsTable tbody .idea-section .textdividea button.idea-split { border-radius: 0.25rem; border: 1px solid #aaa; font-size: 0.9em; margin-left: 10px; padding: 2px 8px; }

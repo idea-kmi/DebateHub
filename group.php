@@ -83,6 +83,14 @@ if($group instanceof Hub_Error){
 	<?php include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 	die;
 } else {
+
+	if ($group->status != $CFG->USER_STATUS_ACTIVE && (!isset($USER->userid) || $USER->getIsAdmin() == "N")) {
+		include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+		echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
+		include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+		die;
+	} 
+
 	$userid = "";
 	if (isset($USER->userid)) {
 		$userid = $USER->userid;

@@ -33,11 +33,11 @@
 
     checkLogin();
 
-    include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
          echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
-        include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+        include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
         die;
 	}
 
@@ -340,10 +340,6 @@
 
 	const allnodes = <?php echo json_encode($allNodes); ?>;
 
-	function init() {
-		$('dialogheader').insert('<?php echo $LNG->SPAM_ADMIN_TITLE; ?>');
-	}
-
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
 		if (window.opener.innerHeight) {
@@ -428,191 +424,201 @@
 </script>
 
 <?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
+	if(!empty($errors)){
+		echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+		foreach ($errors as $error){
+			echo "<li>".$error."</li>";
+		}
+		echo "</ul></div>";
+	}
 ?>
 
-<div id="spamdiv" style="margin-left:10px;">
+<div class="container-fluid">
+	<div class="row p-4">		
+		<div class="col">
+			<div class="d-flex flex-wrap w-100 gap-2 border-bottom mb-3 pb-4">
+				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin">Dashboard</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin">Registration requests</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin active">Reported items</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin">Reported users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
+			</div>
 
-    <h2 style="margin-left:10px;"><?php echo $LNG->SPAM_ADMIN_SPAM_TITLE; ?></h2>
+			<h1 class="mb-3"><?php echo $LNG->SPAM_ADMIN_TITLE; ?></h1>
 
-    <div class="formrow">
-        <div id="nodes" class="forminput">
+			<div id="spamdiv">
+				<div class="mb-3">
+					<h2><?php echo $LNG->SPAM_ADMIN_SPAM_TITLE; ?></h2>
+					<div class="formrow">
+						<div id="nodes" class="forminput">
+							<?php
+								$count = 0;
+								if (is_countable($nodes)) {
+									$count = count($nodes);
+								}
+								if ($count == 0) {
+									echo "<p>".$LNG->SPAM_ADMIN_NONE_MESSAGE."</p>";
+								} else {
+									echo "<table class='table'>";
+									echo "<tr>";
+									echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='20%'>".$LNG->SPAM_ADMIN_TABLE_HEADING0."</th>";
 
-        <?php
-			$count = 0;
-			if (is_countable($nodes)) {
-				$count = count($nodes);
-			}
-        	if ($count == 0) {
-				echo "<p>".$LNG->SPAM_ADMIN_NONE_MESSAGE."</p>";
-        	} else {
-				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
-				echo "<tr>";
-				echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='20%'>".$LNG->SPAM_ADMIN_TABLE_HEADING0."</th>";
+									echo "</tr>";
+									foreach($nodes as $node){
 
-				echo "</tr>";
-				foreach($nodes as $node){
+										echo '<tr>';
 
-					echo '<tr>';
+										echo '<td>';
+										echo $node->name;
+										echo '</td>';
 
-					echo '<td style="font-size:11pt">';
-					echo $node->name;
-					echo '</td>';
+										echo '<td>';
+										$nodetypename = '';
+										if ($node->role->name == 'Issue') {
+											$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
+										} else {
+											$nodetypename = getNodeTypeText($node->role->name, false);
+										}
+										echo $nodetypename;
+										echo '</td>';
 
-					echo '<td style="font-size:11pt">';
-					$nodetypename = '';
-					if ($node->role->name == 'Issue') {
-						$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
-					} else {
-						$nodetypename = getNodeTypeText($node->role->name, false);
-					}
-					echo $nodetypename;
-					echo '</td>';
+										echo '<td>';
+										echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv1\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
+										echo '</td>';
 
-					echo '<td>';
-					//echo '<span class="active" style="font-size:10pt;" onclick="viewSpamItemDetails(\''.$node->nodeid.'\', \''.$node->role->name.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
-					echo '<span class="active" style="font-size:10pt;" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv1\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
-					echo '</td>';
+										echo '<td>';
+										echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">';
+										echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+										echo '<input type="hidden" id="restorenode" name="restorenode" value="" />';
+										echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td>';
-					echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">';
-					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
-					echo '<input type="hidden" id="restorenode" name="restorenode" value="" />';
-					echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</a>';
-					//echo '<input type="submit" style="font-size:10pt;border:none;padding:0px;background:transparent" class="active" id="restorenode" name="restorenode" value="'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'"/>';
-					echo '</form>';
-					echo '</td>';
+										echo '<td>';
+										echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormArchive(\''.htmlspecialchars($node->name).'\');">';
+										echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+										echo '<input type="hidden" id="archivenode" name="archivenode" value="" />';
+										echo '<span class="active" onclick="if (checkFormArchive(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="archivenode" name="archivenode">'.$LNG->SPAM_ADMIN_ARCHIVE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td>';
-					echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormArchive(\''.htmlspecialchars($node->name).'\');">';
-					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
-					echo '<input type="hidden" id="archivenode" name="archivenode" value="" />';
-					echo '<span class="active" onclick="if (checkFormArchive(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="archivenode" name="archivenode">'.$LNG->SPAM_ADMIN_ARCHIVE_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
+										echo '<td>';
+										if (isset($node->reporter)) {
+											echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" onclick="viewSpamUserDetails(\''.$node->reporter->userid.'\');">'.$node->reporter->name.'</span>';
+										} else {
+											echo $LNG->CORE_UNKNOWN_USER_ERROR;
+										}
+										echo '</td>';
+										echo '</tr>';
 
-					echo '<td>';
-					if (isset($node->reporter)) {
-						echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$node->reporter->userid.'\');">'.$node->reporter->name.'</span>';
-					} else {
-						echo $LNG->CORE_UNKNOWN_USER_ERROR;
-					}
-					echo '</td>';
+										// add the tree display area row
+										echo '<tr><td colspan="6">';
+										echo '<div id="'.$node->nodeid.'treediv1" style="display:none">&nbsp;</div>';
+										echo '</td></tr>';
 
-					echo '</tr>';
+									}
+									echo "</table>";
+								}
+							?>
+						</div>
+					</div>
+				</div>
+				
+				<div class="mb-3">
+					<h2><?php echo $LNG->SPAM_ADMIN_ARCHIVE_TITLE; ?></h2>
+					<div class="formrow">
+						<div id="nodesarchived" class="forminput">
+							<?php
+								$count = 0;
+								if (is_countable($nodesarchived)) {
+									$count = count($nodesarchived);
+								}
+								if ($count == 0) {
+									echo "<p>".$LNG->SPAM_ADMIN_NONE_ARCHIVED_MESSAGE."</p>";
+								} else {
+									echo "<table class='table'>";
+									echo "<tr>";
+									echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
+									echo "<th width='20%'>".$LNG->SPAM_ADMIN_TABLE_HEADING0."</th>";
 
-					// add the tree display area row
-					echo '<tr><td colspan="6">';
-					echo '<div id="'.$node->nodeid.'treediv1" style="display:none">&nbsp;</div>';
-					echo '</td></tr>';
+									echo "</tr>";
+									foreach($nodesarchived as $node) {
+										echo '<tr>';
 
-				}
-				echo "</table>";
-			}
-        ?>
-        </div>
-    </div>
+										echo '<td>';
+										echo $node->name;
+										echo '</td>';
 
-    <h2 style="margin-left:10px;"><?php echo $LNG->SPAM_ADMIN_ARCHIVE_TITLE; ?></h2>
+										echo '<td>';
+										$nodetypename = '';
+										if ($node->role->name == 'Issue') {
+											$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
+										} else {
+											$nodetypename = getNodeTypeText($node->role->name, false);
+										}
+										echo $nodetypename;
+										echo '</td>';
 
-	<div class="formrow">
-		<div id="nodesarchived" class="forminput">
+										echo '<td>';
+										echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
+										echo '</td>';
 
-		<?php
-			$count = 0;
-			if (is_countable($nodesarchived)) {
-				$count = count($nodesarchived);
-			}
-			if ($count == 0) {
-				echo "<p>".$LNG->SPAM_ADMIN_NONE_ARCHIVED_MESSAGE."</p>";
-			} else {
-				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
-				echo "<tr>";
-				echo "<th width='40%'>".$LNG->SPAM_ADMIN_TABLE_HEADING1."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING3."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='10%'>".$LNG->SPAM_ADMIN_TABLE_HEADING2."</th>";
-				echo "<th width='20%'>".$LNG->SPAM_ADMIN_TABLE_HEADING0."</th>";
+										echo '<td>';
+										echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">';
+										echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+										echo '<input type="hidden" id="restorenode" name="restorenode" value="" />';
+										echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</a>';
+										//echo '<input type="submit" style="font-size:10pt;border:none;padding:0px;background:transparent" class="active" id="restorenode" name="restorenode" value="'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'"/>';
+										echo '</form>';
+										echo '</td>';
 
-				echo "</tr>";
-				foreach($nodesarchived as $node) {
-					echo '<tr>';
+										echo '<td>';
+										echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($node->name).'\');">';
+										echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
+										echo '<input type="hidden" id="deletenode" name="deletenode" value="" />';
+										echo '<span class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_ADMIN_DELETE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td style="font-size:11pt">';
-					echo $node->name;
-					echo '</td>';
+										echo '<td>';
+										if (isset($node->reporter)) {
+											echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" onclick="viewSpamUserDetails(\''.$node->reporter->userid.'\');">'.$node->reporter->name.'</span>';
+										} else {
+											echo $LNG->CORE_UNKNOWN_USER_ERROR;
+										}
+										echo '</td>';
 
-					echo '<td style="font-size:11pt">';
-					$nodetypename = '';
-					if ($node->role->name == 'Issue') {
-						$nodetypename = $LNG->DEBATE_NAME; //default for type is Issue - I want to show debate
-					} else {
-						$nodetypename = getNodeTypeText($node->role->name, false);
-					}
-					echo $nodetypename;
-					echo '</td>';
+										echo '</tr>';
 
-					echo '<td>';
-					echo '<span class="active" style="font-size:10pt;" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>';
-					echo '</td>';
+										// add the tree display area row
+										echo '<tr><td colspan="6">';
+										echo '<div id="'.$node->nodeid.'treediv" style="display:none">&nbsp;</div>';
+										echo '</td></tr>';
 
-					echo '<td>';
-					echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">';
-					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
-					echo '<input type="hidden" id="restorenode" name="restorenode" value="" />';
-					echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</a>';
-					//echo '<input type="submit" style="font-size:10pt;border:none;padding:0px;background:transparent" class="active" id="restorenode" name="restorenode" value="'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'"/>';
-					echo '</form>';
-					echo '</td>';
-
-					echo '<td>';
-					echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($node->name).'\');">';
-					echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
-					echo '<input type="hidden" id="deletenode" name="deletenode" value="" />';
-					echo '<span class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_ADMIN_DELETE_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
-
-					echo '<td>';
-					if (isset($node->reporter)) {
-						echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$node->reporter->userid.'\');">'.$node->reporter->name.'</span>';
-					} else {
-						echo $LNG->CORE_UNKNOWN_USER_ERROR;
-					}
-					echo '</td>';
-
-					echo '</tr>';
-
-					// add the tree display area row
-					echo '<tr><td colspan="6">';
-					echo '<div id="'.$node->nodeid.'treediv" style="display:none">&nbsp;</div>';
-					echo '</td></tr>';
-
-				}
-				echo "</table>";
-			}
-		?>
+									}
+									echo "</table>";
+								}
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-
-    <div class="formrow" style="margin-top:10px;">
-	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
-    </div>
-
 </div>
 
 <?php
-    include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>

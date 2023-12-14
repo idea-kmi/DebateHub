@@ -357,3 +357,8 @@ hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; wid
 .searchresultblock#content-group-main .overviewfieldset #content-group-list .groups-div .card div { font-size: 14px; }
 
 
+/* Admin page */
+
+.btn-admin { background-color: #ddd; border-color: #ddd; color: #555 !important; font-weight: bold; }
+.btn-admin:hover { background-color: #a91a70; border-color: #a91a70; color: #fff !important; }
+.btn-admin.active { background-color: #a91a70; border-color: #a91a70; color: #fff !important; }

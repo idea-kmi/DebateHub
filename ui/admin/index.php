@@ -33,24 +33,61 @@
 
 	checkLogin();
 
-    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
         //reject user
         echo $LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE;
-        include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+        include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
         die;
     }
 ?>
-<div style="margin-left:20px;margin-top:50px;">
-	<h1><?php echo $LNG->ADMIN_TITLE; ?></h1>
-	<br>
 
-	<?php
-		include($HUB_FLM->getCodeDirPath('ui/admin/menulist.php'));
-	?>
+<div class="container-fluid">
+	<div class="row p-4">		
+		<div class="col">
+			<div class="d-flex flex-wrap w-100 gap-2 border-bottom mb-3 pb-4">
+				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin active">Admin Dashboard</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin">Registration requests</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin">Reported items</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin">Reported users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
+			</div>
+
+			<h1 class="mb-3"><?php echo $LNG->ADMIN_TITLE; ?></h1>
+
+			<div class="d-flex">
+				<div class="w-100 p-4 ps-0">
+					sdf
+				</div>
+			</div>
+
+
+			
+
+			<div class="d-none" style="margin-right:10px;" onclick="" onmouseover="" onmouseout="" title="">
+				<div class="" onclick="" onmouseover="" onmouseout="">
+					<table style="text-align:center;font-weight:bold;width:100%;height:100%" class="themebutton">
+						<tr>
+							<td valign="middle">TEST BUTTON</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<?php
+				include($HUB_FLM->getCodeDirPath('ui/admin/menulist.php'));
+			?>
+
+
+		</div>
+	</div>
 </div>
+
 <?php
-	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>
 

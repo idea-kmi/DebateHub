@@ -33,11 +33,11 @@
 
     checkLogin();
 
-    include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
         echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
-        include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+        include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
         die;
 	}
 
@@ -139,10 +139,6 @@
 
 <script type="text/javascript">
 
-	function init() {
-		$('dialogheader').insert('<?php echo $LNG->REGSITRATION_ADMIN_TITLE; ?>');
-	}
-
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
 		if (window.opener.innerHeight) {
@@ -208,174 +204,187 @@
 </script>
 
 <?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
+	if(!empty($errors)){
+		echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+		foreach ($errors as $error){
+			echo "<li>".$error."</li>";
+		}
+		echo "</ul></div>";
+	}
 ?>
 
-<div id="spamdiv" style="margin-left:10px;">
+<div class="container-fluid">
+	<div class="row p-4">		
+		<div class="col">
+			<div class="d-flex flex-wrap w-100 gap-2 border-bottom mb-3 pb-4">
+				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin">Dashboard</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin active">Registration requests</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin">Reported items</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin">Reported users</a>
+				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
+			</div>
 
-    <div class="formrow">
-    	<h2><?php echo $LNG->REGSITRATION_ADMIN_UNREGISTERED_TITLE;?></h2>
-        <div id="users" class="forminput">
+			<h1 class="mb-3"><?php echo $LNG->REGSITRATION_ADMIN_TITLE; ?></h1>
 
-        <?php
+			<div id="spamdiv">
+				<div class="mb-3">
 
-			$count = 0;
-			if (is_countable($users)) {
-				$count = count($users);
-			}
-        	if ($count == 0) {
-				echo "<p>".$LNG->REGSITRATION_ADMIN_NONE_MESSAGE."</p>";
-        	} else {
-				echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
-				echo "<tr>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
-				echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
-				echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
-				echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
-				echo "<th width='15%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
+					<div class="formrow">
+						<h3><?php echo $LNG->REGSITRATION_ADMIN_UNREGISTERED_TITLE;?></h3>
+						<div id="users" class="forminput">
+							<?php
+								$count = 0;
+								if (is_countable($users)) {
+									$count = count($users);
+								}
+								if ($count == 0) {
+									echo "<p>".$LNG->REGSITRATION_ADMIN_NONE_MESSAGE."</p>";
+								} else {
+									echo "<table class='table'>";
+									echo "<tr>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
+									echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
+									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
+									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
+									echo "<th width='15%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
 
-				echo "</tr>";
-				foreach($users as $user){
-					echo '<tr>';
+									echo "</tr>";
+									foreach($users as $user){
+										echo '<tr>';
 
-					echo '<td valign="top">';
-					echo date('d M Y', $user->creationdate);
-					echo '</td>';
+										echo '<td valign="top">';
+										echo date('d M Y', $user->creationdate);
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->name;
-					echo '</td>';
+										echo '<td valign="top">';
+										echo $user->name;
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->description;
-					echo '</td>';
+										echo '<td valign="top">';
+										echo $user->description;
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->getInterest();
-					echo '</td>';
+										echo '<td valign="top">';
+										echo $user->getInterest();
+										echo '</td>';
 
-					echo '<td valign="top">';
-						if (isset($user->website) && $user->website!="") {
-							echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
-						} else {
-							echo '&nbsp;';
-						}
-					echo '</td>';
+										echo '<td valign="top">';
+											if (isset($user->website) && $user->website!="") {
+												echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
+											} else {
+												echo '&nbsp;';
+											}
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
-					echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					echo '<input type="hidden" id="acceptuser" name="acceptuser" value="" />';
-					echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
+										echo '<td valign="top">';
+										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="acceptuser" name="acceptuser" value="" />';
+										echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
-					echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					echo '<input type="hidden" id="rejectuser" name="rejectuser" value="" />';
-					echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
+										echo '<td valign="top">';
+										echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="rejectuser" name="rejectuser" value="" />';
+										echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '</tr>';
-				}
-				echo "</table>";
-			}
-        ?>
-        </div>
-   </div>
+										echo '</tr>';
+									}
+									echo "</table>";
+								}
+							?>
+						</div>
+					</div>
+				</div>
+				
+				<div class="mb-3">
+					<div class="formrow">
+						<h3><?php echo $LNG->REGSITRATION_ADMIN_UNVALIDATED_TITLE;?></h3>
+						<div id="users2" class="forminput">
+							<?php
 
-    <div class="formrow">
-    	<h2><?php echo $LNG->REGSITRATION_ADMIN_UNVALIDATED_TITLE;?></h2>
+								$count = 0;
+								if (is_countable($users2)) {
+									$count = count($users2);
+								}
+								if ($count == 0) {
+									echo "<p>".$LNG->REGSITRATION_ADMIN_VALIDATION_NONE_MESSAGE."</p>";
+								} else {
+									echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
+									echo "<tr>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
+									echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
+									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
+									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
+									echo "<th width='10%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
+									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
+									echo "</tr>";
+									foreach($users2 as $user){
+										echo '<tr>';
 
-        <div id="users2" class="forminput">
+										echo '<td valign="top">';
+										echo date('d M Y', $user->creationdate);
+										echo '</td>';
 
-        <?php
+										echo '<td valign="top">';
+										echo $user->name;
+										echo '</td>';
 
-			$count = 0;
-			if (is_countable($users2)) {
-				$count = count($users2);
-			}
-        	if ($count == 0) {
-				echo "<p>".$LNG->REGSITRATION_ADMIN_VALIDATION_NONE_MESSAGE."</p>";
-        	} else {
-				echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
-				echo "<tr>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
-				echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
-				echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
-				echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
-				echo "<th width='10%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-				echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-				echo "</tr>";
-				foreach($users2 as $user){
-					echo '<tr>';
+										echo '<td valign="top">';
+										echo $user->description;
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo date('d M Y', $user->creationdate);
-					echo '</td>';
+										echo '<td valign="top">';
+										echo $user->getInterest();
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->name;
-					echo '</td>';
+										echo '<td valign="top">';
+											if (isset($user->website) && $user->website!="") {
+												echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
+											} else {
+												echo '&nbsp;';
+											}
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->description;
-					echo '</td>';
+										echo '<td valign="top">';
+										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="revalidateuser" name="revalidateuser" value="" />';
+										echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td valign="top">';
-					echo $user->getInterest();
-					echo '</td>';
+										echo '<td valign="top">';
+										echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="removeuser" name="removeuser" value="" />';
+										echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
 
-					echo '<td valign="top">';
-						if (isset($user->website) && $user->website!="") {
-							echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
-						} else {
-							echo '&nbsp;';
-						}
-					echo '</td>';
-
-					echo '<td valign="top">';
-					echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
-					echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					echo '<input type="hidden" id="revalidateuser" name="revalidateuser" value="" />';
-					echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
-
-					echo '<td valign="top">';
-					echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
-					echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					echo '<input type="hidden" id="removeuser" name="removeuser" value="" />';
-					echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</a>';
-					echo '</form>';
-					echo '</td>';
-
-					echo '</tr>';
-				}
-				echo "</table>";
-			}
-        ?>
-        </div>
-   </div>
-
-    <div class="formrow">
-	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
-    </div>
-
+										echo '</tr>';
+									}
+									echo "</table>";
+								}
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-
 <?php
-    include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>

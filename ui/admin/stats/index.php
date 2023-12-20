@@ -23,13 +23,13 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
-	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
 	global $CFG;
 
 	if($USER->getIsAdmin() != "Y") {
 		echo "<div class='errors'>".$LNG->FORM_ERROR_NOT_ADMIN."</div>";
-		include_once($HUB_FLM->getCodeDirPath("ui/dialogfooter.php"));
+		include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 		die;
 	}
 
@@ -115,5 +115,5 @@
 ?>
 
 <?php
-	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>

@@ -44,28 +44,96 @@
 ?>
 
 <div class="container-fluid">
-	<div class="row p-4">		
+	<div class="row p-4 pt-0">
 		<div class="col">
-			<div class="d-flex flex-wrap w-100 gap-2 border-bottom mb-3 pb-4">
-				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin active">Admin Dashboard</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin">Registration requests</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin">Reported items</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin">Reported users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
-			</div>
 
 			<h1 class="mb-3"><?php echo $LNG->ADMIN_TITLE; ?></h1>
 
 			<div class="d-flex">
 				<div class="w-100 p-4 ps-0">
-					sdf
+
+				<?php
+						/***** TOTAL USERS ****/
+						$time = 'months';
+						$startdate = $CFG->START_DATE;
+						$startdate = strtotime( 'first day of ' , $startdate);
+
+						$dates = new DateTime();
+						$dates->setTimestamp($startdate);
+						$interval = date_create('now')->diff( $dates );
+
+						$count = $interval->m;
+						$years = $interval->y;
+						if (isset($years) && $years > 0) {
+							$count += ($interval->y * 12);
+						}
+						$count = $count+1; //(to get it to this month too);
+						$grandtotal = 0;
+						for ($i=0; $i<$count; $i++) {
+
+							if ($i < 1) {
+								$mintime= $startdate;
+							} else {
+								$mintime= $maxtime;
+							}
+
+							$maxtime = strtotime( '+1 month', $mintime);
+
+							$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
+							$grandtotal += $monthlytotal;
+						}
+
+
+						echo '<div class="my-3">';
+						echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
+						echo '</div>';
+
+						$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
+						echo '<div class="my-3">';
+
+						$countgroups = 0;
+						if (is_countable($allGroups->groups)) {
+							$countgroups = count($allGroups->groups);
+						}
+
+						echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
+						echo '</div>';
+
+						$grandtotal1 = 0;
+						$categoryArray = array();
+
+						$icount = getNodeCreationCount("Issue",$startdate);
+						$categoryArray[$LNG->ISSUES_NAME] = $icount;
+						$grandtotal1 += $icount;
+
+						$icount = getNodeCreationCount('Solution',$startdate);
+						$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
+						$grandtotal1 += $icount;
+
+						$icount = getNodeCreationCount('Pro',$startdate);
+						$categoryArray[$LNG->PROS_NAME] = $icount;
+						$grandtotal1 += $icount;
+
+						$icount = getNodeCreationCount('Con',$startdate);
+						$categoryArray[$LNG->CONS_NAME] = $icount;
+						$grandtotal1 += $icount;
+
+						echo '<div class="mt-3">';
+						echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
+						echo '<table cellpadding="3" class="table table-sm table-borderless">';
+
+						foreach( $categoryArray as $key => $value) {
+							echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
+						}
+
+						echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
+						echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
+						echo '</table></div>';
+
+					?>				
+
 				</div>
 			</div>
-
-
 			
 
 			<div class="d-none" style="margin-right:10px;" onclick="" onmouseover="" onmouseout="" title="">
@@ -81,6 +149,9 @@
 			<?php
 				include($HUB_FLM->getCodeDirPath('ui/admin/menulist.php'));
 			?>
+
+
+
 
 
 		</div>

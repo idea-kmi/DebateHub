@@ -181,26 +181,16 @@
 ?>
 
 <div class="container-fluid">
-	<div class="row p-4">
+	<div class="row p-4 pt-0">
 		<div class="col">
-			<div class="d-flex w-100 gap-2 border-bottom mb-3 pb-4">
-				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin ">Dashboard</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin">Registration requests</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin">Reported items</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin active">Reported users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
-			</div>
 
 			<h1 class="mb-3"><?php echo $LNG->SPAM_USER_ADMIN_TITLE; ?></h1>
 
 			<div id="spamdiv">
-				<h2><?php echo $LNG->SPAM_USER_ADMIN_SPAM_TITLE; ?></h2>
+				<h3><?php echo $LNG->SPAM_USER_ADMIN_SPAM_TITLE; ?></h3>
 
-				<div class="formrow">
-						<div id="users" class="forminput">
+				<div class="mb-3">
+					<div id="users" class="forminput">
 						<?php
 
 							$count = 0;
@@ -258,72 +248,71 @@
 								echo "</table>";
 							}
 						?>
-						</div>
+					</div>
 				</div>
 
-				<h2><?php echo $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE; ?></h2>
+				<h3><?php echo $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE; ?></h3>
 
-				<div class="formrow">
+				<div class="mb-3">
 					<div id="suspendedusers" class="forminput">
+						<?php
 
-					<?php
-
-						$countu = 0;
-						if (is_countable($userssuspended)) {
-							$countu = count($userssuspended);
-						}
-						if ($countu == 0) {
-							echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
-						} else {
-							echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
-							echo "<tr>";
-							echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
-							echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
-							echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
-							echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
-							echo "<th width='20%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING0."</th>";
-
-							echo "</tr>";
-							foreach($userssuspended as $user){
-								echo '<tr>';
-
-								echo '<td style="font-size:11pt">';
-								echo $user->name;
-								echo '</td>';
-
-								echo '<td>';
-								echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</a>';
-								echo '</td>';
-
-								echo '<td>';
-								echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
-								echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-								echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-								echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
-								echo '</form>';
-								echo '</td>';
-
-								echo '<td>';
-								echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
-								echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-								echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
-								echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
-								echo '</form>';
-								echo '</td>';
-
-								echo '<td>';
-								if (isset($user->reporter)) {
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
-								} else {
-									echo $LNG->CORE_UNKNOWN_USER_ERROR;
-								}
-								echo '</td>';
-
-								echo '</tr>';
+							$countu = 0;
+							if (is_countable($userssuspended)) {
+								$countu = count($userssuspended);
 							}
-							echo "</table>";
-						}
-					?>
+							if ($countu == 0) {
+								echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
+							} else {
+								echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+								echo "<tr>";
+								echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
+								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
+								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
+								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
+								echo "<th width='20%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING0."</th>";
+
+								echo "</tr>";
+								foreach($userssuspended as $user){
+									echo '<tr>';
+
+									echo '<td style="font-size:11pt">';
+									echo $user->name;
+									echo '</td>';
+
+									echo '<td>';
+									echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</a>';
+									echo '</td>';
+
+									echo '<td>';
+									echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
+									echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+									echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
+									echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
+									echo '</form>';
+									echo '</td>';
+
+									echo '<td>';
+									echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
+									echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+									echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
+									echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
+									echo '</form>';
+									echo '</td>';
+
+									echo '<td>';
+									if (isset($user->reporter)) {
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
+									} else {
+										echo $LNG->CORE_UNKNOWN_USER_ERROR;
+									}
+									echo '</td>';
+
+									echo '</tr>';
+								}
+								echo "</table>";
+							}
+						?>
 					</div>
 				</div>
 

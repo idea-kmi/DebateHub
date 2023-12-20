@@ -434,25 +434,15 @@
 ?>
 
 <div class="container-fluid">
-	<div class="row p-4">		
+	<div class="row p-4 pt-0">
 		<div class="col">
-			<div class="d-flex flex-wrap w-100 gap-2 border-bottom mb-3 pb-4">
-				<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin">Dashboard</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin">Analytics</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin">Users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin">Registration requests</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin">Reported groups</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin active">Reported items</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin">Reported users</a>
-				<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin">Manage news</a>
-			</div>
 
 			<h1 class="mb-3"><?php echo $LNG->SPAM_ADMIN_TITLE; ?></h1>
 
 			<div id="spamdiv">
 				<div class="mb-3">
-					<h2><?php echo $LNG->SPAM_ADMIN_SPAM_TITLE; ?></h2>
-					<div class="formrow">
+					<h3><?php echo $LNG->SPAM_ADMIN_SPAM_TITLE; ?></h3>
+					<div class="mb-3">
 						<div id="nodes" class="forminput">
 							<?php
 								$count = 0;
@@ -533,8 +523,8 @@
 				</div>
 				
 				<div class="mb-3">
-					<h2><?php echo $LNG->SPAM_ADMIN_ARCHIVE_TITLE; ?></h2>
-					<div class="formrow">
+					<h3><?php echo $LNG->SPAM_ADMIN_ARCHIVE_TITLE; ?></h3>
+					<div class="mb-3">
 						<div id="nodesarchived" class="forminput">
 							<?php
 								$count = 0;

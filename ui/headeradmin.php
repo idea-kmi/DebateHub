@@ -43,6 +43,8 @@
 	}
 
 	global $HUB_FLM;
+	
+	include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
 ?>
 
 <!DOCTYPE html>
@@ -128,6 +130,8 @@
 					echo $header;
 				}
 			}
+
+			$pg = $_SERVER['PHP_SELF'];
 		?>
 	</head>
 	<body <?php echo $BODY_ATT; ?> id="cohere-body">
@@ -208,3 +212,27 @@
 			<div id="contentwrapper" class="contentwrapper">
 				<div id="content" class="content">
 					<div class="c_innertube">
+						<div class="container-fluid">
+							<div class="row p-4">		
+								<div class="col">
+									<div class="d-flex flex-wrap w-100 gap-2 border-bottom pb-4">
+										<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin <?=($pg=="/ui/admin/index.php" ? 'active' : '')?> ">Admin Dashboard</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin <?=($pg=="/ui/admin/stats/" ? 'active' : '')?> ">Analytics</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin <?=($pg=="/ui/admin/userregistration.php" ? 'active' : '')?> ">Users</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> ">Registration requests</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> ">Reported items</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> ">Reported groups</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagerusers.php" ? 'active' : '')?> ">Reported users</a>
+										<?php 
+											if (isset($CFG->adminUserID)) {
+												$admin = new User($CFG->adminUserID);
+												$admin = $admin->load();
+												if (!$admin instanceof Hub_Error) { ?>
+													<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/newsmanager.php" ? 'active' : '')?> ">Manage news</a>
+											<?php }
+										} ?>
+
+									</div>
+								</div>
+							</div>
+						</div>

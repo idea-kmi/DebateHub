@@ -101,6 +101,7 @@ class GroupSet {
 		$csql = $HUB_SQL->DATAMODEL_GROUP_LOAD_PART1;
 		$csql .= $sql;
 		$csql .= $HUB_SQL->DATAMODEL_GROUP_LOAD_PART2;
+
 		$carray = $DB->select($csql, $params);
         $totalconns = $carray[0]["totalusers"];
 

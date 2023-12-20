@@ -89,10 +89,7 @@ class Connection {
 		$params = array();
 		$params[0] = $this->connid;
     	$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
         if($count == 0){
 	 		$ERROR = new Hub_Error;
 	    	$ERROR->createConnectionNotFoundError($this->connid);
@@ -140,10 +137,7 @@ class Connection {
         if ($style == 'long'){
 	        // add in the groups
 			$resArray2 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_GROUP, $params);
-			$count2 = 0;
-			if (is_countable($resArray2)) {
-				$count2 = count($resArray2);
-			}
+			$count2 = (is_countable($resArray2)) ? count($resArray2) : 0;
 	        if($count2 > 0){
 	            $this->groups = array();
 				for ($i=0; $i<$count2; $i++) {
@@ -155,10 +149,7 @@ class Connection {
 
 	        //now add in any tags
 			$resArray3 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_TAGS, $params);
-			$count3 = 0;
-			if (is_countable($resArray3)) {
-				$count3 = count($resArray3);
-			}
+			$count3 = (is_countable($resArray3)) ? count($resArray3) : 0;
 	        if($count3 > 0){
 	            $this->tags = array();
 				for ($i=0; $i<$count3; $i++) {
@@ -187,10 +178,7 @@ class Connection {
 
         //load positive votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_POS, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -202,10 +190,7 @@ class Connection {
 
         //load negative votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_NEG, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -228,10 +213,7 @@ class Connection {
 		$params[1] = $this->connid;
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTETYPE, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];

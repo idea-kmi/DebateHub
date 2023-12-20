@@ -147,6 +147,11 @@ class CNode {
 					}
 
 					$this->description = stripslashes(trim($array['Description']));
+					
+					// always load the status - important
+					if (isset($array['CurrentStatus'])) {
+						$this->status = $array['CurrentStatus'];
+					}
 
 					$this->users = array();
 					if ($style == 'cif') {
@@ -227,9 +232,6 @@ class CNode {
 							}
 							if (isset($array['AdditionalIdentifier'])) {
 								$this->identifier = $array['AdditionalIdentifier'];
-							}
-							if (isset($array['CurrentStatus'])) {
-								$this->status = $array['CurrentStatus'];
 							}
 						}
 					}

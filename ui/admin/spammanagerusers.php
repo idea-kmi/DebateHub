@@ -294,11 +294,12 @@ if(!empty($errors)){
 					echo '</td>';
 
 					echo '<td>';
-					echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
-					echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
-					echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
-					echo '</form>';
+					echo $LNG->SPAM_USER_ADMIN_DELETE_BUTTON;
+					//echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
+					//echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+					//echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
+					//echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
+					//echo '</form>';
 					echo '</td>';
 
 					echo '<td>';

@@ -303,7 +303,7 @@ function addNode($name,$desc,$private="",$nodetypeid="",$imageurlid="",$imagethu
  * @param string $imagethumbnail optional, the local server path to the thumbnail of the image used for this node
  * @return Node or Error
  */
-function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",$imagethumbnail="",$resources=""){
+function editNode($nodeid, $name, $desc, $private="",$nodetypeid="",$imageurlid="",$imagethumbnail="",$resources=""){
     global $USER;
     if($private == ""){
         $private = $USER->privatedata;
@@ -1633,6 +1633,7 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 	    $cs = new ConnectionSet();
 
 	    //echo $sql;
+		//echo print_r($params, true);
 
 	    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
 	} else {
@@ -1978,21 +1979,22 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
 /**
  * Get the connections for the given netowrk search paramters from the given node.
  *
- * @param string $logictype (either 'and' or 'or', deafult 'or').
- * @param string $scope (either 'all' or 'my', deafult 'all')
- * @param string $labelmatch (optional, 'true', 'false' - default: false;
+ * @param string $logictype (either 'and' or 'or').
+ * @param string $scope (either 'all' or 'my')
+ * @param string $labelmatch ('true', 'false');
  * @param string $nodeid the id of the node to search outward from.
- * @param integer $depth (optional, 1-7, default 1);
+ * @param integer $depth (1-7);
  * @param string $linklabels Array of strings of link types. Array length must match depth specified. Each array level is mutually exclusive with linkgroups - there can only be one.
  * @param string $linkgroups Array of either Positive, Negative, or Neutral - default: empty string). Array length must match depth specified.Each array level is mutually exclusive with linklabels - there can only be one.
  * @param string $directions Array of 'outgoing', 'incmong', or 'both - default: 'both'. Array length must match depth specified.
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
+ * @param string $uniquepath ('true'or 'false')
  * @param String $style (optional - default 'long') may be 'short' or 'long'
  * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getConnectionsByPathByDepth($logictype = 'or', $scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status=0){
+function getConnectionsByPathByDepth($logictype, $scope, $labelmatch, $nodeid, $depth, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status=0){
 	if ($logictype == "and") {
 		return getConnectionsByPathByDepthAND($scope,$labelmatch,$nodeid,$depth,$linklabels,$linkgroups,$directions,$nodetypes,$nodeids, $uniquepath, $style, $status);
 	} else {
@@ -2184,7 +2186,7 @@ function getActiveConnectionUsers($start = 0,$max = 20,$style='long') {
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a users details to load (long includes: tags and groups).
  * @return UserSet or Error
  */
-function getActiveIdeaUsers($start = 0,$max = 20,$style='long') {
+function getActiveIdeaUsers($start = 0, $max = 20, $style='long') {
     global $CFG,$DB,$HUB_SQL;
 
 	$params = array();
@@ -2274,11 +2276,11 @@ function getUsersByMostFollowed($limit=5,$style='long'){
 
 /**
  * Return the most Active users
- * @param integer $limit (optional - default: 5)
+ * @param integer $limit, set a limit on results - a positive integer
  * @param number $from the time from which to get thier activity expressed in milliseconds
  * @return ActivitySet or Error
  */
-function getUsersMostActive($limit=5, $from, $style='long') {
+function getUsersMostActive($limit, $from, $style='long') {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -3107,10 +3109,9 @@ function isGroupMember($groupid,$userid) {
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param string $style (optional - default 'long') may be 'short' or 'long'  - how much of a user's details to load (long includes: tags and groups).
  * @param string $q the query term(s)
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retunvalidated, 3 - unauthorized, 4 - suspended, 5 - archived)
  * @return GroupSet or Error
  */
-function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q='', $status=0){
+function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long',$q=''){
 	global $CFG,$HUB_SQL;
 
 	$params = array();
@@ -3124,10 +3125,6 @@ function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC'
     	$querySQL = getSearchQueryString($params,$q, true, false);
 		$sql .= $HUB_SQL->AND.$querySQL;
 	}
-
-	// FILTER STATUS
-	$params[count($params)] = $status;
-	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
 	$sql .= $HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2;
 

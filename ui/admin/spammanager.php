@@ -80,8 +80,8 @@
 	$ns = getNodesByStatus($CFG->STATUS_REPORTED, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
 
-	$count = (is_countable($nodes)) ? count($nodes) : 0;
 	$childnodes = [];	
+	$count = (is_countable($nodes)) ? count($nodes) : 0;
     for ($i=0; $i<$count;$i++) {
     	$node = $nodes[$i];
 		$node->children = loadDebateChildNodes($node, $CFG->STATUS_ACTIVE, $childnodes);
@@ -99,6 +99,7 @@
     $nodesarchivedinitial = $ns2->nodes;
 
 	$nodesarchived = [];
+	$childnodes2 = [];	
 	$count2 = (is_countable($nodesarchivedinitial)) ? count($nodesarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
@@ -107,7 +108,7 @@
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$node->reporter = $reporter;
-			$node->children = loadDebateChildNodes($node, $CFG->STATUS_ARCHIVED, $childnodes);
+			$node->children = loadDebateChildNodes($node, $CFG->STATUS_ARCHIVED, $childnodes2);
     	}
  		$allNodes[$node->nodeid] = $node;
     }
@@ -117,7 +118,12 @@
 	// will this cover everything?
 	for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
-		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes) ) {
+
+		echo $node->name;
+		echo $node->reporter;
+		echo !in_array($node->nodeid, $childnodes2);
+
+		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes2) ) {
  			$node->istop = true; // only top if it was the reported item
 			array_push($nodesarchived, $node);
     	}

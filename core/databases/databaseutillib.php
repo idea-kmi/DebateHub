@@ -2604,6 +2604,115 @@ function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', 
 }
 
 /**
+ * Get the connections for the node with the given nodeid and status
+ *
+ * @param string $nodeid
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'vote', 'date', 'name' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param string $filtergroup (optional, either 'all','selected','positive','negative' or 'neutral', default: 'all' - to filter the results by the link type group of the connection)
+ * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
+ * @param string $filternodetypes (optional, a list of node type names to filter by)
+ * @param String $style (optional - default 'long') may be 'short' or 'long'
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
+ * @return ConnectionSet or Error
+ */
+function getConnectionsByStatus($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $status=0){
+    global $USER,$CFG,$HUB_SQL;
+
+	$currentuser = '';
+	if (isset($USER->userid)) {
+		$currentuser = $USER->userid;
+	}
+
+	$params = array();
+
+    $list = getAggregatedNodeIDs($nodeid);
+	if ($list != "") {
+		if ($orderby == 'ideavote') {
+			$sql = $HUB_SQL->APILIB_CONNECTIONS_BY_IDEA_SELECT;
+		} else {
+			$sql = $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_SELECT;
+		}
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART1;
+		$sql .= $list;
+    	$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART2;
+		$sql .= $list;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART3;
+
+		// FILTER BY NODE TYPES - OR
+		if ($filternodetypes != "") {
+			$nodetypeArray = array();
+			$innersql = getSQLForNodeTypeIDsForLabels($nodetypeArray,$filternodetypes);
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART1;
+			$sql .= $innersql;
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART2;
+			$sql .= $innersql;
+
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART3;
+		}
+
+		// FILTER BY LINK TYPES
+		if ($filtergroup != '' && $filtergroup != 'all' && $filtergroup != 'selected') {
+			$innersql = getSQLForLinkTypeIDsForGroup($params,$filtergroup);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+			$sql .= $HUB_SQL->OPENING_BRACKET;
+			$sql .= $innersql;
+			$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+		} else {
+			if ($filterlist != "") {
+				$innersql = getSQLForLinkTypeIDsForLabels($params,$filterlist);
+				$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+				$sql .= $HUB_SQL->OPENING_BRACKET;
+				$sql .= $innersql;
+				$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+			}
+		}
+
+		// PERMISSIONS
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
+
+		// FILTER STATUS - ON THE CONNECTION
+		$params[count($params)] = $status;
+		$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
+
+		// ORDER BY VOTE
+		if ($orderby == 'vote') {
+			$sql = $HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART2;
+		} else if ($orderby == 'ideavote') {
+			$sql = $HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART2;
+		}
+
+		//error_log(print_r($sql, true));
+
+		$connectionSet = new ConnectionSet();
+
+	    //echo $sql;
+		//echo print_r($params, true);
+
+	    $connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+		return $connectionSet;		
+	} else {
+		return new ConnectionSet();
+	}
+}
+
+
+/**
  * Build the SQL query string for a search
  * (NODE = t.Name and t.Description, URL = r.Clip., TAG = u.Name)
  *
@@ -3333,7 +3442,7 @@ function loadDebateChildNodes($node, $status, &$childids) {
 
 		//get the Ideas for this Debate.
 		//$connSetSolutions = getDebate($nodeid, $style='long');
-		$connSetSolutions = getConnectionsByNode($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'long', $status);
+		$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'long', $status);
 		if (isset($connSetSolutions->connections[0])) {
 			$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
 			for ($i=0; $i<$count; $i++) {
@@ -3351,7 +3460,7 @@ function loadDebateChildNodes($node, $status, &$childids) {
 		}
 	} else if ($nodetype == "Solution") {
 		// get any pros, cons and moderator comments for a given Idea
-		$connSetArguments = getConnectionsByNode($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'long', $status);
+		$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'long', $status);
 		if (isset($connSetArguments->connections[0])) {
 			$count = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
 			for ($j=0; $j<$count; $j++) {
@@ -3479,7 +3588,7 @@ function archiveNodeAndChildren($nodeid) {
 		if ($nodetype == "Issue") {
 
 			//get the Ideas for this Debate.
-			$connSetSolutions = getConnectionsByNode($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'short', $CFG->STATUS_ACTIVE);				
+			$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'short', $CFG->STATUS_ACTIVE);				
 			if (isset($connSetSolutions->connections[0])) {
 				$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
 			
@@ -3505,7 +3614,7 @@ function archiveNodeAndChildren($nodeid) {
 							$solutionnode->updateStatus($CFG->STATUS_ARCHIVED);
 
 							// get any pros, cons and moderator comments for a given Idea
-							$connSetArguments = getConnectionsByNode($solutionnode->nodeid, 0, -1, 'date', 'ASC', 'all', '', 'Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+							$connSetArguments = getConnectionsByStatus($solutionnode->nodeid, 0, -1, 'date', 'ASC', 'all', '', 'Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
 							if (isset($connSetArguments->connections[0])) {
 								$count2 = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
 
@@ -3539,7 +3648,7 @@ function archiveNodeAndChildren($nodeid) {
 		} else if ($nodetype == "Solution") {
 
 			// get any pros, cons and moderator comments for a given Idea
-			$connSetArguments = getConnectionsByNode($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+			$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
 			if (isset($connSetArguments->connections[0])) {
 				$count = 0;
 				if (is_countable($connSetArguments->connections)) {
@@ -3632,7 +3741,7 @@ function restoreArchivedNodeAndChildren($nodeid) {
 			if ($nodetype == "Issue") {
 
 				//get the Ideas for this Debate.
-				$connSetSolutions = getConnectionsByNode($node->nodeid, 0, -1,'date','ASC', 'all','','Solution', 'short',  $CFG->STATUS_ARCHIVED);
+				$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Solution', 'short',  $CFG->STATUS_ARCHIVED);
 
 				if (isset($connSetSolutions->connections[0])) {
 
@@ -3660,7 +3769,7 @@ function restoreArchivedNodeAndChildren($nodeid) {
 								$solutionnode->updateStatus($CFG->STATUS_ACTIVE);
 
 								// get any pros, cons and moderator comments for a given Idea
-								$connSetArguments = getConnectionsByNode($solutionnode->nodeid,0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ARCHIVED);
+								$connSetArguments = getConnectionsByStatus($solutionnode->nodeid,0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ARCHIVED);
 								if (isset($connSetArguments->connections[0])) {
 									$count2 = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
 
@@ -3693,7 +3802,7 @@ function restoreArchivedNodeAndChildren($nodeid) {
 			} else if ($nodetype == "Solution") {
 
 				// get any pros, cons and moderator comments for a given Idea
-				$connSetArguments = getConnectionsByNode($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short',  $CFG->STATUS_ARCHIVED);
+				$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short',  $CFG->STATUS_ARCHIVED);
 				if (isset($connSetArguments->connections[0])) {
 					$count = 0;
 					if (is_countable($connSetArguments->connections)) {

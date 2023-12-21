@@ -70,7 +70,10 @@ if($node instanceof Hub_Error) {
 	auditView($userid, $nodeid, 'explore');
 }
 
-if ($node->status != $CFG->STATUS_ACTIVE && (!isset($USER->userid) || $USER->getIsAdmin() == "N")) {
+// reported debates are not visible - should they be - like reported groups?.
+// even admins can't see archived debates - have to look at the content through the archived items admin screen
+if ($node->status != $CFG->STATUS_ACTIVE 
+		&& (!isset($USER->userid) || $USER->getIsAdmin() == "N" || $node->status == $CFG->STATUS_ARCHIVED)) {
 	include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 	echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
 	include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

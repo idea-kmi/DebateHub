@@ -4644,8 +4644,9 @@ function reportNodeSpamAlert(obj, nodetype, node) {
 				obj.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
 				if (obj.alt) {
 					obj.alt = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';
-					obj.src= '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>';
+					obj.src= '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>';
 					obj.style.cursor = 'auto';
+					$(obj).unbind("click");
 					Event.stopObserving(obj, 'click');
 				} else {
 					obj.innerHTML = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';

@@ -1630,12 +1630,30 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 
 		//error_log(print_r($sql, true));
 
-	    $cs = new ConnectionSet();
+		$connectionSet = new ConnectionSet();
 
 	    //echo $sql;
 		//echo print_r($params, true);
 
-	    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	    $connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+		$conns = $connectionSet->connections;
+		$count = (is_countable($conns)) ? count($conns) : 0;
+	
+		// filter out connections with archived nodes as only connections being filtered by status
+		$cleanedarray = [];
+		for ($i=0;$i<$count;$i++) {
+			$con = $conns[$i];
+			if ($con->from->status != $CFG->STATUS_ARCHIVED 
+						&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+				array_push($cleanedarray, $con);
+			}
+		}
+	
+		$connectionSet->connections = $cleanedarray;
+		$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+		$connectionSet->totalno = $count;
+	
+		return $connectionSet;		
 	} else {
 		return new ConnectionSet();
 	}
@@ -4227,6 +4245,8 @@ function getAlertsData($issueid,$url,$alerttypes,$timeout=60,$userids="",$root="
  * @return ConnectionSet or Error
  */
 function getDebateIdeaConnections($issueid, $orderby = 'date',$sort ='ASC',$status=0){
+
+	// getConnectionsByNode will filter out connections with archived nodes as only connections being filtered by status
 	return getConnectionsByNode($issueid, 0, -1, $orderby, $sort, 'selected', 'responds to', 'Solution', 'long', $status);
 }
 
@@ -4239,13 +4259,12 @@ function getDebateIdeaConnections($issueid, $orderby = 'date',$sort ='ASC',$stat
  * @return ConnectionSet or Error
  */
 function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort ='ASC'){
-	$connectionSet = getConnectionsByNode($issueid, 0, -1, $orderby, $sort, 'selected', 'responds to', 'Solution', 'long', 0);
-	$conns = $connectionSet->connections;
-	$count = 0;
-	if (is_countable($conns)) {
-		$count = count($conns);
-	}
 
+	// getConnectionsByNode will filter out connections with archived nodes as only connections being filtered by status
+	$connectionSet = getConnectionsByNode($issueid, 0, -1, $orderby, $sort, 'selected', 'responds to', 'Solution', 'long', 0);
+
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
 	$connectionSet->totalno = $count;
 
 	$connectionsWithoutLemonsList = array();
@@ -4274,10 +4293,7 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 	}
 
 	// If there are no lemon votes, just return the normal list of connections.
-	$lemonvotecount = 0;
-	if (is_countable($connectionsWithLemonsList)) {
-		$lemonvotecount = count($connectionsWithLemonsList);
-	}
+	$lemonvotecount = (is_countable($connectionsWithLemonsList)) ? count($connectionsWithLemonsList) : 0;
 
 	if ($lemonvotecount == 0) {
 		return $connectionSet;
@@ -4289,21 +4305,14 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 	// if up to 60% of ideas have lemons, just return all nodes without lemons.
 	if ($lemonvotecount <= $sixtycount) {
 		$connectionSet->connections = $connectionsWithoutLemonsList;
-		$countnolemons = 0;
-		if (is_countable($connectionsWithoutLemonsList)) {
-			$countnolemons = count($connectionsWithoutLemonsList);
-		}
-		$connectionSet->count = $countnolemons;
+		$connectionSet->count = (is_countable($connectionsWithoutLemonsList)) ? count($connectionsWithoutLemonsList) : 0;
 		return $connectionSet;
 	} else {
 		$dumpedconns = array();
 		$runningtotal = 0;
 		krsort($connectionsGroupedByLemons, SORT_NUMERIC);
 		foreach ($connectionsGroupedByLemons as $key => $batch) {
-			$batchcount = 0;
-			if (is_countable($batch)) {
-				$batchcount = count($batch);
-			}
+			$batchcount = (is_countable($batch)) ? count($batch) : 0;
 			$potentialcount = ($runningtotal+$batchcount);
 			if ($potentialcount > $sixtycount) {
 				break;
@@ -4320,10 +4329,7 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
 		);
 
 		$connectionSet->connections = $finalarray;
-		$connectionSet->count = 0;
-		if (is_countable($finalarray)) {
-			$connectionSet->count = count($finalarray);
-		}
+		$connectionSet->count = (is_countable($finalarray)) ? count($finalarray) : 0;
 
 		return $connectionSet;
 	}
@@ -4336,13 +4342,12 @@ function getDebateIdeaConnectionsWithLemoning($issueid, $orderby = 'date', $sort
  * @return ConnectionSet or Error
  */
 function getDebateIdeaConnectionsRemoved($issueid){
-	$connectionSet = getConnectionsByNode($issueid, 0, -1, 'date', 'ASC', 'selected', 'responds to', 'Solution', 'long', 0);
-	$conns = $connectionSet->connections;
 
-	$count = 0;
-	if (is_countable($conns)) {
-		$count = count($conns);
-	}
+	// getConnectionsByNode will filter out connections with archived nodes as only connections being filtered by status
+	$connectionSet = getConnectionsByNode($issueid, 0, -1, 'date', 'ASC', 'selected', 'responds to', 'Solution', 'long', 0);
+
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
 	$connectionSet->totalno = $count;
 
 	$connectionsWithoutLemonsList = array();
@@ -4401,10 +4406,8 @@ function getDebateIdeaConnectionsRemoved($issueid){
 	}
 
 	$connectionSet->connections = $dumpedconns;
-	$connectionSet->count = 0;
-	if (is_countable($dumpedconns)) {
-		$connectionSet->count = count($dumpedconns);
-	}
+	$connectionSet->count = (is_countable($dumpedconns)) ? count($dumpedconns) : 0;
+
 	return $connectionSet;
 }
 

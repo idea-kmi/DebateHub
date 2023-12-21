@@ -1386,8 +1386,30 @@ function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='
 
 	//print_r($params);
 
-    $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$connectionSet = new ConnectionSet();
+
+	//echo $sql;
+	//echo print_r($params, true);
+
+	$connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
+
+	// filter out connections with archived nodes as only connections being filtered by status
+	$cleanedarray = [];
+	for ($i=0;$i<$count;$i++) {
+		$con = $conns[$i];
+		if ($con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			array_push($cleanedarray, $con);
+		}
+	}
+
+	$connectionSet->connections = $cleanedarray;
+	$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+	$connectionSet->totalno = $count;
+
+	return $connectionSet;	
 }
 
 /**
@@ -1530,8 +1552,30 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
 	$params[count($params)] = $status;
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
-    $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$connectionSet = new ConnectionSet();
+
+	//echo $sql;
+	//echo print_r($params, true);
+
+	$connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
+
+	// filter out connections with archived nodes as only connections being filtered by status
+	$cleanedarray = [];
+	for ($i=0;$i<$count;$i++) {
+		$con = $conns[$i];
+		if ($con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			array_push($cleanedarray, $con);
+		}
+	}
+
+	$connectionSet->connections = $cleanedarray;
+	$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+	$connectionSet->totalno = $count;
+
+	return $connectionSet;			
 }
 
 /**
@@ -1751,8 +1795,30 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
 	$params[count($params)] = $status;
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
-    $cs = new ConnectionSet();
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$connectionSet = new ConnectionSet();
+
+	//echo $sql;
+	//echo print_r($params, true);
+
+	$connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
+
+	// filter out connections with archived nodes as only connections being filtered by status
+	$cleanedarray = [];
+	for ($i=0;$i<$count;$i++) {
+		$con = $conns[$i];
+		if ($con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			array_push($cleanedarray, $con);
+		}
+	}
+
+	$connectionSet->connections = $cleanedarray;
+	$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+	$connectionSet->totalno = $count;
+
+	return $connectionSet;	
 }
 
 /**
@@ -1836,11 +1902,30 @@ function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$
 	$params[count($params)] = $status;
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
-    $cs = new ConnectionSet();
+	$connectionSet = new ConnectionSet();
 
 	//echo $sql;
+	//echo print_r($params, true);
 
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
+
+	// filter out connections with archived nodes as only connections being filtered by status
+	$cleanedarray = [];
+	for ($i=0;$i<$count;$i++) {
+		$con = $conns[$i];
+		if ($con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			array_push($cleanedarray, $con);
+		}
+	}
+
+	$connectionSet->connections = $cleanedarray;
+	$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+	$connectionSet->totalno = $count;
+
+	return $connectionSet;	
 }
 
 /**
@@ -3226,11 +3311,30 @@ function getConnectionsByGroup($groupid, $scope,$start = 0,$max = 20 ,$orderby =
 	$params[count($params)] = $currentuser;
 	$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
 
-    $cs = new ConnectionSet();
+	$connectionSet = new ConnectionSet();
 
-	//error_log(print_r($sql, true));
+	//echo $sql;
+	//echo print_r($params, true);
 
-    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+	$conns = $connectionSet->connections;
+	$count = (is_countable($conns)) ? count($conns) : 0;
+
+	// filter out connections with archived nodes as only connections being filtered by status
+	$cleanedarray = [];
+	for ($i=0;$i<$count;$i++) {
+		$con = $conns[$i];
+		if ($con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			array_push($cleanedarray, $con);
+		}
+	}
+
+	$connectionSet->connections = $cleanedarray;
+	$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+	$connectionSet->totalno = $count;
+
+	return $connectionSet;	
 }
 
 

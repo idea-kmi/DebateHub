@@ -118,11 +118,6 @@
 	// will this cover everything?
 	for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
-
-		echo $node->name;
-		echo $node->reporter;
-		echo !in_array($node->nodeid, $childnodes2);
-
 		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes2) ) {
  			$node->istop = true; // only top if it was the reported item
 			array_push($nodesarchived, $node);

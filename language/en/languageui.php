@@ -866,6 +866,7 @@ $LNG->ADMIN_CRON_RECENT_ACTIVITY_TITLE = 'Debate Hub Recent Activity Report';
 $LNG->ADMIN_CRON_RECENT_ACTIVITY_MESSAGE = 'See below for the top 5 most recent items entered for each Debate Hub Category.';
 
 $LNG->ADMIN_NEWS_USERS = 'User List';
+$LNG->ADMIN_NEWS_GROUPS = 'Group List';
 
 /** HELP PAGES **/
 $LNG->HELP_NETWORKMAP_TITLE = 'Network Map';

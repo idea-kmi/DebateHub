@@ -64,55 +64,72 @@
 		$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
 		$grandtotal += $monthlytotal;
 	}
-
-
-	echo '<div class="my-3">';
-	echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
-	echo '</div>';
-
-	$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-	echo '<div class="my-3">';
-
-	$countgroups = 0;
-	if (is_countable($allGroups->groups)) {
-		$countgroups = count($allGroups->groups);
-	}
-
-	echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
-	echo '</div>';
-
-	$grandtotal1 = 0;
-	$categoryArray = array();
-
-	$icount = getNodeCreationCount("Issue",$startdate);
-	$categoryArray[$LNG->ISSUES_NAME] = $icount;
-	$grandtotal1 += $icount;
-
-	$icount = getNodeCreationCount('Solution',$startdate);
-	$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
-	$grandtotal1 += $icount;
-
-	$icount = getNodeCreationCount('Pro',$startdate);
-	$categoryArray[$LNG->PROS_NAME] = $icount;
-	$grandtotal1 += $icount;
-
-	$icount = getNodeCreationCount('Con',$startdate);
-	$categoryArray[$LNG->CONS_NAME] = $icount;
-	$grandtotal1 += $icount;
-
-	echo '<div class="mt-3">';
-	echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
-	echo '<table cellpadding="3" class="table table-sm table-borderless">';
-
-	foreach( $categoryArray as $key => $value) {
-		echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
-	}
-
-	echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
-	echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
-	echo '</table></div>';
-
 ?>
+
+<div class="container-fluid">
+	<div class="row p-4 pt-0">
+		<div class="col">
+
+			<?php
+				if (file_exists("menu.php") ) {
+					include("menu.php");
+				}
+			?>
+
+			<div id="tabs-content" class="tab-content p-0">
+				<?php
+					echo '<div class="my-3">';
+					echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
+					echo '</div>';
+
+					$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
+					echo '<div class="my-3">';
+
+					$countgroups = 0;
+					if (is_countable($allGroups->groups)) {
+						$countgroups = count($allGroups->groups);
+					}
+
+					echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
+					echo '</div>';
+
+					$grandtotal1 = 0;
+					$categoryArray = array();
+
+					$icount = getNodeCreationCount("Issue",$startdate);
+					$categoryArray[$LNG->ISSUES_NAME] = $icount;
+					$grandtotal1 += $icount;
+
+					$icount = getNodeCreationCount('Solution',$startdate);
+					$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
+					$grandtotal1 += $icount;
+
+					$icount = getNodeCreationCount('Pro',$startdate);
+					$categoryArray[$LNG->PROS_NAME] = $icount;
+					$grandtotal1 += $icount;
+
+					$icount = getNodeCreationCount('Con',$startdate);
+					$categoryArray[$LNG->CONS_NAME] = $icount;
+					$grandtotal1 += $icount;
+
+					echo '<div class="mt-3">';
+					echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
+					echo '<table cellpadding="3" class="table table-sm table-borderless">';
+
+					foreach( $categoryArray as $key => $value) {
+						echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
+					}
+
+					echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
+					echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
+					echo '</table></div>';
+
+				?>
+
+			</div>
+		</div>
+	</div>
+</div>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));

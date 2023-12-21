@@ -219,6 +219,7 @@
 										<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin <?=($pg=="/ui/admin/index.php" ? 'active' : '')?> ">Admin Dashboard</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin <?=($pg=="/ui/admin/stats/" ? 'active' : '')?> ">Analytics</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin <?=($pg=="/ui/admin/userregistration.php" ? 'active' : '')?> ">Users</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/groupslist.php" class="btn btn-admin <?=($pg=="/ui/admin/groupslist.php" ? 'active' : '')?> ">Groups</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> ">Registration requests</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> ">Reported items</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> ">Reported groups</a>

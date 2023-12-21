@@ -42,6 +42,63 @@
         die;
     }
 ?>
+<?php
+	/***** TOTAL USERS ****/
+	$time = 'months';
+	$startdate = $CFG->START_DATE;
+	$startdate = strtotime( 'first day of ' , $startdate);
+
+	$dates = new DateTime();
+	$dates->setTimestamp($startdate);
+	$interval = date_create('now')->diff( $dates );
+
+	$count = $interval->m;
+	$years = $interval->y;
+	if (isset($years) && $years > 0) {
+		$count += ($interval->y * 12);
+	}
+	$count = $count+1; //(to get it to this month too);
+	$grandtotal = 0;
+	for ($i=0; $i<$count; $i++) {
+
+		if ($i < 1) {
+			$mintime= $startdate;
+		} else {
+			$mintime= $maxtime;
+		}
+
+		$maxtime = strtotime( '+1 month', $mintime);
+
+		$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
+		$grandtotal += $monthlytotal;
+	}
+
+	$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
+
+	$countgroups = 0;
+	if (is_countable($allGroups->groups)) {
+		$countgroups = count($allGroups->groups);
+	}
+
+	$grandtotal1 = 0;
+	$categoryArray = array();
+
+	$icount = getNodeCreationCount("Issue",$startdate);
+	$categoryArray[$LNG->ISSUES_NAME] = $icount;
+	$grandtotal1 += $icount;
+
+	$icount = getNodeCreationCount('Solution',$startdate);
+	$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
+	$grandtotal1 += $icount;
+
+	$icount = getNodeCreationCount('Pro',$startdate);
+	$categoryArray[$LNG->PROS_NAME] = $icount;
+	$grandtotal1 += $icount;
+
+	$icount = getNodeCreationCount('Con',$startdate);
+	$categoryArray[$LNG->CONS_NAME] = $icount;
+	$grandtotal1 += $icount;
+?>
 
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
@@ -52,107 +109,69 @@
 			<div class="d-flex">
 				<div class="w-100 p-4 ps-0">
 
-				<?php
-						/***** TOTAL USERS ****/
-						$time = 'months';
-						$startdate = $CFG->START_DATE;
-						$startdate = strtotime( 'first day of ' , $startdate);
+					<div class="row mb-3">
+						<!-- Card -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-0 border-start border-primary shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs fw-bold text-primary text-uppercase mb-1"><?= $LNG->USERS_NAME ?></div>
+											<div class="h5 mb-0 fw-bold text-gray-800"><?= $grandtotal ?></div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-user fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 
-						$dates = new DateTime();
-						$dates->setTimestamp($startdate);
-						$interval = date_create('now')->diff( $dates );
+						<!-- Card -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-0 border-start border-info shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs fw-bold text-info text-uppercase mb-1"><?= $LNG->GROUPS_NAME ?></div>
+											<div class="h5 mb-0 fw-bold text-gray-800"><?= $countgroups ?></div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-users fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-						$count = $interval->m;
-						$years = $interval->y;
-						if (isset($years) && $years > 0) {
-							$count += ($interval->y * 12);
-						}
-						$count = $count+1; //(to get it to this month too);
-						$grandtotal = 0;
-						for ($i=0; $i<$count; $i++) {
+					<div class="row">
+						<h3 class="mb-3 d-flex align-items-center gap-3">
+							<?php echo $LNG->ADMIN_STATS_TAB_IDEAS; ?>
+							<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$grandtotal1?></span>
+						</h3>
 
-							if ($i < 1) {
-								$mintime= $startdate;
-							} else {
-								$mintime= $maxtime;
-							}
-
-							$maxtime = strtotime( '+1 month', $mintime);
-
-							$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
-							$grandtotal += $monthlytotal;
-						}
-
-
-						echo '<div class="my-3">';
-						echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
-						echo '</div>';
-
-						$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-						echo '<div class="my-3">';
-
-						$countgroups = 0;
-						if (is_countable($allGroups->groups)) {
-							$countgroups = count($allGroups->groups);
-						}
-
-						echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
-						echo '</div>';
-
-						$grandtotal1 = 0;
-						$categoryArray = array();
-
-						$icount = getNodeCreationCount("Issue",$startdate);
-						$categoryArray[$LNG->ISSUES_NAME] = $icount;
-						$grandtotal1 += $icount;
-
-						$icount = getNodeCreationCount('Solution',$startdate);
-						$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
-						$grandtotal1 += $icount;
-
-						$icount = getNodeCreationCount('Pro',$startdate);
-						$categoryArray[$LNG->PROS_NAME] = $icount;
-						$grandtotal1 += $icount;
-
-						$icount = getNodeCreationCount('Con',$startdate);
-						$categoryArray[$LNG->CONS_NAME] = $icount;
-						$grandtotal1 += $icount;
-
-						echo '<div class="mt-3">';
-						echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
-						echo '<table cellpadding="3" class="table table-sm table-borderless">';
-
-						foreach( $categoryArray as $key => $value) {
-							echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
-						}
-
-						echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
-						echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
-						echo '</table></div>';
-
-					?>				
-
+						<?php foreach( $categoryArray as $key => $value) { ?>
+							<!-- Card -->
+							<div class="col-xl-3 col-md-6 mb-4">
+								<div class="card border-0 border-start border-success shadow h-100 py-2">
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs fw-bold text-success text-uppercase mb-1"><?= $key ?></div>
+												<div class="h5 mb-0 fw-bold text-gray-800"><?= $value ?></div>
+											</div>
+											<div class="col-auto">
+												<i class="far fa-sticky-note fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php } ?>	
+					</div>
 				</div>
-			</div>
-			
-
-			<div class="d-none" style="margin-right:10px;" onclick="" onmouseover="" onmouseout="" title="">
-				<div class="" onclick="" onmouseover="" onmouseout="">
-					<table style="text-align:center;font-weight:bold;width:100%;height:100%" class="themebutton">
-						<tr>
-							<td valign="middle">TEST BUTTON</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-
-			<?php
-				include($HUB_FLM->getCodeDirPath('ui/admin/menulist.php'));
-			?>
-
-
-
-
+			</div>			
 
 		</div>
 	</div>

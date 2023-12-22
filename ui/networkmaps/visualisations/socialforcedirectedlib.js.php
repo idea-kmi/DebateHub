@@ -461,6 +461,15 @@ function addConnectionToFDGraphSocial(c, forcedirectedGraph) {
 		var fN = c.from[0].cnode;
 		var tN = c.to[0].cnode;
 
+		if (fN == undefined || tN == undefined) {
+			return false;
+		}
+
+		if (fN.status == STATUS_SUSPENDED || fN.status ==  STATUS_ARCHIVED
+			|| tN.status == STATUS_SUSPENDED || tN.status ==  STATUS_ARCHIVED){
+			return false;
+		}
+
 		var fromuser = null;
 		if (fN.users[0].userid) {
 			fromuser = fN.users[0];

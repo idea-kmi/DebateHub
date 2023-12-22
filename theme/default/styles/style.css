@@ -108,6 +108,7 @@ span.page-nav i.fa-lg { font-size: 0.9em !important; }
 
 .editgroup-link { font-size: 0.9em; cursor: pointer; }
 
+.tab-pane.active { cursor: default; font-weight: inherit; color: inherit; }
 
 /*******************************************/
 /* for the scriptaculous auto complete box */

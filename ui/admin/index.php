@@ -84,19 +84,35 @@
 	$categoryArray = array();
 
 	$icount = getNodeCreationCount("Issue",$startdate);
-	$categoryArray[$LNG->ISSUES_NAME] = $icount;
+	$next = array();
+	$next[0] = $LNG->ISSUES_NAME;
+	$next[1] = $icount;
+	$next[2] = $HUB_FLM->getImagePath('nodetypes/Default/issue.png');
+	array_push($categoryArray, $next);
 	$grandtotal1 += $icount;
 
 	$icount = getNodeCreationCount('Solution',$startdate);
-	$categoryArray[$LNG->SOLUTIONS_NAME] = $icount;
+	$next = array();
+	$next[0] = $LNG->SOLUTIONS_NAME;
+	$next[1] = $icount;
+	$next[2] = $HUB_FLM->getImagePath('nodetypes/Default/solution.png');
+	array_push($categoryArray, $next);
 	$grandtotal1 += $icount;
 
 	$icount = getNodeCreationCount('Pro',$startdate);
-	$categoryArray[$LNG->PROS_NAME] = $icount;
+	$next = array();
+	$next[0] = $LNG->PROS_NAME;
+	$next[1] = $icount;
+	$next[2] = $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png');
+	array_push($categoryArray, $next);
 	$grandtotal1 += $icount;
 
 	$icount = getNodeCreationCount('Con',$startdate);
-	$categoryArray[$LNG->CONS_NAME] = $icount;
+	$next = array();
+	$next[0] = $LNG->CONS_NAME;
+	$next[1] = $icount;
+	$next[2] = $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png');
+	array_push($categoryArray, $next);
 	$grandtotal1 += $icount;
 ?>
 
@@ -151,18 +167,20 @@
 							<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$grandtotal1?></span>
 						</h3>
 
-						<?php foreach( $categoryArray as $key => $value) { ?>
+						<?php 
+							foreach( $categoryArray as $next) { ?>
 							<!-- Card -->
 							<div class="col-xl-3 col-md-6 mb-4">
 								<div class="card border-0 border-start border-success shadow h-100 py-2">
 									<div class="card-body">
 										<div class="row no-gutters align-items-center">
 											<div class="col mr-2">
-												<div class="text-xs fw-bold text-success text-uppercase mb-1"><?= $key ?></div>
-												<div class="h5 mb-0 fw-bold text-gray-800"><?= $value ?></div>
+												<div class="text-xs fw-bold text-success text-uppercase mb-1"><?= $next[0] ?></div>
+												<div class="h5 mb-0 fw-bold text-gray-800"><?=  $next[1] ?></div>
 											</div>
 											<div class="col-auto">
-												<i class="far fa-sticky-note fa-2x text-gray-300"></i>
+												<img border="0" src="<?=  $next[2] ?>" />
+												<!--i class="far fa-sticky-note fa-2x text-gray-300"></i -->
 											</div>
 										</div>
 									</div>

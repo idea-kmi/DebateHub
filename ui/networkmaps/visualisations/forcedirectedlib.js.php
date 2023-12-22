@@ -413,8 +413,8 @@ function addConnectionToFDGraph(c, graph) {
 			return false;
 		}
 
-		if (fN.status == USER_STATUS_SUSPENDED || fN.status ==  USER_STATUS_ARCHIVED
-			|| tN.status == USER_STATUS_SUSPENDED || tN.status ==  USER_STATUS_ARCHIVED){
+		if (fN.status == STATUS_SUSPENDED || fN.status ==  STATUS_ARCHIVED
+			|| tN.status == STATUS_SUSPENDED || tN.status ==  STATUS_ARCHIVED){
 			return false;
 		}
 

@@ -37,7 +37,9 @@
 	$nodeCheck = array();
 	$totalnodes = 0;
 
+	// only will get active nodes - the default is not specified
 	$issueNodes = getNodesByGlobal(0,-1,'date','DESC', 'Issue', 'mini');
+
 	$nodes = $issueNodes->nodes;
 	$count = 0;
 	if (is_countable($nodes)) {

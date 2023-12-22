@@ -69,6 +69,11 @@ span.nav strong { font-size: 0.9em; margin-bottom: 10px; }
 
 .span-link { font-size: 0.9em; }
 
+.errors {
+    padding: 20px;
+    font-size: 14pt;
+}
+
 /* MB: We seem to have lost this class - matches a span to look like an anchor */
 .active {
     color: #a91a70;
@@ -298,12 +303,11 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 
 .my-groups p { text-align: left; }
 
-
 /** FOR THE FORMS **/
 .ideaforagainsttable { border: none; table-layout: fixed; width: 100%; }
 .ideaforagainsttable tbody { display: block; width: 100%; }
-.ideaforagainsttable tbody tr { display: block; width: 100%; }
-.ideaforagainsttable tbody tr td.for-against { border: none; padding: 10px 20px; min-width: 1%; }
+.ideaforagainsttable tbody tr { display: block; width: 100%; display: flex; flex-direction: row;  flex-wrap: nowrap; }
+.ideaforagainsttable tbody tr td.for-against { border: none; padding: 10px 20px; min-width: 1%; width: 50%; display: flex; flex-direction: column; flex-wrap: nowrap; }
 
 .ideaforagainsttable tbody tr td h3.forHeading { border-bottom: 1px solid #D8D8D8; color: green; font-size: 1.17em; margin-bottom: 2px; padding-bottom: 5px; }
 .ideaforagainsttable tbody tr td h3.conHeading { border-bottom: 1px solid #D8D8D8; color: red; font-size: 1.17em; margin-bottom: 2px; padding-bottom: 5px; }

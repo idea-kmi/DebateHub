@@ -141,7 +141,7 @@ if ($jsonld === FALSE) {
 	}
 
 	if ($cipher == "" && $type != "unobfuscatedusers") {
-		error_log("Creating new Cipher");
+		//error_log("Creating new Cipher");
 		$salt = openssl_random_pseudo_bytes(32);
 		$cipher = new Cipher($salt);
 	}
@@ -567,11 +567,7 @@ function getConversationData($groupid) {
 
 	if (!$issueNodes instanceof Hub_Error) {
 		$nodes = $issueNodes->nodes;
-		$count = 0;
-		if (is_countable($nodes)) {
-			$count = count($nodes);
-		}
-
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
 			if (!$node instanceof Hub_Error) {

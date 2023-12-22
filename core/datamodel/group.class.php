@@ -41,6 +41,8 @@ class Group {
     public $negativevotes = 0;
     public $votes = 0;
     public $isopenjoining = 'N';
+    
+    public $status = 0;
 
     //public $location;
     //public $countrycode;
@@ -93,6 +95,10 @@ class Group {
                 $this->website = stripslashes($array['Website']);
                 $this->isopenjoining = $array['IsOpenJoining'];
 
+                if (isset($array['CurrentStatus'])) {
+                    $this->status = (int) $array['CurrentStatus'];
+                }                 
+
 				if($array['Photo']){
 					//set user photo and thumb the thumb creation is done during registration
 					$originalphotopath = $HUB_FLM->createUploadsDirPath($this->groupid."/".stripslashes($array['Photo']));
@@ -135,7 +141,7 @@ class Group {
                 }
                 if(isset($array['LocationLng'])){
                     $this->locationlng = $array['LocationLng'];
-                }
+                }               
             }
         } else {
             return database_error();
@@ -449,6 +455,35 @@ class Group {
         return new Result("deleted","true");
     }
 
+	/**
+	 * Update the status for this group
+	 *
+	 * @return Group object (this) (or Error object)
+	 */
+	function updateStatus($status){
+	    global $DB,$CFG,$USER,$HUB_SQL,$HUB_CACHE;
+
+		if (isset($HUB_CACHE)) {
+			$HUB_CACHE->deleteData($this->groupid.$this->style);
+		}
+
+	    $dt = time();
+
+		$params = array();
+		$params[0] = $status;
+		$params[1] = $dt;
+		$params[2] = $this->groupid;
+
+        // users are groups so we can use the same SQL as users
+		$res = $DB->insert($HUB_SQL->DATAMODEL_USER_STATUS_UPDATE, $params);
+		if (!$res) {
+			return database_error();
+		} else {
+			$this->status = $status;
+		    return $this;
+		}
+	}
+
     /**
      * Adds a member to the group
      *
@@ -628,7 +663,7 @@ class Group {
     }
 
     /**
-     * Remove a emember of the group
+     * Remove a member of the group
      *
      * @param string $userid
      * @return Group object (this)

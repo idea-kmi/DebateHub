@@ -312,7 +312,9 @@ $HUB_SQL->APILIB_NODES_BY_ACTIVE_USERS_SELECT = "SELECT Node.UserID, count(Node.
 
 /** Get users by following **/
 
-$HUB_SQL->APILIB_USERS_BY_FOLLOWING_SELECT = "SELECT t.UserID, t.CreationDate FROM Following t WHERE t.ItemID=?";
+$HUB_SQL->APILIB_USERS_BY_FOLLOWING_SELECT = "SELECT t.UserID, t.CreationDate FROM Following t
+												LEFT JOIN Users u on u.UserID = t.UserID
+												WHERE t.ItemID=? AND u.CurrentStatus IN (0,1)";
 
 /** Get users by most followed **/
 
@@ -409,9 +411,9 @@ $HUB_SQL->APILIB_CONNECTION_GROUP_PRIVACY_SELECT = "SELECT t.TripleID FROM Node 
 $HUB_SQL->APILIB_GET_ALL_GROUPS_SELECT = "SELECT DISTINCT GroupID FROM UserGroup order by CreationDate DESC";
 
 $HUB_SQL->APILIB_GET_MY_GROUPS_SELECT = "SELECT DISTINCT ug.GroupID FROM UserGroup ug left join Users u on
-											ug.GroupID = u.UserID WHERE ug.UserID=?";
+											ug.GroupID = u.UserID WHERE ug.UserID=? AND u.CurrentStatus IN (0,1)";
 
-$HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SELECT = $HUB_SQL->APILIB_GET_MY_GROUPS_SELECT." AND IsAdmin = 'Y'";
+$HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SELECT = $HUB_SQL->APILIB_GET_MY_GROUPS_SELECT." AND ug.IsAdmin = 'Y' AND u.CurrentStatus IN (0,1)";
 
 $HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SORT = 'order by u.CreationDate DESC';
 

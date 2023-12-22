@@ -57,9 +57,10 @@ if ($searchid != "" && isset($USER->userid)) {
 
 $node = getNode($nodeid, 'long');
 
-if($node instanceof Hub_Error){
-	echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+if($node instanceof Hub_Error) {
+	include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+	echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+	include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 	die;
 } else {
 	$userid = "";
@@ -68,6 +69,16 @@ if($node instanceof Hub_Error){
 	}
 	auditView($userid, $nodeid, 'explore');
 }
+
+// reported debates are not visible - should they be - like reported groups?.
+// even admins can't see archived debates - have to look at the content through the archived items admin screen
+if ($node->status != $CFG->STATUS_ACTIVE 
+		&& (!isset($USER->userid) || $USER->getIsAdmin() == "N" || $node->status == $CFG->STATUS_ARCHIVED)) {
+	include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+	echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
+	include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+	die;
+} 
 
 if (isset($USER->userid) &&
 		isset($node->properties['lemoningon']) && $node->properties['lemoningon'] == 'Y') {
@@ -93,26 +104,30 @@ if ($nodetype != "Issue") {
 			if (isset($con->to)) {
 				$node = $con->to;
 				if($node instanceof Hub_Error){
-					echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-					include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+					include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+					echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+					include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 					die;
 				} else {
 					$nodeid = $node->nodeid;
 					$node = getNode($nodeid);
 					if($node instanceof Hub_Error){
-						echo "<h1>".$LNG->ISSUE_NAME." ".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-						include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+						include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+						echo "<div class='errors'>".$LNG->ISSUE_NAME." ".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+						include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 						die;
 					}
 				}
 			} else {
-				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+				include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+				echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+				include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 				die;
 			}
 		} else {
-			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+			include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+			echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 			die;
   	    }
 	} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
@@ -126,26 +141,30 @@ if ($nodetype != "Issue") {
 			if (isset($con->to)) {
 				$localnode = $con->to;
 				if($localnode instanceof Hub_Error){
-					echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-					include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+					include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+					echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+					include_once($HUB_FLM->getCodeDirPath("ui/fofooterdialogoter.php"));
 					die;
 				} else {
 					$nodeid = $localnode->nodeid;
 					$node = getNode($nodeid);
 					if($node instanceof Hub_Error){
-						echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-						include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+						include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+						echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+						include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 						die;
 					}
 				}
 			} else {
-				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+				include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+				echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+				include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 				die;
 			}
 		} else {
-			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+			include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+			echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 			die;
   	    }
 	}
@@ -172,8 +191,9 @@ if (isset($groupid) && $groupid != "") {
 	$group = getGroup($groupid);
 	//getGroup does not return group properties apart from its members
 	if($group instanceof Hub_Error){
-		echo "<h1>Group not found</h1>";
-		include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+		include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+		echo "<div class='errors'>Group not found</div>";
+		include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
 		die;
 	} else {
 		$userset = $group->members;

@@ -29,6 +29,8 @@ include_once($HUB_FLM->getCodeDirPath("core/formats/json.php"));
 include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 $nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
+
+// getNode even if not active?
 $node = getNode($nodeid);
 
 $userHashtable = array();
@@ -47,7 +49,7 @@ if (!array_key_exists($node->users[0]->userid, $userHashtable)) {
 	$userHashtable[$node->users[0]->userid] = $globaluser;
 }
 
-$debateConnections = getDebate($nodeid);
+$debateConnections = getDebate($nodeid); // hardcoded to status = 0, by default
 $cons = $debateConnections->connections;
 $countcons = 0;
 if (is_countable($cons)) {

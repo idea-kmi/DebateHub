@@ -401,12 +401,22 @@ function createNewForceDirectedGraph(containername, rootNodeID) {
 
 /**
  * Add the given connection to the given graph
+ * return true if connection added, else false;
  */
 function addConnectionToFDGraph(c, graph) {
 
 	if (c && c.from && c.to) {
 		var fN = c.from[0].cnode;
 		var tN = c.to[0].cnode;
+
+		if (fN == undefined || tN == undefined) {
+			return false;
+		}
+
+		if (fN.status == STATUS_SUSPENDED || fN.status ==  STATUS_ARCHIVED
+			|| tN.status == STATUS_SUSPENDED || tN.status ==  STATUS_ARCHIVED){
+			return false;
+		}
 
 		var fnRole = c.fromrole[0].role;
 		var fNNodeImage = "";
@@ -571,6 +581,10 @@ function addConnectionToFDGraph(c, graph) {
 		};
 
 		graph.addAdjacence(fromNode, toNode, data);
+		
+		return true;
+	} else {
+		return false;
 	}
 }
 

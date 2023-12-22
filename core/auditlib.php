@@ -250,12 +250,16 @@ function getSpamReporter($itemid) {
 	$params[0] = $itemid;
 
 	$sql = $HUB_SQL->AUDIT_SPAM_REPORTS_SELECT;
-	$sql = $DB->addLimitingResults($sql, 0, 1);
+	//$sql = $DB->addLimitingResults($sql, 0, 1); will return only one record
 
     $resArray = $DB->select($sql, $params);
     if ($resArray !== false) {
-    	// only expect 1 row
-        return $resArray[0]["ReporterID"];
+    	// only expecting 1 row - getting newest entry for the item by date
+		if (is_countable($resArray) && count($resArray)) {
+        	return $resArray[0]["ReporterID"];
+		} else {
+			return false;
+		}
     } else {
         return false;
     }
@@ -314,7 +318,7 @@ function isProbablyRealWebUser() {
  * @param string $viewtype The type of the view to the record
  * @return booelan false if at least one database read or write failed, else true;
  */
-function auditViewMulti($userid="", $nodeids, $viewtype) {
+function auditViewMulti($userid, $nodeids, $viewtype) {
     global $DB,$HUB_SQL,$_SERVER;
 
     $wentOK = true;
@@ -375,7 +379,7 @@ function auditViewMulti($userid="", $nodeids, $viewtype) {
  * @param string $viewtype The type of the view to the record
  * @return booelan
  */
-function auditView($userid="", $nodeid, $viewtype) {
+function auditView($userid, $nodeid, $viewtype) {
     global $DB,$HUB_SQL;
 
     $wentOK = true;
@@ -426,7 +430,7 @@ function auditView($userid="", $nodeid, $viewtype) {
  * @param string $viewtype The type of the view to the record
  * @return booelan
  */
-function auditGroupView($userid="", $groupid, $viewtype) {
+function auditGroupView($userid, $groupid, $viewtype) {
     global $DB,$HUB_SQL;
 
     $wentOK = true;
@@ -500,7 +504,7 @@ function auditHomepageView($userid="") {
  * @param string $page the dashboard page viewed
  * @return booelan
  */
-function auditDashboardView($userid="", $itemid, $page) {
+function auditDashboardView($userid, $itemid, $page) {
 	global $SERVER, $DB, $HUB_SQL;
 
     $wentOK = true;
@@ -541,7 +545,7 @@ function auditDashboardView($userid="", $itemid, $page) {
  * @param string $state any state information you want to save about the test element.
  * @return booelan
  */
-function auditTesting($trialname, $userid="", $itemid, $testelementid, $event, $state) {
+function auditTesting($trialname, $userid, $itemid, $testelementid, $event, $state) {
 	global $SERVER, $DB, $HUB_SQL;
 
     $wentOK = true;

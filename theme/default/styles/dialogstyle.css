@@ -67,6 +67,24 @@ div.autocomplete ul li { list-style-type: none; display: block; margin: 0; paddi
 
 .likeabutton { appearance: button; -moz-appearance: button; -webkit-appearance: button; text-decoration: none; font: menu; color: ButtonText; display: inline-block; padding: 2px 8px; }
 
+.errors {
+    padding: 20px;
+    font-size: 14pt;
+}
+
+/* MB: We seem to have lost this class - matches a span to look like an anchor */
+.active {
+    color: #a91a70;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.active:hover {
+    color: #4E725F;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .plainborder {
 	border: 2px solid #D0D0D0;
 } 

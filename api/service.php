@@ -192,9 +192,9 @@ switch($method) {
         $scope = optional_param('scope','my',PARAM_TEXT);
         $response = getNodesByFirstCharacters($query,$scope,$start,$max,"name","ASC",$filternodetypes,$style,$status);
         break;
-    case "getmultinodes":
+    case "getmultinodes": // not used as far as I can find
         $nodeids = required_param('nodeids',PARAM_TEXT);
-        $response = getMultiNodes($nodeids,$start,$max,$o,$s,$style);
+        $response = getMultiNodes($nodeids,$start,$max,$o,$s,$style); //should this pass the status?
     	break;
 
 	/** RESOURCE **/
@@ -371,7 +371,7 @@ switch($method) {
     case "getusersbyglobal":
         $includegroups = optional_param('includegroups',false,PARAM_BOOL);
         $query = optional_param('q', "", PARAM_TEXT);
-        $response = getUsersByGlobal($includegroups, $start,$max,$o,$s,$style,$query);
+        $response = getUsersByGlobal($includegroups, $start,$max,$o,$s,$style,$query,$status);
         break;
 
     /** TAGS **/

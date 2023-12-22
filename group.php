@@ -83,6 +83,16 @@ if($group instanceof Hub_Error){
 	<?php include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 	die;
 } else {
+	// reported groups are still visible - in case maliciously reported. Which would take out too much content
+	// even admins can't see archived groups - have to look at the content through the reported groups admin screen
+	if (($group->status != $CFG->USER_STATUS_ACTIVE && $group->status != $CFG->USER_STATUS_REPORTED) 
+				&& (!isset($USER->userid) || $USER->getIsAdmin() == "N" || $group->status == $CFG->STATUS_ARCHIVED)) {
+		include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+		echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
+		include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+		die;
+	} 
+
 	$userid = "";
 	if (isset($USER->userid)) {
 		$userid = $USER->userid;

@@ -2375,7 +2375,7 @@ function getUser($userid,$format='long'){
 	$u = $u->load($format);
 
 	if ($u instanceof User) {
-		if ($u->status == $CFG->STATUS_SUSPENDED || $u->status == $CFG->STATUS_ARCHIVED) {
+		if ($u->status == $CFG->USER_STATUS_SUSPENDED || $u->status == $CFG->USER_STATUS_ARCHIVED) {
 			$ERROR = new Hub_Error();
 			return $ERROR->createAccessDeniedError();
 		}

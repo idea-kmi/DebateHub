@@ -311,7 +311,7 @@ $HUB_SQL->UTILLIB_SEARCH_TAG_LIKE = "u.Name".$HUB_SQL->SEARCH_LIKE_START;
 
 $HUB_SQL->UTILLIB_USER_NODETYPE_CREATION_COUNTS = "SELECT NodeType.Name, count(NodeID) AS num
 								FROM Node LEFT JOIN NodeType on Node.NodeTypeID = NodeType.NodeTypeID
-								WHERE Node.UserID=?
+								WHERE Node.UserID=? AND Node.CurrentStatus NOT IN (4,5)
 								GROUP BY NodeType.Name ORDER BY num DESC";
 
 

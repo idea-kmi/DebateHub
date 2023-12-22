@@ -94,6 +94,12 @@ var SELECTED_NODETYPES = "";
 var SELECTED_USERS = "";
 var ALERT_COUNT = 2;
 
+var STATUS_SUSPENDED = <?php print $CFG->STATUS_SUSPENDED;?>; 
+var STATUS_ARCHIVED = <?php print $CFG->STATUS_ARCHIVED;?>;
+
+var USER_STATUS_SUSPENDED = <?php print $CFG->USER_STATUS_SUSPENDED;?>; 
+var USER_STATUS_ARCHIVED = <?php print $CFG->USER_STATUS_ARCHIVED;?>;
+
 var CLOSED_PHASE = 'closed';
 var PENDING_PHASE = 'pending';
 

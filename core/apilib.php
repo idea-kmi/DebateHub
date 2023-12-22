@@ -253,17 +253,24 @@ function deleteLemon($issueid,$nodeid){
  * @return Node or Error
  */
 function getNode($nodeid,$style='long'){
-	global $_SESSION;
+	global $_SESSION, $CFG, $ERROR;
 
 	//$cachednode = $_SESSION[$nodeid.$style];
 	//if (isset($cachednode) && (time()-$cachednode->cachetime) <= 60) {
 	//	return $cachednode;
 	//}
+	
+    //$_SESSION[$nodeid.$style] = $this;
 
     $n = new CNode($nodeid);
 	$node = $n->load($style);
 
-    //$_SESSION[$nodeid.$style] = $this;
+	if ($node instanceof CNode) {
+		if ($node->status == $CFG->STATUS_SUSPENDED || $node->status == $CFG->STATUS_ARCHIVED) {
+			$ERROR = new Hub_Error();
+			return $ERROR->createAccessDeniedError();
+		}
+	}
 
     return $node;
 }
@@ -1112,8 +1119,23 @@ function deleteConnectionVote($connid,$vote){
  * @return Connection or Error
  */
 function getConnection($connid, $style='long'){
+	global $CFG, $ERROR;
+
     $c = new Connection($connid);
     $conn = $c->load($style);
+
+	if ($conn instanceof Connection) {
+		if ($conn->status == $CFG->STATUS_SUSPENDED 
+				|| $conn->status == $CFG->STATUS_ARCHIVED
+				|| $conn->from->status == $CFG->STATUS_SUSPENDED 
+				|| $conn->from->status == $CFG->STATUS_ARCHIVED
+				|| $conn->to->status == $CFG->STATUS_SUSPENDED 
+				|| $conn->to->status == $CFG->STATUS_ARCHIVED) {
+			$ERROR = new Hub_Error();
+			return $ERROR->createAccessDeniedError();						
+		}
+	}
+
     return $conn; // return the connection object
 }
 
@@ -1399,8 +1421,12 @@ function getConnectionsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='
 	$cleanedarray = [];
 	for ($i=0;$i<$count;$i++) {
 		$con = $conns[$i];
-		if ($con->from->status != $CFG->STATUS_ARCHIVED 
-					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+		if ($con->status != $CFG->STATUS_ARCHIVED 
+				&& $con->from->status != $CFG->STATUS_ARCHIVED 
+				&& $con->to->status != $CFG->STATUS_ARCHIVED
+				&& $con->status != $CFG->STATUS_SUSPENDED 
+				&& $con->from->status != $CFG->STATUS_SUSPENDED 
+				&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 			array_push($cleanedarray, $con);
 		}
 	}
@@ -1565,8 +1591,12 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
 	$cleanedarray = [];
 	for ($i=0;$i<$count;$i++) {
 		$con = $conns[$i];
-		if ($con->from->status != $CFG->STATUS_ARCHIVED 
-					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+		if ($con->status != $CFG->STATUS_ARCHIVED 
+				&& $con->from->status != $CFG->STATUS_ARCHIVED 
+				&& $con->to->status != $CFG->STATUS_ARCHIVED
+				&& $con->status != $CFG->STATUS_SUSPENDED 
+				&& $con->from->status != $CFG->STATUS_SUSPENDED 
+				&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 			array_push($cleanedarray, $con);
 		}
 	}
@@ -1687,8 +1717,12 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 		$cleanedarray = [];
 		for ($i=0;$i<$count;$i++) {
 			$con = $conns[$i];
-			if ($con->from->status != $CFG->STATUS_ARCHIVED 
-						&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+			if ($con->status != $CFG->STATUS_ARCHIVED 
+					&& $con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED
+					&& $con->status != $CFG->STATUS_SUSPENDED 
+					&& $con->from->status != $CFG->STATUS_SUSPENDED 
+					&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 				array_push($cleanedarray, $con);
 			}
 		}
@@ -1808,8 +1842,12 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
 	$cleanedarray = [];
 	for ($i=0;$i<$count;$i++) {
 		$con = $conns[$i];
-		if ($con->from->status != $CFG->STATUS_ARCHIVED 
-					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+		if ($con->status != $CFG->STATUS_ARCHIVED 
+				&& $con->from->status != $CFG->STATUS_ARCHIVED 
+				&& $con->to->status != $CFG->STATUS_ARCHIVED
+				&& $con->status != $CFG->STATUS_SUSPENDED 
+				&& $con->from->status != $CFG->STATUS_SUSPENDED 
+				&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 			array_push($cleanedarray, $con);
 		}
 	}
@@ -1836,7 +1874,7 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $linklabels = '', $filternodetypes='', $userid='', $style='long', $status=0){
+function getConnectionsBySocial($scope, $start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $linklabels = '', $filternodetypes='', $userid='', $style='long', $status=0){
     global $DB, $USER,$CFG,$HUB_SQL;
 
 	$currentuser = '';
@@ -1915,8 +1953,12 @@ function getConnectionsBySocial($scope,$start = 0,$max = 20 ,$orderby = 'date',$
 	$cleanedarray = [];
 	for ($i=0;$i<$count;$i++) {
 		$con = $conns[$i];
-		if ($con->from->status != $CFG->STATUS_ARCHIVED 
-					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+		if ($con->status != $CFG->STATUS_ARCHIVED 
+				&& $con->from->status != $CFG->STATUS_ARCHIVED 
+				&& $con->to->status != $CFG->STATUS_ARCHIVED
+				&& $con->status != $CFG->STATUS_SUSPENDED 
+				&& $con->from->status != $CFG->STATUS_SUSPENDED 
+				&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 			array_push($cleanedarray, $con);
 		}
 	}
@@ -2327,8 +2369,18 @@ function getActiveIdeaUsers($start = 0, $max = 20, $style='long') {
  * @return User or Error
  */
 function getUser($userid,$format='long'){
+	global $CFG, $ERROR;
+
     $u = new User($userid);
 	$u = $u->load($format);
+
+	if ($u instanceof User) {
+		if ($u->status == $CFG->STATUS_SUSPENDED || $u->status == $CFG->STATUS_ARCHIVED) {
+			$ERROR = new Hub_Error();
+			return $ERROR->createAccessDeniedError();
+		}
+	}
+
     return $u;
 }
 
@@ -3324,8 +3376,12 @@ function getConnectionsByGroup($groupid, $scope,$start = 0,$max = 20 ,$orderby =
 	$cleanedarray = [];
 	for ($i=0;$i<$count;$i++) {
 		$con = $conns[$i];
-		if ($con->from->status != $CFG->STATUS_ARCHIVED 
-					&& $con->to->status != $CFG->STATUS_ARCHIVED) {
+		if ($con->status != $CFG->STATUS_ARCHIVED 
+				&& $con->from->status != $CFG->STATUS_ARCHIVED 
+				&& $con->to->status != $CFG->STATUS_ARCHIVED
+				&& $con->status != $CFG->STATUS_SUSPENDED 
+				&& $con->from->status != $CFG->STATUS_SUSPENDED 
+				&& $con->to->status != $CFG->STATUS_SUSPENDED) {
 			array_push($cleanedarray, $con);
 		}
 	}

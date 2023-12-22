@@ -467,11 +467,21 @@ function addConnectionToFDGraphSocial(c, forcedirectedGraph) {
 		} else {
 			fromuser = fN.users[0].user;
 		}
+
 		var touser = null;
 		if (tN.users[0].userid) {
 			touser = tN.users[0];
 		} else {
 			touser = tN.users[0].user;
+		}
+
+		if (fromuser == undefined || touser == undefined) {
+			return false;
+		}
+
+		if (fromuser.status == USER_STATUS_SUSPENDED || fromuser.status ==  USER_STATUS_ARCHIVED
+			|| touser.status == USER_STATUS_SUSPENDED || touser.status ==  USER_STATUS_ARCHIVED){
+			return false
 		}
 
 		if (fromuser.userid == touser.userid) {
@@ -586,6 +596,7 @@ function addConnectionToFDGraphSocial(c, forcedirectedGraph) {
 				adj.setData('label', connections.length);
 			}
 		}
+
 		return true;
 	} else {
 		return false;

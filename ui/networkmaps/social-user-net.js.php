@@ -129,12 +129,14 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
       			//alert("connection count = "+conns.length);
 				let concount = 0;
+				console.log("COUNT", conns.length);
       			if (conns.length > 0) {
       				var connectionadded = false;
 	      			for(var i=0; i< conns.length; i++){
 	      				var c = conns[i].connection;
 	      				var fN = c.from[0].cnode;
 	      				var tN = c.to[0].cnode;
+						console.log("INNER", i);
 						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
 							concount++;
 						}

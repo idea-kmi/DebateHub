@@ -74,14 +74,15 @@
 					$i=0;
 
 					foreach($activities as $activity) {
+
 						if ($activity->type == 'Follow') {
-							$follownode = getNode($activity->itemid);
 
+							$follownode = getNode($activity->itemid); // filters archived
 							if (!$follownode instanceof CNode) {
-								$followuser = getUser($activity->itemid);
-
+								$followuser = getUser($activity->itemid); // filters archived
+								// can't rely on node class canview at the moment
 								if ($followuser instanceof User) {
-
+										
 									try {
 										$userObj = json_encode($followuser, JSON_INVALID_UTF8_IGNORE);
 									} catch (Exception $e) {
@@ -117,6 +118,7 @@
 									echo "</script></td>";
 								}
 							} else if ($follownode instanceof CNode) {
+								
 								try {
 									$jsonfollownode = json_encode($follownode, JSON_INVALID_UTF8_IGNORE);
 								} catch (Exception $e) {
@@ -155,9 +157,8 @@
 						} else if ($activity->type == 'Vote') {
 
 							//check if the item voted on was a node
-							$voteobj = getNode($activity->itemid);
+							$voteobj = getNode($activity->itemid); // filters archived
 							if ($voteobj instanceof CNode) {
-
 								try {
 									$jsonvotenode = json_encode($voteobj, JSON_INVALID_UTF8_IGNORE);
 								} catch (Exception $e) {
@@ -234,8 +235,9 @@
 								echo "</td>";
 
 								//check if the item voted on was a connection
-								$voteobj = getConnection($activity->itemid);
-								if ($voteobj instanceof Connection) {
+								$voteobj = getConnection($activity->itemid); // filters archived
+								if ($voteobj instanceof Connection) {	
+
 									$con = $voteobj;
 									if ( $con->private == 'N' || $con->userid == $USER->userid ) {
 										if (

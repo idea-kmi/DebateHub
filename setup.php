@@ -144,7 +144,7 @@
 	$CFG->ALERT_UNSEEN_COMPETITOR = "unseen_competitor";
 	$CFG->ALERT_USER_IGNORED_COMPETITORS = "user_ignored_competitors";
 	$CFG->ALERT_USER_IGNORED_ARGUMENTS = "user_ignored_arguments";
-$CFG->ALERT_USER_IGNORED_RESPONSES = "user_ignored_responses";
+	$CFG->ALERT_USER_IGNORED_RESPONSES = "user_ignored_responses";
 
 /** START SESSION **/
 	//MB: consequences of calling accesslib before language files loaded?
@@ -217,15 +217,15 @@ $CFG->ALERT_USER_IGNORED_RESPONSES = "user_ignored_responses";
 	$CFG->CACHE_DEFAULT_TIMEOUT = 60;//seconds
 
 	unset($HUB_CACHE);
-	require_once("core/memcachemanager.class.php");
-	if(class_exists('Memcache')){
-		$HUB_CACHE = new MemcacheManager();
-	}
+	//require_once("core/memcachemanager.class.php");
+	//if(class_exists('Memcache')){
+	//	$HUB_CACHE = new MemcacheManager();
+	//}
 
-    global $HUB_CACHE;
+    //global $HUB_CACHE;
 
 
-//include common libaries coherelib.php and apilib.php
+	//include common libaries coherelib.php and apilib.php
     require_once('core/datamodel/error.class.php');
     require_once('core/apilib.php');
     require_once('core/auditlib.php');

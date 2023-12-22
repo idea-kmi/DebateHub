@@ -168,7 +168,7 @@ $HUB_SQL->STATSLIB_USER_TOTAL_VOTES = "SELECT
 						Sum(case when ot.VoteType='Y' then 1 else 0 end) as up,
 						Sum(case when ot.VoteType='N' then 1 else 0 end) as down
 						From (select ItemID, VoteType from Voting Where ItemID in
-						(Select NodeID from Node) AND UserID=?) ot ";
+						(Select NodeID from Node where Node.CurrentStatus NOT IN (4,5)) AND UserID=?) ot ";
 
 
 
@@ -182,7 +182,7 @@ $HUB_SQL->STATSLIB_USER_ALL_VOTING = "SELECT ot.NodeID,
 						FROM Node n
 						left join Voting v on n.NodeID=v.ItemID
 						left join NodeType t on n.NodeTypeID=t.NodeTypeID
-						Where v.UserID=?) ot
+						Where v.UserID=? AND n.CurrentStatus NOT IN (4,5)) ot
 						group by ot.NodeID having vote > 0 ";
 
 
@@ -204,7 +204,7 @@ $HUB_SQL->STATSLIB_USER_TOP_TAG = "SELECT alltags.Name, count(alltags.Name) as U
 
 $HUB_SQL->STATSLIB_USER_LINK_TYPES = "SELECT LinkType.Label, Count(TripleID) AS num
 						FROM Triple LEFT JOIN LinkType ON Triple.LinkTypeID = LinkType.LinkTypeID
-						WHERE  Triple.UserID=?
+						WHERE  Triple.UserID=? AND Triple.CurrentStatus NOT IN (4,5)
 						GROUP BY Label
 						ORDER BY num DESC";
 
@@ -213,7 +213,7 @@ $HUB_SQL->STATSLIB_USER_LINK_TYPES = "SELECT LinkType.Label, Count(TripleID) AS 
 
 $HUB_SQL->STATSLIB_USER_NODE_TYPES = "SELECT NodeType.Name, count(NodeID) AS num
 						FROM Node LEFT JOIN NodeType on Node.NodeTypeID = NodeType.NodeTypeID
-						WHERE Node.UserID=?
+						WHERE Node.UserID=? AND Node.CurrentStatus NOT IN (4,5)
 						GROUP BY NodeType.Name
 						ORDER BY num DESC";
 
@@ -224,7 +224,7 @@ $HUB_SQL->STATSLIB_USER_CONNECTIONS = "SELECT * FROM
 						(SELECT Triple.*, Node.UserID as FromUserID
 						FROM Triple
 						RIGHT JOIN Node ON Triple.FromID = Node.NodeID
-						WHERE Triple.UserID=?
+						WHERE Triple.UserID=? AND Triple.CurrentStatus NOT IN (4,5) 
 						AND ((Triple.Private='N') OR
 					   		(TripleID IN (SELECT tg.TripleID FROM TripleGroup tg
 						 	INNER JOIN UserGroup ug ON ug.GroupID=tg.GroupID
@@ -245,7 +245,8 @@ $HUB_SQL->STATSLIB_USER_CONNECTIONS = "SELECT * FROM
 						(SELECT Triple.TripleID as TripleID2, Node.UserID AS ToUserID
 						FROM Triple
 						RIGHT JOIN Node ON Triple.ToID = Node.NodeID
-						WHERE  Triple.UserID=? AND ((Triple.Private='N') OR
+						WHERE  Triple.UserID=? AND Triple.CurrentStatus NOT IN (4,5)
+						AND ((Triple.Private='N') OR
 					   (TripleID IN (SELECT tg.TripleID FROM TripleGroup tg
 									 INNER JOIN UserGroup ug ON ug.GroupID=tg.GroupID
 									  WHERE ug.UserID=?)))

@@ -310,10 +310,9 @@ if(!empty($errors)){
 					echo '</tr>';
 
 					// add the tree display area row
-					echo '<tr><td colspan="6">';
-					echo '<div id="'.$node->nodeid.'treediv1" name="treediv1" style="display:none">&nbsp;</div>';
-					echo '</td></tr>';
-
+					//echo '<tr><td colspan="6">';
+					//echo '<div id="'.$node->nodeid.'treediv1" name="treediv1" style="display:none">&nbsp;</div>';
+					//echo '</td></tr>';
 				}
 				echo "</table>";
 			}

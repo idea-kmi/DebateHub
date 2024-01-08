@@ -44,7 +44,8 @@ $HUB_SQL->AUDIT_SPAM_REPORTS_INSERT = "INSERT into AuditSpamReports (ReporterID,
 $HUB_SQL->AUDIT_VOTE_INSERT = "INSERT into AuditVoting (UserID, ItemID, VoteType, ModificationDate, ChangeType)
             					values (?, ?, ?, ?, ?)";
 
-$HUB_SQL->AUDIT_SPAM_REPORTS_SELECT = "Select ReporterID from AuditSpamReports where ItemId=? order by CreationDate DESC";
+// get only the latest record for each item
+$HUB_SQL->AUDIT_SPAM_REPORTS_SELECT = "Select ReporterID, ItemID, MAX(CreationDate) from AuditSpamReports where ItemID=? GROUP BY ItemID";
 
 $HUB_SQL->AUDIT_NODE_VIEW_INSERT ="INSERT into AuditNodeView (UserID, NodeID, ModificationDate, ViewType, SessionID, IPAddress, Agent)
             					values (?, ?, ?, ?, ?, ?, ?)";

@@ -500,7 +500,7 @@ switch($method) {
         break;
     case "getgroupsbyglobal":
         $query = optional_param('q', "", PARAM_TEXT);
-        $response = getGroupsByGlobal($start,$max,$o,$s,$style,$query,$status);
+        $response = getGroupsByGlobal($start,$max,$o,$s,$style,$query);
         break;
     case "getmygroups":
         $userid = optional_param('userid','',PARAM_ALPHANUMEXT);

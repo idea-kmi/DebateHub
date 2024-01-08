@@ -342,20 +342,21 @@ function connectionOrderString($o,$s){
 /**
  * Get the connections for the given netowrk search paramters from the given node.
  *
- * @param string $scope (either 'all' or 'my', deafult 'all')
- * @param string $labelmatch (optional, 'true', 'false' - default: false;
+ * @param string $scope (either 'all' or 'my')
+ * @param string $labelmatch ('true', 'false');
  * @param string $nodeid the id of the node to search outward from.
- * @param integer $depth (optional, 1-7, default 1);
+ * @param integer $depth (1-7);
  * @param string $linklabels Array of strings of link types. Array length must match depth specified. Each array level is mutually exclusive with linkgroups - there can only be one.
  * @param string $linkgroups Array of either Positive, Negative, or Neutral - default: empty string). Array length must match depth specified.Each array level is mutually exclusive with linklabels - there can only be one.
  * @param string $directions Array of 'outgoing', 'incmong', or 'both' - default: 'both'. Array length must match depth specified.
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
+ * @param string $uniquepath (optional, true/false) default to true
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
+ * @param integer $status, (optional - defaults to 0 - possible options: 0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status){
+function getConnectionsByPathByDepthAND($logictype, $scope, $labelmatch, $nodeid, $depth, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status=0){
     global $DB,$USER,$CFG,$HUB_SQL;
 
 	// GET TEXT FOR PASSED IDEA ID IF REQUIRED
@@ -391,7 +392,7 @@ function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelm
 		} else {
 			$nextNodes[0] = $nodeid;
 		}
-		$matchesFound = searchNetworkConnectionsByDepth($checkConnections, $matchedConnections, $nextNodes, $labelmatch, $depth, 0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath, $scope, $status, $messages);
+		$matchesFound = searchNetworkConnectionsByDepth($checkConnections, $matchedConnections, $nextNodes, $labelmatch, $depth, 0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath, $scope, $status=0, $messages);
 	}
 	//return database_error($messages);
 
@@ -407,20 +408,21 @@ function getConnectionsByPathByDepthAND($logictype = 'or', $scope='all', $labelm
 /**
  * Get the connections for the given netowrk search paramters from the given node.
  *
- * @param string $scope (either 'all' or 'my', deafult 'all')
+ * @param string $scope (either 'all' or 'my')
  * @param string $labelmatch (optional, 'true', 'false' - default: false;
  * @param string $nodeid the id of the node to search outward from.
- * @param integer $depth (optional, 1-7, default 1);
+ * @param integer $depth (1-7);
  * @param string $linklabels Array of strings of link types. Array length must match depth specified. Each array level is mutually exclusive with linkgroups - there can only be one.
  * @param string $linkgroups Array of either Positive, Negative, or Neutral - default: empty string). Array length must match depth specified.Each array level is mutually exclusive with linklabels - there can only be one.
  * @param string $directions Array of 'outgoing', 'incmong', or 'both' - default: 'both'. Array length must match depth specified.
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
+ * @param string $uniquepath (optional - true/false, defaults to true)
  * @param String $style (optional - default 'long') may be 'short' or 'long'
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, (optional - defaults to 0 - possible options: 0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @return ConnectionSet or Error
  */
-function getConnectionsByPathByDepthOR($scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status){
+function getConnectionsByPathByDepthOR($scope, $labelmatch, $nodeid, $depth, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $style='long', $status=0){
     global $DB,$USER,$CFG,$HUB_SQL;
 
 	// GET TEXT FOR PASSED IDEA ID IF REQUIRED
@@ -467,9 +469,10 @@ function getConnectionsByPathByDepthOR($scope='all', $labelmatch='false', $nodei
 /**
  * Walk the network matching connection based on the passed criteria.
  * Starting from the given list of node labels/ids. (which always starts with 1, the focal node);
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param string $scope (optional - either 'all' or 'my')
+ * @param integer $status, (optional - defaults to 0 - possible options: 0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  */
-function searchNetworkConnections($checkConnections, $matches, $nextNodes, $linklabels='', $linkLabelsArray, $linkgroup='', $labelmatch='false', $depth=7, $currentdepth=0, $direction='both', $nodeTypeNames='', $nodeTypeNamesArray, $scope='all', $status=0) {
+function searchNetworkConnections($checkConnections, $matches, $nextNodes, $linklabels, $linkLabelsArray, $linkgroup, $labelmatch, $depth, $currentdepth, $direction, $nodeTypeNames, $nodeTypeNamesArray, $scope='all', $status=0) {
     global $DB,$USER,$CFG,$HUB_SQL;
 
 	$message="";
@@ -689,9 +692,9 @@ function searchNetworkConnections($checkConnections, $matches, $nextNodes, $link
 
 /**
  * Run the sql to get the nodes based on the given parameters.
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired)
+ * @param integer $status, (possible options: 0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  */
-function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNodes, $labelmatch='false', $links, $linkgroup, $direction, $roles, $uniquepath='true', $scope, $status=0, &$message) {
+function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNodes, $labelmatch, $links, $linkgroup, $direction, $roles, $uniquepath, $scope, $status, &$message) {
 	global $DB,$USER,$HUB_SQL;
 
 	$allConnections = array();
@@ -1015,8 +1018,8 @@ function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNode
  * @param array $checkConnections the id of the connections looked at so far - you to check same connections not processde more than once.
  * @param array $matches the id of the connections mathed.
  * @param array $nextNodes the id of the nodes to search outward from on this loop.
- * @param string $labelmatch (optional, 'true', 'false' - default: false;
- * @param integer $depth (optional, 1-7, default 1);
+ * @param string $labelmatch ('true', 'false');
+ * @param integer $depth (1-7);
  * @param integer $currentdepth depth of current loop.
  * @param string $linklabels Array of strings of link types. Array length must match depth specified. Each array level is mutually exclusive with linkgroups - there can only be one.
  * @param string $linkgroups Array of either Positive, Negative, or Neutral - default: empty string). Array length must match depth specified.Each array level is mutually exclusive with linklabels - there can only be one.
@@ -1024,11 +1027,11 @@ function getNetworkConnectionNodesByDepth($currentdepth, $depthnodeid, $nextNode
  * @param string $nodetypes Array of strings of node type names. Array length must match depth specified.
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param string $uniquepath "true"/"false" (default="true"). Should the paths followed consist of unique connections or can they repeat connections on a path if it follows the depth rules requested.
- * @param string $scope (either 'all' or 'my', deafult 'all')
+ * @param string $scope (either 'all' or 'my', default 'all')
  * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @param array &$messages passed in to store any return messages.
  */
-function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes, $labelmatch='false', $depth, $currentdepth=0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $scope, $status=0, &$message) {
+function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes, $labelmatch, $depth, $currentdepth, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath, $scope, $status, &$message) {
     global $DB,$USER,$CFG,$HUB_SQL;
 
 	$message .= "currentdepth=".$currentdepth;
@@ -1520,8 +1523,8 @@ function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes
  * @param array $checkConnections the id of the connections looked at so far - you to check same connections not processde more than once.
  * @param array $matches the id of the connections mathed.
  * @param array $nextNodes the id of the nodes to search outward from on this loop.
- * @param string $labelmatch (optional, 'true', 'false' - default: false;
- * @param integer $depth (optional, 1-7, default 1);
+ * @param string $labelmatch ('true', 'false');
+ * @param integer $depth (1-7);
  * @param integer $currentdepth depth of current loop.
  * @param string $linklabels Array of strings of link types. Array length must match depth specified. Each array level is mutually exclusive with linkgroups - there can only be one.
  * @param string $linkgroups Array of either Positive, Negative, or Neutral - default: empty string). Array length must match depth specified.Each array level is mutually exclusive with linklabels - there can only be one.
@@ -1530,10 +1533,10 @@ function searchNetworkConnectionsByDepth($checkConnections, $matches, $nextNodes
  * @param string $nodeids Array of strings of nodeids. Array length must match depth specified.
  * @param string $uniquepath "true"/"false" (default="true"). Should the paths followed consist of unique connections or can they repeat connections on a pth if it follows the depth rules requested.
  * @param string $scope (either 'all' or 'my', deafult 'all')
- * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
+ * @param integer $status (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
  * @param array &$messages passed in to store any return messages.
  */
-function searchNetworkConnectionsByDepthOR($checkConnections, $matches, $nextNodes, $labelmatch='false', $depth, $currentdepth=0, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath='true', $scope, $status=0, &$message) {
+function searchNetworkConnectionsByDepthOR($checkConnections, $matches, $nextNodes, $labelmatch, $depth, $currentdepth, $linklabels, $linkgroups, $directions, $nodetypes, $nodeids, $uniquepath, $scope, $status, &$message) {
     global $DB,$USER,$CFG,$HUB_SQL;
 
 	$message .= "currentdepth=".$currentdepth;
@@ -2538,15 +2541,16 @@ function getNodesByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
  * <br>$CFG->USER_STATUS_UNVALIDATED = new user account that has not had the email address verified yet.
  * <br>$CFG->USER_STATUS_UNAUTHORIZED = new user account that has not been authorized yet.
  * <br>$CFG->USER_STATUS_SUSPENDED = user account that has been suspended.
+ * <br>$CFG->USER_STATUS_ARCHIVED = N/A only for Groups
  *
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20)
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @return NodeSet or Error
+ * @return UserSet or Error
  */
-function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long', $isGroup='N') {
+function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long') {
     global $CFG,$USER,$HUB_SQL;
 
 	if ($USER->getIsAdmin() == "Y") {
@@ -2554,15 +2558,157 @@ function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
 		$params[0] = $status;
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
 
-		$params[1] = $isGroup;
-		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
-
-	    $us = new UserSet();
-	    return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
-	 } else {
+		$us = new UserSet();
+	   	return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
         $ERROR = new Hub_Error();
         return $ERROR->createAccessDeniedError();
-	 }
+	}
+}
+
+/**
+ * Get the users with the given status. For admin area.
+ *
+ * @param integer $status
+ * <br>$CFG->USER_STATUS_ACTIVE = live and active group
+ * <br>$CFG->USER_STATUS_REPORTED = group has been reported as spammer (not used at present)
+ * <br>$CFG->USER_STATUS_UNVALIDATED = N/A only for users
+ * <br>$CFG->USER_STATUS_UNAUTHORIZED = N/A only for users
+ * <br>$CFG->USER_STATUS_SUSPENDED = N/A only for users
+ * <br>$CFG->USER_STATUS_ARCHIVED = group that has been archived.
+ *
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
+ * @return GroupSet or Error
+ */
+function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', $sort ='DESC', $style='long'){
+    global $CFG,$USER,$HUB_SQL;
+
+	if ($USER->getIsAdmin() == "Y") {
+		$params = array();
+		$params[0] = $status;
+		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+
+		$params[1] = 'Y';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
+		$gs = new GroupSet();
+		return $gs->loadFromUsers($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
+        $ERROR = new Hub_Error();
+        return $ERROR->createAccessDeniedError();
+	}
+}
+
+/**
+ * Get the connections for the node with the given nodeid and status
+ *
+ * @param string $nodeid
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'vote', 'date', 'name' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param string $filtergroup (optional, either 'all','selected','positive','negative' or 'neutral', default: 'all' - to filter the results by the link type group of the connection)
+ * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
+ * @param string $filternodetypes (optional, a list of node type names to filter by)
+ * @param String $style (optional - default 'long') may be 'short' or 'long'
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
+ * @return ConnectionSet or Error
+ */
+function getConnectionsByStatus($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $status=0){
+    global $USER,$CFG,$HUB_SQL;
+
+	$currentuser = '';
+	if (isset($USER->userid)) {
+		$currentuser = $USER->userid;
+	}
+
+	$params = array();
+
+    $list = getAggregatedNodeIDs($nodeid);
+	if ($list != "") {
+		if ($orderby == 'ideavote') {
+			$sql = $HUB_SQL->APILIB_CONNECTIONS_BY_IDEA_SELECT;
+		} else {
+			$sql = $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_SELECT;
+		}
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART1;
+		$sql .= $list;
+    	$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART2;
+		$sql .= $list;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART3;
+
+		// FILTER BY NODE TYPES - OR
+		if ($filternodetypes != "") {
+			$nodetypeArray = array();
+			$innersql = getSQLForNodeTypeIDsForLabels($nodetypeArray,$filternodetypes);
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART1;
+			$sql .= $innersql;
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART2;
+			$sql .= $innersql;
+
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART3;
+		}
+
+		// FILTER BY LINK TYPES
+		if ($filtergroup != '' && $filtergroup != 'all' && $filtergroup != 'selected') {
+			$innersql = getSQLForLinkTypeIDsForGroup($params,$filtergroup);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+			$sql .= $HUB_SQL->OPENING_BRACKET;
+			$sql .= $innersql;
+			$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+		} else {
+			if ($filterlist != "") {
+				$innersql = getSQLForLinkTypeIDsForLabels($params,$filterlist);
+				$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+				$sql .= $HUB_SQL->OPENING_BRACKET;
+				$sql .= $innersql;
+				$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+			}
+		}
+
+		// PERMISSIONS
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = 'N';
+		$params[count($params)] = $currentuser;
+		$params[count($params)] = $currentuser;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
+
+		// FILTER STATUS - ON THE CONNECTION
+		$params[count($params)] = $status;
+		$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
+
+		// ORDER BY VOTE
+		if ($orderby == 'vote') {
+			$sql = $HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART2;
+		} else if ($orderby == 'ideavote') {
+			$sql = $HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART2;
+		}
+
+		//error_log(print_r($sql, true));
+
+		$connectionSet = new ConnectionSet();
+
+	    //echo $sql;
+		//echo print_r($params, true);
+
+	    $connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+		return $connectionSet;		
+	} else {
+		return new ConnectionSet();
+	}
 }
 
 
@@ -3233,4 +3379,459 @@ function getMyLemonsForIssue($issueid) {
 	$ns = new NodeSet();
 	return $ns->loadNodesWithExtras($HUB_SQL->DATAMODEL_UTIL_USER_LEMONS_FOR_ISSUE,$params);
 }
+
+
+/*** FUNCTION FOR ADMIN MODERATION OF REPORTED AND ARCHIVED ITEMS ***/
+
+function loadUsersAndContent($userid, $status, &$childids) {	
+	global $CFG;
+
+	$children = [];
+
+	// get the user's debates to start with
+	// getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long', $q="", $connectionfilter='',$status=0){
+	$issueNodes = getNodesByUser($userid, 0, -1, 'date', 'DESC', 'Issue', 'short', '', '', $status);
+
+	if (!$issueNodes instanceof Hub_Error) {
+		$nodes = $issueNodes->nodes;
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$node = $nodes[$i];
+			if (!$node instanceof Hub_Error) {
+				$children = array_merge($children, loadDebateChildNodes($node, $status, $childids));
+			}
+		}
+	}
+
+	return $children;
+}
+
+function loadGroupChildDebates($groupid, $status) {	
+	global $CFG;
+
+	$childids = [];	// not used but needs to be pased in to function called
+	$children = [];
+
+	// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
+	$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $status);
+
+	if (!$issueNodes instanceof Hub_Error) {
+		$nodes = $issueNodes->nodes;
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$node = $nodes[$i];
+			if (!$node instanceof Hub_Error) {
+				$node->children = loadDebateChildNodes($node, $status, $childids);
+				array_push($children, $node);
+			}
+		}
+	}
+
+	return $children;
+}
+
+function loadDebateChildNodes($node, $status, &$childids) {
+	global $CFG;
+	
+	$nodetype = $node->role->name;
+
+	$children = [];
+
+	// If the node being archived is a Debate Node
+	if ($nodetype == "Issue") {
+
+		//get the Ideas for this Debate.
+		//$connSetSolutions = getDebate($nodeid, $style='long');
+		$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'long', $status);
+		if (isset($connSetSolutions->connections[0])) {
+			$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$con = $connSetSolutions->connections[$i];
+				// connection connect from the child to the parent so get the from end of the connection
+				if (isset($con->from)) {
+					$solutionnode = $con->from;
+					if(!$solutionnode instanceof Hub_Error){								
+						$solutionnode->children = loadDebateChildNodes($solutionnode, $status, $childids);
+						array_push($children, $solutionnode);
+						array_push($childids, $solutionnode->nodeid);
+					}
+				} 
+			}
+		}
+	} else if ($nodetype == "Solution") {
+		// get any pros, cons and moderator comments for a given Idea
+		$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'long', $status);
+		if (isset($connSetArguments->connections[0])) {
+			$count = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
+			for ($j=0; $j<$count; $j++) {
+				$con = $connSetArguments->connections[$j];
+				// connections connect from the child to the parent so get the from end of the connection
+				if (isset($con->from)) {
+					$argumentnode = $con->from;
+					if(!$argumentnode instanceof Hub_Error){								
+						array_push($children, $argumentnode); // has no children
+						array_push($childids, $argumentnode->nodeid);
+					}
+				}
+			}
+		}
+	} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+		//nothing more to do! status already changed above for the node.
+	}
+
+	return $children;
+} 
+
+/*
+function archiveUserAndContent($userid) {
+	global $CFG;
+
+	if (isset($userid) && $userid !="") {
+		$childids = [];
+
+		//Need to know all the child nodes being processed
+		loadGroupChildDebates($groupid, $CFG->STATUS_ACTIVE, &$childids);
+
+		// get the user's debates to start with
+		// getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long', $q="", $connectionfilter='',$status=0){
+		// GET ACTIVE DEBATES
+		$issueNodes = getNodesByUser($userid, 0, -1, 'date', 'DESC', 'Issue', 'short', '', '', $CFG->STATUS_ACTIVE);
+
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}	
+
+		// GET REPORTED DEBATES AS WELL IN CASE THERE ARE SOIME OUTSTANDING
+		$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $CFG->STATUS_REPORTED);
+
+		$checkNodes = array();
+		$checkConns = array();
+
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}		
+	}
+}
+*/
+
+function archiveGroupAndChildren($groupid) {	
+	global $CFG;
+
+	if (isset($groupid) && $groupid !="") {
+		// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
+		// GET ACTIVE DEBATES
+		$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $CFG->STATUS_ACTIVE);
+
+		$checkNodes = array();
+		$checkConns = array();
+
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}
+
+		// GET REPORTED DEBATES AS WELL IN CASE THERE ARE SOIME OUTSTANDING
+		$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $CFG->STATUS_REPORTED);
+
+		$checkNodes = array();
+		$checkConns = array();
+
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}	
+
+		// Groups are User records with isGroup set to 'Y'
+		$user = new User($groupid);
+		$user->updateStatus($CFG->USER_STATUS_ARCHIVED);
+	}
+}
+
+function archiveNodeAndChildren($nodeid) {
+	global $CFG;
+
+	if ($nodeid != "") {
+		$node = new CNode($nodeid);
+		$node = $node->load();
+
+		// marks all child nodes as also archived, if parent archived.
+
+		$nodetype = $node->role->name;
+
+		// If the node being archived is a Debate Node
+		if ($nodetype == "Issue") {
+
+			//get the Ideas for this Debate.
+			$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'short', $CFG->STATUS_ACTIVE);				
+			if (isset($connSetSolutions->connections[0])) {
+				$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
+			
+				//echo"Number of connections to ideas: ".$count;
+
+				for ($i=0; $i<$count; $i++) {
+
+					//echo "NEXT IDEA: ".$i;
+
+					$con = $connSetSolutions->connections[$i];
+					//echo "Idea Con Updating status: ".$con->connid;
+
+					$con->updateStatus($CFG->STATUS_ARCHIVED);
+
+					// connection connect from the child to the parent so get the from end of the connection
+					if (isset($con->from)) {
+						$solutionnode = $con->from;
+						if(!$solutionnode instanceof Hub_Error) {
+							
+							//echo "IDEA: ".$solutionnode->name;
+							//echo "IDEA: ".$solutionnode->nodeid. " Updating status";
+
+							$solutionnode->updateStatus($CFG->STATUS_ARCHIVED);
+
+							// get any pros, cons and moderator comments for a given Idea
+							$connSetArguments = getConnectionsByStatus($solutionnode->nodeid, 0, -1, 'date', 'ASC', 'all', '', 'Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+							if (isset($connSetArguments->connections[0])) {
+								$count2 = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
+
+								//echo "Number of connections to arguments: ".$count2;
+
+								for ($j=0; $j<$count2; $j++) {
+									$con2 = $connSetArguments->connections[$j];
+
+									//echo "Arg Con Updating status: ".$con2->connid;
+
+									$con2->updateStatus($CFG->STATUS_ARCHIVED);
+
+									// connection connect from the child to the parent so get the from end of the connection
+									if (isset($con2->from)) {
+										$argumentnode = $con2->from;
+
+										if(!$argumentnode instanceof Hub_Error){	
+											
+											//echo "Arg: ".$argumentnode->name;
+											//echo "Arg: ".$argumentnode->nodeid. " Updating status";
+											
+											$argumentnode->updateStatus($CFG->STATUS_ARCHIVED);
+										}
+									}
+								}
+							}
+						}
+					} 
+				}
+			}
+		} else if ($nodetype == "Solution") {
+
+			// get any pros, cons and moderator comments for a given Idea
+			$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ACTIVE);
+			if (isset($connSetArguments->connections[0])) {
+				$count = 0;
+				if (is_countable($connSetArguments->connections)) {
+					$count = count($connSetArguments->connections);
+				}
+				for ($j=0; $j<$count; $j++) {
+					$con = $connSetArguments->connections[$j];
+					$con->updateStatus($CFG->STATUS_ARCHIVED);
+
+					// connection connect from the child to the parent so get the from end of the connection
+					if (isset($con->from)) {
+						$argumentnode = $con->from;
+						if(!$argumentnode instanceof Hub_Error){								
+							$argumentnode->updateStatus($CFG->STATUS_ARCHIVED);
+						}
+					}
+				}
+			}
+		} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+			//nothing more to do! status already changed above for the node.
+		}
+
+		//echo "UPDATING STATUS MAIN NODE: ".$node->nodeid;
+		$node = $node->updateStatus($CFG->STATUS_ARCHIVED);
+
+		//echo "STATUS NOW: ".$node->status;
+	}
+}
+
+/*
+function restoreArchivedUserAndChildren($userid) {
+	global $CFG;
+}
+*/
+
+function restoreArchivedGroupAndChildren($groupid) {
+	global $CFG;
+
+	if (isset($groupid) && $groupid !="") {
+		// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
+		// GET ARCHIVED DEBATES
+		$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $CFG->STATUS_ARCHIVED);
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					restoreArchivedNodeAndChildren($node->nodeid);
+				}
+			}
+		}
+
+		// GET REPORTED DEBATES AS WELL IN CASE THERE ARE SOIME OUTSTANDING REPORTED SEPRATELY
+		/*$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $CFG->STATUS_REPORTED);
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					restoreArchivedNodeAndChildren($node->nodeid);
+				}
+			}
+		}*/	
+
+		// Groups are User records with isGroup set to 'Y'
+		$group = getGroup($groupid);
+		$group->updateStatus($CFG->USER_STATUS_ACTIVE);
+	}
+}
+
+function restoreArchivedNodeAndChildren($nodeid) {
+	global $CFG;
+
+	if ($nodeid != "") {
+		$node = new CNode($nodeid);
+		$node = $node->load();
+
+		$originalStatus = $node->status;
+		//echo "RESTTORING - original node status: ".$originalStatus;
+
+		// only need to restore child nodes if we are dealing with an archived item
+		if ($originalStatus == $CFG->STATUS_ARCHIVED) {
+
+			// marks all child nodes as also archived, if parent archived.
+			$nodetype = $node->role->name;
+
+			// If the node being archived is a Debate Node
+			if ($nodetype == "Issue") {
+
+				//get the Ideas for this Debate.
+				$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Solution', 'short',  $CFG->STATUS_ARCHIVED);
+
+				if (isset($connSetSolutions->connections[0])) {
+
+					$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
+
+					//echo"Restore Number of connections to ideas: ".$count;
+
+					for ($i=0; $i<$count; $i++) {
+
+						//echo "RESTORE NEXT IDEA: ".$i;
+
+						$con = $connSetSolutions->connections[$i];
+						//echo "Restore Idea Con Updating status: ".$con->connid;
+
+						$con->updateStatus($CFG->STATUS_ACTIVE);
+
+						// connection connect from the child to the parent so get the from end of the connection
+						if (isset($con->from)) {
+							$solutionnode = $con->from;
+							if(!$solutionnode instanceof Hub_Error){								
+
+								//echo "Restore IDEA: ".$solutionnode->name;
+								//echo "Restore IDEA: ".$solutionnode->nodeid. " Updating status";
+
+								$solutionnode->updateStatus($CFG->STATUS_ACTIVE);
+
+								// get any pros, cons and moderator comments for a given Idea
+								$connSetArguments = getConnectionsByStatus($solutionnode->nodeid,0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short', $CFG->STATUS_ARCHIVED);
+								if (isset($connSetArguments->connections[0])) {
+									$count2 = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
+
+									//echo "Restore Number of connections to arguments: ".$count2;
+
+									for ($j=0; $j<$count2; $j++) {
+										$con2 = $connSetArguments->connections[$j];
+
+										//echo "Restore Arg Con Updating status: ".$con2->connid;
+
+										$con2->updateStatus($CFG->STATUS_ACTIVE);
+
+										// connection connect from the child to the parent so get the from end of the connection
+										if (isset($con2->from)) {
+											$argumentnode = $con2->from;
+											if(!$argumentnode instanceof Hub_Error){		
+												
+												//echo "Restore Arg: ".$argumentnode->name;
+												//echo "Restore Arg: ".$argumentnode->nodeid. " Updating status";
+													
+												$argumentnode->updateStatus($CFG->STATUS_ACTIVE);
+											}
+										}
+									}
+								}
+							}
+						} 
+					}
+				}
+			} else if ($nodetype == "Solution") {
+
+				// get any pros, cons and moderator comments for a given Idea
+				$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'short',  $CFG->STATUS_ARCHIVED);
+				if (isset($connSetArguments->connections[0])) {
+					$count = 0;
+					if (is_countable($connSetArguments->connections)) {
+						$count = count($connSetArguments->connections);
+					}
+					for ($j=0; $j<$count; $j++) {
+						$con = $connSetArguments->connections[$j];
+						$con->updateStatus($CFG->STATUS_ACTIVE);
+
+						// connection connect from the child to the parent so get the from end of the connection
+						if (isset($con->from)) {
+							$argumentnode = $con->from;
+							if(!$argumentnode instanceof Hub_Error){								
+								$argumentnode->updateStatus($CFG->STATUS_ACTIVE);
+							}
+						}
+					}
+				}
+			} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+				//nothing more to do! status already changed above for the node.
+			}
+		}
+
+		//echo "UPDATING STATUS MAIN NODE: ".$node->nodeid;
+		$node = $node->updateStatus($CFG->STATUS_ACTIVE);
+
+	} else {
+		array_push($errors,$LNG->SPAM_ADMIN_ID_ERROR);
+	}
+}
+
 ?>

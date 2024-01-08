@@ -228,9 +228,10 @@ function reportUserSpamAlert(obj, user) {
 			onSuccess: function(transport){
 				obj.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
 				obj.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("spam-reported.png"); ?>');
+				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
 				obj.style.cursor = 'auto';
 				$(obj).unbind("click");
+				Event.stopObserving(obj, 'click');
 				user.status = 1;
 			}
 		});

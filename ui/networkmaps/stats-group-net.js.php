@@ -125,15 +125,18 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
 			var conns = json.connectionset[0].connections;
 			//alert("conns: "+conns.length);
+			let conslenth = 0;
 			if (conns.length > 0) {
 				for(var i=0; i< conns.length; i++){
 					var c = conns[i].connection;
-					addConnectionToFDGraph(c, forcedirectedGraph.graph);
+					if (addConnectionToFDGraph(c, forcedirectedGraph.graph)) {
+						conslenth++;	
+					}
 				}
 			}
 
 			$('graphConnectionCount').innerHTML = "";
-			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
+			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
 
 			if (conns.length > 0) {
 				computeMostConnectedNode(forcedirectedGraph);

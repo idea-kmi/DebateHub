@@ -43,71 +43,99 @@
 
     $errors = array();
 
-    if(isset($_POST["deleteuser"])){
-		$userid = optional_param("userid","",PARAM_ALPHANUMEXT);
-    	if ($userid != "") {
-    		$user = new User($userid);
-			// delete user and any upload folder
-			if (!adminDeleteUser($userid)) {
-				echo $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR." ".$userid;
-			}
+    if(isset($_POST["deletegroup"])){
+		//$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+    	//if ($groupid != "") {
+			//$group = getGroup($groupid);
+			// delete group and any upload folder
+			//if (!adminDeleteUser($groupid)) {
+			//	echo $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR." ".$groupid;
+			//}
+    	//} else {
+        //    array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
+    	//}
+    } else if(isset($_POST["archivegroup"])){
+		$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+   	if ($groupid != "") {
+			archiveGroupAndChildren($groupid);
+     	} else {
+            array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
+    	}
+    } /*else if(isset($_POST["suspendgroup"])){
+		$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+    	if ($groupid != "") {
+ 			$group = getGroup($groupid);
+	   		$group->updateStatus($CFG->USER_STATUS_SUSPENDED);
     	} else {
             array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
     	}
-    } else if(isset($_POST["suspenduser"])){
-		$userid = optional_param("userid","",PARAM_ALPHANUMEXT);
-    	if ($userid != "") {
-    		$user = new User($userid);
-	   		$user->updateStatus($CFG->USER_STATUS_SUSPENDED);
+    }*/ 
+	else if(isset($_POST["restoregroup"])){
+		$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+    	if ($groupid != "") {
+			$group = getGroup($groupid);
+	   		$group->updateStatus($CFG->USER_STATUS_ACTIVE);
     	} else {
             array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
     	}
-    } else if(isset($_POST["restoreuser"])){
-		$userid = optional_param("userid","",PARAM_ALPHANUMEXT);
-    	if ($userid != "") {
-    		$user = new User($userid);
-	   		$user->updateStatus($CFG->USER_STATUS_ACTIVE);
+    }
+	else if(isset($_POST["restorearchivedgroup"])){
+		$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+    	if ($groupid != "") {
+			restoreArchivedGroupAndChildren($groupid);
     	} else {
             array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
     	}
     }
 
-	$us = getUsersByStatus($CFG->USER_STATUS_REPORTED, 0,-1,'name','ASC','long', 'Y');
-    $users = $us->users;
+	$allGroups = array();
 
-	$count = 0;
-	if (is_countable($users)) {
-		$count = count($users);
-	}
+	$gs = getGroupsByStatus($CFG->USER_STATUS_REPORTED, 0, -1, 'name', 'ASC','long');
+    $groups = $gs->groups;
+ 
+	$count = (is_countable($groups)) ? count($groups) : 0;
     for ($i=0; $i<$count;$i++) {
-    	$user = $users[$i];
-    	$reporterid = getSpamReporter($user->userid);
-    	if ($reporterid != false) {
+    	$group = $groups[$i];
+		$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ACTIVE);
+		$reporterid = getSpamReporter($group->groupid);
+		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
-    		$user->reporter = $reporter;
+    		$group->reporter = $reporter;
+			$group->istop = true;	// only top if it was the reported item
     	}
+		$allGroups[$group->groupid] = $group;
     }
 
-	$us2 = getUsersByStatus($CFG->USER_STATUS_SUSPENDED, 0,-1,'name','ASC','long', 'Y');
-    $userssuspended = $us2->users;
+	// groups are really user record entries
+	$gs2 = getGroupsByStatus($CFG->USER_STATUS_ARCHIVED, 0, -1, 'name', 'ASC','long');
+    $groupssarchivedinitial = $gs2->groups;
+	$archivedgroups  = [];
 
-	$count2 = 0;
-	if (is_countable($userssuspended)) {
-		$count2 = count($userssuspended);
-	}
+	$count2 = (is_countable($groupssarchivedinitial)) ? count($groupssarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
-    	$user = $userssuspended[$i];
-    	$reporterid = getSpamReporter($user->userid);
+    	$group = $groupssarchivedinitial[$i];
+    	$reporterid = getSpamReporter($group->groupid);
     	if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
-    		$user->reporter = $reporter;
-    	}
+    		$group->reporter = $reporter;
+			$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ARCHIVED);
+			$group->istop = true; // only top if it was the reported item
+			array_push($archivedgroups, $group);
+   		}
+		$allGroups[$group->groupid] = $group;
     }
 ?>
 
 <script type="text/javascript">
+
+	const allgroups = <?php echo json_encode($allGroups); ?>;
+
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->SPAM_GROUP_ADMIN_TITLE; ?>');
+	}
+
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
 		if (window.opener.innerHeight) {
@@ -132,11 +160,11 @@
 		return viewportWidth;
 	}
 
-	function viewSpamUserDetails(userid) {
+	function viewSpamUserDetails(groupid) {
 		var width = getParentWindowWidth()-20;
 		var height = getParentWindowHeight()-20;
 
-		loadDialog('user', URL_ROOT+"user.php?userid="+userid, width, height);
+		loadDialog('user', URL_ROOT+"user.php?groupid="+groupid, width, height);
 	}
 
 	function viewSpamGroupDetails(groupid) {
@@ -165,13 +193,41 @@
 	}
 
 	function checkFormSuspend(name) {
-		var ans = confirm("<?php echo $LNG->SPAM_GROUP_ADMIN_SUSPEND_CHECK_MESSAGE; ?>\n\n"+name+"?\n\n");
+		var ans = confirm("<?php echo $LNG->SPAM_GROUP_ADMIN_ARCHIVE_CHECK_MESSAGE; ?>\n\n"+name+"?\n\n");
 		if (ans){
 			return true;
 		} else {
 			return false;
 		}
 	}
+
+	function viewGroupTree(groupid, containerid, rootname) {
+
+		// close any opened divs
+		const divsArray = document.getElementsByName(rootname);
+		for (let i=0; i<divsArray.length; i++) {
+			if (divsArray[i].id !== containerid) {
+				divsArray[i].style.display = 'none';
+			}
+		}
+
+		var group = allgroups[groupid];
+
+		const containerObj = document.getElementById(containerid);
+		if (containerObj.style.display == 'block') {
+			containerObj.style.display = 'none';
+		} else {
+			containerObj.style.display = 'block';
+		}
+		
+		if (containerObj.innerHTML == "&nbsp;") {
+			containerObj.innerHTML = "";
+
+			if (group && group.children.length > 0) {			
+				displayConnectionNodes(containerObj, group.children, parseInt(0), true, groupid+"tree");
+			}					
+		}
+	}	
 
 	window.onload = init;
 
@@ -191,130 +247,137 @@
 	<div class="row p-4 pt-0">
 		<div class="col">
 
-			<h1 class="mb-3"><?php echo $LNG->SPAM_GROUP_ADMIN_TITLE; ?></h1>
-			
-			<div id="spamdiv">
-				<div class="mb-3">
-					<h3><?php echo $LNG->SPAM_GROUP_ADMIN_SPAM_TITLE; ?></h3>
-					<div class="mb-3">
-						<div id="users" class="forminput">
-							<?php
+	<h2 style="margin-left:10px;"><?php echo $LNG->SPAM_GROUP_ADMIN_SPAM_TITLE; ?></h2>
 
-								$count = 0;
-								if (is_countable($users)) {
-									$count = count($users);
-								}
-								if ($count == 0) {
-									echo "<p>".$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE."</p>";
-								} else {
-									echo "<table class='table'>";
-									echo "<tr>";
-									echo "<th width='50%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='20%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0."</th>";
+    <div class="formrow">
+        <div id="groups" class="forminput">
+        <?php
 
-									echo "</tr>";
-									foreach($users as $user){
-										echo '<tr>';
-										echo '<td style="font-size:11pt">';
-										echo $user->name;
-										echo '</td>';
+			$count = (is_countable($groups)) ? count($groups) : 0;
+        	if ($count == 0) {
+				echo "<p>".$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE."</p>";
+        	} else {
+				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+				echo "<tr>";
+				echo "<th width='50%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='20%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0."</th>";
 
-										echo '<td>';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamGroupDetails(\''.$user->userid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>';
-										echo '</td>';
+				echo "</tr>";
+				foreach($groups as $group){
+					echo '<tr>';
+					echo '<td style="font-size:11pt">';
+					echo $group->name;
+					echo '</td>';
 
-										echo '<td>';
-										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
+					echo '<td>';
+					echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>';
+					//echo '<span class="active" style="font-size:10pt;" onclick="viewGroupTree(\''.$group->groupid.'\', \''.$group->groupid.'treediv1\', \'treediv1\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>';
+					echo '</td>';
 
-										echo '<td>';
-										echo '<form id="fourth-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="suspenduser" name="suspenduser" value="" />';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_SUSPEND_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($user->name).'\')) { $(\'fourth-'.$user->userid.'\').submit(); }" id="suspenduser" name="suspenduser">'.$LNG->SPAM_GROUP_ADMIN_SUSPEND_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
+					echo '<td>';
+					echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">';
+					echo '<input type="hidden" id="groupid" name="groupid" value="'.$group->groupid.'" />';
+					echo '<input type="hidden" id="restoregroup" name="restoregroup" value="" />';
+					echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ $(\'second-'.$group->groupid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</a>';
+					echo '</form>';
+					echo '</td>';
 
-										echo '<td>';
-										if (isset($user->reporter)) {
-											echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
-										} else {
-											echo $LNG->CORE_UNKNOWN_USER_ERROR;
-										}
-										echo '</td>';
+					echo '<td>';
+					echo '<form id="fourth-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($group->name).'\');">';
+					echo '<input type="hidden" id="groupid" name="groupid" value="'.$group->groupid.'" />';
+					echo '<input type="hidden" id="archivegroup" name="archivegroup" value="" />';
+					echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_ARCHIVE_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($group->name).'\')) { $(\'fourth-'.$group->groupid.'\').submit(); }" id="archivegroup" name="archivegroup">'.$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON.'</a>';
+					echo '</form>';
+					echo '</td>';
 
-										echo '</tr>';
-									}
-									echo "</table>";
-								}
-							?>
-						</div>
-					</div>
-				</div>
+					echo '<td>';
+					if (isset($group->reporter)) {
+						echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$group->reporter->userid.'\');">'.$group->reporter->name.'</span>';
+					} else {
+						echo $LNG->CORE_UNKNOWN_USER_ERROR;
+					}
+					echo '</td>';
 
-				<div class="mb-3">
-					<h3><?php echo $LNG->SPAM_GROUP_ADMIN_SUSPENDED_TITLE; ?></h3>
-					<div class="mb-3">
-						<div id="suspendedusers" class="forminput">
-							<?php
+					// add the tree display area row
+					echo '<tr><td colspan="6">';
+					echo '<div id="'.$group->groupid.'treediv1" name="treediv1" style="display:none">&nbsp;</div>';
+					echo '</td></tr>';
+					
+					echo '</tr>';
+				}
+				echo "</table>";
+			}
+        ?>
+        </div>
+   </div>
 
-								$countu = 0;
-								if (is_countable($userssuspended)) {
-									$countu = count($userssuspended);
-								}
-								if ($countu == 0) {
-									echo "<p>".$LNG->SPAM_GROUP_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
-								} else {
-									echo "<table class='table'>";
-									echo "<tr>";
-									echo "<th width='50%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
-									echo "<th width='20%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0."</th>";
+	<h2 style="margin-left:10px;margin-top:20px;"><?php echo $LNG->SPAM_GROUP_ADMIN_ARCHIVED_TITLE; ?></h2>
 
-									echo "</tr>";
-									foreach($userssuspended as $user){
-										echo '<tr>';
+    <div class="formrow">
+        <div id="archivedgroups" class="forminput">
 
-										echo '<td style="font-size:11pt">';
-										echo $user->name;
-										echo '</td>';
+        <?php
 
-										echo '<td>';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamGroupDetails(\''.$user->userid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</a>';
-										echo '</td>';
+			$countu = 0;
+			if (is_countable($archivedgroups)) {
+				$countu = count($archivedgroups);
+			}
+        	if ($countu == 0) {
+				echo "<p>".$LNG->SPAM_GROUP_ADMIN_NONE_ARCHIVED_MESSAGE."</p>";
+        	} else {
+				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+				echo "<tr>";
+				echo "<th width='50%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='10%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2."</th>";
+				echo "<th width='20%'>".$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0."</th>";
 
-										echo '<td>';
-										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
+				echo "</tr>";
+				foreach($archivedgroups as $group){
+					echo '<tr>';
 
-										echo '<td>';
-										echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
-										echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
+					echo '<td style="font-size:11pt">';
+					echo $group->name;
+					echo '</td>';
 
-										echo '<td>';
-										if (isset($user->reporter)) {
-											echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
-										} else {
-											echo $LNG->CORE_UNKNOWN_USER_ERROR;
-										}
-										echo '</td>';
+					echo '<td>';
+					//echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</a>';
+					echo '<span class="active" style="font-size:10pt;" onclick="viewGroupTree(\''.$group->groupid.'\', \''.$group->groupid.'treediv\', \'treediv\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>';
+					echo '</td>';
+
+					echo '<td>';
+					echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">';
+					echo '<input type="hidden" id="groupid" name="groupid" value="'.$group->groupid.'" />';
+					echo '<input type="hidden" id="restorearchivedgroup" name="restorearchivedgroup" value="" />';
+					echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ $(\'second-'.$group->groupid.'\').submit(); }" id="restorearchivedgroup" name="restorearchivedgroup">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</a>';
+					echo '</form>';
+					echo '</td>';
+
+					echo '<td>';
+					echo $LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON;
+					//echo '<form id="third-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($group->name).'\');">';
+					//echo '<input type="hidden" id="groupid" name="groupid" value="'.$group->groupid.'" />';
+					//echo '<input type="hidden" id="deletegroup" name="deletegroup" value="" />';
+					//echo '<span title="'.$LNG->SPAM_GROUP_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($group->name).'\')) { $(\'third-'.$group->groupid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON.'</a>';
+					//echo '</form>';
+					echo '</td>';
+
+					echo '<td>';
+					if (isset($group->reporter)) {
+						echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$group->reporter->userid.'\');">'.$group->reporter->name.'</span>';
+					} else {
+						echo $LNG->CORE_UNKNOWN_USER_ERROR;
+					}
+					echo '</td>';
+
+					// add the tree display area row
+					echo '<tr><td colspan="6">';
+					echo '<div id="'.$group->groupid.'treediv" name="treediv" style="display:none">&nbsp;</div>';
+					echo '</td></tr>';
 
 										echo '</tr>';
 									}

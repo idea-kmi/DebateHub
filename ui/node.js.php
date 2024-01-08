@@ -881,8 +881,10 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	}
 
 	<?php if ($CFG->SPAM_ALERT_ON) { ?>
-	if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
-		toolbarDiv.insert(createSpamButton(node, role));
+	if (mainheading) {
+		if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
+			toolbarDiv.insert(createSpamButton(node, role));
+		}
 	}
 	<?php } ?>
 
@@ -3463,7 +3465,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 
 /**
  * Render the given node.
- * @param node the node object do render
+ * @param node the node object to render
  * @param uniQ is a unique id element prepended to the nodeid to form an overall unique id within the currently visible site elements
  * @param role the role object for this node
  * @param includeUser whether to include the user image and link
@@ -4642,8 +4644,9 @@ function reportNodeSpamAlert(obj, nodetype, node) {
 				obj.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
 				if (obj.alt) {
 					obj.alt = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';
-					obj.src= '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>';
+					obj.src= '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>';
 					obj.style.cursor = 'auto';
+					$(obj).unbind("click");
 					Event.stopObserving(obj, 'click');
 				} else {
 					obj.innerHTML = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';

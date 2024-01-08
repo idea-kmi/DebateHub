@@ -461,17 +461,36 @@ function addConnectionToFDGraphSocial(c, forcedirectedGraph) {
 		var fN = c.from[0].cnode;
 		var tN = c.to[0].cnode;
 
+		if (fN == undefined || tN == undefined) {
+			return false;
+		}
+
+		if (fN.status == STATUS_SUSPENDED || fN.status ==  STATUS_ARCHIVED
+			|| tN.status == STATUS_SUSPENDED || tN.status ==  STATUS_ARCHIVED){
+			return false;
+		}
+
 		var fromuser = null;
 		if (fN.users[0].userid) {
 			fromuser = fN.users[0];
 		} else {
 			fromuser = fN.users[0].user;
 		}
+
 		var touser = null;
 		if (tN.users[0].userid) {
 			touser = tN.users[0];
 		} else {
 			touser = tN.users[0].user;
+		}
+
+		if (fromuser == undefined || touser == undefined) {
+			return false;
+		}
+
+		if (fromuser.status == USER_STATUS_SUSPENDED || fromuser.status ==  USER_STATUS_ARCHIVED
+			|| touser.status == USER_STATUS_SUSPENDED || touser.status ==  USER_STATUS_ARCHIVED){
+			return false
 		}
 
 		if (fromuser.userid == touser.userid) {
@@ -586,6 +605,7 @@ function addConnectionToFDGraphSocial(c, forcedirectedGraph) {
 				adj.setData('label', connections.length);
 			}
 		}
+
 		return true;
 	} else {
 		return false;

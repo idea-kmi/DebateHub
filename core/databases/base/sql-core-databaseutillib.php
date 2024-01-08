@@ -311,7 +311,7 @@ $HUB_SQL->UTILLIB_SEARCH_TAG_LIKE = "u.Name".$HUB_SQL->SEARCH_LIKE_START;
 
 $HUB_SQL->UTILLIB_USER_NODETYPE_CREATION_COUNTS = "SELECT NodeType.Name, count(NodeID) AS num
 								FROM Node LEFT JOIN NodeType on Node.NodeTypeID = NodeType.NodeTypeID
-								WHERE Node.UserID=?
+								WHERE Node.UserID=? AND Node.CurrentStatus NOT IN (4,5)
 								GROUP BY NodeType.Name ORDER BY num DESC";
 
 
@@ -319,7 +319,7 @@ $HUB_SQL->UTILLIB_USER_NODETYPE_CREATION_COUNTS = "SELECT NodeType.Name, count(N
 
 $HUB_SQL->UTILLIB_USERS_FOLLOWED_BY_USER = "SELECT Users.UserID, Users.Name
 								FROM Users LEFT JOIN Following on Users.UserID = Following.ItemID
-								WHERE Following.UserID=? AND Users.IsGroup = 'N'
+								WHERE Following.UserID=? AND Users.IsGroup = 'N' AND Users.CurrentStatus IN (0,1)
 								ORDER BY Users.Name";
 
 
@@ -328,7 +328,7 @@ $HUB_SQL->UTILLIB_USERS_FOLLOWED_BY_USER = "SELECT Users.UserID, Users.Name
 $HUB_SQL->UTILLIB_ITEMS_FOLLOWED_BY_USER = "SELECT NodeType.Name as NodeType, Node.Name as Name, Node.NodeID, Node.UserID
 								FROM Node LEFT JOIN NodeType on Node.NodeTypeID = NodeType.NodeTypeID
 								LEFT JOIN Following on Node.NodeID = Following.ItemID
-								WHERE Following.UserID=?
+								WHERE Following.UserID=? AND Node.CurrentStatus !=5
 								ORDER BY NodeType, Name";
 
 

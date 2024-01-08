@@ -88,6 +88,7 @@ class ConnectionSet {
 
         //create new nodeset and loop to add each node to the set
 		$count = count($resArray);
+
         $this->totalno = $totalconns;
         $this->start = $start;
         $this->count = $count;
@@ -107,12 +108,9 @@ class ConnectionSet {
 				}
 			}
 
-            // Check the status of the connection itself and that of the nodes at each end, matches the requested status.
-            // Reject the connection if the connection status doesn't match or the node at either end don't match the status.
-            // Note: nodes are loaded by connection class load function
-            if ($conn->status == $status && $fromnode->status == $status && $tonode->status == $status) {  
-                $this->add($conn);
-            }
+            // Reported nodes are not the same status as the nodes at the other end of their connections
+            // so can't check status
+            $this->add($conn);
         }
 
         return $this;
@@ -137,13 +135,10 @@ class ConnectionSet {
 				$c = new Connection($array["TripleID"]);
 				$conn = $c->load($style);
 
-                // Check the status of the connection itself and that of the nodes at each end, matches the requested status.
-                // Reject the connection if the connection status doesn't match or the node at either end don't match the status.
-                // Note: nodes are loaded by connection class load function
-                if ($conn->status == $status && $fromnode->status == $status && $tonode->status == $status) {  
-                    $this->add($conn);                    
-				    $checkArray[$array["TripleID"]] = $array["TripleID"];
-                }  
+                // Reported nodes are not the same status as the nodes at the other end of their connections
+                // so can't check status
+                $this->add($conn);                    
+    		    $checkArray[$array["TripleID"]] = $array["TripleID"];
 			}
         }
 

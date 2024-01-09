@@ -190,12 +190,44 @@ $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6 = "SELECT DISTINCT a.NodeID as ItemID,
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
 
 
+/** Get Node Activity Admin **/
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
+    									FROM AuditNode a WHERE a.NodeID=? AND a.ChangeType <> 'delete'";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE = " AND a.ModificationDate >= ?";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART3 = ") UNION (SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
+										a.ChangeType, a.TripleXML as XML
+										FROM AuditTriple a
+										LEFT JOIN Triple t ON t.TripleID = a.TripleID
+										WHERE (a.FromID=? OR a.ToID=?) AND a.ChangeType <> 'edit'";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
+										a.ChangeType as ChangeType, a.VoteType as XML
+										FROM AuditVoting a WHERE a.ItemID=?";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
+										'' as ChangeType, '' as XML
+										FROM Following a WHERE a.ItemID=?";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
+										ViewType as ChangeType, '' as XML
+										FROM AuditNodeView a WHERE a.NodeID=?";
+
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
+
 /** Get Node Activity **/
 
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
 
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
-    									FROM AuditNode a WHERE a.NodeID=? AND a.ChangeType <> 'delete'";
+    									FROM AuditNode a 
+										LEFT JOIN Node n on a.NodeID = n.NodeID
+										WHERE a.NodeID=? AND a.ChangeType = 'add' AND (n.CurrentStatus = 0 OR n.CurrentStatus = 1)";
+
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
 
@@ -203,26 +235,44 @@ $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3 = ") UNION (SELECT a.TripleID as ItemID, a
 										a.ChangeType, a.TripleXML as XML
 										FROM AuditTriple a
 										LEFT JOIN Triple t ON t.TripleID = a.TripleID
-										WHERE (a.FromID=? OR a.ToID=?) AND a.ChangeType <> 'edit'";
-
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
-										a.ChangeType as ChangeType, a.VoteType as XML
-										FROM AuditVoting a WHERE a.ItemID=?";
-
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
-										'' as ChangeType, '' as XML
-										FROM Following a WHERE a.ItemID=?";
-
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
-										ViewType as ChangeType, '' as XML
-										FROM AuditNodeView a WHERE a.NodeID=?";
+										WHERE (a.FromID=? OR a.ToID=?) AND a.ChangeType = 'add' and t.CurrentStatus = 0";
 
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
+
+/** Get User Activity ADMIN **/
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate,
+											a.ChangeType, a.NodeXML as XML FROM AuditNode a WHERE a.UserID=? AND a.ChangeType <> 'delete'";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE = " AND a.ModificationDate >= ?";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART3 = ") UNION (SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type,
+												a.ModificationDate, a.ChangeType, a.TripleXML as XML
+												FROM AuditTriple a
+												LEFT JOIN Triple t ON t.TripleID = a.TripleID
+												WHERE a.UserID=? AND a.ChangeType <> 'edit'";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
+												a.ChangeType as ChangeType, a.VoteType as XML
+												FROM AuditVoting a WHERE a.UserID=?";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type,
+												a.CreationDate as ModificationDate, '' as ChangeType, '' as XML
+												FROM Following a WHERE a.UserID=?";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
+												ViewType as ChangeType, '' as XML
+												FROM AuditNodeView a WHERE a.UserID=?";
+
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
 
 /** Get User Activity **/
 $HUB_SQL->UTILLIB_USER_ACTIVITY_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
 $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate,
-											a.ChangeType, a.NodeXML as XML FROM AuditNode a WHERE a.UserID=? AND a.ChangeType <> 'delete'";
+											a.ChangeType, a.NodeXML as XML FROM AuditNode a 
+											LEFT JOIN Node n on a.NodeID = n.NodeID
+											WHERE a.UserID=? AND a.ChangeType = 'add' AND (n.CurrentStatus = 0 OR n.CurrentStatus = 1)";
 
 $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
 $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
@@ -231,19 +281,7 @@ $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3 = ") UNION (SELECT a.TripleID as ItemID, a
 												a.ModificationDate, a.ChangeType, a.TripleXML as XML
 												FROM AuditTriple a
 												LEFT JOIN Triple t ON t.TripleID = a.TripleID
-												WHERE a.UserID=? AND a.ChangeType <> 'edit'";
-
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
-												a.ChangeType as ChangeType, a.VoteType as XML
-												FROM AuditVoting a WHERE a.UserID=?";
-
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type,
-												a.CreationDate as ModificationDate, '' as ChangeType, '' as XML
-												FROM Following a WHERE a.UserID=?";
-
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
-												ViewType as ChangeType, '' as XML
-												FROM AuditNodeView a WHERE a.UserID=?";
+												WHERE a.UserID=? AND a.ChangeType = 'add' and t.CurrentStatus = 0";
 
 $HUB_SQL->UTILLIB_USER_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
 

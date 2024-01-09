@@ -344,6 +344,20 @@ $HUB_SQL->STATSLIB_GLOBAL_LINKTYPE_USAGE_PART5_GROUPS = " FROM LinkType LEFT JOI
 $HUB_SQL->STATSLIB_GLOBAL_LINKTYPE_USAGE_SELECT = "Select UserID, Name from Users where UserID IN (";
 
 
+/** Get Total Group Count **/
+
+$HUB_SQL->STATSLIB_GLOBAL_REGISTERED_GROUPS_COUNT = "SELECT count(UserID) as num from Users WHERE IsGroup='Y'";
+
+
+/** Get Registered Groups **/
+
+$HUB_SQL->STATSLIB_GLOBAL_REGISTERED_GROUPS = "SELECT u.*, count(ug.UserID) as MembersCount from Users u 
+												LEFT JOIN UserGroup ug ON ug.GroupID = u.UserID 
+												WHERE u.IsGroup='Y' 
+												GROUP BY ug.GroupID";
+
+$HUB_SQL->ORDER_BY_MEMBERS = " order by MembersCount ";
+
 /** Get Total Users Count **/
 
 $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_USERS_COUNT = "SELECT count(UserID) as num from Users WHERE IsGroup='N' AND UserID <> ?";

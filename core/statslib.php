@@ -1715,9 +1715,7 @@
 		global $DB, $CFG,$HUB_SQL;
 
 		$params = array();
-		$params[0] = $CFG->defaultUserID;
-
-		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_USERS_COUNT;
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_GROUPS_COUNT;
 
 		$count = 0;
 		$resArray = $DB->select($sql, $params);
@@ -1739,9 +1737,7 @@
 		global $DB,$CFG,$HUB_SQL;
 
 		$params = array();
-		$params[0] = $CFG->defaultUserID;
-
-		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_USERS;
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_GROUPS;
 
 		if ($sort) {
 			if ($direction) {
@@ -1762,15 +1758,11 @@
 				$sql .= $HUB_SQL->ORDER_BY_NAME.$direction;
 			} else if ($sort == 'date') {
 				$sql .= $HUB_SQL->ORDER_BY_CREATIONDATE.$direction;
-			} else if ($sort == 'login') {
-				$sql .= $HUB_SQL->ORDER_BY_LASTLOGIN.$direction;
-			} else if ($sort == 'email') {
-				$sql .= $HUB_SQL->ORDER_BY_EMAIL.$direction;
-			} else if ($sort == 'web') {
-				$sql .= $HUB_SQL->ORDER_BY_WEBSITE.$direction;
-			} else if ($sort == 'location') {
-				$sql .= $HUB_SQL->ORDER_BY_LOCATION.$direction;
+			} else if ($sort == 'members') {
+				$sql .= $HUB_SQL->ORDER_BY_MEMBERS.$direction;
 			}
+
+				
 		} else {
 			$sql .= ' order by CreationDate DESC';
 		}

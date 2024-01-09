@@ -39,10 +39,7 @@
 	$direction = optional_param("lastdir","DESC",PARAM_ALPHANUM);
 
 	$registeredGroups = getRegisteredGroups($direction, $sort, $oldsort);
-	$countGroups = 0;
-	if (is_countable($registeredGroups)) {
-		$countGroups = count($registeredGroups);
-	}
+	$countGroups = (is_countable($registeredGroups)) ? count($registeredGroups) : 0;
 ?>
 
 <div class="container-fluid">
@@ -79,8 +76,8 @@
 
 					<tr>
 						<td></td>
-						<td valign="bottom" width="25%" class="adminTableHead">
-							<a href="userregistration.php?&sort=name&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
+						<td valign="bottom" width="30%" class="adminTableHead">
+							<a href="groupslist.php?&sort=name&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
 								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_NAME?></b>
 								<?php
 									if ($sort === 'name') {
@@ -90,7 +87,7 @@
 							</a>
 						</td>
 						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=date&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
+							<a href="groupslist.php?&sort=date&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
 								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DATE?></b>
 								<?php
 									if ($sort === 'date') {
@@ -99,8 +96,8 @@
 								?>
 							</a>
 						</td>
-						<td valign="bottom" width="25%" class="adminTableHead">
-							<a href="userregistration.php?&sort=desc&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
+						<td valign="bottom" width="50%" class="adminTableHead">
+							<a href="groupslist.php?&sort=desc&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
 								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DESC?></b>
 								<?php
 									if ($sort === 'desc') {
@@ -109,38 +106,17 @@
 								?>
 							</a>
 						</td>
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=website&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_WEBSITE?></b>
-								<?php
-									if ($sort === 'website') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
 
 						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=location&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_LOCATION?></b>
+							<a href="groupslist.php?&sort=members&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
+								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_MEMBERS?></b>
 								<?php
-									if ($sort === 'location') {
+									if ($sort === 'members') {
 										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
 									}
 								?>
 							</a>
-						</td>
-
-						<td valign="bottom" width="20%" class="adminTableHead">
-							<a href="userregistration.php?&sort=login&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_LAST_LOGIN?></b>
-								<?php
-									if ($sort === 'login') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
+						</td>						
 					</tr>
 
 					<?php
@@ -155,8 +131,7 @@
 								$userid = $array['UserID'];
 								$date = $array['CreationDate'];
 								$desc = $array['Description'];
-								$website = $array['Website'];
-								$lastlogin = $array['LastLogin'];
+								$members = $array['MembersCount'];
 								$photo = '';
 								$thumb = '';
 								if($array['Photo']){
@@ -176,24 +151,12 @@
 									$thumb =  $HUB_FLM->getUploadsWebPath(str_replace('.','_thumb.', stripslashes($CFG->DEFAULT_USER_PHOTO)));
 								}
 
-								$location = "";
-								$country="";
-								if(isset($array['LocationText'])){
-									$location = $array['LocationText'];
-								}
-								if(isset($array['LocationCountry'])){
-									$cs = getCountryList();
-									if (isset($cs[$array['LocationCountry']])) {
-										$country = $cs[$array['LocationCountry']];
-									}
-								}
-
 								echo '<tr>';
 									echo '<td valign="top">';
 										echo '<a title="'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'" href="'.$CFG->homeAddress.'user.php?userid='.$userid.'"><img style="padding:5px;padding-bottom:10px;max-width:150px;max-height:100px;" src="'.$thumb.'" alt="profile picture of '.$name.'" /></a>';
 									echo '</td>';
 									echo '<td valign="top">';
-										echo $name;
+										echo '<a href="../../group.php?groupid='.$array['UserID'].'">'.$name.'</a>';
 									echo '</td>';
 									echo '<td valign="top">';
 										echo strftime( '%d/%m/%Y' ,$date);
@@ -202,26 +165,8 @@
 										echo $desc;
 									echo '</td>';
 									echo '<td valign="top">';
-										if ($website != null && $website != "") {
-											echo '<a href="'.$website.'">Homepage</a>';
-										} else {
-											echo '&nbsp;';
-										}
-									echo '</td>';
-									echo '<td valign="top">';
-										if ($location != "" || $country != "") {
-											echo '<span>'.$location;
-											if ($location != "" && $country !="") {
-												echo ",";
-											}
-											echo $country.'</span>';
-										} else {
-											echo '&nbsp;';
-										}
-									echo '</td>';
-									echo '<td valign="top">';
-										echo strftime( '%d/%m/%Y' ,$lastlogin);
-									echo '</td>';
+										echo $members;
+									echo '</td>';									
 								echo '</tr>';
 							}
 						}

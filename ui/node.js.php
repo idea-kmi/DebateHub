@@ -3552,14 +3552,6 @@ function renderListNode(node, uniQ, role, includeUser){
 	textspan.href = '<?php echo $CFG->homeAddress; ?>explore.php?id='+node.nodeid;
 	textDiv.insert(textspan);
 
-	<?php if ($CFG->SPAM_ALERT_ON) { ?>
-	if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
-		const item = createSpamButton(node, role);
-		item.style.paddingLeft = "10px";
-		textDiv.insert(item);
-	}
-	<?php } ?>
-
 	if(node.description || node.hasdesc){
 		var dStr = '<div class="idea-desc" id="desc'+uniQ+'div"><span>';
 		if (node.description && node.description != "") {

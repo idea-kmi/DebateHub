@@ -154,7 +154,7 @@
 				<div class="col-auto">
 					<img class="image-fluid" alt="" <?php if (isset($imageheight) && $imageheight > 100) { echo 'height="100"'; } ?> src="<?php print $user->photo;?>"/>
 				</div>	
-				<h1 class="col-auto"><?php print $user->name; ?></h1>
+				<h1 class="col-auto pt-3"><?php print $user->name; ?></h1>
 			</div>
 		</div>
 		<div class="col">

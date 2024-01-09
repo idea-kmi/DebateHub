@@ -40,8 +40,13 @@
     $fromtime = optional_param("fromtime","0",PARAM_TEXT);
     $user = getUser($userid);
 
-    $as = getUserActivity($userid, $fromtime, 0, -1);
-    $activities = $as->activities;
+	if ($USER->userid == $userid || $USER->getIsAdmin() == "Y") {					
+		$as = getAdminUserActivity($userid, $fromtime, 0, -1);
+	} else {
+		$as = getUserActivity($userid, $fromtime, 0, -1);
+	}
+
+     $activities = $as->activities;
 
 	$userObj = json_encode($user, JSON_INVALID_UTF8_IGNORE);
 	echo "<script type='text/javascript'>";

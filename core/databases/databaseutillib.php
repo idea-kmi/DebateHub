@@ -2656,8 +2656,10 @@ function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
 
 	if ($USER->getIsAdmin() == "Y") {
 		$params = array();
-		$params[0] = $status;
+		$params[0] = $status;		
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+		$params[1] = 'N';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
 
 		$us = new UserSet();
 	   	return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
@@ -2692,7 +2694,6 @@ function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', 
 		$params = array();
 		$params[0] = $status;
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
-
 		$params[1] = 'Y';
 		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
 

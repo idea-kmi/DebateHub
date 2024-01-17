@@ -52,6 +52,7 @@
 		</div>
 	</body>
 
+
 	<script>
 		// COOKIES
 		document.addEventListener('DOMContentLoaded', function() {

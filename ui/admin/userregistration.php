@@ -45,6 +45,9 @@
 	}
 ?>
 
+<link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/DataTables/datatables.min.css"); ?>" type="text/css" />
+<script src="<?php echo $CFG->homeAddress; ?>ui/lib/DataTables/datatables.js" type="text/javascript"></script>
+
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
 		<div class="col">
@@ -53,184 +56,140 @@
 				<?php echo $LNG->ADMIN_NEWS_USERS; ?>
 				<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$countUsers?></span>
 			</h1>
-			<!-- <div class="d-flex justify-content-center mb-5"><img src="usersgraph.php?time=months" alt="graph of user registration by month" /></div> -->
-			<div class="adminTableDiv">
-				<table class="table table-sm">
-					<?php
-						if ($sort) {
-							if ($direction) {
-								if ($oldsort === $sort) {
-									if ($direction === 'ASC') {
-										$direction = "DESC";
-									} else {
-										$direction = "ASC";
-									}
-								} else {
-									$direction = "ASC";
-								}
-							} else {
-								$direction = "ASC";
+
+			<div class="adminTableDiv">			
+				<table class="table table-sm compact dataTable" id="adminTableDiv">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Name</th>
+							<th style="max-width: 600px;">Description</th>
+							<th>Website</th>
+							<th>Location</th>
+							<th>Creation Date</th>
+							<th>Last Sign in</th>
+							<th class="text-end">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$countUsers = 0;
+							if (is_countable($registeredUsers)) {
+								$countUsers = count($registeredUsers);
 							}
-						} else {
-							$sort='date';
-							$direction='DESC';
-						}
-					?>
-
-					<tr>
-						<td></td>
-						<td valign="bottom" width="25%" class="adminTableHead">
-							<a href="userregistration.php?&sort=name&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_NAME?></b>
-								<?php
-									if ($sort === 'name') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=date&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DATE?></b>
-								<?php
-									if ($sort === 'date') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-						<td valign="bottom" width="25%" class="adminTableHead">
-							<a href="userregistration.php?&sort=desc&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DESC?></b>
-								<?php
-									if ($sort === 'desc') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=website&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_WEBSITE?></b>
-								<?php
-									if ($sort === 'website') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="userregistration.php?&sort=location&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_LOCATION?></b>
-								<?php
-									if ($sort === 'location') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-
-						<td valign="bottom" width="20%" class="adminTableHead">
-							<a href="userregistration.php?&sort=login&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_LAST_LOGIN?></b>
-								<?php
-									if ($sort === 'login') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-					</tr>
-
-					<?php
-						$countUsers = 0;
-						if (is_countable($registeredUsers)) {
-							$countUsers = count($registeredUsers);
-						}
-						if ($countUsers > 0) {
-							for ($i=0; $i<$countUsers; $i++) {
-								$array = $registeredUsers[$i];
-								$name = $array['Name'];
-								$userid = $array['UserID'];
-								$date = $array['CreationDate'];
-								$desc = $array['Description'];
-								$website = $array['Website'];
-								$lastlogin = $array['LastLogin'];
-								$photo = '';
-								$thumb = '';
-								if($array['Photo']){
-									$originalphotopath = $HUB_FLM->createUploadsDirPath($userid."/".stripslashes($array['Photo']));
-									if (file_exists($originalphotopath)) {
-										$photo =  $HUB_FLM->getUploadsWebPath($userid."/".stripslashes($array['Photo']));
-										$thumb =  $HUB_FLM->getUploadsWebPath($userid."/".str_replace('.','_thumb.', stripslashes($array['Photo'])));
-										if (!file_exists($thumb)) {
-											create_image_thumb($array['Photo'], $CFG->IMAGE_THUMB_WIDTH, $userid);
+							if ($countUsers > 0) {
+								for ($i=0; $i < $countUsers; $i++) {
+									$array = $registeredUsers[$i];
+									$name = $array['Name'];
+									$userid = $array['UserID'];
+									$date = $array['CreationDate'];
+									$desc = $array['Description'];
+									$website = $array['Website'];
+									$lastlogin = $array['LastLogin'];
+									$photo = '';
+									$thumb = '';
+									$status = $array['CurrentStatus'];
+									if($array['Photo']){
+										$originalphotopath = $HUB_FLM->createUploadsDirPath($userid."/".stripslashes($array['Photo']));
+										if (file_exists($originalphotopath)) {
+											$photo =  $HUB_FLM->getUploadsWebPath($userid."/".stripslashes($array['Photo']));
+											$thumb =  $HUB_FLM->getUploadsWebPath($userid."/".str_replace('.','_thumb.', stripslashes($array['Photo'])));
+											if (!file_exists($thumb)) {
+												create_image_thumb($array['Photo'], $CFG->IMAGE_THUMB_WIDTH, $userid);
+											}
+										} else {
+											$photo =  $HUB_FLM->getUploadsWebPath($CFG->DEFAULT_USER_PHOTO);
+											$thumb =  $HUB_FLM->getUploadsWebPath(str_replace('.','_thumb.', stripslashes($CFG->DEFAULT_USER_PHOTO)));
 										}
 									} else {
 										$photo =  $HUB_FLM->getUploadsWebPath($CFG->DEFAULT_USER_PHOTO);
 										$thumb =  $HUB_FLM->getUploadsWebPath(str_replace('.','_thumb.', stripslashes($CFG->DEFAULT_USER_PHOTO)));
 									}
-								} else {
-									$photo =  $HUB_FLM->getUploadsWebPath($CFG->DEFAULT_USER_PHOTO);
-									$thumb =  $HUB_FLM->getUploadsWebPath(str_replace('.','_thumb.', stripslashes($CFG->DEFAULT_USER_PHOTO)));
-								}
 
-								$location = "";
-								$country="";
-								if(isset($array['LocationText'])){
-									$location = $array['LocationText'];
-								}
-								if(isset($array['LocationCountry'])){
-									$cs = getCountryList();
-									if (isset($cs[$array['LocationCountry']])) {
-										$country = $cs[$array['LocationCountry']];
+									$location = "";
+									$country="";
+									if(isset($array['LocationText'])){
+										$location = $array['LocationText'];
 									}
+									if(isset($array['LocationCountry'])){
+										$cs = getCountryList();
+										if (isset($cs[$array['LocationCountry']])) {
+											$country = $cs[$array['LocationCountry']];
+										}
+									}
+								?>
+									<tr>
+										<td valign="top">
+											<a title="<?= $LNG->SPAM_USER_ADMIN_VIEW_BUTTON ?>" href="<?= $CFG->homeAddress ?>user.php?userid=<?= $userid ?>">
+												<img style="padding:5px;padding-bottom:10px;max-width:150px;max-height:100px;" src="<?= $thumb ?>" alt="profile picture of <?= $name ?>" />
+											</a>
+										</td>
+										<td valign="top">
+											<a href="<?= $CFG->homeAddress ?>user.php?userid=<?= $userid ?>" target="_blank"><?= $name ?></a>
+										</td>
+										<td valign="top">
+											<?= $desc ?>
+										</td>
+										<td valign="top">
+											<?php if ($website != null && $website != "") { ?>
+												<a href="<?= $website ?>">Homepage</a>
+											<?php } ?>
+										</td>
+										<td valign="top">
+											<?php if ($location != "" || $country != "") {
+												echo '<span>' . implode(', ', array_filter([$location, $country])) . '</span>';
+											} ?>
+										</td>
+										<?php $prettydate = date( 'd/m/Y', $date); ?>
+										<td class="text-end" valign="top" data-search="<?= $prettydate ?>" data-order="<?= $date ?>">
+											<?= $prettydate ?>
+										</td>
+										<?php $prettydate2 = date( 'd/m/Y', $lastlogin); ?>
+										<td class="text-end" valign="top" data-search="<?= $prettydate2 ?>" data-order="<?= $lastlogin ?>">
+											<?= $prettydate2 ?>
+										</td>
+										<td class="text-center" valign="top">
+											<?php if ($status == $CFG->USER_STATUS_REPORTED) { ?>
+												<div class="d-block">
+													<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_USER_REPORTED ?>" alt="<?= $LNG->SPAM_USER_REPORTED_ALT ?>"/>
+												</div>
+											<?php } else if ($status == $CFG->USER_STATUS_ACTIVE)  { ?>
+												<div class="d-block">
+													<img class="active" id="<?= $userid ?>" data-label="<?= $name ?>" src="<?= $HUB_FLM->getImagePath('flag.png') ?>" onclick="reportUserSpamAlert(this, '<?= $userid ?>')" title="<?= $LNG->SPAM_USER_REPORT ?>" alt="<?= $LNG->SPAM_USER_REPORT_ALT ?>"/>
+												</div>
+											<?php } else { ?>
+												<div class="d-block">
+													<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_USER_LOGIN_REPORT ?>" alt="<?= $LNG->SPAM_USER_LOGIN_REPORT_ALT ?>"/>
+												</div>
+											<?php } ?>																		
+										</td>
+									</tr>									
+								<?php
 								}
-
-								echo '<tr>';
-									echo '<td valign="top">';
-										echo '<a title="'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'" href="'.$CFG->homeAddress.'user.php?userid='.$userid.'"><img style="padding:5px;padding-bottom:10px;max-width:150px;max-height:100px;" src="'.$thumb.'" alt="profile picture of '.$name.'" /></a>';
-									echo '</td>';
-									echo '<td valign="top">';
-										echo $name;
-									echo '</td>';
-									echo '<td valign="top">';
-										echo strftime( '%d/%m/%Y' ,$date);
-									echo '</td>';
-									echo '<td valign="top">';
-										echo $desc;
-									echo '</td>';
-									echo '<td valign="top">';
-										if ($website != null && $website != "") {
-											echo '<a href="'.$website.'">Homepage</a>';
-										} else {
-											echo '&nbsp;';
-										}
-									echo '</td>';
-									echo '<td valign="top">';
-										if ($location != "" || $country != "") {
-											echo '<span>'.$location;
-											if ($location != "" && $country !="") {
-												echo ",";
-											}
-											echo $country.'</span>';
-										} else {
-											echo '&nbsp;';
-										}
-									echo '</td>';
-									echo '<td valign="top">';
-										echo strftime( '%d/%m/%Y' ,$lastlogin);
-									echo '</td>';
-								echo '</tr>';
 							}
-						}
-					?>
+						?>
+					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	jQuery.noConflict();
+	jQuery(document).ready(function($) {
+		$('#adminTableDiv').DataTable({
+			"autoWidth": true,
+			"responsive": true,
+			"pageLength": 25,
+        	"lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+			"columnDefs": [
+				{ "orderable": false, "targets": 0 }
+			],
+			"order": [[5, "desc"]]
+		});
+	});
+</script>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));

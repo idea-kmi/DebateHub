@@ -5345,17 +5345,11 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	var idDiv = new Element("div", {'class':'idea-detail'});
 
 	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
-	/*
-	if (node.istop) {
-		if (DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] == true) {
-			expandDiv.style.display = 'block';
-		} else {
-			expandDiv.style.display = 'none';
-		}
-	} else {
-	*/
+	if (node.children && node.children.length > 0) {
 		expandDiv.style.display = 'block';
-	//}
+	} else {
+		expandDiv.style.display = 'none';
+	}
 	var hint = alttext+": "+node.name;
 	hint += " <?php echo $LNG->NODE_GOTO_PARENT_HINT; ?>"
 
@@ -5365,20 +5359,18 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
    	 **/
 	var expandTable = new Element( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
 	expandTable.height="100%";
-	//expandTable.border="1";
 	var expandrow = expandTable.insertRow(-1);
 	expandrow.style.height="100%";
 	if (node.istop) {
-		expandTable.style.marginLeft = "5px";
+		expandTable.style.marginLeft = "9px";
 	} else {
-		expandTable.style.marginLeft = "20px";
+		expandTable.style.marginLeft = "26px";
 	}
 
 	var lineCell = expandrow.insertCell(-1);
 	lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
 	lineCell.width="5px;";
 	lineCell.style.marginLeft="3px";
-
 	lineCell.title=hint;
 	lineCell.className="grayline";
 	Event.observe(lineCell,'click',function (){

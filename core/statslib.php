@@ -1066,7 +1066,7 @@
 	 * Return the total count of all users (not groups) excluding the default user.
 	 */
 	function getTotalUsersCount() {
-		global $DB, $CFG,$HUB_SQL;
+		global $DB, $CFG, $HUB_SQL;
 
 		$params = array();
 		$params[0] = $CFG->defaultUserID;
@@ -1080,7 +1080,7 @@
 			if (is_countable($resArray)) {
 				$icount = count($resArray);
 			}
-			for ($i=0; $i<$icount; $i++) {
+			for ($i=0; $i < $icount; $i++) {
 				$array = $resArray[$i];
 				$count = $array['num'];
 			}
@@ -1161,7 +1161,7 @@
 	 * return an inter count of the user registrations between the given times/dates
 	 */
 	function getRegisteredUserCount($mintime, $maxtime) {
-		global $DB, $CFG,$HUB_SQL;
+		global $DB, $CFG, $HUB_SQL;
 
 		$params = array();
 		$params[0] = $CFG->defaultUserID;
@@ -1177,7 +1177,7 @@
 			if (is_countable($resArray)) {
 				$icount = count($resArray);
 			}
-			for ($i=0; $i<$icount; $i++) {
+			for ($i=0; $i < $icount; $i++) {
 				$array = $resArray[$i];
 				$num = $array['num'];
 			}
@@ -1193,7 +1193,7 @@
 	 * return an inter count of the node creations between the given times/dates for the given node type name
 	 */
 	function getNodeCreationCount($nodetypenames,$mintime, $maxtime="") {
-		global $DB, $CFG,$HUB_SQL;
+		global $DB, $CFG, $HUB_SQL;
 
 		$params = array();
 
@@ -1712,7 +1712,7 @@
 	 * Return the total count of all groups (not users) excluding the default user.
 	 */
 	function getTotalGroupsCount() {
-		global $DB, $CFG,$HUB_SQL;
+		global $DB, $CFG, $HUB_SQL;
 
 		$params = array();
 		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTERED_GROUPS_COUNT;
@@ -1724,7 +1724,7 @@
 			if (is_countable($resArray)) {
 				$icount = count($resArray);
 			}
-			for ($i=0; $i<$icount; $i++) {
+			for ($i=0; $i < $icount; $i++) {
 				$array = $resArray[$i];
 				$count = $array['num'];
 			}
@@ -1799,7 +1799,7 @@
 	 * return an inter count of the user registrations between the given times/dates
 	 */
 	function getRegisteredGroupCount($mintime, $maxtime) {
-		global $DB, $CFG,$HUB_SQL;
+		global $DB, $CFG, $HUB_SQL;
 
 		$params = array();
 		$params[0] = $CFG->defaultUserID;
@@ -1815,11 +1815,79 @@
 			if (is_countable($resArray)) {
 				$icount = count($resArray);
 			}
-			for ($i=0; $i<$icount; $i++) {
+			for ($i=0; $i < $icount; $i++) {
 				$array = $resArray[$i];
 				$num = $array['num'];
 			}
 		}
 		return $num;
 	}
+
+	/**
+	 * Show count of pending registration requests that need actioning
+	 */
+	function getRegistrationRequestCount() {
+		global $DB, $CFG, $HUB_SQL;
+	
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REGISTRATION_REQUEST_COUNT;
+		$params = array(); // An array of parameters, empty if no parameters are needed
+		$resArray = $DB->select($sql, $params);
+	
+		if ($resArray !== false && is_array($resArray) && count($resArray) > 0) {
+			return $resArray[0]['num'];
+		}
+		return 0;
+	}
+
+	/**
+	 * Show count of pending reported items
+	 */
+	function getReportedItemsCount() {
+		global $DB, $CFG, $HUB_SQL;
+	
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REPORTED_ITEMS_COUNT;
+		$params = array(); // An array of parameters, empty if no parameters are needed
+		$resArray = $DB->select($sql, $params);
+	
+		if ($resArray !== false && is_array($resArray) && count($resArray) > 0) {
+			return $resArray[0]['num'];
+		}
+		return 0;
+	}
+
+	/**
+	 * Show count of pending reported groups
+	 */
+	function getReportedGroupsCount() {
+		global $DB, $CFG, $HUB_SQL;
+	
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REPORTED_GROUPS_COUNT;
+		$params = array(); // An array of parameters, empty if no parameters are needed
+		$resArray = $DB->select($sql, $params);
+	
+		if ($resArray !== false && is_array($resArray) && count($resArray) > 0) {
+			return $resArray[0]['num'];
+		}
+		return 0;
+	}
+
+	/**
+	 * Show count of pending reported users
+	 */
+	function getReportedUsersCount() {
+		global $DB, $CFG, $HUB_SQL;
+	
+		$sql = $HUB_SQL->STATSLIB_GLOBAL_REPORTED_USERS_COUNT;
+		$params = array(); // An array of parameters, empty if no parameters are needed
+		$resArray = $DB->select($sql, $params);
+	
+		if ($resArray !== false && is_array($resArray) && count($resArray) > 0) {
+			return $resArray[0]['num'];
+		}
+		return 0;
+	}
+
 ?>
+
+
+

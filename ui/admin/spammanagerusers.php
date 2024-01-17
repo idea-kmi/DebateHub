@@ -1,27 +1,27 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2013-2023 The Open University UK                              *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2013-2023 The Open University UK                              *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
     include_once("../../config.php");
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
@@ -133,8 +133,8 @@
 	}
 
 	function viewSpamUserDetails(userid) {
-		var width = getParentWindowWidth()-20;
-		var height = getParentWindowHeight()-20;
+		var width = window.screen.width - 400;
+		var height = window.screen.height - 400;
 
 		loadDialog('user', URL_ROOT+"user.php?userid="+userid, width, height);
 	}
@@ -192,7 +192,6 @@
 				<div class="mb-3">
 					<div id="users" class="forminput">
 						<?php
-
 							$count = 0;
 							if (is_countable($users)) {
 								$count = count($users);
@@ -200,49 +199,44 @@
 							if ($count == 0) {
 								echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_MESSAGE."</p>";
 							} else {
-								echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+								echo "<table class='table'>";
 								echo "<tr>";
 								echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
 								echo "<th width='20%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING0."</th>";
-
 								echo "</tr>";
+
 								foreach($users as $user){
 									echo '<tr>';
-									echo '<td style="font-size:11pt">';
-									echo $user->name;
-									echo '</td>';
-
-									echo '<td>';
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</span>';
-									echo '</td>';
-
-									echo '<td>';
-									echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
-									echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-									echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
-									echo '</form>';
-									echo '</td>';
-
-									echo '<td>';
-									echo '<form id="fourth-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($user->name).'\');">';
-									echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-									echo '<input type="hidden" id="suspenduser" name="suspenduser" value="" />';
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_SUSPEND_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($user->name).'\')) { $(\'fourth-'.$user->userid.'\').submit(); }" id="suspenduser" name="suspenduser">'.$LNG->SPAM_USER_ADMIN_SUSPEND_BUTTON.'</a>';
-									echo '</form>';
-									echo '</td>';
-
-									echo '<td>';
-									if (isset($user->reporter)) {
-										echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
-									} else {
-										echo $LNG->CORE_UNKNOWN_USER_ERROR;
-									}
-									echo '</td>';
-
+										echo '<td>';
+										echo $user->name;
+										echo '</td>';
+										echo '<td>';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</span>';
+										echo '</td>';
+										echo '<td>';
+										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
+										echo '<td>';
+										echo '<form id="fourth-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="suspenduser" name="suspenduser" value="" />';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_SUSPEND_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($user->name).'\')) { $(\'fourth-'.$user->userid.'\').submit(); }" id="suspenduser" name="suspenduser">'.$LNG->SPAM_USER_ADMIN_SUSPEND_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
+										echo '<td>';
+										if (isset($user->reporter)) {
+											echo '<a href="'. $CFG->homeAddress .'user.php?userid='. $user->reporter->userid .'" class="active" target="_blank">'.$user->reporter->name.'</a>';
+										} else {
+											echo $LNG->CORE_UNKNOWN_USER_ERROR;
+										}
+										echo '</td>';
 									echo '</tr>';
 								}
 								echo "</table>";
@@ -269,46 +263,40 @@
 								echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
-								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
+								echo "<th width='10%' class='d-none'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
 								echo "<th width='20%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING0."</th>";
-
 								echo "</tr>";
+
 								foreach($userssuspended as $user){
 									echo '<tr>';
-
-									echo '<td style="font-size:11pt">';
-									echo $user->name;
-									echo '</td>';
-
-									echo '<td>';
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</a>';
-									echo '</td>';
-
-									echo '<td>';
-									echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
-									echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-									echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-									echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
-									echo '</form>';
-									echo '</td>';
-
-					echo '<td>';
-					echo $LNG->SPAM_USER_ADMIN_DELETE_BUTTON;
-					//echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
-					//echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-					//echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
-					//echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
-					//echo '</form>';
-					echo '</td>';
-
-									echo '<td>';
-									if (isset($user->reporter)) {
-										echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" style="font-size:10pt;" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
-									} else {
-										echo $LNG->CORE_UNKNOWN_USER_ERROR;
-									}
-									echo '</td>';
-
+										echo '<td>';
+										echo $user->name;
+										echo '</td>';
+										echo '<td>';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" onclick="viewSpamUserDetails(\''.$user->userid.'\');">'.$LNG->SPAM_USER_ADMIN_VIEW_BUTTON.'</a>';
+										echo '</td>';
+										echo '<td>';
+										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
+										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
+										echo '</form>';
+										echo '</td>';
+										echo '<td class="d-none">';
+										echo $LNG->SPAM_USER_ADMIN_DELETE_BUTTON;
+										//echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
+										//echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+										//echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
+										//echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
+										//echo '</form>';
+										echo '</td>';
+										echo '<td>';
+										if (isset($user->reporter)) {
+											echo '<span title="'.$LNG->SPAM_USER_ADMIN_VIEW_HINT.'" class="active" onclick="viewSpamUserDetails(\''.$user->reporter->userid.'\');">'.$user->reporter->name.'</span>';
+										} else {
+											echo $LNG->CORE_UNKNOWN_USER_ERROR;
+										}
+										echo '</td>';
 									echo '</tr>';
 								}
 								echo "</table>";

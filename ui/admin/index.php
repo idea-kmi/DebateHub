@@ -113,10 +113,10 @@
 	$next[1] = $icount;
 	$next[2] = $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png');
 	array_push($categoryArray, $next);
-	$grandtotal1 += $icount;
+	$grandtotal1 += $icount;	
 ?>
 
-<div class="container-fluid">
+<div class="container-fluid admin-index">
 	<div class="row p-4 pt-0">
 		<div class="col">
 
@@ -130,15 +130,17 @@
 						<div class="col-xl-3 col-md-6 mb-4">
 							<div class="card border-0 border-start border-primary shadow h-100 py-2">
 								<div class="card-body">
-									<div class="row no-gutters align-items-center">
-										<div class="col mr-2">
-											<div class="text-xs fw-bold text-primary text-uppercase mb-1"><?= $LNG->USERS_NAME ?></div>
-											<div class="h5 mb-0 fw-bold text-gray-800"><?= $grandtotal ?></div>
+									<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs fw-bold text-primary text-uppercase mb-1"><?= $LNG->USERS_NAME ?></div>
+												<div class="h5 mb-0 fw-bold text-gray-800"><?= $grandtotal ?></div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-user fa-2x text-gray-300"></i>
+											</div>
 										</div>
-										<div class="col-auto">
-											<i class="fas fa-user fa-2x text-gray-300"></i>
-										</div>
-									</div>
+									</a>
 								</div>
 							</div>
 						</div>
@@ -147,15 +149,17 @@
 						<div class="col-xl-3 col-md-6 mb-4">
 							<div class="card border-0 border-start border-info shadow h-100 py-2">
 								<div class="card-body">
-									<div class="row no-gutters align-items-center">
-										<div class="col mr-2">
-											<div class="text-xs fw-bold text-info text-uppercase mb-1"><?= $LNG->GROUPS_NAME ?></div>
-											<div class="h5 mb-0 fw-bold text-gray-800"><?= $countgroups ?></div>
+									<a href="<?= $CFG->homeAddress ?>ui/admin/groupslist.php">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs fw-bold text-info text-uppercase mb-1"><?= $LNG->GROUPS_NAME ?></div>
+												<div class="h5 mb-0 fw-bold text-gray-800"><?= $countgroups ?></div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-users fa-2x text-gray-300"></i>
+											</div>
 										</div>
-										<div class="col-auto">
-											<i class="fas fa-users fa-2x text-gray-300"></i>
-										</div>
-									</div>
+									</a>
 								</div>
 							</div>
 						</div>

@@ -56,7 +56,8 @@
 	$grandtotal = 0;
 	$tabledata = "";
 
-	for ($i=0; $i<$count; $i++) {
+
+	for ($i = 0; $i < $count; $i++) {
 		if ($i < 1) {
 			$mintime= $startdate;
 		} else {
@@ -70,11 +71,12 @@
 		$tabledata .= '<td align="right" style="font-weight:bold;">'.$monthlytotal.'</td>';
 		$tabledata .= '</tr>';
 	}
+
 ?>
 
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
-		<div class="col">
+		<div class="col-12">
 
 			<?php
 				if (file_exists("menu.php") ) {
@@ -85,7 +87,8 @@
 			<div class="my-3"><p><?= $LNG->ADMIN_STATS_REGISTER_TOTAL_LABEL ?> = <?= $grandtotal ?></p><div>
 
 			<div class="text-center"><img src="usersGraph.php?time=months" alt="user registration graph" /></div>
-
+		</div>
+		<div class="col-4 m-auto">
 			<!-- MONTHLY TOTALS -->
 			<?php
 				echo '<div class="mb-5">';

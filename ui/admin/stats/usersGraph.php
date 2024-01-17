@@ -23,7 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 
-require_once('graphlib.php');
+require_once('../../lib/graphlib.php');
 include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
 
@@ -205,6 +205,7 @@ for ($i=0; $i<$count; $i++) {
 	}
 
 	$num = getRegisteredUserCount($mintime, $maxtime);
+
 	$graph->y_data['bar1'][$i] = $num;
 
 	if ($time === 'weeks') {

@@ -24,12 +24,6 @@
 	 ********************************************************************************/
 	/** Author: Michelle Bachler, KMi, The Open University **/
 
-	//$_SESSION['embedded'] = false;
-	//if (isset($_SESSION['embedded']) && $_SESSION['embedded']) {
-	//    include_once($HUB_FLM->getCodeDirPath("ui/headerembed.php"));
-	//    return;
-	//}
-
 	if ($CFG->privateSite) {
 		checklogin();
 	}
@@ -45,6 +39,15 @@
 	global $HUB_FLM;
 	
 	include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
+	
+	$page = optional_param("page","home",PARAM_ALPHANUM);
+	$itemid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
+	if ($itemid == "") {
+		$itemid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+		if ($itemid == "") {
+			$itemid = 'system';
+		}
+	}
 ?>
 
 <!DOCTYPE html>
@@ -69,9 +72,7 @@
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
-		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("vis.css"); ?>" type="text/css" media="screen" />
-		<link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/jit-2.0.2/Jit/css/base.css"); ?>" type="text/css" />
-		<link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/jit-2.0.2/Jit/css/ForceDirected.css"); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("vis.css"); ?>" type="text/css" media="screen" />	
 
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/popuputil.js.php'); ?>" type="text/javascript"></script>
@@ -82,17 +83,14 @@
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/datetimepicker_css.js" type="text/javascript"></script>
-		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/jit-2.0.2/Jit/jit.js" type="text/javascript"></script>
-
-
-		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/lib/bootstrap/bootstrap.bundle.min.js'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/bootstrap/bootstrap.bundle.min.js" type="text/javascript"></script>
 
 		<?php
 			$custom = $HUB_FLM->getCodeDirPath("ui/dialogheaderCustom.php");
 			if (file_exists($custom)) {
 				include_once($custom);
 			}
-
+			
 			global $HEADER,$BODY_ATT, $CFG;
 			if(is_array($HEADER)){
 				foreach($HEADER as $header){
@@ -132,6 +130,14 @@
 			}
 
 			$pg = $_SERVER['PHP_SELF'];
+			
+		?>
+		<?php 
+			/* Counts */
+			$registrationRequests = getRegistrationRequestCount();
+			$reportedItemsCount = getReportedItemsCount();
+			$reportedGroupsCount = getReportedGroupsCount();
+			$reportedUsersCount = getReportedUsersCount();
 		?>
 	</head>
 	<body <?php echo $BODY_ATT; ?> id="cohere-body">
@@ -220,10 +226,10 @@
 										<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin <?=($pg=="/ui/admin/stats/" ? 'active' : '')?> ">Analytics</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin <?=($pg=="/ui/admin/userregistration.php" ? 'active' : '')?> ">Users</a>
 										<a href="<?= $CFG->homeAddress ?>ui/admin/groupslist.php" class="btn btn-admin <?=($pg=="/ui/admin/groupslist.php" ? 'active' : '')?> ">Groups</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> ">Registration requests</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> ">Reported items</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> ">Reported groups</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagerusers.php" ? 'active' : '')?> ">Reported users</a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> ">Registration requests <?=($registrationRequests > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $registrationRequests .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> ">Reported items <?=($reportedItemsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedItemsCount .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> ">Reported groups <?=($reportedGroupsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedGroupsCount .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagerusers.php" ? 'active' : '')?> ">Reported users <?=($reportedUsersCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedUsersCount .'</span>' : '')?></a>
 										<?php 
 											if (isset($CFG->adminUserID)) {
 												$admin = new User($CFG->adminUserID);
@@ -232,7 +238,6 @@
 													<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/newsmanager.php" ? 'active' : '')?> ">Manage news</a>
 											<?php }
 										} ?>
-
 									</div>
 								</div>
 							</div>

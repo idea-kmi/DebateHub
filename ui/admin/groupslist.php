@@ -34,6 +34,9 @@
 		die;
 	}
 
+    //array_push($HEADER,'<link rel="stylesheet" href="'.$HUB_FLM->getCodeWebPath("ui/lib/DataTables/datatables.min.css").'">type="text/css" />');
+    //array_push($HEADER,'<script src="'.$HUB_FLM->getCodeWebPath('ui/lib/DataTables/datatables.js').'" type="text/javascript"></script>');
+
 	$sort = optional_param("sort","date",PARAM_ALPHANUM);
 	$oldsort = optional_param("lastsort","",PARAM_ALPHANUM);
 	$direction = optional_param("lastdir","DESC",PARAM_ALPHANUM);
@@ -41,6 +44,9 @@
 	$registeredGroups = getRegisteredGroups($direction, $sort, $oldsort);
 	$countGroups = (is_countable($registeredGroups)) ? count($registeredGroups) : 0;
 ?>
+
+<link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/DataTables/datatables.min.css"); ?>" type="text/css" />
+<script src="<?php echo $CFG->homeAddress; ?>ui/lib/DataTables/datatables.js" type="text/javascript"></script>
 
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
@@ -52,73 +58,19 @@
 			</h1>
 			<!-- <div class="d-flex justify-content-center mb-5"><img src="usersgraph.php?time=months" alt="graph of user registration by month" /></div> -->
 			<div class="adminTableDiv">
-				<table class="table table-sm">
-					<?php
-						if ($sort) {
-							if ($direction) {
-								if ($oldsort === $sort) {
-									if ($direction === 'ASC') {
-										$direction = "DESC";
-									} else {
-										$direction = "ASC";
-									}
-								} else {
-									$direction = "ASC";
-								}
-							} else {
-								$direction = "ASC";
-							}
-						} else {
-							$sort='date';
-							$direction='DESC';
-						}
-					?>
+				<table class="table table-sm compact" id="adminGroupsTableDiv">
+					<thead>
+						<tr>
+							<th width="10%"></th>
+							<th width="20%">Name</th>
+							<th width="40%" style="max-width: 600px;">Description</th>
+							<th width="10%">Members</th>
+							<th width="10%">Date</th>
+							<th width="10%">Action</th>
+						</tr>
+					</thead>
 
-					<tr>
-						<td></td>
-						<td valign="bottom" width="30%" class="adminTableHead">
-							<a href="groupslist.php?&sort=name&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_NAME?></b>
-								<?php
-									if ($sort === 'name') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="groupslist.php?&sort=date&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DATE?></b>
-								<?php
-									if ($sort === 'date') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-						<td valign="bottom" width="50%" class="adminTableHead">
-							<a href="groupslist.php?&sort=desc&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_DESC?></b>
-								<?php
-									if ($sort === 'desc') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>
-
-						<td valign="bottom" width="10%" class="adminTableHead">
-							<a href="groupslist.php?&sort=members&lastsort=<?=$sort?>&lastdir=<?=$direction?>">
-								<b><?=$LNG->STATS_GLOBAL_REGISTER_HEADER_MEMBERS?></b>
-								<?php
-									if ($sort === 'members') {
-										echo '<img src="../../images/' . ($direction === 'ASC' ? 'up' : 'down') . 'arrow.gif" width="16" height="8" alt="' . strtolower($direction) . '" />';
-									}
-								?>
-							</a>
-						</td>						
-					</tr>
-
+					<tbody>
 					<?php
 						$countGroups = 0;
 						if (is_countable($registeredGroups)) {
@@ -159,23 +111,61 @@
 										echo '<a href="../../group.php?groupid='.$array['UserID'].'">'.$name.'</a>';
 									echo '</td>';
 									echo '<td valign="top">';
-										echo strftime( '%d/%m/%Y' ,$date);
-									echo '</td>';
-									echo '<td valign="top">';
 										echo $desc;
 									echo '</td>';
 									echo '<td valign="top">';
 										echo $members;
-									echo '</td>';									
-								echo '</tr>';
+									echo '</td>';			
+									
+									$prettydate = strftime( '%d/%m/%Y', $date);
+									echo '<td valign="top" data-search="'.$prettydate.'" data-order="'.$date.'">';
+										echo $prettydate;
+									echo '</td>';
+									?>
+
+									<td valign="top">
+									<?php if ($status == $CFG->USER_STATUS_REPORTED) { ?>
+										<div class="d-block">
+											<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_REPORTED ?>" alt="<?= $LNG->SPAM_GROUP_REPORTED_ALT ?>"/>
+										</div>
+									<?php } else if ($status == $CFG->USER_STATUS_ACTIVE)  { ?>
+										<div class="d-block">
+											<img id="<?= $userid ?>" data-label="<?= $name ?>" class="active" src="<?= $HUB_FLM->getImagePath('flag.png') ?>" onclick="reportGroupSpamAlert(this)" title="<?= $LNG->SPAM_GROUP_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_REPORT_ALT ?>"/>
+										</div>
+									<?php } else { ?>
+										<div class="d-block">
+											<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_LOGIN_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_LOGIN_REPORT_ALT ?>"/>
+										</div>
+									<?php } ?>																		
+								</td>
+								
+								</tr>
+								<?php								
 							}
 						}
 					?>
+					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	jQuery.noConflict();
+	jQuery(document).ready(function($) {
+		$('#adminGroupsTableDiv').DataTable({
+			"autoWidth": true,
+			"responsive": true,
+			"pageLength": 25,
+        	"lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+			"columnDefs": [
+				{ "orderable": false, "targets": 0 }
+			],
+			"order": [[4, "desc"]]
+		});
+	});
+</script>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));

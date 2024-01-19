@@ -56,11 +56,11 @@
 				<?php echo $LNG->ADMIN_NEWS_GROUPS; ?>
 				<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?= $countGroups ?></span>
 			</h1>
-			<!-- <div class="d-flex justify-content-center mb-5"><img src="usersgraph.php?time=months" alt="graph of user registration by month" /></div> -->
-			<div class="adminTableDiv">
-				<table class="table table-sm compact" id="adminGroupsTableDiv">
-					<thead>
-						<tr>
+			
+			<div class="adminTableDiv">	
+				<table class="table table-sm table-striped table-hover compact dataTable" id="adminGroupsTableDiv">
+					<thead class="table-light">
+						<tr class="align-middle">
 							<th width="10%"></th>
 							<th width="20%">Name</th>
 							<th width="40%" style="max-width: 600px;">Description</th>

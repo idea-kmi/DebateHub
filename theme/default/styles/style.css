@@ -234,7 +234,6 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 /****************************************/
 
 .page { margin-left:20px; margin-right:20px; }
-.paraindent1 {  }
 .paraindent2 { margin-left: 48.0pt; text-indent: -18.0pt; }
 
 /*******************/
@@ -353,7 +352,7 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 .nodetablecelltop { display: table-cell; vertical-align: top; }
 
 /** was messing up the 'Manage Discussion Group' link - squashing it up **/
-.nodetableGroup .nodetablecellbottom { display: block; vertical-align: bottom; }
+.nodetableGroup .nodetablecellbottom { display: block; }
 
 .grouptablecellstats { width:80px;  height:100%; padding:5px; }
 .grouptablemaindivborder { clear:both; float:left;  width:100%; border:1px solid #C8C8C8; }
@@ -389,10 +388,6 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 .debates.card-footer .nodetable { padding: 0 4px; }
 .debates strong { display: inline-block; padding-right: 5px; font-size: 0.9em; }
 .debates span { font-size: 0.9em; }
-
-/* .issueopen { float: left; height:100%; overflow:hidden; opacity: 0.85; font-family: Arial; color:white; background: linear-gradient(#5BB75B, #449B44) repeat scroll 0 0 rgba(0, 0, 0, 0); background: -webkit-linear-gradient(#5BB75B, #449B44) repeat scroll 0 0 rgba(0, 0, 0, 0); border-color: #2C5E2C; border-image: none; border-radius: 4px; border-style: solid; border-width: 1px; box-shadow: 0 1px 0 #90CE90 inset; }
-.issueclosed { float: left; height:100%; overflow:hidden; opacity: 0.85; font-family: Arial; color:white; background: linear-gradient(#DA4F49, #C72F29) repeat scroll 0 0 rgba(0, 0, 0, 0); background: -webkit-linear-gradient(#DA4F49, #C72F29) repeat scroll 0 0 rgba(0, 0, 0, 0); border-color: #B22A24; border-image: none; border-radius: 4px; border-style: solid; border-width: 1px; box-shadow: 0 1px 0 #E78C89 inset; }
-.issuepending { float: left; height:100%; overflow:hidden; opacity: 0.85; font-family: Arial; color:white; background: linear-gradient(#979905, #96980A) repeat scroll 0 0 rgba(0, 0, 0, 0); background: -webkit-linear-gradient(#979905, #96980A) repeat scroll 0 0 rgba(0, 0, 0, 0); border-color: #808000; border-image: none; border-radius: 4px; border-style: solid; border-width: 1px; box-shadow: 0 1px 0 #D6D828 inset; } */
 
 [draggable] { -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; user-select: none; }
 [draggable] * { -moz-user-drag: none; -khtml-user-drag: none; -webkit-user-drag: none; }

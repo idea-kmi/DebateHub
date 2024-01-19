@@ -273,17 +273,16 @@ function draw_set($order, $set, $offset) {
 
     //print "$thisX, $thisY <br />";
 
-    if ($this->offset_relation != null) {
-      if (($bar!='none') && (string)$thisY != 'none') {
-          if ($relatedset = $this->offset_relation[$set]) {                               // Moodle
-              $yoffset = $this->calculated['y_plot'][$relatedset][$index];                // Moodle
-          } else {                                                                        // Moodle
-              $yoffset = 0;                                                               // Moodle
-          }                                                                               // Moodle
-          //$this->bar($thisX, $thisY, $bar, $barSize, $colour, $offset, $set);           // Moodle
-          $this->bar($thisX, $thisY, $bar, $barSize, $colour, $offset, $set, $yoffset);   // Moodle
-      }
-    }    
+    if (($bar!='none') && (string)$thisY != 'none') {
+        if ($this->offset_relation != null 
+                && $relatedset = $this->offset_relation[$set]) {                        // Moodle
+            $yoffset = $this->calculated['y_plot'][$relatedset][$index];                // Moodle
+        } else {                                                                        // Moodle
+            $yoffset = 0;                                                               // Moodle
+        }                                                                               // Moodle
+        //$this->bar($thisX, $thisY, $bar, $barSize, $colour, $offset, $set);           // Moodle
+        $this->bar($thisX, $thisY, $bar, $barSize, $colour, $offset, $set, $yoffset);   // Moodle
+    }
 
     if (($area!='none') && (((string)$lastY != 'none') && ((string)$thisY != 'none')))
       $this->area($lastX, $lastY, $thisX, $thisY, $area, $colour, $offset);
@@ -1425,34 +1424,27 @@ function init_colours() {
   $this->colour['gray66']   = ImageColorAllocate ($this->image, 0x66, 0x66, 0x66);
   $this->colour['gray99']   = ImageColorAllocate ($this->image, 0x99, 0x99, 0x99);
 
-  // DEBATE HUB
-  $challenge = $this->hex2rgb($CFG->challengeback);
+  // EVHUB
   $issue = $this->hex2rgb($CFG->issueback);
   $solution = $this->hex2rgb($CFG->solutionback);
-  $pro = $this->hex2rgb($CFG->proback);
-  $con = $this->hex2rgb($CFG->conback);
   $evidence = $this->hex2rgb($CFG->evidenceback);
   $resource = $this->hex2rgb($CFG->resourceback);
-  $org = $this->hex2rgb($CFG->orgback);
-  $project = $this->hex2rgb($CFG->projectback);
+  $pro = $this->hex2rgb($CFG->proback);
+  $con = $this->hex2rgb($CFG->conback);
   $people = $this->hex2rgb($CFG->peopleback);
-  $theme = $this->hex2rgb($CFG->themeback);
   $plain = $this->hex2rgb($CFG->plainback);
 
-  $this->colour['challenge'] = ImageColorAllocate ($this->image, $challenge[0], $challenge[1], $challenge[2]);
   $this->colour['issue'] = ImageColorAllocate ($this->image, $issue[0], $issue[1], $issue[2]);
   $this->colour['solution'] = ImageColorAllocate ($this->image, $solution[0], $solution[1], $solution[2]);
-  $this->colour['pro'] = ImageColorAllocate ($this->image, $pro[0], $pro[1], $pro[2]);
-  $this->colour['con'] = ImageColorAllocate ($this->image, $con[0], $con[1], $con[2]);
   $this->colour['evidence'] = ImageColorAllocate ($this->image, $evidence[0], $evidence[1], $evidence[2]);
   $this->colour['resource'] = ImageColorAllocate ($this->image, $resource[0], $resource[1], $resource[2]);
-  $this->colour['org'] = ImageColorAllocate ($this->image, $org[0], $org[1], $org[2]);
-  $this->colour['project'] = ImageColorAllocate ($this->image, $project[0], $project[1], $project[2]);
+  $this->colour['pro'] = ImageColorAllocate ($this->image, $pro[0], $pro[1], $pro[2]);
+  $this->colour['con'] = ImageColorAllocate ($this->image, $con[0], $con[1], $con[2]);
   $this->colour['people'] = ImageColorAllocate ($this->image, $people[0], $people[1], $people[2]);
-  $this->colour['theme'] = ImageColorAllocate ($this->image, $theme[0], $theme[1], $theme[2]);
   $this->colour['plain'] = ImageColorAllocate ($this->image, $plain[0], $plain[1], $plain[2]);
 
   $this->colour['none']   = 'none';
+
   return true;
 }
 
@@ -1506,6 +1498,8 @@ function output() {
           ImageJPEG($this->image);
           break;
        default:
+          //error_log(ob_get_contents()); // something adding '\r\n\r\n\r\n' to the buffer
+          ob_end_clean(); // suggested by Bard when outputting to a file worked, but back to the browser didn't - 17/01/2024
           Header("Content-type: image/png");  // preferred output format
           ImagePNG($this->image);
           break;
@@ -1787,6 +1781,4 @@ function draw_brush($x, $y, $size, $type, $colour) {
 }
 
 } // class graph
-
-
 ?>

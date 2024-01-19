@@ -36,7 +36,7 @@ if($USER->getIsAdmin() != "Y") {
 
 $time = required_param("time",PARAM_ALPHANUM);
 if ($time == null) {
-	$time = 'weeks';
+	$time = 'months';
 }
 
 $startdate = $CFG->START_DATE;
@@ -51,14 +51,6 @@ $graph = new graph(1000,600);
 $graph->parameter['title_size'] = 12;
 $graph->parameter['title_colour'] = 'black';
 
-// SET THE GRAPH LABELS AND PROPERTIES
-if ($time === 'weeks') {
-	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_WEEK_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate);   	// if this is set then this text is printed on bottom axis of graph.
-	$graph->parameter['title'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_WEEK_TITLE;
-} else {
-	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_MONTH_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate);	// if this is set then this text is printed on bottom axis of graph.
-	$graph->parameter['title'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_MONTH_TITLE;
-}
 
 $graph->parameter['y_label_left'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_X_LABEL;  	// if this is set then this text is printed on bottom axis of graph.
 $graph->parameter['y_label_right'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_X_LABEL;  	// if this is set then this text is printed on right axis of graph.
@@ -173,17 +165,20 @@ for($i=0; $i<$count; $i++){
 	}
 }
 
+
 $day   = 24*60*60; // 24 hours * 60 minutes * 60 seconds
 $week  = $day * 7;
 $month = $day * 30.5;
 
-// WE ONLY WANT THE LAST YEAR - OR PART THERE OF
 if ($time === 'weeks') {
 	$count = ceil((mktime()-$startdate) / $week);
-	//if ($count > 52) {
-	//	$startdate =  $startdate+($WEEK*($count - 52));
-	//	$count = 52;
-	//}
+	$maxcount = 52; // in weeks
+	if ($count > $maxcount) {
+		//$startdate =  $startdate+($WEEK*($count - $maxcount));
+		$startdate = strtotime( '+'.($count - $maxcount).' week', $startdate);
+		$startdate = strtotime( 'first day of ' , $startdate);
+		$count = $maxcount;
+	}
 } else {
 	$dates = new DateTime();
 	$dates->setTimestamp($startdate);
@@ -196,12 +191,24 @@ if ($time === 'weeks') {
 	}
 	$count = $count+1; //(to get it to this month too);
 
-	//if ($count > 12) {
-	//	$startdate = strtotime( '+'.($count - 12).' month', $startdate);
-	//	$startdate = strtotime( 'first day of ' , $startdate);
-	//	$count = 12;
-	//}
+	// more than maxcount - limit to maxcount
+	$maxcount = 60; // in months
+	if ($count > $maxcount) {
+		$startdate = strtotime( '+'.($count - $maxcount).' month', $startdate);
+		$startdate = strtotime( 'first day of ' , $startdate);
+		$count = $maxcount;
+	}
 }
+
+// SET THE GRAPH LABELS AND PROPERTIES
+if ($time === 'weeks') {
+	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_WEEK_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';   	// if this is set then this text is printed on bottom axis of graph.
+	$graph->parameter['title'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_WEEK_TITLE;
+} else {
+	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_MONTH_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';	// if this is set then this text is printed on bottom axis of graph.
+	$graph->parameter['title'] = $LNG->ADMIN_STATS_IDEAS_GRAPH_MONTH_TITLE;
+}
+
 
 for ($i=0; $i<$count; $i++) {
 
@@ -233,7 +240,8 @@ for ($i=0; $i<$count; $i++) {
 	//$graph->y_data['bar8'][$i] = $num8;
 
 	if ($time === 'weeks') {
-		$graph->x_data[$i] = $i+1;
+		//$graph->x_data[$i] = $i+1;
+		$graph->x_data[$i] = date("d / m / Y", $mintime);
 	} else {
 		$graph->x_data[$i] = date("m / y", $mintime);
 	}

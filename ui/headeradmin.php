@@ -36,7 +36,7 @@
 		header('Location: '.$CFG->homeAddress.'ui/pages/login.php?ref='.urlencode($url));
 	}
 
-	global $HUB_FLM;
+	// global $HUB_FLM;
 	
 	include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
 	
@@ -90,14 +90,23 @@
 			if (file_exists($custom)) {
 				include_once($custom);
 			}
-			
-			global $HEADER,$BODY_ATT, $CFG;
-			if(is_array($HEADER)){
-				foreach($HEADER as $header){
-					echo $header;
-				}
-			}
 		?>
+
+		<?php
+			$nowtime = time();
+			if (isset($USER) && isset($USER->userid)
+				&& $nowtime >= $CFG->TEST_TRIAL_START && $nowtime < $CFG->TEST_TRIAL_END) { ?>
+
+			<script type="text/javascript">
+				window.addEventListener("unload", function (e) {
+					var itemid='<?php echo $itemid; ?>';
+					var testelementid='<?php echo $page; ?>';
+					var testevent='leftpage';
+					var state=window.location.href;
+					auditTesting(itemid,testelementid,testevent,state);
+				});
+			</script>
+		<?php } ?>
 
 		<script type="text/javascript">
 			window.name="coheremain";
@@ -140,7 +149,7 @@
 			$reportedUsersCount = getReportedUsersCount();
 		?>
 	</head>
-	<body <?php echo $BODY_ATT; ?> id="cohere-body">
+	<body <?php echo $BODY_ATT; ?>>
 		<div class="alert alert-dark alert-dismissible fade show m-0 fixed-bottom" role="alert" id="cookieConsent" style="display: none;">
 			This website uses cookies to ensure you get the best experience on our website. <a href="ui/pages/cookies.php">Learn more</a>
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="closeCookieConsent"></button>

@@ -26,12 +26,23 @@
 	include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 	include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
+	global $DB,$CFG;
+
 	if($USER->getIsAdmin() != "Y") {
 		echo "<div class='errors'>".$LNG->FORM_ERROR_NOT_ADMIN."</div>";
 		include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 		die;
 	}
+	
+	$sort = optional_param("sort","date",PARAM_ALPHANUM);
+	$oldsort = optional_param("lastsort","date",PARAM_ALPHANUM);
+	$direction = optional_param("lastdir","ASC",PARAM_ALPHANUM);
+	
 ?>
+
+<link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/DataTables/datatables.min.css"); ?>" type="text/css" />
+<script src="<?php echo $CFG->homeAddress; ?>ui/lib/DataTables/datatables.js" type="text/javascript"></script>
+
 
 <script type="text/javascript">
 	var context = '<?php echo $CFG->GLOBAL_CONTEXT; ?>';
@@ -130,213 +141,130 @@
 				}
 			?>
 
-			<div id="tab-connections-overview" class="tabcontentinner"></div>
+			<div id="tab-connections-overview" class="tabcontentinner mb-3"></div>
 
-			<div class="mt-5">
-				<table class="table table-sm">
-					<?php
+			<?php 
+				$con = $DB->conn;
 
-						global $DB,$CFG;
-						$con = $DB->conn;
+				$err = "";
+				if( ! $con ) {
+					$err = mysql_error();
+				} else {
 
-						$sort = optional_param("sort","date",PARAM_ALPHANUM);
-						$oldsort = optional_param("lastsort","date",PARAM_ALPHANUM);
-						$direction = optional_param("lastdir","ASC",PARAM_ALPHANUM);
+					$qry = "SELECT
+						(SELECT Node.Name FROM Node WHERE NodeID = Triple.ToID) AS ToName,
+						(SELECT NodeType.Name FROM NodeType WHERE NodeTypeID = Triple.ToContextTypeID) AS ToType,
+						(SELECT Users.Name FROM Node LEFT JOIN Users ON Node.UserID = Users.UserID WHERE NodeID = Triple.ToID ) AS ToAuthor,
+						(SELECT Node.Name FROM Node WHERE NodeID = Triple.FromID) AS FromName,
+						(SELECT NodeType.Name FROM NodeType WHERE NodeTypeID = Triple.FromContextTypeID) AS FromType,
+						(SELECT Users.Name FROM Node LEFT JOIN Users ON Node.UserID = Users.UserID WHERE NodeID = Triple.FromID ) AS FromAuthor,
+						LinkType.Label AS LinkLabel,
+						Triple.CreationDate,
+						Users.Name AS ConnectionAuthor FROM Triple
+						LEFT JOIN Users ON Triple.UserID = Users.UserID
+						LEFT JOIN LinkType ON Triple.LinkTypeID = LinkType.LinkTypeID";
 
-						$err = "";
-						if( ! $con ) {
-							$err = mysql_error();
-						} else {
+						$qry .= ' ORDER BY Triple.CreationDate DESC';
+						$sort='date';
+						$direction='DESC';
+				}
+			?>
 
-							$qry = " SELECT
-								(Select Node.Name from Node where NodeID = Triple.ToID) as ToName,
-								(Select NodeType.Name from NodeType where NodeTypeID = Triple.ToContextTypeID) as ToType,
-								(Select Users.Name from Node left Join Users on Node.UserID = Users.UserID where NodeID = Triple.ToID ) as ToAuthor,
-								(Select Node.Name from Node where NodeID = Triple.FromID) as FromName,
-								(Select NodeType.Name from NodeType where NodeTypeID = Triple.FromContextTypeID) as FromType,
-								(Select Users.Name from Node left Join Users on Node.UserID = Users.UserID where NodeID = Triple.FromID ) as FromAuthor,
-								LinkType.Label as LinkLabel,
-								Triple.CreationDate,
-								Users.Name as ConnectionAuthor from Triple
-								left join Users on Triple.UserID = Users.UserID
-								left join LinkType on Triple.LinkTypeID = LinkType.LinkTypeID
-								where LinkType.Label <> '".$CFG->LINK_NODE_THEME."'";
-
-							if ($sort) {
-								if ($direction) {
-									if ($oldsort === $sort) {
-										if ($direction === 'ASC') {
-											$direction = "DESC";
-										} else {
-											$direction = "ASC";
-										}
-									} else {
-										$direction = "ASC";
-									}
-								} else {
-									$direction = "ASC";
-								}
-
-								if ($sort == 'from') {
-									$qry .= ' ORDER BY FromName '.$direction;
-								} else if ($sort == 'date') {
-									$qry .= ' ORDER BY Triple.CreationDate '.$direction;
-								} else if ($sort == 'to') {
-									$qry .= ' ORDER BY ToName '.$direction;
-								} else if ($sort == 'totype') {
-									$qry .= ' ORDER BY ToType '.$direction;
-								} else if ($sort == 'fromtype') {
-									$qry .= ' ORDER BY FromType '.$direction;
-								} else if ($sort == 'link') {
-									$qry .= ' ORDER BY LinkLabel '.$direction;
-								} else if ($sort == 'user') {
-									$qry .= ' ORDER BY ConnectionAuthor '.$direction;
-								} else if ($sort == 'fromuser') {
-									$qry .= ' ORDER BY FromAuthor '.$direction;
-								} else if ($sort == 'touser') {
-									$qry .= ' ORDER BY ToAuthor '.$direction;
-								}
+			<div class="adminTableDiv my-5">			
+				<table class="table table-sm table-striped table-hover compact dataTable" id="adminTableDiv">
+					<thead class="table-light">
+						<tr class="align-middle">
+							<th style="min-width: 200px;">Connection Author</th>
+							<th style="min-width: 100px;">Date</th>
+							<th style="max-width: 500px;">From Idea</th>
+							<th>From Type</th>
+							<th style="min-width: 200px;">From Idea Author</th>
+							<th>Link Type</th>
+							<th style="max-width: 500px;">To Idea</th>
+							<th>To Type</th>
+							<th style="min-width: 200px;">To Idea Author</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$err = "";
+							if( ! $con ) {
+								$err = mysql_error();
 							} else {
-								$qry .= ' order by Triple.CreationDate DESC';
-								$sort='date';
-								$direction='DESC';
-							}
+								$resArray = $DB->SELECT($qry, []);
+								if ($resArray !== false) {
+									$count = (is_countable($resArray)) ? count($resArray) : 0;
+									for ($i=0; $i < $count; $i++) {
+										$array = $resArray[$i];
+										$date = $array['CreationDate'];
+										$prettydate = date( 'd M Y', $date); 
+									?>
 
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=user&lastsort='.$sort.'&lastdir='.$direction.'">Connection Author';
-							if ($sort === 'user') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
+										<tr>
+											<td valign="top">
+												<?php echo $array['ConnectionAuthor']; ?>
+											</td>
+
+											<td valign="top" data-search="<?= $prettydate ?>" data-order="<?= $date ?>">
+												<?= $prettydate ?>
+											</td>
+
+											<td valign="top">
+												<?php echo $array['FromName']; ?>
+											</td>
+
+											<td valign="top">
+												<?php echo getNodeTypeText($array['FromType'], false); ?>
+											</td>
+
+											<td valign="top">
+												<?php echo $array['FromAuthor']; ?>
+											</td>
+
+											<td valign="top">
+												<?php echo $array['LinkLabel']; ?>
+											</td>
+
+											<td valign="top">
+												<?php echo $array['ToName']; ?>
+											</td>
+
+											<td valign="top">
+												<?php echo getNodeTypeText($array['ToType'], false); ?>
+											</td>
+
+											<td valign="top">
+												<?php echo $array['ToAuthor']; ?>
+											</td>
+										</tr>
+
+									<?php }
 								}
 							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=date&lastsort='.$sort.'&lastdir='.$direction.'">Date';
-							if ($sort === 'date') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=from&lastsort='.$sort.'&lastdir='.$direction.'">From Idea';
-							if ($sort === 'from') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=fromtype&lastsort='.$sort.'&lastdir='.$direction.'">From Type';
-							if ($sort === 'fromtype') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=fromuser&lastsort='.$sort.'&lastdir='.$direction.'">From Idea Author';
-							if ($sort === 'fromuser') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=link&lastsort='.$sort.'&lastdir='.$direction.'">Link Type';
-							if ($sort === 'link') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=to&lastsort='.$sort.'&lastdir='.$direction.'">To Idea';
-							if ($sort === 'to') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=totype&lastsort='.$sort.'&lastdir='.$direction.'">To Type';
-							if ($sort === 'totype') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-							echo '<td class="adminTableHead"><a href="connections.php?&sort=touser&lastsort='.$sort.'&lastdir='.$direction.'">To Idea Author';
-							if ($sort === 'touser') {
-								if ($direction === 'ASC') {
-									echo '<img src="'.$HUB_FLM->getImagePath("uparrow.gif").'" width="16" height="8" alt="asc" />';
-								} else {
-									echo '<img src="'.$HUB_FLM->getImagePath("downarrow.gif").'" width="16" height="8" alt="desc" />';
-								}
-							}
-							echo '</td>';
-
-							$res = mysql_query( $qry, $con);
-							if ($res) {
-								while ($array = mysql_fetch_array($res, MYSQL_ASSOC)) {
-
-									$date = $array['CreationDate'];
-
-									echo '<tr>';
-										echo '<td valign="top">';
-											echo $array['ConnectionAuthor'];
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo strftime( '%d %B %Y' ,$date);
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo $array['FromName'];
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo getNodeTypeText($array['FromType'], false);
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo $array['FromAuthor'];
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo $array['LinkLabel'];
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo $array['ToName'];
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo getNodeTypeText($array['ToType'], false);
-										echo '</td>';
-
-										echo '<td valign="top">';
-											echo $array['ToAuthor'];
-										echo '</td>';
-									echo '</tr>';
-								}
-							}
-						}
-
-					?>
+						?>										
+					</tbody>
 				</table>
 			</div>
+
 		</div>
 	</div>
 </div>
+
+<script>
+	jQuery.noConflict();
+	jQuery(document).ready(function($) {
+		$('#adminTableDiv').DataTable({
+			"autoWidth": true,
+			"responsive": true,
+			"pageLength": 25,
+        	"lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+			"columnDefs": [
+				{ "orderable": false, "targets": 0 }
+			],
+			"order": [[5, "desc"]]
+		});
+	});
+</script>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));

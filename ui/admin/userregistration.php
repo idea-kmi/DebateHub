@@ -57,10 +57,10 @@
 				<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$countUsers?></span>
 			</h1>
 
-			<div class="adminTableDiv">			
-				<table class="table table-sm compact dataTable" id="adminTableDiv">
-					<thead>
-						<tr>
+			<div class="adminTableDiv">						
+				<table class="table table-sm table-striped table-hover compact dataTable" id="adminTableDiv">
+					<thead class="table-light">
+						<tr class="align-middle">
 							<th></th>
 							<th>Name</th>
 							<th style="max-width: 600px;">Description</th>

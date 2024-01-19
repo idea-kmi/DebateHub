@@ -67,8 +67,8 @@
 		$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
 		$grandtotal += $monthlytotal;
 		$tabledata .= '<tr>';
-		$tabledata .= '<td>'.date("m / y", $mintime).'</td>';
-		$tabledata .= '<td align="right" style="font-weight:bold;">'.$monthlytotal.'</td>';
+		$tabledata .= '<td class="ps-4">'.date("m / y", $mintime).'</td>';
+		$tabledata .= '<td class="pe-4" align="right">'.$monthlytotal.'</td>';
 		$tabledata .= '</tr>';
 	}
 
@@ -88,26 +88,26 @@
 
 			<div class="text-center"><img src="usersGraph.php?time=months" alt="user registration graph" /></div>
 		</div>
-		<div class="col-4 m-auto">
+		<div class="col-md-3 col-sm-12 m-auto mt-4">
 			<!-- MONTHLY TOTALS -->
-			<?php
-				echo '<div class="mb-5">';
-				echo '<table class="table table-sm table-hover">';
-				echo '<tr>';
-				echo '<th valign="top" style="font-weight:bold;">Month</th>';
-				echo '<th valign="top" style="font-weight:bold;">Monthly Total</th>';
-				echo '</tr>';
-
-				echo $tabledata;
-
-				echo '<tr>';
-				echo '<td valign="top" style="font-weight:bold;">Total</td>';
-				echo '<td align="right" valign="top" style="font-weight:bold;">'.$grandtotal.'</td>';
-				echo '</tr>';
-
-				echo '</table>';
-				echo '</div>';
-			?>
+			
+			<div class="mb-5">
+				<table class="table table-sm table-hover table-striped">
+					<thead>
+						<tr>
+							<th class="ps-4"><strong>Month</strong></th>
+							<th class="pe-4 text-end" style="max-width: 30px;"><strong>Monthly Total</strong></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php echo $tabledata; ?>
+						<tr class="table-secondary">
+							<td class="text-end"><strong>Total</strong></td>
+							<td class="text-end pe-4"><strong><?= $grandtotal ?></strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

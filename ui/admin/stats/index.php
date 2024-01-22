@@ -76,22 +76,15 @@
 				}
 			?>
 
-			<div id="tabs-content" class="tab-content p-0">
-				<?php
-					echo '<div class="my-3">';
-					echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
-					echo '</div>';
+			<div id="tabs-content" class="tab-content">
 
+				<?php 
 					$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-					echo '<div class="my-3">';
 
 					$countgroups = 0;
 					if (is_countable($allGroups->groups)) {
 						$countgroups = count($allGroups->groups);
 					}
-
-					echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
-					echo '</div>';
 
 					$grandtotal1 = 0;
 					$categoryArray = array();
@@ -111,21 +104,39 @@
 					$icount = getNodeCreationCount('Con',$startdate);
 					$categoryArray[$LNG->CONS_NAME] = $icount;
 					$grandtotal1 += $icount;
-
-					echo '<div class="mt-3">';
-					echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
-					echo '<table cellpadding="3" class="table table-sm table-borderless">';
-
-					foreach( $categoryArray as $key => $value) {
-						echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
-					}
-
-					echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
-					echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
-					echo '</table></div>';
-
 				?>
 
+				<div class="d-flex flex-wrap justify-content-center gap-3">
+					<div class="mt-3 col-lg-3 col-sm-12">
+						<p class="fw-bold" style="font-size: 1.1em;">Accounts Created</p>
+						<table class="table table-sm table-striped table-hover">
+							<tr>
+								<td><span><?= $LNG->USERS_NAME ?></span></td>
+								<td class="text-end"><span><?= $grandtotal ?></span></td>
+							</tr>
+							<tr>
+								<td><span><?= $LNG->GROUPS_NAME ?></span></td>
+								<td class="text-end"><span><?= $countgroups ?></span></td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="mt-3 col-lg-3 col-sm-12">
+						<p class="fw-bold" style="font-size: 1.1em;"><?= $LNG->ADMIN_STATS_TAB_IDEAS ?></p>
+						<table class="table table-sm table-striped table-hover">
+							<?php foreach( $categoryArray as $key => $value) { ?>
+								<tr>
+									<td><span><?= $key ?></span></td>
+									<td class="text-end"><span><?= $value ?></span></td>
+								</tr>
+							<?php } ?>
+							<tr class="fw-bold">
+								<td><span><?= $LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL ?></span></td>
+								<td class="text-end"><span><?= $grandtotal1 ?></span></td>
+							</tr>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

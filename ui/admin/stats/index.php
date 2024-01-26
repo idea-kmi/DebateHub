@@ -68,7 +68,7 @@
 
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
-		<div class="col">
+		<div class="col-12">
 
 			<?php
 				if (file_exists("menu.php") ) {

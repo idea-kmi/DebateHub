@@ -515,10 +515,6 @@ class CNode {
 			if (is_countable($resArray)) {
 				$count = count($resArray);
 			}
-			$count = 0;
-			if (is_countable($resArray)) {
-				$count = count($resArray);
-			}
 			if($count > 0 ){
             	$this->tags = array();
 				for ($i=0; $i<$count; $i++) {

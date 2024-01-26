@@ -49,7 +49,6 @@
 	$grandtotal1 = 0;
 	$categoryArray = array();
 
-
 	$icount = getNodeCreationCount("Issue",$startdate);
 	$categoryArray[$LNG->ISSUES_NAME] = $icount;
 	$grandtotal1 += $icount;
@@ -115,13 +114,13 @@
 				 $time = "months";
 			?>
 
-			<div class="text-center"><img src="newIdeasGraph.php?time=months" alt="graph of items created" /></div>
+			<div class="text-center"><img class="img-fluid" src="newIdeasGraph.php?time=months" alt="graph of items created" /></div>
 		</div>
+
 		<div class="col-md-8 col-sm-12 m-auto mt-4">
 
 			<?php
 				/***** MONTHLY BY CATEOGRY TABLE ******/
-
 				$day   = 24*60*60; // 24 hours * 60 minutes * 60 seconds
 				$week  = $day * 7;
 				$month = $day * 30.5;
@@ -219,7 +218,6 @@
 								}
 								$monthlytotal += $num5;
 							?>
-
 							
 							<td class="text-end pe-4"><strong><?= $monthlytotal ?></strong></td>
 						</tr>

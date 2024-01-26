@@ -37,12 +37,10 @@
 	$sort = optional_param("sort","date",PARAM_ALPHANUM);
 	$oldsort = optional_param("lastsort","date",PARAM_ALPHANUM);
 	$direction = optional_param("lastdir","ASC",PARAM_ALPHANUM);
-	
 ?>
 
 <link rel="stylesheet" href="<?php echo $HUB_FLM->getCodeWebPath("ui/lib/DataTables/datatables.min.css"); ?>" type="text/css" />
 <script src="<?php echo $CFG->homeAddress; ?>ui/lib/DataTables/datatables.js" type="text/javascript"></script>
-
 
 <script type="text/javascript">
 	var context = '<?php echo $CFG->GLOBAL_CONTEXT; ?>';
@@ -77,7 +75,7 @@
 		var legend = new Element("legend", {'class':'overviewlegend widgettextcolor'});
 		legend.insert(title);
 		set.insert(legend);
-		var main = new Element("div", {'style':'height: 300px; overflow-y: auto; overflow-x: hidden; padding-right:5px;'});
+		var main = new Element("div", {'style':'height: 300px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;'});
 		main.insert(getLoading("(<?php echo $LNG->WIDGET_LOADING; ?> "+title+"...)"));
 		set.insert(main);
 
@@ -126,15 +124,12 @@
 
 		return set;
 	}
-
 	window.onload = init;
-
 </script>
 
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
 		<div class="col">
-
 			<?php
 				if (file_exists("menu.php") ) {
 					include("menu.php");
@@ -143,7 +138,7 @@
 
 			<div id="tab-connections-overview" class="tabcontentinner mb-3"></div>
 
-			<?php 
+			<?php
 				$con = $DB->conn;
 
 				$err = "";
@@ -204,35 +199,27 @@
 											<td valign="top">
 												<?php echo $array['ConnectionAuthor']; ?>
 											</td>
-
 											<td valign="top" data-search="<?= $prettydate ?>" data-order="<?= $date ?>">
 												<?= $prettydate ?>
 											</td>
-
 											<td valign="top">
 												<?php echo $array['FromName']; ?>
 											</td>
-
 											<td valign="top">
 												<?php echo getNodeTypeText($array['FromType'], false); ?>
 											</td>
-
 											<td valign="top">
 												<?php echo $array['FromAuthor']; ?>
 											</td>
-
 											<td valign="top">
 												<?php echo $array['LinkLabel']; ?>
 											</td>
-
 											<td valign="top">
 												<?php echo $array['ToName']; ?>
 											</td>
-
 											<td valign="top">
 												<?php echo getNodeTypeText($array['ToType'], false); ?>
 											</td>
-
 											<td valign="top">
 												<?php echo $array['ToAuthor']; ?>
 											</td>
@@ -241,11 +228,10 @@
 									<?php }
 								}
 							}
-						?>										
+						?>
 					</tbody>
 				</table>
 			</div>
-
 		</div>
 	</div>
 </div>

@@ -153,10 +153,7 @@ $graph->parameter['x_axis_angle']       =  90;            // rotation of axis te
 $graph->offset_relation = null;
 
 $evtypes = "";
-$count = 0;
-if (is_countable($CFG->EVIDENCE_TYPES)) {
-	$count = count($CFG->EVIDENCE_TYPES);
-}
+$count = (is_countable($CFG->EVIDENCE_TYPES)) ? count($CFG->EVIDENCE_TYPES) : 0;
 for($i=0; $i<$count; $i++){
 	if ($i == 0) {
 		$evtypes .= "'".$CFG->EVIDENCE_TYPES[$i]."'";

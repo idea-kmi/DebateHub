@@ -84,9 +84,11 @@
 				}
 			?>
 
-			<div class="my-3"><p><?= $LNG->ADMIN_STATS_REGISTER_TOTAL_LABEL ?> = <?= $grandtotal ?></p><div>
-
-			<div class="text-center"><img src="usersGraph.php?time=months" alt="user registration graph" /></div>
+			<h1 class="my-4 d-flex align-items-center gap-3">
+				<?php echo $LNG->ADMIN_STATS_REGISTER_TOTAL_LABEL; ?>
+				<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$grandtotal?></span>
+			</h1>
+			<div class="text-center"><img class="img-fluid" src="usersGraph.php?time=months" alt="user registration graph" /></div>
 		</div>
 		<div class="col-md-3 col-sm-12 m-auto mt-4">
 			<!-- MONTHLY TOTALS -->

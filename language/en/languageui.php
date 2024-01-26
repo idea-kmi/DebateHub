@@ -866,8 +866,9 @@ $LNG->ADMIN_CRON_RECENT_ACTIVITY_NO_DIGEST = 'No recent activity digest for:';
 $LNG->ADMIN_CRON_RECENT_ACTIVITY_TITLE = 'Debate Hub Recent Activity Report';
 $LNG->ADMIN_CRON_RECENT_ACTIVITY_MESSAGE = 'See below for the top 5 most recent items entered for each Debate Hub Category.';
 
-$LNG->ADMIN_NEWS_USERS = 'User List';
-$LNG->ADMIN_NEWS_GROUPS = 'Group List';
+$LNG->ADMIN_NEWS_USERS = 'Users';
+$LNG->ADMIN_NEWS_GROUPS = 'Groups';
+$LNG->ADMIN_DASHBOARD = 'Admin Dashboard';
 
 /** HELP PAGES **/
 $LNG->HELP_NETWORKMAP_TITLE = 'Network Map';

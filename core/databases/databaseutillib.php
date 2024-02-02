@@ -3512,6 +3512,7 @@ function loadGroupChildDebates($groupid, $status) {
 	global $CFG;
 
 	$childids = [];	// not used but needs to be pased in to function called
+	$children = [];
 
 	// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
 	$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $status);

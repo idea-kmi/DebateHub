@@ -53,19 +53,18 @@ div.idea-header-fake {
 	background: #DAD2D2; /*#F6F4F4;*/
 }
 
+
 div.idea-title {
 	clear:both;
+	float:left;
 	padding: 3px;
-	float: left;
-	/*font-weight:bold;*/
 	overflow: hidden;
 }
 
 div.idea-title-fake {
 	padding: 5px;
-	float: left;
+	float:left;
 	width:95%;
-	/*font-weight:bold;*/
 }
 
 div.idea-user {
@@ -75,11 +74,17 @@ div.idea-user {
 
 div.idea-user2 {
 	padding-right: 5px;
-	text-align: right;
+	text-align: left;
 } 
 
 div.idea-user img {
 	border:0px;
+	object-fit: contain;
+}
+
+div.idea-user2 img {
+	border:0px;
+	object-fit: contain;
 }
 
 div.idea-wrapper{
@@ -97,44 +102,41 @@ div.idea-main{
 }
 
 div.idea-desc {
-	clear: both;
-	float:left;
-	width:100%;
 	overflow-y:auto;
 	overflow-x:hidden;
 	text-align: left;
-	display:block;
+	display: block;
+	margin-bottom: 15px;
+	padding: 10px 10px 0 0;
 }
 
 div.idea-detail{
+	font-size: 10pt; /* over-ride table 0.9em or it deminishes going down a tree of nodes */
 }
 
 div.idea-action{
-	float:right; 
 	margin: 2px;
 	text-align: right; 
 }
 
 div.idea-menus {
-	float: left;
 	margin-left: 2px;
 	margin-right: 2px;
 	background: transparent; 
 }
 
 .ideadata {
-    clear: both;
+	clear: both;
     margin: 5px;   
+	width:100%;
 }
 
 ol.idea-list-ol {
-	clear:both;
-	padding-top: 5px;
-	margin-left:0px;
-	padding-left:0px;
 	list-style:none;
+	margin: 0;
+	padding: 10px 0 0 0;
 }
-	
+
 ol li {
 	vertical-align:top;	
 }
@@ -285,6 +287,24 @@ div.idea-li-wrapper{
     padding: 0.5em 9px;
 }
 
+.boxshadowsquaredarker {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #E8E6E6 #DCDCDC #DBD9D9 #CCCACA;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    background: #FAFAFA;
+    color: #414141;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 0.5em;
+    padding: 0.5em 9px;
+}
+
 #maparrowdiv.boxshadowsquare .active input { cursor: pointer; }
 
 .toConnectionsTable { width: 100%; }
@@ -300,7 +320,7 @@ div.idea-li-wrapper{
 
 .toConnectionsTable tbody .idea-section { padding-left: 10px; }
 .toConnectionsTable tbody .idea-section .textdividea { text-align: left; }
-.toConnectionsTable tbody .idea-section .textdividea span.desctoggle { font-weight: bold; font-size: 14pt; cursor: pointer; }
+.toConnectionsTable tbody .idea-section .textdividea span.desctoggle { font-weight: bold; font-size: 14pt; cursor: pointer; padding-right: 5px; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-edit { margin-left: 10px; margin-top: -7px; cursor: pointer; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-delete { margin-left: 10px; margin-top: -7px; cursor: pointer; }
 .toConnectionsTable tbody .idea-section .textdividea .idea-built { margin-left: 10px; margin-top: -7px; }

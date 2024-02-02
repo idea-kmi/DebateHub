@@ -34,6 +34,7 @@
     checkLogin();
 
     include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
+	include_once($HUB_FLM->getCodeDirPath("core/formats/json.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
          echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
@@ -76,6 +77,7 @@
 	}
 
 	$allNodes = array();
+	$format_json = new format_json();
 
 	$ns = getNodesByStatus($CFG->STATUS_REPORTED, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
@@ -92,8 +94,10 @@
     		$node->reporter = $reporter;
 			$node->istop = true;	// only top if it was the reported item
     	}
-		$allNodes[$node->nodeid] = $node;
-    }
+		$jsonnodestr = $format_json->format($node);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsonnodestr); // in case older data has some
+		$allNodes[$node->nodeid] = json_decode($stripped_of_invalid_utf8_chars_string);
+   }
 
 	$ns2 = getNodesByStatus($CFG->STATUS_ARCHIVED, 0,-1,'name','ASC','long');
     $nodesarchivedinitial = $ns2->nodes;
@@ -103,23 +107,25 @@
 	$count2 = (is_countable($nodesarchivedinitial)) ? count($nodesarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
+	    $node->children = loadDebateChildNodes($node, $CFG->STATUS_ARCHIVED, $childnodes2);
    		$reporterid = getSpamReporter($node->nodeid);
    		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$node->reporter = $reporter;
-			$node->children = loadDebateChildNodes($node, $CFG->STATUS_ARCHIVED, $childnodes2);
     	}
- 		$allNodes[$node->nodeid] = $node;
+		$jsonnodestr = $format_json->format($node);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsonnodestr); // in case older data has some
+		$allNodes[$node->nodeid] = json_decode($stripped_of_invalid_utf8_chars_string);
     }
 
 	// only hold top level archived nodes that have a reporter 
 	// and are not children of another item also archived
 	// will this cover everything?
 	for ($i=0; $i<$count2;$i++) {
-    	$node = $nodesarchivedinitial[$i];
+    	$node = $nodesarchivedinitial[$i];		
 		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes2) ) {
- 			$node->istop = true; // only top if it was the reported item
+ 			$node->istop = true; 
 			array_push($nodesarchived, $node);
     	}
     }	
@@ -127,7 +133,7 @@
 
 <script type="text/javascript">
 
-	const allnodes = <?php echo json_encode($allNodes); ?>;
+	const allnodes = <?php echo json_encode($allNodes, JSON_INVALID_UTF8_IGNORE); ?>;
 
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
@@ -217,6 +223,10 @@
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
 			containerObj.innerHTML = "";
+
+			if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
+			if (node.cnode.children && node.cnode.children.length > 0) {  node.cnode.istop = true; 	}
+
 			displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
 		}
 	}

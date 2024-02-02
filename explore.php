@@ -138,7 +138,8 @@ if ($nodetype != "Issue") {
 		$consol = $conSetSol->connections[0];
 		$nodesol = $consol->to;
 		$consSet = getConnectionsByNode($nodesol->nodeid,0,1,'date','ASC', 'all', '', 'Issue');
-		if (isset($consSet->connections[0])) {
+		$count = is_countable($consSet>connections) ? count($consSet>connections) : 0;
+		if ($count > 0) {
 			$con = $consSet->connections[0];
 			if (isset($con->to)) {
 				$localnode = $con->to;

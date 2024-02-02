@@ -34,6 +34,7 @@
     checkLogin();
 
     include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
+	include_once($HUB_FLM->getCodeDirPath("core/formats/json.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
         echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
@@ -81,6 +82,7 @@
     }
 
 	$allGroups = array();
+	$format_json = new format_json();
 
 	$gs = getGroupsByStatus($CFG->USER_STATUS_REPORTED, 0, -1, 'name', 'ASC','long');
     $groups = $gs->groups;
@@ -94,10 +96,12 @@
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			$group->istop = true;	// only top if it was the reported item
+			//$group->istop = true;	// only top if it was the reported item
     	}
-		$allGroups[$group->groupid] = $group;
-    }
+		$jsongroupstr = $format_json->format($group);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsongroupstr); // in case older data has some
+		$allGroups[$group->groupid] =  json_decode($stripped_of_invalid_utf8_chars_string);
+   }
 
 	// groups are really user record entries
 	$gs2 = getGroupsByStatus($CFG->USER_STATUS_ARCHIVED, 0, -1, 'name', 'ASC','long');
@@ -113,16 +117,18 @@
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
 			$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ARCHIVED);
-			$group->istop = true; // only top if it was the reported item
+			//$group->istop = true; // only top if it was the reported item
 			array_push($archivedgroups, $group);
    		}
-		$allGroups[$group->groupid] = $group;
-    }
+		$jsongroupstr = $format_json->format($group);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsongroupstr); // in case older data has some
+		$allGroups[$group->groupid] =  json_decode($stripped_of_invalid_utf8_chars_string);
+	}
 ?>
 
 <script type="text/javascript">
 
-	const allgroups = <?php echo json_encode($allGroups); ?>;
+	const  allgroups = <?php echo json_encode($allGroups, JSON_INVALID_UTF8_IGNORE); ?>;
 
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
@@ -208,11 +214,19 @@
 		}
 
 		var group = allgroups[groupid];
+		group = group.group[0];
 
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
 			containerObj.innerHTML = "";
-			if (group && group.children.length > 0) {			
+			if (group && group.children != null && group.children.length > 0) {		
+				for (let i=0; i< group.children.length; i++) {
+					let debatenode = group.children[i];
+					if (debatenode.cnode.children.length > 0) {
+						debatenode.cnode.istop = true;
+					}
+				}
+				
 				displayConnectionNodes(containerObj, group.children, parseInt(0), true, groupid+"tree");
 			}					
 		}

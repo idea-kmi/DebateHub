@@ -220,7 +220,7 @@ function unfollowMyUser(userid) {
  * Send a spam alert to the server.
  */
 function reportGroupSpamAlert(obj, group) {
-	var ans = confirm("Are you sure you want to report \n\n"+obj.dataset.label+"\n\nas an Inappropriate?\n\n");
+	var ans = confirm("Are you sure you want to report \n\n"+group.name+"\n\nas an Inappropriate?\n\n");
 	if (ans){
 		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
 		new Ajax.Request(reqUrl, { method:'get',
@@ -285,7 +285,6 @@ function createGroupSpamButton(group) {
 			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORT; ?>');
 			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
 			spamimg.id = group.groupid;
-			spamimg['data-label'] = group.name;
 			spamimg.style.cursor = 'pointer';
 			Event.observe(spamimg,'click',function () { reportGroupSpamAlert(this, group) } );
 		}

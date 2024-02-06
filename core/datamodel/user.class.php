@@ -36,7 +36,7 @@ class user {
     private $interest;
     private $testgroup = 0;
 
-	// For span icon on user lists
+	// For spam icon on user lists
     public $status = 0;
 
     public $userid;

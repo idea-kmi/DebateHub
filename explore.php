@@ -57,6 +57,8 @@ if ($searchid != "" && isset($USER->userid)) {
 
 $node = getNode($nodeid, 'long');
 
+//echo print_r($node, true);
+
 if($node instanceof Hub_Error) {
 	include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 	echo "<div class='errors'>".$LNG->ITEM_NOT_FOUND_ERROR."</div>";
@@ -136,7 +138,8 @@ if ($nodetype != "Issue") {
 		$consol = $conSetSol->connections[0];
 		$nodesol = $consol->to;
 		$consSet = getConnectionsByNode($nodesol->nodeid,0,1,'date','ASC', 'all', '', 'Issue');
-		if (isset($connSet->connections[0])) {
+		$count = is_countable($consSet>connections) ? count($consSet>connections) : 0;
+		if ($count > 0) {
 			$con = $consSet->connections[0];
 			if (isset($con->to)) {
 				$localnode = $con->to;

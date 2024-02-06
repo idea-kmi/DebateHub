@@ -746,7 +746,8 @@ $LNG->USER_HOME_TABLE_ACTION = 'Action';
 $LNG->USER_HOME_TABLE_PICTURE = 'Picture';
 $LNG->USER_HOME_PROFILE_HEADING = 'Profile';
 $LNG->USER_HOME_VIEW_CONTENT_HEADING = 'Content Creation Summary';
-$LNG->USER_HOME_VIEW_ACTIVITIES_LINK = "( View all Activity for this person )";
+$LNG->USER_HOME_VIEW_ACTIVITIES_LINK_ADMIN = "( View all Activity )";
+$LNG->USER_HOME_VIEW_ACTIVITIES_LINK = "( View content creation Activity )";
 $LNG->USER_HOME_VIEW_ACTIVITIES_HINT =  "This opens a new window and may take some time to load depending on the volume of activity by that person";
 $LNG->USER_HOME_FOLLOWING_HEADING = 'Following';
 $LNG->USER_HOME_ACTIVITY_ALERT = 'Send email Alert of New Activity';
@@ -865,7 +866,9 @@ $LNG->ADMIN_CRON_RECENT_ACTIVITY_NO_DIGEST = 'No recent activity digest for:';
 $LNG->ADMIN_CRON_RECENT_ACTIVITY_TITLE = 'Debate Hub Recent Activity Report';
 $LNG->ADMIN_CRON_RECENT_ACTIVITY_MESSAGE = 'See below for the top 5 most recent items entered for each Debate Hub Category.';
 
-$LNG->ADMIN_NEWS_USERS = 'User List';
+$LNG->ADMIN_NEWS_USERS = 'Users';
+$LNG->ADMIN_NEWS_GROUPS = 'Groups';
+$LNG->ADMIN_DASHBOARD = 'Admin Dashboard';
 
 /** HELP PAGES **/
 $LNG->HELP_NETWORKMAP_TITLE = 'Network Map';

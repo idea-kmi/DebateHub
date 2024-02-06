@@ -41,7 +41,12 @@
     $fromtime = optional_param("fromtime","0",PARAM_ALPHANUMEXT);
     $node = getNode($nodeid);
 
-    $as = getNodeActivity($nodeid, $fromtime, 0, -1);
+	if ($USER->getIsAdmin() == "Y") {					
+		$as = getAdminNodeActivity($nodeid, $fromtime, 0, -1);
+	} else {
+		$as = getNodeActivity($nodeid, $fromtime, 0, -1);
+	}
+    
     $activities = $as->activities;
 ?>
 <script type="text/javascript">

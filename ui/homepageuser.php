@@ -60,7 +60,9 @@
 		?>
 	</dl>
 
+	<?php if(isset($USER->userid) && ($USER->userid == $userid || $USER->getIsAdmin() == "Y")) {	?>					
 	<p class="text-end"><a class="active" title="<?php echo $LNG->USER_HOME_ANALYTICS_LINK_HINT; ?>" onclick="javascript:loadDialog('viewuseranalytics','<?php echo $CFG->homeAddress; ?>ui/stats/userContextStats.php?userid=<?php echo $user->userid; ?>', 800, 600);"><?php echo $LNG->USER_HOME_ANALYTICS_LINK_TEXT; ?></a></p>
+	<?php } ?>
 
 	<hr class="hrline" />
 
@@ -71,7 +73,7 @@
 		<tr class="challengeback text-white">
 			<td><strong><?php echo $LNG->USER_HOME_TABLE_ITEM_TYPE; ?></strong></td>
 			<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_CREATION_COUNT; ?></strong></td>
-			<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_VIEW; ?></strong></td>
+			<td class="text-end"><strong>&nbsp;</strong></td>
 		</tr>
 		<?php $i=0; foreach($nodeArray as $n=>$c) {
 			if ($n == 'Issue' 
@@ -124,7 +126,11 @@
 		<?php } ?>
 	</table>
 	
-	<p class="text-end"><a class="active" title="<?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_HINT; ?>" onclick="javascript:loadDialog('viewuseractivity','<?php echo $CFG->homeAddress; ?>ui/popups/activityviewerusers.php?fromtime=0&userid=<?php echo $userid; ?>', 800, 600);"><?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_LINK; ?></a></p>
+	<?php if ($USER->userid == $userid || $USER->getIsAdmin() == "Y") {	?>			
+		<p class="text-end"><a class="active" title="<?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_HINT; ?>" onclick="javascript:loadDialog('viewuseractivity','<?php echo $CFG->homeAddress; ?>ui/popups/activityviewerusers.php?fromtime=0&userid=<?php echo $userid; ?>', 800, 600);"><?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_LINK_ADMIN; ?></a></p>
+	<?php } else { ?>
+		<p class="text-end"><a class="active" title="<?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_HINT; ?>" onclick="javascript:loadDialog('viewuseractivity','<?php echo $CFG->homeAddress; ?>ui/popups/activityviewerusers.php?fromtime=0&userid=<?php echo $userid; ?>', 800, 600);"><?php echo $LNG->USER_HOME_VIEW_ACTIVITIES_LINK; ?></a></p>
+	<?php } ?>
 
 	<hr class="hrline" />
 
@@ -181,11 +187,13 @@
 				<tr class="challengeback text-white">
 					<td><strong><?php echo $LNG->USER_HOME_TABLE_TYPE; ?></strong></td>
 					<td><strong><?php echo $LNG->USER_HOME_TABLE_NAME; ?></strong></td>
+					
 					<?php if ($USER->userid == $userid) {?>
-						<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_ACTION; ?></strong></td>
+						<td class="text-end"><strong>&nbsp;</strong></td>
 					<?php } ?>
-					<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_ACTION; ?></strong></td>
-					<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_VIEW; ?></strong></td>
+					
+					<td class="text-end"><strong>&nbsp;</strong></td>				
+					<td class="text-end"><strong>&nbsp;</strong></td>
 				</tr>
 				<?php
 					$followingCount = 0;
@@ -268,6 +276,7 @@
 									<td class="text-end">
 										<a class="active" href="<?php echo $CFG->homeAddress; ?>explore.php?id=<?php echo $nodeid; ?>">Explore</a>
 									</td>
+									
 									<td class="text-end">
 										<a class="active" href="javascript:;" onclick="loadDialog('viewactivity','<?php echo $CFG->homeAddress; ?>ui/popups/activityviewer.php?nodeid=<?php echo $nodeid; ?>', 800, 600);">Activity</a>
 									</td>
@@ -286,12 +295,18 @@
 			</table>
 		</div>
 		<div class="col">
-			<h2 style="margin-bottom: 44px;"><?php echo $LNG->USER_HOME_FOLLOWERS_HEADING; ?></h2>
+			<h2><?php echo $LNG->USER_HOME_FOLLOWERS_HEADING; ?></h2>
+
+			<!-- To pad out to the same height as the radio buttons controlling the email alert frequency on the left hand table -->
+			<?php if(isset($USER->userid) && $USER->userid == $userid && $CFG->send_mail){ ?>
+				<div style="height:34px;">&nbsp;</div>
+			<?php } ?>
+
 			<table class="table table-sm">
 				<tr class="challengeback text-white">
 					<td><strong><?php echo $LNG->USER_HOME_TABLE_PICTURE; ?></strong></td>
 					<td><strong><?php echo $LNG->USER_HOME_TABLE_NAME; ?></strong></td>
-					<td class="text-end"><strong><?php echo $LNG->USER_HOME_TABLE_VIEW; ?></strong></td>
+					<td class="text-end"><strong>&nbsp;</strong></td>
 				</tr>
 				<?php
 					$i=0;

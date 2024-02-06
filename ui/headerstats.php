@@ -1,57 +1,56 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
-//if (isset($_SESSION['embedded']) && $_SESSION['embedded']) {
-//    include_once($HUB_FLM->getCodeDirPath("ui/headerembed.php"));
-//    return;
-//}
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 The Open University UK                                   *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
+	//if (isset($_SESSION['embedded']) && $_SESSION['embedded']) {
+	//    include_once($HUB_FLM->getCodeDirPath("ui/headerembed.php"));
+	//    return;
+	//}
 
-if ($CFG->privateSite) {
-	checklogin();
-}
-
-$query = stripslashes(parseToJSON(optional_param("q","",PARAM_TEXT)));
-// need to do parseToJSON to convert any '+' symbols as they are now used in searches.
-
-if( isset($_POST["loginsubmit"]) ) {
-    $url = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-    header('Location: '.$CFG->homeAddress.'ui/pages/login.php?ref='.urlencode($url));
-}
-
-include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
-
-$page = optional_param("page","home",PARAM_ALPHANUM);
-$itemid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
-if ($itemid == "") {
-	$itemid = optional_param("groupid","",PARAM_ALPHANUMEXT);
-	if ($itemid == "") {
-		$itemid = 'system';
+	if ($CFG->privateSite) {
+		checklogin();
 	}
-}
 
+	$query = stripslashes(parseToJSON(optional_param("q","",PARAM_TEXT)));
+	// need to do parseToJSON to convert any '+' symbols as they are now used in searches.
 
+	if( isset($_POST["loginsubmit"]) ) {
+		$url = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		header('Location: '.$CFG->homeAddress.'ui/pages/login.php?ref='.urlencode($url));
+	}
+
+	include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
+
+	$page = optional_param("page","home",PARAM_ALPHANUM);
+	$itemid = optional_param("nodeid","",PARAM_ALPHANUMEXT);
+	if ($itemid == "") {
+		$itemid = optional_param("groupid","",PARAM_ALPHANUMEXT);
+		if ($itemid == "") {
+			$itemid = 'system';
+		}
+	}
 ?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
 	<head>

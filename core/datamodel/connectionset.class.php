@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -87,7 +87,7 @@ class ConnectionSet {
 		$resArray = $DB->select($sql, $params);
 
         //create new nodeset and loop to add each node to the set
-		$count = count($resArray);
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 
         $this->totalno = $totalconns;
         $this->start = $start;
@@ -95,7 +95,7 @@ class ConnectionSet {
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
             $c = new Connection($array["TripleID"]);
-            $conn = $c->load($style);            
+            $conn = $c->load($style);
 
 			// if there are other array properties add them to the connections.
 			if ($orderby == 'ideavote') {
@@ -128,7 +128,7 @@ class ConnectionSet {
 
         $checkArray = array();
 
-		$counti = count($conns);
+		$counti = (is_countable($conns)) ? count($conns) : 0;
         for ($i=0; $i < $counti; $i++) {
 			$array = $conns[$i];
 			if (!array_key_exists($array['TripleID'],$checkArray)) {
@@ -137,12 +137,12 @@ class ConnectionSet {
 
                 // Reported nodes are not the same status as the nodes at the other end of their connections
                 // so can't check status
-                $this->add($conn);                    
+                $this->add($conn);
     		    $checkArray[$array["TripleID"]] = $array["TripleID"];
 			}
         }
 
-        $this->totalno = count($this->connections);
+		$this->totalno = (is_countable($this->connections))  ? count($this->connections) : 0;
         $this->count =  $this->totalno;
 
         return $this;

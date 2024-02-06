@@ -1825,7 +1825,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 				'href':'<?php echo $CFG->homeAddress."ui/pages/login.php?ref="; ?>'+NODE_ARGS["ref"],
 				'title':'<?php echo $LNG->DEBATE_CONTRIBUTE_LINK_HINT; ?>',
 				'class':'lightgreenbutton',
-				'style':'float:left;margin-left:30px;font-size:10pt;margin-top:2px;',
+				'style':'margin-right: 15px;',
 			});
 			signinlink.insert('<?php echo $LNG->DEBATE_CONTRIBUTE_LINK_TEXT; ?>');
 			textDiv.insert(signinlink);
@@ -3552,14 +3552,6 @@ function renderListNode(node, uniQ, role, includeUser){
 	textspan.href = '<?php echo $CFG->homeAddress; ?>explore.php?id='+node.nodeid;
 	textDiv.insert(textspan);
 
-	<?php if ($CFG->SPAM_ALERT_ON) { ?>
-	if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
-		const item = createSpamButton(node, role);
-		item.style.paddingLeft = "10px";
-		textDiv.insert(item);
-	}
-	<?php } ?>
-
 	if(node.description || node.hasdesc){
 		var dStr = '<div class="idea-desc" id="desc'+uniQ+'div"><span>';
 		if (node.description && node.description != "") {
@@ -3650,6 +3642,7 @@ function renderReportNode(node, uniQ, role){
 /*** HELPER FUNCTIONS ***/
 
 var DEBATE_TREE_OPEN_ARRAY = {};
+var TREE_OPEN_ARRAY = {};
 
 /**
  * Open and close the knowledge tree
@@ -4695,7 +4688,7 @@ function createSpamMenuOption(node, nodetype) {
  */
 function createSpamButton(node, nodetype) {
 	// Add spam icon
-	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
+	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;padding-left:10px;'});
 	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
 		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
@@ -5129,23 +5122,40 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 	}
 }
 
-/** MODIFIED FROM LITEMAP **/
-//Called using passed data therefore no cnode and array levels for node items and other object types
+
+
+var TREE_OPEN_ARRAY = {};
+
+/**
+ * Open and close the knowledge tree
+ */
+function toggleItem(section, uniQ) {
+    $(section).toggle();
+
+    if($(section).visible()){
+    	TREE_OPEN_ARRAY[section] = true;
+    	$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
+	} else {
+    	TREE_OPEN_ARRAY[section] = false;
+		$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>';
+	}
+}
+
 /**
  * Render a list of connection nodes
  */
-function displayConnectionNodes(objDiv, nodes, start,includeUser,uniqueid, childCountSpan, parentrefreshhandler){
+function displayConnectionNodes(objDiv, nodes,start,includeUser,uniqueid, childCountSpan, parentrefreshhandler){
 	if (uniqueid == undefined) {
 		uniqueid = 'idea-list';
 	}
 
 	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i< nodes.length; i++){
-		if(nodes[i]){
-			var iUL = new Element("li", {'id':nodes[i].nodeid, 'class':'idea-list-li'});
+		if(nodes[i].cnode){
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.insert(iUL);
 			var blobDiv = new Element("div", {'class':'idea-blob-list'});
-			var blobNode = renderConnectionNode(nodes[i], uniqueid, nodes[i].role, includeUser, childCountSpan, parentrefreshhandler);
+			var blobNode = renderConnectionNode(nodes[i].cnode, uniqueid,nodes[i].cnode.role[0].role,includeUser, childCountSpan, parentrefreshhandler);
 			blobDiv.insert(blobNode);
 			iUL.insert(blobDiv);
 		}
@@ -5172,20 +5182,20 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	var originaluniQ = uniQ;
 
 	if(role === undefined){
-		role = node.role;
+		role = node.role[0].role;
 	}
 
 	var nodeuser = null;
 	// JSON structure different if coming from popup where json_encode used.
-	if (node.users.userid) {
+	if (node.users[0].userid) {
 		nodeuser = node.users[0];
 	} else {
-		nodeuser = node.users[0];
+		nodeuser = node.users[0].user;
 	}
 	var connection = node.connection;
 	var user = null;
 	if (connection && connection.users) {
-		user = connection.users[0];
+		user = connection.users[0].user;
 	}
 
 	//needs to check if embedded as a snippet
@@ -5203,15 +5213,15 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	var otherend = "";
 	if (connection) {
 		uniQ = connection.connid+uniQ;
-		var fN = connection.from;
-		var tN = connection.to;
+		var fN = connection.from[0].cnode;
+		var tN = connection.to[0].cnode;
 		if (node.nodeid == fN.nodeid) {
-			connrole = connection.fromrole;
-			focalrole = tN.role;
+			connrole = connection.fromrole[0].role;
+			focalrole = tN.role[0].role;
 			otherend = tN;
 		} else {
-			connrole = connection.torole;
-			focalrole = fN.role;
+			connrole = connection.torole[0].role;
+			focalrole = fN.role[0].role;
 			otherend = fN;
 		}
 	} else {
@@ -5231,12 +5241,34 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 
 	var row = nodeTable.insertRow(-1);
 
-	var lineCell = row.insertCell(-1);
-	//lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
-	lineCell.width="15px;"
-	lineCell.vAlign="middle";
-	var lineDiv = new Element('div',{'class':'graylinewide', 'style':'width:100%;'});
-	lineCell.insert(lineDiv);
+	// ADD THE ARROW IF REQUIRED
+	if (node.istop) {
+		var expandArrow = null;
+		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
+			|| role.name == "Issue" || role.name == "Solution" ) {
+
+			var arrowCell = row.insertCell(-1);
+			arrowCell.vAlign="middle";
+			arrowCell.align="left";
+
+			if (TREE_OPEN_ARRAY["desc"+uniQ] && TREE_OPEN_ARRAY["desc"+uniQ] == true) {
+				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>'});
+				expandArrow.uniqueid = uniQ;
+			} else {
+				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>'});
+				expandArrow.uniqueid = uniQ;
+			}
+			Event.observe(expandArrow,'click',function (){ toggleItem("treedesc"+uniQ,uniQ);});
+			arrowCell.insert(expandArrow);
+		}
+	} else {
+		var lineCell = row.insertCell(-1);
+		//lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
+		lineCell.width="15px;"
+		lineCell.vAlign="middle";
+		var lineDiv = new Element('div',{'class':'graylinewide', 'style':'width:100%;'});
+		lineCell.insert(lineDiv);
+	}
 
 	var textCell = row.insertCell(-1);
 	textCell.vAlign="middle";
@@ -5329,7 +5361,6 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	});
 
 	if (node.istop) {
-		var expandArrow = null;
 		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
 			|| role.name == "Issue" || role.name == "Solution" || role.name == "Idea"
 			|| role.name == "Pro"  || role.name == "Con" || role.name == "Comment") {
@@ -5353,17 +5384,16 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	var idDiv = new Element("div", {'class':'idea-detail'});
 
 	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
-	/*
-	if (node.istop) {
-		if (DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] == true) {
-			expandDiv.style.display = 'block';
-		} else {
-			expandDiv.style.display = 'none';
+
+	if (node.children && node.children.length > 0) {
+		if (expandArrow && expandArrow != null) {
+			expandArrow.src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
 		}
-	} else {
-	*/
 		expandDiv.style.display = 'block';
-	//}
+	} else {
+		expandDiv.style.display = 'none';
+	}
+
 	var hint = alttext+": "+node.name;
 	hint += " <?php echo $LNG->NODE_GOTO_PARENT_HINT; ?>"
 
@@ -5373,20 +5403,18 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
    	 **/
 	var expandTable = new Element( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
 	expandTable.height="100%";
-	//expandTable.border="1";
 	var expandrow = expandTable.insertRow(-1);
 	expandrow.style.height="100%";
 	if (node.istop) {
-		expandTable.style.marginLeft = "5px";
+		expandTable.style.marginLeft = "9px";
 	} else {
-		expandTable.style.marginLeft = "20px";
+		expandTable.style.marginLeft = "26px";
 	}
 
 	var lineCell = expandrow.insertCell(-1);
 	lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
 	lineCell.width="5px;";
 	lineCell.style.marginLeft="3px";
-
 	lineCell.title=hint;
 	lineCell.className="grayline";
 	Event.observe(lineCell,'click',function (){
@@ -5445,7 +5473,6 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	nextCell.insert(userbar);
 
 	// image
-
 	if (node.imagethumbnail != null && node.imagethumbnail != "") {
 		var imageDiv = new Element("div");
 
@@ -5468,13 +5495,22 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'clear:both;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
 		iconlink.insert(nodeicon);
 		imageDiv.insert(iconlink);
-		userbar.insert(imageDiv);
+		const row = nodeTable.insertRow(-1);
+		const nextCell = row.insertCell(-1);
+		nextCell.vAlign="middle";
+		nextCell.align="left";		
+		nextCell.insert(imageDiv);
 		//nodeArea.insert(alttext+": ");
 	} else if (node.image != null && node.image != "") {
 		var imageDiv = new Element("div");
 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'clear:both;padding-right:5px;','align':'left','border':'0','src': node.image});
 		imageDiv.insert(nodeicon);
-		userbar.insert(imageDiv);
+		const row = nodeTable.insertRow(-1);
+		const nextCell = row.insertCell(-1);
+		nextCell.vAlign="middle";
+		nextCell.align="left";		
+		nextCell.insert(imageDiv);
+		nextCell.insert(imageDiv);
 	} 
 
 	// META DATA - DESCRIPTION, URLS ETC

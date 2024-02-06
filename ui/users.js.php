@@ -215,11 +215,37 @@ function unfollowMyUser(userid) {
   	});
 }
 
+
+/**
+ * Send a spam alert to the server.
+ */
+function reportGroupSpamAlert(obj, group) {
+	var ans = confirm("Are you sure you want to report \n\n"+group.name+"\n\nas an Inappropriate?\n\n");
+	if (ans){
+		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
+		new Ajax.Request(reqUrl, { method:'get',
+			onError: function(error) {
+			},
+			onSuccess: function(transport){
+				obj.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
+				obj.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
+				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
+				obj.style.cursor = 'auto';
+				$(obj).unbind("click");
+				Event.stopObserving(obj, 'click');
+				if (group !== undefined) {
+					group.status = 1;
+				}
+			}
+		});
+	}
+}
+
 /**
  * Send a spam alert to the server.
  */
 function reportUserSpamAlert(obj, user) {
-	var ans = confirm("Are you sure you want to report \n\n"+obj.label+"\n\nas a Spammer / Inappropriate?\n\n");
+	var ans = confirm("Are you sure you want to report \n\n"+obj.dataset.label+"\n\nas a Spammer / Inappropriate?\n\n");
 	if (ans){
 		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
 		new Ajax.Request(reqUrl, { method:'get',
@@ -232,7 +258,9 @@ function reportUserSpamAlert(obj, user) {
 				obj.style.cursor = 'auto';
 				$(obj).unbind("click");
 				Event.stopObserving(obj, 'click');
-				user.status = 1;
+				if (user !== undefined) {
+					user.status = 1;
+				}
 			}
 		});
 	}
@@ -241,8 +269,37 @@ function reportUserSpamAlert(obj, user) {
 /**
  * Create a span button to report spam / show spam reported / or say login to report.
  *
- * @param node the node to report
- * @param nodetype the nodetype of the node to report
+ * @param group, the group to report
+ */
+function createGroupSpamButton(group) {
+
+	// Add spam icon
+	var spamimg = document.createElement('img');
+	if(USER != ""){
+		if (group.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+		} else if (group.status == <?php echo $CFG->USER_STATUS_ACTIVE; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORT_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORT; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
+			spamimg.id = group.groupid;
+			spamimg.style.cursor = 'pointer';
+			Event.observe(spamimg,'click',function () { reportGroupSpamAlert(this, group) } );
+		}
+	} else {
+		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_LOGIN_REPORT_ALT; ?>');
+		spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_LOGIN_REPORT; ?>');
+		spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+	}
+	return spamimg;
+}
+
+/**
+ * Create a span button to report spam / show spam reported / or say login to report.
+ *
+ * @param user the user to report
  */
 function createUserSpamButton(user) {
 
@@ -257,12 +314,8 @@ function createUserSpamButton(user) {
 			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>');
 			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORT; ?>');
 			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
-			if (user.groupid) { // for groups
-				spamimg.id = user.groupid;
-			} else {
-				spamimg.id = user.userid;
-			}
-			spamimg.label = user.name;
+			spamimg.id = user.userid;
+			spamimg['data-label'] = user.name;
 			spamimg.style.cursor = 'pointer';
 			Event.observe(spamimg,'click',function (){ reportUserSpamAlert(this, user) } );
 		}
@@ -477,7 +530,7 @@ function renderGroup(group, mainheading, cropdesc){
 	    // Add spam icon
 	    const spamDiv = new Element("div");
 		spamDiv.className = "p-2";
-		const item = createUserSpamButton(group);
+		const item = createGroupSpamButton(group);
 	    spamDiv.insert(item);
 	    toolbarDiv.insert(spamDiv);
 	    <?php } ?>

@@ -1,27 +1,27 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 - 2024 The Open University UK                            *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
     include_once("config.php");
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
@@ -33,6 +33,7 @@
 
 	$searchid = optional_param("sid","",PARAM_ALPHANUMEXT);
 	$query = stripslashes(parseToJSON(optional_param("q","",PARAM_TEXT)));
+	// need to do parseToJSON to convert any '+' symbols as they are now used in searches.
 
 	// default parameters
 	$start = optional_param("start",0,PARAM_INT);
@@ -73,16 +74,15 @@
 
 	$CONTEXT = $CFG->GLOBAL_CONTEXT;
 
-   // now trigger the js to load data
+    // now trigger the js to load data
 	$argsStr = "{";
 	$keys = array_keys($args);
-
 
 	$keycount = 0;
 	if (is_countable($keys)) {
 		$keycount = sizeof($keys);
 	}
-	for($i=0;$i< $keycount; $i++){
+	for($i = 0; $i < $keycount; $i++){
 		$argsStr .= '"'.$keys[$i].'":"'.addslashes($args[$keys[$i]]).'"';
 		if ($i != ($keycount-1)){
 			$argsStr .= ',';
@@ -120,7 +120,7 @@
 			<script type="text/javascript">
 				Event.observe(window, 'load', function() {
 
-					buildSearchToolbar($("content-controls"))
+					buildSearchToolbar($("content-controls"));
 					loadissues(CONTEXT,ISSUE_ARGS);
 
 					loadsolutions(CONTEXT,SOLUTION_ARGS);
@@ -142,7 +142,7 @@
 				<div class="row">
 					<div id="content-controls"></div>
 				</div>
-
+				
 				<div id="q_results" name="q_results" class="row searchResultsMenu">
 					<div class="col-auto"><a id="issue-result-menu" href="#issueresult"><?php echo $LNG->ISSUES_NAME; ?>: <span id="issue-list-count-main"></span></a><span class="ms-4">|</span></div>
 					<div class="col-auto"><a id="solution-result-menu" href="#solutionresult"><?php echo $LNG->SOLUTIONS_NAME; ?>: <span id="solution-list-count-main"></span></a><span class="ms-4">|</span></div>
@@ -153,11 +153,11 @@
 					<div class="col-auto"><a id="group-result-menu" href="#groupresult"><?php echo $LNG->GROUPS_NAME; ?>: <span id="group-list-count-main"></span></a></div>
 				</div>
 
-				<div id="content-issue-main" class="searchresultblock">					
+				<div id="content-issue-main" class="searchresultblock">
 					<div class="strapline searchresulttitle">
-						<span id="issue-list-count">0</span> 
+						<span id="issue-list-count">0</span>
 						<span id="issue-list-title"><?php echo $LNG->ISSUES_NAME; ?></span>
-						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
+						<a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top" class="ms-2 search-backtotop">[<?php echo $LNG->SEARCH_BACKTOTOP; ?>]</a>
 						<a name="issueresult"></a>
 					</div>
 					<div class="searchresultcontent" id="content-issue-list"></div>

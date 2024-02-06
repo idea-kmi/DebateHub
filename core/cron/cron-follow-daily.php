@@ -105,7 +105,6 @@ for ($i=0; $i<$count; $i++) {
 			}
 		}
 
-
 		// GET ITEMS THEY FOLLOW
 		$itemArray = getItemsBeingFollowedByMe($userid);
 		$k=0;

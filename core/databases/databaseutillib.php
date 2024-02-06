@@ -2000,7 +2000,7 @@ function getActivityDateRange($itemids="") {
 
 
 /**
- * Return the Activity objects that represent the activity on the given nodeid
+ * Return the Activity objects that represent all the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
  * @param integer $from (optional - default: 0) only get records from the given timestamp
  * @param integer $to (optional - default: 0 - do not apply) only get records to from the given timestamp
@@ -2154,7 +2154,91 @@ function getAllNodeActivity($nodeid, $from = 0, $to = 0) {
 }
 
 /**
- * Return the Activity objects that represent the activity on the given nodeid
+ * Return the Activity objects that represent the all the activity on the given nodeid
+ * @param string $nodeid the id of the node to get Activity for
+ * @param integer $from (optional - default: 0)
+ * @param boolean $includeviews (optional - default: true)
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
+ * @return ActivitySet or Error
+ */
+function getAdminNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max = 20, $style='long') {
+    global $DB, $CFG, $USER,$HUB_SQL;
+
+	$params = array();
+
+    $as = new ActivitySet();
+
+   	//"month"  => 2419200,  // seconds in a month  (4 weeks)
+   	// "week"   => 604800,  // seconds in a week   (7 days)
+   	//"day"    => 86400,    // seconds in a day    (24 hours)
+	/*if ($NoDays > 0) {
+		$timeback = $NoDays * 86400; //86400 = 24 hours or 1 Day
+		$now = time();
+		$startime = $now - $timeback;
+	}*/
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART1;
+
+	// NODES
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	// CONNECTIONS
+	$params[count($params)] = $nodeid;
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	// VOTING
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+
+	// FOLLOWING - does not have modification date, so needs different MOD date
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING;
+	}
+
+	// VIEWING
+	if ($includeviews) {
+		$params[count($params)] = $nodeid;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART6;
+		if ($from > 0) {
+			$params[count($params)] = $from;
+			$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+		}
+	}
+
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART7;
+
+    if ($max > -1) {
+		// ADD LIMITING
+		$sql = $DB->addLimitingResults($sql, $start, $max);
+	}
+
+	$as->load($sql, $params, $style);
+
+    return $as;
+}
+
+/**
+ * Return the Activity objects that represent the activity of creating new content or connections for the given nodeid
  * @param string $nodeid the id of the node to get Activity for
  * @param integer $from (optional - default: 0)
  * @param boolean $includeviews (optional - default: true)
@@ -2198,33 +2282,6 @@ function getNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max 
 		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
 	}
 
-	// VOTING
-	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
-	}
-
-
-	// FOLLOWING - does not have modification date, so needs different MOD date
-	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE_FOLLOWING;
-	}
-
-	// VIEWING
-	if ($includeviews) {
-		$params[count($params)] = $nodeid;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6;
-		if ($from > 0) {
-			$params[count($params)] = $from;
-			$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
-		}
-	}
-
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART7;
 
     if ($max > -1) {
@@ -2237,8 +2294,9 @@ function getNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max 
     return $as;
 }
 
+
 /**
- * Return the Activity objects that represent the activity on the given userid
+ * Return the Activity objects that represent all the activity on the given userid
  * @param string $userid the id of the user to get Activity for
  * @param number $from the time from which to get their activity, expressed in milliseconds.
  * @param integer $start (optional - default: 0)
@@ -2246,7 +2304,7 @@ function getNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max 
  * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
  * @return ActivitySet or Error
  */
-function getUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
+function getAdminUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -2262,6 +2320,70 @@ function getUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
 		$startime = $now - $timeback;
 	}*/
 
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART1;
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART6;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART7;
+
+    if ($max > -1) {
+		// ADD LIMITING
+		$sql = $DB->addLimitingResults($sql, $start, $max);
+	}
+
+	$as->load($sql, $params, $style);
+
+    return $as;
+}
+
+/**
+ * Return the Activity objects that represent the activity of creating new content on the given userid
+ * @param string $userid the id of the user to get Activity for
+ * @param number $from the time from which to get their activity, expressed in milliseconds.
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
+ * @return ActivitySet or Error
+ */
+function getUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
+    global $DB, $CFG, $USER,$HUB_SQL;
+
+	$params = array();
+
+    $as = new ActivitySet();
+
 	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART1;
 	$params[count($params)] = $userid;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2;
@@ -2272,27 +2394,6 @@ function getUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
 
 	$params[count($params)] = $userid;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
 		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
@@ -2555,8 +2656,10 @@ function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
 
 	if ($USER->getIsAdmin() == "Y") {
 		$params = array();
-		$params[0] = $status;
+		$params[0] = $status;		
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+		$params[1] = 'N';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
 
 		$us = new UserSet();
 	   	return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
@@ -2591,7 +2694,6 @@ function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', 
 		$params = array();
 		$params[0] = $status;
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
-
 		$params[1] = 'Y';
 		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
 

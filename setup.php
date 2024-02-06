@@ -37,7 +37,7 @@
 
 /** SETUP STATIC CONFIG VARIABLES **/
 
-	$CFG->VERSION = '1.0';
+	$CFG->VERSION = '2.1';
 
 	/** NODE TYPES **/
 	$CFG->BASE_TYPES = array("Issue","Solution","Idea");

@@ -84,6 +84,7 @@
 								$date = $array['CreationDate'];
 								$desc = $array['Description'];
 								$members = $array['MembersCount'];
+								$status = $array['CurrentStatus'];
 								$photo = '';
 								$thumb = '';
 								if($array['Photo']){

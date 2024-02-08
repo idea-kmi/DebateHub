@@ -49,6 +49,15 @@ if ($CFG->privateSite && $method != "login" && (!isset($USER->userid) || $USER->
     die;
 }
 
+// methods starting in 'admin' can only be called by users who are admins.
+if (strpos($method, "admin", 0) !== false && (!isset($USER->userid) || $USER->userid == "" || $USER->getIsAdmin() == "N")) {
+    global $ERROR;
+    $ERROR = new Hub_Error;
+    $ERROR->createAccessDeniedError();
+	include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
+    die;
+}
+
 // optional params for ordering, max no and sorting sets of objects and filtering
 $start = optional_param("start",0,PARAM_INT);
 $max = optional_param("max",20,PARAM_INT);
@@ -630,6 +639,18 @@ switch($method) {
 		$todate = optional_param('todate','',PARAM_ALPHANUMEXT);
         $response = getTreeData($fromdate, $todate);
  		break;
+
+    /** ADMIN ONLY */
+
+    case "adminloadgroupchilddebates":
+        $groupid = required_param('groupid', PARAM_ALPHANUMEXT);
+        $response = loadGroupChildDebates($groupid, $status);
+ 		break;
+
+    case "adminloaddebatechildnodes":
+        $nodeid = required_param('nodeid', PARAM_ALPHANUMEXT);
+        $response = loadDebateChildNodes($nodeid, $status); 
+        break;        
 
     default:
         //error as method not defined.

@@ -90,14 +90,12 @@
 	$count = (is_countable($groups)) ? count($groups) : 0;
     for ($i=0; $i<$count;$i++) {
     	$group = $groups[$i];
-		$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ACTIVE);
 		$reporterid = getSpamReporter($group->groupid);
 		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			//$group->istop = true;	// only top if it was the reported item
-    	}
+   	}
 		$jsongroupstr = $format_json->format($group);
 		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsongroupstr); // in case older data has some
 		$allGroups[$group->groupid] =  json_decode($stripped_of_invalid_utf8_chars_string);
@@ -116,8 +114,6 @@
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ARCHIVED);
-			//$group->istop = true; // only top if it was the reported item
 			array_push($archivedgroups, $group);
    		}
 		$jsongroupstr = $format_json->format($group);
@@ -195,7 +191,7 @@
 		}
 	}
 
-	function viewGroupTree(groupid, containerid, rootname, toggleRow) {
+	function viewGroupTree(groupid, containerid, rootname, toggleRow, status) {
 
 		// close any opened divs
 		const divsArray = document.getElementsByName(rootname);
@@ -216,19 +212,46 @@
 		var group = allgroups[groupid];
 		group = group.group[0];
 
+		//call for child nodes
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
-			containerObj.innerHTML = "";
-			if (group && group.children != null && group.children.length > 0) {		
-				for (let i=0; i< group.children.length; i++) {
-					let debatenode = group.children[i];
-					if (debatenode.cnode.children.length > 0) {
-						debatenode.cnode.istop = true;
+			containerObj.innerHTML = '<span style="font-size: 0.9em;font-style:italic"><?php echo $LNG->ADMIN_TREEVIEW_LOADING; ?></span>';
+
+			var reqUrl = SERVICE_ROOT + "&method=adminloadgroupchilddebates&groupid="+groupid+"&status="+status;
+
+			document.body.style.cursor = "wait"; 
+
+			new Ajax.Request(reqUrl, { method:'get',
+				onSuccess: function(transport){
+					var json = null;
+					try {
+						json = transport.responseText.evalJSON();
+					} catch(e) {
+						alert(e);
 					}
+					if(json.error){
+						alert(json.error[0].message);
+						return;
+					}
+					var nodes = json.nodeset[0].nodes;
+					if (nodes && nodes.length > 0) {		
+						for (let i=0; i< nodes.length; i++) {
+							let debatenode = nodes[i];
+							if (debatenode.cnode.children.length > 0) {
+								debatenode.cnode.istop = true;
+							}
+						}
+						document.body.style.cursor = "pointer"; 
+						containerObj.innerHTML = "";
+
+						displayConnectionNodes(containerObj, nodes, parseInt(0), true, groupid+"tree");
+					}					
+				},
+				onFailure: function(transport) {
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
 				}
-				
-				displayConnectionNodes(containerObj, group.children, parseInt(0), true, groupid+"tree");
-			}					
+			});
 		}
 	}
 	window.onload = init;
@@ -335,7 +358,8 @@
 															\''.$group->groupid.'\', 
 															\''.$group->groupid.'treediv\', 
 															\'treediv\', 
-															\''.$group->groupid.'treeRow\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
+															\''.$group->groupid.'treeRow\',
+															\''.$CFG->STATUS_ARCHIVED.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
 												<td>

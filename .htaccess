@@ -2,6 +2,7 @@
 #For HSTS
 Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
 
+
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html

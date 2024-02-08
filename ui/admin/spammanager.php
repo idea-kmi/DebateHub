@@ -86,7 +86,6 @@
 	$count = (is_countable($nodes)) ? count($nodes) : 0;
     for ($i=0; $i<$count;$i++) {
     	$node = $nodes[$i];
-		$node->children = loadDebateChildNodes($node, $CFG->STATUS_ACTIVE, $childnodes);
 	   	$reporterid = getSpamReporter($node->nodeid);
     	if ($reporterid != false) {
     		$reporter = new User($reporterid);
@@ -103,32 +102,35 @@
     $nodesarchivedinitial = $ns2->nodes;
 
 	$nodesarchived = [];
-	$childnodes2 = [];	
+	//$childnodes2 = [];	
 	$count2 = (is_countable($nodesarchivedinitial)) ? count($nodesarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
-	    $node->children = loadDebateChildNodes($node, $CFG->STATUS_ARCHIVED, $childnodes2);
-   		$reporterid = getSpamReporter($node->nodeid);
+  		$reporterid = getSpamReporter($node->nodeid);
    		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$node->reporter = $reporter;
+			$node->istop = true; 
+			array_push($nodesarchived, $node);
     	}
 		$jsonnodestr = $format_json->format($node);
 		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsonnodestr); // in case older data has some
 		$allNodes[$node->nodeid] = json_decode($stripped_of_invalid_utf8_chars_string);
+		
     }
 
 	// only hold top level archived nodes that have a reporter 
 	// and are not children of another item also archived
 	// will this cover everything?
-	for ($i=0; $i<$count2;$i++) {
+	/*for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];		
 		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes2) ) {
  			$node->istop = true; 
 			array_push($nodesarchived, $node);
     	}
     }	
+	*/
 ?>
 
 <script type="text/javascript">
@@ -200,7 +202,7 @@
 		}
 	}
 
-	function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow) {		
+	function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow, status) {		
 
 		// close any opened row
 		const divsArray = document.getElementsByName(rootname);
@@ -222,12 +224,40 @@
 
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
-			containerObj.innerHTML = "";
+			containerObj.innerHTML = '<span style="font-size: 0.9em;font-style:italic"><?php echo $LNG->ADMIN_TREEVIEW_LOADING; ?></span>';
 
-			if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
-			if (node.cnode.children && node.cnode.children.length > 0) {  node.cnode.istop = true; 	}
+			var reqUrl = SERVICE_ROOT + "&method=adminloaddebatechildnodes&nodeid="+nodeid+"&status="+status;
 
-			displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
+			document.body.style.cursor = "wait"; 
+
+			new Ajax.Request(reqUrl, { method:'get',
+				onSuccess: function(transport){
+					var json = null;
+					try {
+						json = transport.responseText.evalJSON();
+					} catch(e) {
+						alert(e);
+					}
+					if(json.error){
+						alert(json.error[0].message);
+						return;
+					}
+					var children = json.nodeset[0].nodes;
+					
+					if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
+					node.cnode.children = children;
+					if (node.cnode.children && node.cnode.children.length > 0) {  node.cnode.istop = true; 	}
+
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "";
+
+					displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
+				},
+				onFailure: function(transport) {
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+				}
+			});
 		}
 	}
 </script>
@@ -354,7 +384,7 @@
 												</td>
 												<td>
 													<?php 
-														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\', \'treediv\', \''.$node->nodeid.'treeRow\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
+														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\', \'treediv\', \''.$node->nodeid.'treeRow\', \''.$CFG->STATUS_ARCHIVED.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
 												<td>

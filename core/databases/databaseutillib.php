@@ -3500,7 +3500,7 @@ function loadUsersAndContent($userid, $status, &$childids) {
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
 			if (!$node instanceof Hub_Error) {
-				$children = array_merge($children, loadDebateChildNodes($node, $status, $childids));
+				$children = array_merge($children, loadDebateChildNodes($node->nodeid, $status, $childids));
 			}
 		}
 	}
@@ -3512,9 +3512,8 @@ function loadGroupChildDebates($groupid, $status) {
 	global $CFG;
 
 	$childids = [];	// not used but needs to be pased in to function called
-	$children = [];
 
-	// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
+	$nodegroup  = new NodeSet();
 	$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $status);
 
 	if (!$issueNodes instanceof Hub_Error) {
@@ -3523,21 +3522,28 @@ function loadGroupChildDebates($groupid, $status) {
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
 			if (!$node instanceof Hub_Error) {
-				$node->children = loadDebateChildNodes($node, $status, $childids);
-				array_push($children, $node);
+				$node->children = loadDebateChildNodes($node->nodeid, $status, $childids);
+				$nodegroup->add($node);
 			}
 		}
 	}
 
-	return $children;
+	$nodegroup->totalno = count($nodegroup->nodes);
+	$nodegroup->start = 0;
+	$nodegroup->count = $nodegroup->totalno;
+
+	return $nodegroup;
 }
 
-function loadDebateChildNodes($node, $status, &$childids) {
+function loadDebateChildNodes($nodeid, $status) {
 	global $CFG;
 	
+	$n = new CNode($nodeid);
+	$node = $n->load();
+
 	$nodetype = $node->role->name;
 
-	$children = [];
+	$nodegroup  = new NodeSet();
 
 	// If the node being archived is a Debate Node
 	if ($nodetype == "Issue") {
@@ -3553,9 +3559,8 @@ function loadDebateChildNodes($node, $status, &$childids) {
 				if (isset($con->from)) {
 					$solutionnode = $con->from;
 					if(!$solutionnode instanceof Hub_Error){								
-						$solutionnode->children = loadDebateChildNodes($solutionnode, $status, $childids);
-						array_push($children, $solutionnode);
-						array_push($childids, $solutionnode->nodeid);
+						$solutionnode->children = loadDebateChildNodes($solutionnode->nodeid, $status, $childids);
+						$nodegroup->add($solutionnode);
 					}
 				} 
 			}
@@ -3571,8 +3576,7 @@ function loadDebateChildNodes($node, $status, &$childids) {
 				if (isset($con->from)) {
 					$argumentnode = $con->from;
 					if(!$argumentnode instanceof Hub_Error){								
-						array_push($children, $argumentnode); // has no children
-						array_push($childids, $argumentnode->nodeid);
+						$nodegroup->add($argumentnode);
 					}
 				}
 			}
@@ -3581,7 +3585,11 @@ function loadDebateChildNodes($node, $status, &$childids) {
 		//nothing more to do! status already changed above for the node.
 	}
 
-	return $children;
+	$nodegroup->totalno = count($nodegroup->nodes);
+	$nodegroup->start = 0;
+	$nodegroup->count = $nodegroup->totalno;
+
+	return $nodegroup;
 } 
 
 /*

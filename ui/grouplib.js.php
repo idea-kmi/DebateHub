@@ -266,8 +266,8 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    //next
-	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
-	    if(parseInt(start)+parseInt(count) < parseInt(total)){
+	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
+		if(parseInt(start)+parseInt(count) < parseInt(total)){		
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
 	        Event.observe(nextSpan,"click", function(){

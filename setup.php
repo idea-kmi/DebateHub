@@ -224,11 +224,11 @@
 
     //global $HUB_CACHE;
 
-
-	//include common libaries coherelib.php and apilib.php
+	//include common libaries
     require_once('core/datamodel/error.class.php');
     require_once('core/apilib.php');
     require_once('core/auditlib.php');
+	require_once('core/databases/databaseutillib.php');
 
     if (isset($_SESSION["session_userid"]) && $_SESSION["session_userid"] != "") {
     	$USER = new User($_SESSION["session_userid"]);

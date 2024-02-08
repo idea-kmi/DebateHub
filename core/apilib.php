@@ -4572,7 +4572,7 @@ function getDebateIdeaConnectionsRemoved($issueid){
 }
 
 
-/** Admin only functions */
+/*** FUNCTIONS FOR ADMIN MODERATION ***/
 
 function loadGroupChildDebates($groupid, $status) {	
 	global $CFG;

@@ -32,6 +32,8 @@
 
 include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
+require_once('core/databases/databaseutillib.php');
+
 global $USER,$CFG,$LNG;
 
 //send the header info

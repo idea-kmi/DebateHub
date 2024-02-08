@@ -4571,5 +4571,93 @@ function getDebateIdeaConnectionsRemoved($issueid){
 	return $connectionSet;
 }
 
+
+/*** FUNCTIONS FOR ADMIN MODERATION ***/
+
+function loadGroupChildDebates($groupid, $status) {	
+	global $CFG;
+
+	$childids = [];	// not used but needs to be pased in to function called
+
+	$nodegroup  = new NodeSet();
+	$issueNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Issue', 'short', '', '', $status);
+
+	if (!$issueNodes instanceof Hub_Error) {
+		$nodes = $issueNodes->nodes;
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$node = $nodes[$i];
+			if (!$node instanceof Hub_Error) {
+				$node->children = loadDebateChildNodes($node->nodeid, $status, $childids);
+				$nodegroup->add($node);
+			}
+		}
+	}
+
+	$nodegroup->totalno = count($nodegroup->nodes);
+	$nodegroup->start = 0;
+	$nodegroup->count = $nodegroup->totalno;
+
+	return $nodegroup;
+}
+
+function loadDebateChildNodes($nodeid, $status) {
+	global $CFG;
+	
+	$n = new CNode($nodeid);
+	$node = $n->load();
+
+	$nodetype = $node->role->name;
+
+	$nodegroup  = new NodeSet();
+
+	// If the node being archived is a Debate Node
+	if ($nodetype == "Issue") {
+
+		//get the Ideas for this Debate.
+		//$connSetSolutions = getDebate($nodeid, $style='long');
+		$connSetSolutions = getConnectionsByStatus($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'long', $status);
+		if (isset($connSetSolutions->connections[0])) {
+			$count = is_countable($connSetSolutions->connections) ? count($connSetSolutions->connections) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$con = $connSetSolutions->connections[$i];
+				// connection connect from the child to the parent so get the from end of the connection
+				if (isset($con->from)) {
+					$solutionnode = $con->from;
+					if(!$solutionnode instanceof Hub_Error){								
+						$solutionnode->children = loadDebateChildNodes($solutionnode->nodeid, $status, $childids);
+						$nodegroup->add($solutionnode);
+					}
+				} 
+			}
+		}
+	} else if ($nodetype == "Solution") {
+		// get any pros, cons and moderator comments for a given Idea
+		$connSetArguments = getConnectionsByStatus($node->nodeid, 0, -1,'date','ASC', 'all','','Pro,Con,Comment', 'long', $status);
+		if (isset($connSetArguments->connections[0])) {
+			$count = is_countable($connSetArguments->connections) ? count($connSetArguments->connections) : 0;
+			for ($j=0; $j<$count; $j++) {
+				$con = $connSetArguments->connections[$j];
+				// connections connect from the child to the parent so get the from end of the connection
+				if (isset($con->from)) {
+					$argumentnode = $con->from;
+					if(!$argumentnode instanceof Hub_Error){								
+						$nodegroup->add($argumentnode);
+					}
+				}
+			}
+		}
+	} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
+		//nothing more to do! status already changed above for the node.
+	}
+
+	$nodegroup->totalno = count($nodegroup->nodes);
+	$nodegroup->start = 0;
+	$nodegroup->count = $nodegroup->totalno;
+
+	return $nodegroup;
+} 
+
+
 // ensure there are no spaces or blank lines after this closing tag
 ?>

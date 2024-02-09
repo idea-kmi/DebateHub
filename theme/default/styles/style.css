@@ -87,6 +87,10 @@ span.nav strong { font-size: 0.9em; margin-bottom: 10px; }
     font-weight: bold;
 }
 
+.spamicon {
+    height: 12px;
+}
+
 /** MB: To make the titles a fix heigh so the movies line up nicely even when page resized and title wraps to two lines. **/
 .movietitle {
     width: 480px;

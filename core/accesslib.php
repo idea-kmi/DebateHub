@@ -176,8 +176,7 @@
 		ini_set('session.gc_maxlifetime', '7200'); // two hours
 		session_set_cookie_params($time);
 
-		if(session_id() == '') {
-			//session_name($ses); // messes up hybridauth - firefox sidebar needs to look for PHPSESSID
+		if (session_status() === PHP_SESSION_NONE) { 
 			session_start();
 		}
 

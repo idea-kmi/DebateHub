@@ -192,7 +192,7 @@
 	*/
 	function clearSession() {
 		$_SESSION["session_userid"] = "";
-		setcookie("debatehubuser","",time()-3600, "/");
+		setcookie("debatehub","",time()-3600, "/");
 	}
 
 	/**
@@ -201,7 +201,7 @@
 	*/
 	function createSession($user) {
 		$_SESSION["session_userid"] = $user->userid;
-		setcookie("debatehubuser",$user->userid,time()+99999999,"/");
+		setcookie("debatehub",$user->userid,time()+99999999,"/");
 		$user->updateLastLogin();
 	}
 

@@ -253,14 +253,7 @@ function deleteLemon($issueid,$nodeid){
  * @return Node or Error
  */
 function getNode($nodeid,$style='long'){
-	global $_SESSION, $CFG, $ERROR;
-
-	//$cachednode = $_SESSION[$nodeid.$style];
-	//if (isset($cachednode) && (time()-$cachednode->cachetime) <= 60) {
-	//	return $cachednode;
-	//}
-	
-    //$_SESSION[$nodeid.$style] = $this;
+	global $CFG, $ERROR;
 
     $n = new CNode($nodeid);
 	$node = $n->load($style);

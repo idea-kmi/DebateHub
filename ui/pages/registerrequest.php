@@ -63,11 +63,6 @@
 
     $description = optional_param("description","",PARAM_TEXT);
 
-    $location = optional_param("location","",PARAM_TEXT);
-    $loccountry = optional_param("loccountry","",PARAM_TEXT);
-
-    $homepage = trim(optional_param("homepage","http://",PARAM_URL));
-
     $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
 
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
@@ -77,8 +72,6 @@
     }
 
     $privatedata = optional_param("defaultaccess","N",PARAM_ALPHA);
-
-    $countries = getCountryList();
 
     if(isset($_POST["register"])){
     	if ($CFG->hasConditionsOfUseAgreement && $agreeconditions != "Y") {
@@ -103,17 +96,6 @@
 				}
 				if ($interest == ""){
 					array_push($errors, $LNG->FORM_ERROR_INTEREST_MISSING);
-				}
-
-				// check url
-				if ($homepage == "http://") {
-					$homepage = "";
-				}
-				if ($homepage != "") {
-					$URLValidator = new mrsnk_URL_validation($homepage, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
-					if($homepage != "" && !$URLValidator->isValid()){
-						 array_push($errors, $LNG->FORM_ERROR_URL_INVALID);
-					}
 				}
 
 				if (empty($errors)) {
@@ -156,10 +138,9 @@
 							// only create user if no error so far
 							// create new user but status unauthorized
 
-							$u->add($email,$fullname,$password,$homepage,'N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNAUTHORIZED);
+							$u->add($email,$fullname,$password,'','N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNAUTHORIZED);
 							if ($u instanceof User) {
 								$u->updatePrivate($privatedata);
-								$u->updateLocation($location,$loccountry);
 								$u->setInterest($interest);
 
 								$photofilename = "";
@@ -190,11 +171,6 @@
 								$footpath = $HUB_FLM->getMailTemplatePath("emailfoot.txt");
 								$foottemp = loadFileToString($footpath);
 								$foot = vsprintf($foottemp,array ($CFG->homeAddress));
-
-								$country = "";
-								if ($loccountry != "") {
-									$country = $countries[$loccountry];
-								}
 
 								$message = $LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN;
 								$message = $head.$message.$foot;
@@ -282,6 +258,7 @@
 				<span class="required">*</span></label>
 				<div class="col-sm-9">
 					<input class="form-control" type="text" id="fullname" name="fullname" value="<?php print $fullname; ?>">
+					<div id="validationFullname" class="form-text text-danger"></div>
 				</div>
 			</div>
 			<div class="mb-3 row">
@@ -297,35 +274,6 @@
 					<textarea class="form-control" id="interest" name="interest" rows="3"><?php print $interest; ?></textarea>
 				</div>
 			</div>
-			<div class="mb-3 row">
-				<label class="col-sm-3 col-form-label" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
-				<div class="col-sm-5">
-					<input class="form-control" id="location" name="location" type="text" value="<?php echo $location; ?>">
-				</div>
-				<div class="col-sm-4">
-					<select id="loccountry" name="loccountry" class="form-select" aria-label="Select country">
-						<option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
-						<?php
-							foreach($countries as $code=>$c){
-								echo "<option value='".$code."'";
-								if($code == $loccountry){
-									echo " selected='true'";
-								}
-								echo ">".$c."</option>";
-							}
-						?>
-					</select>
-				</div>
-			</div>
-
-			<?php if ($CFG->hasUserHomePageOption) { ?>
-				<div class="mb-3 row">
-					<label class="col-sm-3 col-form-label" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" id="homepage" name="homepage" value="<?php print $homepage; ?>">
-					</div>
-				</div>
-			<?php } ?>
 
 			<div class="mb-3 row">
 				<label class="col-sm-3 col-form-label" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
@@ -374,6 +322,29 @@
 		</form>
 	</div>
 </div>
+
+<script>
+	document.getElementById('fullname').addEventListener('input', function() {
+		var nameInput = this;
+		var errorDiv = document.getElementById('validationFullname');
+    	var submitBtn = document.getElementById('register');
+		// Pattern to include Unicode characters
+		var regex = /^[\p{L}\s'-]+$/u;
+		
+		if (!regex.test(nameInput.value)) {
+			// Disable the submit button
+			submitBtn.disabled = true;
+			// Display error message if validation fails
+			errorDiv.textContent = "Name can only contain letters, spaces, hyphens, and apostrophes.";
+		} else {
+			// Enable  the submit button
+			submitBtn.disabled = false;
+			// Clear error message if validation passes
+			errorDiv.textContent = '';
+		}		
+	});
+</script>
+
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

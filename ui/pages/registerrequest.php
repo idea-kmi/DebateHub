@@ -31,26 +31,23 @@
 		die;
 	}
 
-	// check if user already logged in
+    // check if user already logged in
     if(isset($USER->userid)){
         header('Location: '.$CFG->homeAddress.'index.php');
         return;
     }
 
     if ($CFG->signupstatus != $CFG->SIGNUP_REQUEST) {
-	    header('Location: '.$CFG->homeAddress.'index.php');
-	  	return;
-	}
+        header('Location: '.$CFG->homeAddress.'index.php');
+    	return;
+    }
 
     if($CFG->CAPTCHA_ON) {
 		array_push($HEADER,'<script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>');
 	}
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
-
-    //require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/recaptchalib.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/autoload.php"));
-
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
     $errors = array();
@@ -62,22 +59,23 @@
     $interest = trim(optional_param("interest","",PARAM_TEXT));
 
     $description = optional_param("description","",PARAM_TEXT);
-
-    $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
-
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
     $recentactivitiesemail = optional_param("recentactivitiesemail","N",PARAM_TEXT);
     if ($recentactivitiesemail == "") {
     	$recentactivitiesemail = 'N';
     }
 
+    $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
+
     $privatedata = optional_param("defaultaccess","N",PARAM_ALPHA);
+
+    $ref = optional_param("ref",$CFG->homeAddress."index.php",PARAM_URL);
 
     if(isset($_POST["register"])){
     	if ($CFG->hasConditionsOfUseAgreement && $agreeconditions != "Y") {
             array_push($errors, $LNG->CONDITIONS_AGREE_FAILED_MESSAGE);
         } else {
-			// check email & full name provided
+			// check email, password & full name provided
 			if (!validEmail($email)) {
 				array_push($errors, $LNG->FORM_ERROR_EMAIL_INVALID);
 			} else {
@@ -87,12 +85,13 @@
 				if (strlen($password) < 8){
 					array_push($errors, $LNG->LOGIN_PASSWORD_LENGTH);
 				}
+				if ($fullname == ""){
+					array_push($errors, $LNG->FORM_ERROR_NAME_MISSING);
+				}
+
 				// check password & confirm password match
 				if ($password != $confirmpassword){
 					array_push($errors, $LNG->FORM_ERROR_PASSWORD_MISMATCH);
-				}
-				if ($fullname == ""){
-					array_push($errors, $LNG->FORM_ERROR_NAME_MISSING);
 				}
 				if ($interest == ""){
 					array_push($errors, $LNG->FORM_ERROR_INTEREST_MISSING);
@@ -108,28 +107,14 @@
 						array_push($errors, $LNG->FORM_ERROR_EMAIL_USED);
 					} else {
 						if($CFG->CAPTCHA_ON) {
-							/*
-							$reCaptcha = new ReCaptcha($CFG->CAPTCHA_PRIVATE);
-							$response = $reCaptcha->verifyResponse(
-								$_SERVER["REMOTE_ADDR"],
-								$recaptcha_response_field
-							);
-							if ($recaptcha_response_field == "" || $response == null || !$response->isSuccess()) {
-								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
-							}
-							*/
-
 							$reCaptcha = new \ReCaptcha\ReCaptcha($CFG->CAPTCHA_PRIVATE);
-							$response = $reCaptcha->setExpectedHostname($CFG->homeAddress)
+							$response = $reCaptcha->setExpectedHostname($CFG->CAPTCHA_DOMAIN)
 								->verify(
 									$recaptcha_response_field,
 									$_SERVER["REMOTE_ADDR"]
 							);
 
 							if ($response == null || !$response->isSuccess()) {
-								if (isset($response) && $response != null) {
-									console.log($response->getErrorCodes());
-								}
 								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
 							}
 						}

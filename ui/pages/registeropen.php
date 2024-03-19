@@ -58,12 +58,7 @@
     $fullname = trim(optional_param("fullname","",PARAM_TEXT));
     $interest = trim(optional_param("interest","",PARAM_TEXT));
 
-    $homepage = trim(optional_param("homepage","http://",PARAM_URL));
-
     $description = optional_param("description","",PARAM_TEXT);
-
-    $location = optional_param("location","",PARAM_TEXT);
-    $loccountry = optional_param("loccountry","",PARAM_TEXT);
 
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
     $recentactivitiesemail = optional_param("recentactivitiesemail","N",PARAM_TEXT);
@@ -103,17 +98,6 @@
 					array_push($errors, $LNG->FORM_ERROR_INTEREST_MISSING);
 				}
 
-				// check url
-				if ($homepage == "http://") {
-					$homepage = "";
-				}
-				if ($homepage != "") {
-					$URLValidator = new mrsnk_URL_validation($homepage, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
-					if($homepage != "" && !$URLValidator->isValid()){
-						 array_push($errors, $LNG->FORM_ERROR_URL_INVALID);
-					}
-				}
-
 				if (empty($errors)) {
 					// check email not already in use
 					$u = new User();
@@ -140,9 +124,8 @@
 							// only create user if no error so far
 							// create new user
 
-							$u->add($email,$fullname,$password,$homepage,'N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNVALIDATED);
+							$u->add($email,$fullname,$password,'','N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNVALIDATED);
 							$u->updatePrivate($privatedata);
-							$u->updateLocation($location,$loccountry);
 							$u->setInterest($interest);
 
 							// Recent Activities Email
@@ -191,8 +174,6 @@
 			}
 		}
     }
-
-    $countries = getCountryList();
 ?>
 
 <div class="container-fluid">
@@ -244,6 +225,7 @@
 				<label for="fullname" class="col-sm-3 col-form-label"><?php echo $LNG->FORM_REGISTER_NAME; ?> <span class="required">*</span></label>
 				<div class="col-sm-9">
 					<input type="text" class="form-control" id="fullname" name="fullname" value="<?php print $fullname; ?>" />
+					<div id="validationFullname" class="form-text text-danger"></div>
 				</div>
 			</div>
 			<div class="mb-3 row">
@@ -257,44 +239,13 @@
 				<div class="col-sm-9">
 					<textarea type="text" class="form-control" id="interest" name="interest" rows="3"><?php print $interest; ?></textarea>
 				</div>
-			</div>
-			<div class="mb-3 row">
-				<label for="location" class="col-sm-3 col-form-label"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
-				<div class="col-sm-5">
-					<input type="text" class="form-control" id="location" name="location" value="<?php print $location; ?>" />
-				</div>
-				<div class="col-sm-4">
-					<select class="form-select" aria-label="Select country" id="loccountry" name="loccountry" >
-						<option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
-						<?php
-							foreach($countries as $code=>$c){
-								echo "<option value='".$code."'";
-								if($code == $loccountry){
-									echo " selected='true'";
-								}
-								echo ">".$c."</option>";
-							}
-						?>
-					</select>
-				</div>
-			</div>	
-			
-			<?php if ($CFG->hasUserHomePageOption) { ?>
-				<div class="mb-3 row">
-					<label for="homepage" class="col-sm-3 col-form-label"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" id="homepage" name="homepage" value="<?php print $homepage; ?>" />
-					</div>
-				</div>	
-			<?php } ?>		
-			
+			</div>			
 			<div class="mb-3 row">
 				<label for="photo" class="col-sm-3 col-form-label"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
 				<div class="col-sm-9">
 					<input type="file" class="form-control" id="photo" name="photo" />
 				</div>
-			</div>	
-			
+			</div>				
 			<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
 				<div class="mb-3 row">
 					<label class="col-sm-3 col-form-label"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
@@ -305,8 +256,7 @@
 						</div>
 					</div>
 				</div>	
-			<?php } ?>
-			
+			<?php } ?>			
 			<?php if ($CFG->CAPTCHA_ON) { ?>
 				<div class="mb-3 row">
 					<label for="g-recaptcha-response" class="col-sm-3 col-form-label"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?> <span class="required">*</span></label>
@@ -315,7 +265,6 @@
 					</div>
 				</div>	
 			<?php } ?>
-
 			<div class="mb-3 row">
 				<hr />
 				<?php if ($CFG->hasConditionsOfUseAgreement) { ?>
@@ -359,6 +308,29 @@
 		<?php } ?>
 	</div>
 </div>
+
+<script>
+	document.getElementById('fullname').addEventListener('input', function() {
+		var nameInput = this;
+		var errorDiv = document.getElementById('validationFullname');
+    	var submitBtn = document.getElementById('register');
+		// Pattern to include Unicode characters
+		var regex = /^[\p{L}\s'-]+$/u;
+		
+		if (!regex.test(nameInput.value)) {
+			// Disable the submit button
+			submitBtn.disabled = true;
+			// Display error message if validation fails
+			errorDiv.textContent = "Name can only contain letters, spaces, hyphens, and apostrophes.";
+		} else {
+			// Enable  the submit button
+			submitBtn.disabled = false;
+			// Clear error message if validation passes
+			errorDiv.textContent = '';
+		}		
+	});
+</script>
+
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

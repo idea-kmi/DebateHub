@@ -286,7 +286,7 @@
 								if ($count == 0) { ?>
 									<p><?= $LNG->SPAM_ADMIN_NONE_MESSAGE ?></p>
 								<?php } else { ?>
-									<table class='table table-sm'>
+									<table class='table table-sm table-striped table-hover compact'>
 										<tr>
 											<th width='40%'><?= $LNG->SPAM_ADMIN_TABLE_HEADING1 ?></th>
 											<th width='10%'><?= $LNG->SPAM_ADMIN_TABLE_HEADING3 ?></th>
@@ -358,7 +358,7 @@
 								if ($count == 0) { ?>
 									<p><?= $LNG->SPAM_ADMIN_NONE_ARCHIVED_MESSAGE ?></p>
 								<?php } else { ?>
-									<table class='table table-sm'>
+									<table class='table table-sm table-striped table-hover compact'>
 										<tr>
 											<th width='40%'><?= $LNG->SPAM_ADMIN_TABLE_HEADING1 ?></th>
 											<th width='10%'><?= $LNG->SPAM_ADMIN_TABLE_HEADING3 ?></th>

@@ -199,7 +199,8 @@
 							if ($count == 0) {
 								echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_MESSAGE."</p>";
 							} else {
-								echo "<table class='table'>";
+								echo "
+								<table class='table table-sm table-striped table-hover compact'>";
 								echo "<tr>";
 								echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";
@@ -258,7 +259,7 @@
 							if ($countu == 0) {
 								echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
 							} else {
-								echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
+								echo "<table class='table table-sm table-striped table-hover compact'>";
 								echo "<tr>";
 								echo "<th width='50%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING1."</th>";
 								echo "<th width='10%'>".$LNG->SPAM_USER_ADMIN_TABLE_HEADING2."</th>";

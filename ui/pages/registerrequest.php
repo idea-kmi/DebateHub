@@ -57,19 +57,20 @@
     $confirmpassword = trim(optional_param("confirmpassword","",PARAM_TEXT));
     $fullname = trim(optional_param("fullname","",PARAM_TEXT));
     $interest = trim(optional_param("interest","",PARAM_TEXT));
-
     $description = optional_param("description","",PARAM_TEXT);
+    $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
     $recentactivitiesemail = optional_param("recentactivitiesemail","N",PARAM_TEXT);
     if ($recentactivitiesemail == "") {
     	$recentactivitiesemail = 'N';
     }
-
-    $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
-
     $privatedata = optional_param("defaultaccess","N",PARAM_ALPHA);
 
     $ref = optional_param("ref",$CFG->homeAddress."index.php",PARAM_URL);
+
+	/* block list for emails to try reduce spammers */
+	$emailBlocklist = include_once($HUB_FLM->getCodeDirPath("core/email-blocklist.php"));
+	$emailDomain = substr(strrchr($email, "@"), 1);
 
     if(isset($_POST["register"])){
     	if ($CFG->hasConditionsOfUseAgreement && $agreeconditions != "Y") {
@@ -78,6 +79,8 @@
 			// check email, password & full name provided
 			if (!validEmail($email)) {
 				array_push($errors, $LNG->FORM_ERROR_EMAIL_INVALID);
+			} else if (in_array($emailDomain, $emailBlocklist)) {
+				array_push($errors, $LNG->FORM_ERROR_EMAIL_NOT_ALLOWED);
 			} else {
 				if ($password == ""){
 					array_push($errors, $LNG->FORM_ERROR_PASSWORD_MISSING);
@@ -85,13 +88,12 @@
 				if (strlen($password) < 8){
 					array_push($errors, $LNG->LOGIN_PASSWORD_LENGTH);
 				}
-				if ($fullname == ""){
-					array_push($errors, $LNG->FORM_ERROR_NAME_MISSING);
-				}
-
 				// check password & confirm password match
 				if ($password != $confirmpassword){
 					array_push($errors, $LNG->FORM_ERROR_PASSWORD_MISMATCH);
+				}
+				if ($fullname == ""){
+					array_push($errors, $LNG->FORM_ERROR_NAME_MISSING);
 				}
 				if ($interest == ""){
 					array_push($errors, $LNG->FORM_ERROR_INTEREST_MISSING);

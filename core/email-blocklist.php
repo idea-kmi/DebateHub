@@ -6,6 +6,7 @@ return array(
     'dig.oueue.com',
     'farironalds.com',
     'yandex.ru',
-    'dig.oueue.com',
+    'gmial.com',
+    'mailcos.site',
     // Add more domains as necessary
 );

@@ -8,5 +8,6 @@ return array(
     'yandex.ru',
     'gmial.com',
     'mailcos.site',
+    'dianabykiris.fun',
     // Add more domains as necessary
 );

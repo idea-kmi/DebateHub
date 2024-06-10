@@ -9,5 +9,7 @@ return array(
     'gmial.com',
     'mailcos.site',
     'dianabykiris.fun',
+    'list.ru',
+    'gmx.com',
     // Add more domains as necessary
 );

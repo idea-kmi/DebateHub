@@ -11,5 +11,7 @@ return array(
     'dianabykiris.fun',
     'list.ru',
     'gmx.com',
+    'mail.ru',
+    'sedona-vortex-tours.com',
     // Add more domains as necessary
 );

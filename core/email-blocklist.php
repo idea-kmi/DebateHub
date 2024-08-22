@@ -14,5 +14,6 @@ return array(
     'mail.ru',
     'sedona-vortex-tours.com',
     'rockstarseo.net',
+    'yandex.kz',
     // Add more domains as necessary
 );

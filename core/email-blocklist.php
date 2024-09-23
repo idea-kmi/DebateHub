@@ -15,5 +15,7 @@ return array(
     'sedona-vortex-tours.com',
     'rockstarseo.net',
     'yandex.kz',
+    'sit.codepb.com',
+    'phoenixseomasters.com'
     // Add more domains as necessary
 );

@@ -16,6 +16,7 @@ return array(
     'rockstarseo.net',
     'yandex.kz',
     'sit.codepb.com',
-    'phoenixseomasters.com'
+    'phoenixseomasters.com',
+    'apacheodyssey.com'
     // Add more domains as necessary
 );

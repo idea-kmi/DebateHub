@@ -283,11 +283,11 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 			<hr class="my-4" />
 			<div class="col">
 				<h6 class="mb-4"><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h6>
-				<iframe src="//www.youtube.com/embed/JrfX_zysLcQ" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+				<iframe title="<?php echo $LNG->IFRAME_ABOUT_DEBTEHUB;?>" src="//www.youtube.com/embed/JrfX_zysLcQ" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 			</div>
 			<div class="col">
 				<h6 class="mb-4"><?php echo $LNG->HELP_MOVIES_TITLE_INTRO;?> <span class="text-secondary fs-6">(1m 48s)</span></h6>
-				<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.png" width="480px" height="270px" autobuffer="autobuffer" controls="controls">
+				<video title="<?php echo $LNG->IFRAME_HELP_CREATING_ACCOUNT; ?>" poster="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.png" width="480px" height="270px" autobuffer="autobuffer" controls="controls">
 					<source src="<?php echo $CFG->homeAddress; ?>ui/movies/debatehub-intro.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 				</video>
 			</div>

@@ -51,7 +51,7 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstatsexternal.php"));
 	<h1 style="padding-top:0px;margin-top:0px;"><?php echo $LNG->STATS_DEBATE_TITLE.$node->name; ?><a href="<?php echo $CFG->homeAddress.'explore.php?id='.$nodeid; ?>"><img src="<?php echo $HUB_FLM->getImagePath('arrow-up2.png'); ?>" style="padding-left:3px;vertical-align:middle" border="0" /></a></h1>
 </center>
 
-<iframe width="1000px;" height="1000px;" src="<?php echo $dashboardurl; ?>" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+<iframe title="<?php echo $LNG->IFRAME_DASHBOARD_FRAME_DEBATE;?>" width="1000px;" height="1000px;" src="<?php echo $dashboardurl; ?>" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));

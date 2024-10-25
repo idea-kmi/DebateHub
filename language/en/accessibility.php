@@ -23,20 +23,14 @@
  *                                                                              *
  ********************************************************************************/
 
-	include_once("config.php");
+// ACESSIBILITY ADDITIONS
 
-	include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
+// Iframes
+$LNG->IFRAME_ABOUT_DEBTEHUB = "About Debate Hub Movie";
+$LNG->IFRAME_HELP_CREATING_ACCOUNT = "Creating an account and a homepage overview Movie";
+$LNG->IFRAME_CIDASHBOARD_FRAME_GROUP = "Displaying a CIDashboard dashboard instance, with various visualisations for this group.";
+$LNG->IFRAME_DASHBOARD_FRAME_GROUP = "Displaying a dashboard with various visualisations for this group.";
+$LNG->IFRAME_DASHBOARD_FRAME_DEBATE = "Displaying a dashboard with various visualisations for this debate.";
+$LNG->IFRAME_EMBED_TEST = "A test frame for Embedding a debate";
 
-?>
 
-<div style="margin:20px;">
-
-<h1>Testing the embeddable</h1>
-
-<iframe title="<?php echo $LNG->IFRAME_EMBED_TEST;?>" src="http://debatehub.net/group.php?groupid=9811386440138143001413817989&embed=true" width="1024" height="900" scrolling="yes" frameborder="1"></iframe>
-
-</div>
-
-<?php
-	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-?>

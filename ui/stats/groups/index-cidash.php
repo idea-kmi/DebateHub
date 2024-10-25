@@ -65,7 +65,7 @@
 		<a href="<?php echo $CFG->homeAddress.'group.php?groupid='.$groupid; ?>" class="fw-normal fs-6">[Go back]</a>
 	</h1>
 
-	<iframe width="1000px;" height="1000px;" src="<?php echo $dashboardurl; ?>" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+	<iframe title="<?php echo $LNG->IFRAME_CIDASHBOARD_FRAME_GROUP;?>" width="1000px;" height="1000px;" src="<?php echo $dashboardurl; ?>" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 
 </div>
 

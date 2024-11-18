@@ -223,15 +223,15 @@ echo "</script>";
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
+    window.addEventListener('load', function() {
+        NODE_ARGS['jsonnodes'] = JSON.parse('<?php echo addslashes($jsonnodes); ?>');
+        NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');
+        NODE_ARGS['jsoncons'] = JSON.parse('<?php echo addslashes($jsoncons); ?>');
 
-		NODE_ARGS['jsonnodes'] = JSON.parse('<?php echo addslashes($jsonnodes); ?>');
-		NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');
-		NODE_ARGS['jsoncons'] = JSON.parse('<?php echo addslashes($jsoncons); ?>');
-
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>', 'stats-groups-sunburst-script');
-	});
+        addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-sunburst.js.php"); ?>', 'stats-groups-sunburst-script');
+    });
 </script>
+
 
 <div class="d-flex flex-column">
 	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>

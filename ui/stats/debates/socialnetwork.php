@@ -52,7 +52,7 @@ echo "</script>";
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-debate-social.js.php"); ?>', 'stats-debates-debate-social-script');
 	});
 </script>

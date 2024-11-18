@@ -221,14 +221,14 @@
 										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
 										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
 										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ document.getElementById(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
 										echo '</form>';
 										echo '</td>';
 										echo '<td>';
 										echo '<form id="fourth-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($user->name).'\');">';
 										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
 										echo '<input type="hidden" id="suspenduser" name="suspenduser" value="" />';
-										echo '<span title="'.$LNG->SPAM_USER_ADMIN_SUSPEND_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($user->name).'\')) { $(\'fourth-'.$user->userid.'\').submit(); }" id="suspenduser" name="suspenduser">'.$LNG->SPAM_USER_ADMIN_SUSPEND_BUTTON.'</a>';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_SUSPEND_HINT.'" class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($user->name).'\')) { document.getElementById(\'fourth-'.$user->userid.'\').submit(); }" id="suspenduser" name="suspenduser">'.$LNG->SPAM_USER_ADMIN_SUSPEND_BUTTON.'</a>';
 										echo '</form>';
 										echo '</td>';
 										echo '<td>';
@@ -280,7 +280,7 @@
 										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($user->name).'\');">';
 										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
 										echo '<input type="hidden" id="restoreuser" name="restoreuser" value="" />';
-										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
+										echo '<span title="'.$LNG->SPAM_USER_ADMIN_RESTORE_HINT.'" class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($user->name).'\')){ document.getElementById(\'second-'.$user->userid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_USER_ADMIN_RESTORE_BUTTON.'</a>';
 										echo '</form>';
 										echo '</td>';
 										echo '<td class="d-none">';
@@ -288,7 +288,7 @@
 										//echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($user->name).'\');">';
 										//echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
 										//echo '<input type="hidden" id="deleteuser" name="deleteuser" value="" />';
-										//echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
+										//echo '<span title="'.$LNG->SPAM_USER_ADMIN_DELETE_HINT.'" class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($user->name).'\')) { document.getElementById(\'third-'.$user->userid.'\').submit(); }" id="deletenode" name="deletenode">'.$LNG->SPAM_USER_ADMIN_DELETE_BUTTON.'</a>';
 										//echo '</form>';
 										echo '</td>';
 										echo '<td>';

@@ -165,7 +165,7 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		NODE_ARGS['nodeid'] = '<?php echo $nodeid; ?>';
 		NODE_ARGS['jsondata'] = <?php echo $json; ?>;
 

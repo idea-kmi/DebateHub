@@ -31,9 +31,9 @@
 /**
  *	set which tab to show and load first
  */
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
 	var itemobj = renderGroup(groupObj, 760, "", true, false);
-	$('maingroupdiv').insert(itemobj);
+	document.getElementById('maingroupdiv').appendChild(itemobj);
 	refreshIssues();
 });
 
@@ -42,8 +42,8 @@ function changeGroupMode(obj, mode) {
 	if (obj.className == "radiobuttonpressed") {
 		wasPressed = true;
 	}
-	$('radiobuttonsum').className = "radiobutton";
-	$('radiobuttonshare').className = "radiobutton";
+	document.getElementById('radiobuttonsum').className = "radiobutton";
+	document.getElementById('radiobuttonshare').className = "radiobutton";
 	if (!wasPressed) {
 		obj.className = "radiobuttonpressed";
 	}
@@ -60,14 +60,13 @@ function refreshIssues() {
 }
 
 function checkIssueAddForm() {
-	var checkname = ($('issue').value).trim();
+	const checkname = document.getElementById('issue').value.trim();
 	if (checkname == ""){
 	   alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
 	   return false;
     }
 
-    $('issueform').style.cursor = 'wait';
-
+	document.getElementById('issueform').style.cursor = 'wait';
 	return true;
 }
 
@@ -79,7 +78,9 @@ function loadissues(context,args){
 
 	updateAddressParameters(args);
 
-	$("tab-content-issue-list").update(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	const tabcontentissuelist = document.getElementById('tab-content-issue-list');
+	tabcontentissuelist.innerHTML = "";
+	tabcontentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	new Ajax.Request(reqUrl, { method:'get',
@@ -101,7 +102,9 @@ function loadissues(context,args){
 				var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 				window.location.hash = "-"+currentPage;
 
-				$("tab-content-issue-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+				document.getElementById("tab-content-issue-list").innerHTML = (createNavCounter(total,json.nodeset[0].start,json.nodeset[0].count,"issues")).innerHTML;
+
+				const tabcontentissuelist = document.getElementById("tab-content-issue-list");
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -122,14 +125,13 @@ function loadissues(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
-					$("tab-content-issue-list").insert(tb3);
-
-					displayIssueNodes(466, 210, $("tab-content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "groupissues", 'active', false, true, true);
+					document.getElementById("tab-content-issue-list").appendChild(tb3);
+					displayIssueNodes(466, 210,tabcontentissuelist,json.nodeset[0].nodes,parseInt(args['start'])+1, true, "groupissues", 'active', false, true, true);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-issue-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+					tabcontentissuelist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 				}
     		}
   		});
@@ -141,8 +143,10 @@ function loadissues(context,args){
 function reorderIssues(){
  	// change the sort and orderby ARG values
  	ISSUE_ARGS['start'] = 0;
- 	ISSUE_ARGS['sort'] = $('select-sort-issue').options[$('select-sort-issue').selectedIndex].value;
- 	ISSUE_ARGS['orderby'] = $('select-orderby-issue').options[$('select-orderby-issue').selectedIndex].value;
+	const sortissue = getElementById('select-sort-issue');
+ 	ISSUE_ARGS['sort'] = sortissue.options[sortissue.selectedIndex].value;
+	const sortorderissue = getElementById('select-orderby-issue');
+ 	ISSUE_ARGS['orderby'] = sortorderissue.options[sortorderissue.selectedIndex].value;
 
  	loadissues(CONTEXT,ISSUE_ARGS);
 }
@@ -151,13 +155,15 @@ function reorderIssues(){
  *	Filter the issues by search criteria
  */
 function filterSearchIssues() {
-	ISSUE_ARGS['q'] = $('qissue').value;
+	ISSUE_ARGS['q'] = document.getElementByIf('qissue').value;
 	var scope = 'all';
-	if ($('scopeissuemy') && $('scopeissuemy').selected) {
+	const scopeidissuemy = getElementById('scopeissuemy');
+	if (scopeidissuemy && scopeidissuemy.selected) {
 		scope = 'my';
 	}
 	ISSUE_ARGS['scope'] = scope;
 
+	const tabissuelistobj = getElementById('tab-issue-list-obj');
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&type=issue&format=text&q="+ISSUE_ARGS['q'];
 		new Ajax.Request(reqUrl, { method:'get',
@@ -170,12 +176,12 @@ function filterSearchIssues() {
 					ISSUE_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.issue = false;
-				setTabPushed($('tab-issue-list-obj'),'issue-list');
+				setTabPushed(tabissuelistobj,'issue-list');
 			}
 		});
 	} else {
 		DATA_LOADED.issue = false;
-		setTabPushed($('tab-issue-list-obj'),'issue-list');
+		setTabPushed(tabissuelistobj,'issue-list');
 	}
 }
 
@@ -188,7 +194,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
 
     var selOrd = new Element("select");
- 	Event.observe(selOrd,'change',handler);
+ 	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar";
     selOrd.name = "orderby";
@@ -204,7 +210,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
- 	Event.observe(sortBy,'change',handler);
+ 	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar";
     sortBy.name = "sort";
@@ -237,15 +243,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
 	    if(start > 0){
 			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("active");
-	        Event.observe(prevSpan,"click", function(){
+	        prevSpan.classList.add("active");
+	        prevSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) - newArr["max"];
 	            eval("load"+type+"(context,newArr)");
-	        });
+	        };
 	    } else {
 			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("inactive");
+	        prevSpan.classList.add("inactive");
 	    }
 
 	    //pages
@@ -255,12 +261,12 @@ function createNav(total, start, count, argArray, context, type){
 	    for (var i = 1; i<totalPages+1; i++){
 	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
 	    	if(i != currentPage){
-		    	page.addClassName("active");
+		    	page.classList.add("active");
 		    	var newArr = Object.clone(argArray);
 		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+		    	page.onclick = Pages.next.bindAsEventListener(Pages,type,context,newArr);
 	    	} else {
-	    		page.addClassName("currentpage");
+	    		page.classList.add("currentpage");
 	    	}
 	    	pageSpan.insert(page);
 	    }
@@ -269,15 +275,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
 		if(parseInt(start)+parseInt(count) < parseInt(total)){		
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("active");
-	        Event.observe(nextSpan,"click", function(){
+	        nextSpan.classList.add("active");
+	        nextSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
 	            eval("load"+type+"(context, newArr)");
-	        });
+	        };
 	    } else {
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("inactive");
+	        nextSpan.classList.add("inactive");
 	    }
 
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){

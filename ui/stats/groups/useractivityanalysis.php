@@ -132,26 +132,29 @@
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
 
-	Event.observe(window, 'load', function() {
-		NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
+    window.addEventListener('load', function() {
+        NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
-		var data = NODE_ARGS['data'];
-		if (data.length > 0) {
-			document.getElementById("allStatsArea").style.visibility = "visible";
-			$('messagearea').update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
-			displayUserActivityCrossFilterD3Vis(data, 980);
-		} else {
-			document.getElementById("allStatsArea").style.visibility = "hidden";
-			<?php if ($sdt != "" && $edt != "") {?>
-				$('messagearea').innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-			<?php } ?>
-		}
-	});
+        var data = NODE_ARGS['data'];
+        const messagearea = document.getElementById("messagearea");
+        messagearea.innerHTML = "";
+
+        if (data.length > 0) {
+            document.getElementById("allStatsArea").style.visibility = "visible";
+            messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+            displayUserActivityCrossFilterD3Vis(data, 980);
+        } else {
+            document.getElementById("allStatsArea").style.visibility = "hidden";
+            <?php if ($sdt != "" && $edt != "") { ?>
+                messagearea.innerHTML = "<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+            <?php } ?>
+        }
+    });
 
 	function checkForm() {
 		//check dates
-		var startdate = ($('startdate').value).trim();
-		var enddate = ($('enddate').value).trim();
+		var startdate = (document.getElementById('startdate').value).trim();
+		var enddate = (document.getElementById('enddate').value).trim();
 
 		if (startdate == "") {
 			alert("<?php echo $LNG->STATS_START_DATE_ERROR; ?>");
@@ -172,7 +175,9 @@
 			}
 		}
 
-		$('messagearea').update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+		const messagearea = document.getElementById("messagearea");
+		messagearea.innerHTML = "";
+		messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 		return true;
 	}

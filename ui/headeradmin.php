@@ -67,6 +67,7 @@
 		<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
 
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("bootstrap.css"); ?>" type="text/css" />
+        <link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("ckeditor5.css"); ?>" type="text/css" />		
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("all.css"); ?>" type="text/css" />
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("style.css"); ?>" type="text/css" media="screen" />
 		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
@@ -79,7 +80,7 @@
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/users.js.php'); ?>" type="text/javascript"></script>
 
-		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor/ckeditor.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor5/ckeditor5.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/datetimepicker_css.js" type="text/javascript"></script>
@@ -121,10 +122,11 @@
 					'alt': '<?php echo $LNG->HEADER_RSS_FEED_ICON_ALT; ?>',
 					'class': 'active',
 					'style': 'padding-top:0px;'});
-				Event.observe(feed,'click',function(){
+				feed.addEventListener("click", function() {	
 					getNodesFeed(args);
 				});
-				$('rssbuttonfred').insert(feed);
+				const rssbuttonfred = document.getElementById('rssbuttonfred');
+				rssbuttonfred.insert(feed);
 				<?php } ?>
 			}
 			window.onload = init;

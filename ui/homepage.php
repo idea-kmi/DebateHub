@@ -37,13 +37,15 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 	function scrollDivLeft(divname, leftbuttonname, rightbuttonname, barname) {
 		timerLeft = setInterval(function() {
-			if ($(divname).scrollLeft == 0) {
-				$(leftbuttonname).src = "<?php echo $HUB_FLM->getImagePath('back-arrow-grey.png'); ?>";
+			const divnameobj = document.getElementById(divname);
+			if (divnameobj.scrollLeft == 0) {
+				document.getElementById(leftbuttonname).src = "<?php echo $HUB_FLM->getImagePath('back-arrow-grey.png'); ?>";
 				stopScrollLeft(divname);
 			} else {
-				$(divname).scrollLeft -= timerStep;
-				if ($(divname).scrollLeft < ($(barname).offsetWidth-$(divname).offsetWidth)) {
-					$(rightbuttonname).src = "<?php echo $HUB_FLM->getImagePath('forward-arrow.png'); ?>";
+				divnameobj.scrollLeft -= timerStep;
+				const barnameobj = document.getElementById(barname);
+				if (divnameobj.scrollLeft < (barnameobj.offsetWidth-divnameobj.offsetWidth)) {
+					document.getElementById(rightbuttonname).src = "<?php echo $HUB_FLM->getImagePath('forward-arrow.png'); ?>";
 				}
 			}
 		},
@@ -53,13 +55,17 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 
 	function scrollDivRight(divname, leftbuttonname, rightbuttonname, barname) {
 		timerRight = setInterval(function() {
-			if ($(divname).scrollLeft >= ($(barname).offsetWidth-$(divname).offsetWidth)) {
-				$(rightbuttonname).src = "<?php echo $HUB_FLM->getImagePath('forward-arrow-grey.png'); ?>";
+			const divnamneobj = document.getElementById(divname);
+			const barnameobj = document.getElementById(barname);
+			if (divnamneobj.scrollLeft >= (barnameobj.offsetWidth-divnamneobj.offsetWidth)) {
+				const rightbuttonnameobj = document.getElementById(rightbuttonname);
+				rightbuttonnameobj.src = "<?php echo $HUB_FLM->getImagePath('forward-arrow-grey.png'); ?>";
 				stopScrollRight(divname);
 			} else {
-				$(divname).scrollLeft += timerStep;
-				if ($(divname).scrollLeft > 0) {
-					$(leftbuttonname).src = "<?php echo $HUB_FLM->getImagePath('back-arrow.png'); ?>";
+				divnamneobj.scrollLeft += timerStep;
+				if (divnamneobj.scrollLeft > 0) {
+					const leftbuttonnameobj = document.getElementById(leftbuttonname);
+					leftbuttonnameobj.src = "<?php echo $HUB_FLM->getImagePath('back-arrow.png'); ?>";
 				}
 			}
 		}, timerDuration);
@@ -80,7 +86,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 		}
 	}
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		if (USER && USER != "") {
 			loadmygroups();
 			loadmyissues();
@@ -94,8 +100,9 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 	*	load my groups
 	*/
 	function loadmygroups(){
-		var container = $('mygroupsBar');
-		container.update(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+		const container = document.getElementById('mygroupsBar');
+		container.innerHTML = "";
+		container.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getmygroups&start=0&max=-1&orderby=date&sort=DESC";
 		new Ajax.Request(reqUrl, { method:'get',
 			onSuccess: function(transport){
@@ -111,11 +118,11 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 					loadrecentgroups();
 					return;
 				}
-				container.update("");
+				container.innerHTML = "";
 				if(json.groupset[0].groups.length > 0){
 					container.style.width = (json.groupset[0].groups.length*450)+'px';
 					displayGroups(container,json.groupset[0].groups,0, false, true);
-					$("tab-content-home-recent-mygroup-div").style.display = 'block';
+					document.getElementById("tab-content-home-recent-mygroup-div").style.display = 'block';
 				} else {
 					loadrecentgroups();
 				}
@@ -126,12 +133,13 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 	/**
 	*	load my issues
 	*/
-	function loadmyissues(){
-		var container = $('myissuesBar');
-		container.update(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	function loadmyissues() {
+		const container = document.getElementById('myissuesBar');
+		container.innerHTML = "";
+		container.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getnodesbyuser&start=0&max=-1&orderby=date&sort=DESC&filternodetypes=Issue&userid="+USER;
 		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport){
+			onSuccess: function(transport) {
 				try {
 					var json = transport.responseText.evalJSON();
 				} catch(err) {
@@ -145,11 +153,11 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 					return;
 				}
 				//display nodes
-				container.update("");
+				container.innerHTML = "";
 				if(json.nodeset[0].nodes.length > 0){
 					container.style.width = (json.nodeset[0].nodes.length*450)+'px';
 					displayIssueNodes(428, 160, container,json.nodeset[0].nodes,0, false,'recentissues','inactive', false, false, true);
-					$("tab-content-home-recent-mydebate-div").style.display = 'block';
+					document.getElementById("tab-content-home-recent-mydebate-div").style.display = 'block';
 				} else {
 					loadrecentissues();
 				}
@@ -160,11 +168,12 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 	/**
 	*	load latest groups
 	*/
-	function loadrecentgroups(){
-		var container = $('groupsBar');
-		container.update(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+	function loadrecentgroups() {
+		const container = document.getElementById('groupsBar');
+		container.innerHTML = "";
+		container.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getgroupsbyglobal&start=0&max=4&orderby=members&sort=DESC";
-		$("tab-content-home-recent-group-div").style.display = 'block';
+		document.getElementById("tab-content-home-recent-group-div").style.display = 'block';
 		new Ajax.Request(reqUrl, { method:'get',
 			onSuccess: function(transport){
 				try {
@@ -176,7 +185,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 					alert(json.error[0].message);
 					return;
 				}
-				container.update("");
+				container.innerHTML = "";
 				if(json.groupset[0].groups.length > 0){
 					//alert((json.groupset[0].groups.length*450));
 					container.style.width = (json.groupset[0].groups.length*450)+'px';
@@ -198,7 +207,9 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 			<div class="h1"><?php echo $LNG->HOMEPAGE_TITLE; ?></div>
 			<p>
 				<?php echo $LNG->HOMEPAGE_FIRST_PARA; ?><br />
-				<span id="homeintrobutton" class="active" onclick="if ($('homeintromore').style.display == 'none') { $('homeintromore').style.display = 'block'; $('homeintrobutton').innerHTML = '<?php echo $LNG->HOMEPAGE_READ_LESS; ?>'; } else { $('homeintromore').style.display = 'none';  $('homeintrobutton').innerHTML = '<?php echo $LNG->HOMEPAGE_KEEP_READING; ?>';}"><?php echo $LNG->HOMEPAGE_KEEP_READING; ?></span>
+				const homeintromore = document.getElementById('homeintromore');
+				const homeintrobutton = document.getElementById('homeintrobutton');
+				<span id="homeintrobutton" class="active" onclick="if (homeintromore.style.display == 'none') { homeintromore.style.display = 'block'; homeintrobutton.innerHTML = '<?php echo $LNG->HOMEPAGE_READ_LESS; ?>'; } else { homeintromore.style.display = 'none';  homeintrobutton.innerHTML = '<?php echo $LNG->HOMEPAGE_KEEP_READING; ?>';}"><?php echo $LNG->HOMEPAGE_KEEP_READING; ?></span>
 			</p>
 			<div id="homeintromore" style="display:none;">
 				<p><?php echo $LNG->HOMEPAGE_SECOND_PARA_PART2; ?></p>

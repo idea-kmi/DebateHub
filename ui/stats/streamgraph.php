@@ -97,7 +97,7 @@
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-streamgraph.js.php"); ?>', 'stats-streamgraph-script');

@@ -103,7 +103,7 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 <script type='text/javascript'>
 var NODE_ARGS = new Array();
 
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
 
 	NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 

@@ -81,7 +81,8 @@ function loadScatterPlotData(messagearea, scatterplotdiv, width) {
 
 	//displayScatterPlotD3VisTest(scatterplotdiv, width)
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+	messagearea.innerHTML="";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 	var data = NODE_ARGS['data'];
  	if (data != "") {

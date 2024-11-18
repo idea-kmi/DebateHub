@@ -119,8 +119,8 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 			enlargeMap(contentarea, forcedirectedGraph);
 		}
 	};
-	Event.observe(link,"click", handler);
-	Event.observe(button,"click", handler);
+	link.addEventListener("click", handler);	
+	button.addEventListener("click", handler);		
 	tb2.insert(link);
 
 	var zoomOut = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
@@ -128,7 +128,7 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
 	};
-	Event.observe(zoomOut,"click", zoomOuthandler);
+	zoomOut.addEventListener("click", zoomOuthandler);	
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
@@ -136,7 +136,7 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
 	};
-	Event.observe(zoomIn,"click", zoomInhandler);
+	zoomIn.addEventListener("click", zoomInhandler);	
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
@@ -144,7 +144,7 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
 	};
-	Event.observe(zoom1to1,"click", zoom1to1handler);
+	zoom1to1.addEventListener("click", zoom1to1handler);		
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
@@ -152,7 +152,7 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
 	};
-	Event.observe(zoomFit,"click", zoomFithandler);
+	zoomFit.addEventListener("click", zoomFithandler);	
 	tb2.insert(zoomFit);
 
 	var printButton = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
@@ -160,7 +160,7 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
 	};
-	Event.observe(printButton,"click", printButtonhandler);
+	printButton.addEventListener("click", printButtonhandler);	
 	tb2.insert(printButton);
 
 	return tb2;
@@ -190,8 +190,8 @@ function createSocialGraphToolbar(forcedirectedGraph,contentarea) {
 			}
 		}
 	};
-	Event.observe(button3,"click", handler3);
-	Event.observe(view3,"click", handler3);
+	button3.addEventListener("click", handler3);
+	view3.addEventListener("click", handler3);	
 	tb2.insert(view3);
 
 	var button2 = new Element("button", {'id':'viewdetailbutton','class':'d-none', 'title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>'});
@@ -208,8 +208,8 @@ function createSocialGraphToolbar(forcedirectedGraph,contentarea) {
 			alert("<?php echo $LNG->NETWORKMAPS_SELECTED_NODEID_ERROR; ?>");
 		}
 	};
-	Event.observe(button2,"click", handler2);
-	Event.observe(view,"click", handler2);
+	button2.addEventListener("click", handler2);
+	view.addEventListener("click", handler2);	
 	tb2.insert(view);
 
 	return tb2;
@@ -240,8 +240,8 @@ function createGraphToolbar(forcedirectedGraph,contentarea) {
 			alert("<?php echo $LNG->NETWORKMAPS_SELECTED_NODEID_ERROR; ?>");
 		}
 	};
-	Event.observe(button2,"click", handler2);
-	Event.observe(view,"click", handler2);
+	button2.addEventListener("click", handler2);
+	view.addEventListener("click", handler2);	
 	tb2.insert(view);
 
 	var button3 = new Element("button", {'id':'viewdetailbutton', 'class':'d-none', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>'});
@@ -260,8 +260,8 @@ function createGraphToolbar(forcedirectedGraph,contentarea) {
 			}
 		}
 	};
-	Event.observe(button3,"click", handler3);
-	Event.observe(view3,"click", handler3);
+	button3.addEventListener("click", handler3);
+	view3.addEventListener("click", handler3);	
 	tb2.insert(view3);
 
 	return tb2;
@@ -280,7 +280,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
 	};
-	Event.observe(zoomOut,"click", zoomOuthandler);
+	zoomOut.addEventListener("click", zoomOuthandler);	
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
@@ -289,7 +289,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
 	};
-	Event.observe(zoomIn,"click", zoomInhandler);
+	zoomIn.addEventListener("click", zoomInhandler);
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
@@ -298,7 +298,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
 	};
-	Event.observe(zoom1to1,"click", zoom1to1handler);
+	zoom1to1.addEventListener("click", zoom1to1handler);		
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
@@ -307,7 +307,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
 	};
-	Event.observe(zoomFit,"click", zoomFithandler);
+	zoomFit.addEventListener("click", zoomFithandler);	
 	tb2.insert(zoomFit);
 
 	var printButton = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
@@ -316,7 +316,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
 	};
-	Event.observe(printButton,"click", printButtonhandler);
+	printButton.addEventListener("click", printButtonhandler);	
 	tb2.insert(printButton);
 
 	var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left-25px;margin-top:7px;'});
@@ -355,8 +355,8 @@ function createEmbedSocialGraphToolbar(forcedirectedGraph,contentarea) {
 			alert("<?php echo $LNG->NETWORKMAPS_SELECTED_NODEID_ERROR; ?>");
 		}
 	};
-	Event.observe(button2,"click", handler2);
-	Event.observe(view,"click", handler2);
+	button2.addEventListener("click", handler2);
+	view.addEventListener("click", handler2);
 	tb2.insert(view);
 
 	return tb2;
@@ -377,7 +377,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var handler = function() {
 		//go to debate hub
 	};
-	Event.observe(button,"click", handler);
+	button.addEventListener("click", handler);
 	tb2.insert(button);
 	*/
 
@@ -387,7 +387,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
 	};
-	Event.observe(zoomOut,"click", zoomOuthandler);
+	zoomOut.addEventListener("click", zoomOuthandler);
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
@@ -396,7 +396,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
 	};
-	Event.observe(zoomIn,"click", zoomInhandler);
+	zoomIn.addEventListener("click", zoomInhandler);
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
@@ -405,7 +405,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
 	};
-	Event.observe(zoom1to1,"click", zoom1to1handler);
+	zoom1to1.addEventListener("click", zoom1to1handler);
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
@@ -414,7 +414,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
 	};
-	Event.observe(zoomFit,"click", zoomFithandler);
+	zoomFit.addEventListener("click", zoomFithandler);
 	tb2.insert(zoomFit);
 
 	var printButton = new Element("button", {'style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
@@ -423,7 +423,7 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
 	};
-	Event.observe(printButton,"click", printButtonhandler);
+	printButton.addEventListener("click", printButtonhandler);	
 	tb2.insert(printButton);
 
 	var key = new Element("div", {'id':'key', 'style':'float:left;margin-left:25px;margin-top:10px;'});

@@ -42,29 +42,26 @@ var POSITIVE_LINKGROUP_NAME = "Positive";
 var NEUTRAL_LINKGROUP_NAME = "Neutral";
 
 //define events for clicking on the tabs
-var stpHomeList = setTabPushed.bindAsEventListener($('tab-home-list-obj'),'home-list');
-var stpIssueList = setTabPushed.bindAsEventListener($('tab-issue-list-obj'),'issue-list');
-var stpGroupList = setTabPushed.bindAsEventListener($('tab-group-list-obj'),'group-list');
+var stpHomeList = function(event) { setTabPushed.call(document.getElementById('tab-home-list-obj'), event, 'home-list'); };
+var stpIssueList = function(event) { setTabPushed.call(document.getElementById('tab-issue-list-obj'), event, 'issue-list'); };
+var stpGroupList = function(event) { setTabPushed.call(document.getElementById('tab-group-list-obj'), event, 'group-list'); };
 
 /**
  *	set which tab to show and load first
  */
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
 
-	Event.observe('tab-home','click', stpHomeList);
-	Event.observe('tab-issue','click', stpIssueList);
-	Event.observe('tab-group','click', stpGroupList);
+	document.getElementById('tab-home').addEventListener('click', stpHomeList);
+	document.getElementById('tab-issue').addEventListener('click', stpIssueList);
+	document.getElementById('tab-group').addEventListener('click', stpGroupList);
 
-	setTabPushed($('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
+	setTabPushed(document.getElementById(''tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)), getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
 });
 
 /**
  *	switch between tabs
  */
-function setTabPushed(e) {
-
-	var data = $A(arguments);
-	var tabID = data[1];
+function setTabPushed(e, tabID) {
 
 	// Social Sign On bug - returns strange #_=_ when calling index page
 	if (tabID == '_=_') {
@@ -95,24 +92,26 @@ function setTabPushed(e) {
 
 	var i="";
 	for (i in TABS){
+		const tabi = document.getElementById('tab-'+i);
 		if(tab == i){
-			if($("tab-"+i)) {
-				$("tab-"+i).removeClassName("unselected");
-				$("tab-"+i).addClassName("current");
+			if(tabi) {
+				tabi.classList.remove("unselected");
+				tabi..classList.add("current");
 			}
 		} else {
-			if($("tab-"+i)) {
-				$("tab-"+i).removeClassName("current");
-				$("tab-"+i).addClassName("unselected");
+			if(tabi) {
+				tabi.classList.remove("current");
+				tabi.classList.add("unselected");
 			}
 		}
+		const tabcontenti = document.getElementById('tab-content-'+i+'-div');
 		if(tab == i){
-			if ($("tab-content-"+i+"-div")) {
-				$("tab-content-"+i+"-div").show();
+			if (tabcontenti) {
+				tabcontenti.style.display = "block";
 			}
 		} else {
-			if ($("tab-content-"+i+"-div")) {
-				$("tab-content-"+i+"-div").hide();
+			if (tabcontenti) {
+				tabcontenti.style.display = "none";
 			}
 		}
 	}
@@ -124,13 +123,14 @@ function setTabPushed(e) {
 		case 'list':
 			switch(tab) {
 				case 'home':
-					$('tab-home').setAttribute("href",'#home-list');
-					Event.observe('tab-home','click', stpHomeList);
+					const tabhome = document.getElementById('tab-home');
+					tabhome.setAttribute("href",'#home-list');
+					tabhome.onclick'= stpHomeList;
 					break;
 				case 'issue':
-					$('tab-issue').setAttribute("href",'#issue-list');
-					Event.stopObserving('tab-issue','click');
-					Event.observe('tab-issue','click', stpIssueList);
+					const tabissue = document.getElementById('tab-issue');
+					tabissue.setAttribute("href",'#issue-list');
+					tabissue.onclick = stpIssueList;
 					if(!DATA_LOADED.issue){
 						ISSUE_ARGS['start'] = (page-1) * ISSUE_ARGS['max'];
 						loadissues(CONTEXT,ISSUE_ARGS);
@@ -139,9 +139,9 @@ function setTabPushed(e) {
 					}
 					break;
 				case 'group':
-					$('tab-group').setAttribute("href",'#group-list');
-					Event.stopObserving('tab-group','click');
-					Event.observe('tab-group','click', stpGroupList);
+					const tabgroup = document.getElementById('tab-group');
+					tabgroup.setAttribute("href",'#group-list');
+					tabgroup.onclick = stpGroupList;
 					if(!DATA_LOADED.group) {
 						GROUP_ARGS['start'] = (page-1) * GROUP_ARGS['max'];
 						loadgroups(CONTEXT,GROUP_ARGS);
@@ -180,7 +180,9 @@ function loadissues(context,args){
 
 	updateAddressParameters(args);
 
-	$("tab-content-issue-list").update(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	const tabcontentissuelist = document.getElementById("tab-content-issue-list");
+	tabcontentissuelist.innerHTML = "";
+	tabcontentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -199,10 +201,10 @@ function loadissues(context,args){
       			}
 
       			//set the count in tab header
-      			//$('issue-list-count').innerHTML = "";
-      			//$('issue-list-count').insert("("+json.nodeset[0].totalno+")");
+      			//document.getElementById('issue-list-count').innerHTML = "";
+      			//document.getElementById('issue-list-count').appendChild("("+json.nodeset[0].totalno+")");
 
-      			//$('issuebuttons').innerHTML = "";
+      			//document.getElementById('issuebuttons').innerHTML = "";
 
 				//display nav
 				var total = json.nodeset[0].totalno;
@@ -210,7 +212,9 @@ function loadissues(context,args){
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
-				$("tab-content-issue-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+				const tabcontentissuelist = document.getElementById("tab-content-issue-list");
+				tabcontenteissuelist.innerHTML = "";
+				tabcontentissuelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -230,14 +234,14 @@ function loadissues(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
-					$("tab-content-issue-list").insert(tb3);
+					document.getElementById("tab-content-issue-list").appendChild(tb3);
 
-					displayIssueNodes(466, 210, $("tab-content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
+					displayIssueNodes(466, 210, document.getElementById("tab-content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-issue-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+					document.getElementById("tab-content-issue-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 				}
     		}
   		});
@@ -252,7 +256,9 @@ function loadgroups(context,args){
 
 	updateAddressParameters(args);
 
-	$("tab-content-group-list").update(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+	const tabcontentgrouplist = document.getElementById("tab-content-group-list");
+	tabcontentgrouplist.innerHTML = "";
+	tabcontentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getgroupsby" + context + "&includegroups=false&" + Object.toQueryString(args);
 
@@ -266,10 +272,10 @@ function loadgroups(context,args){
       				alert(json.error[0].message);
       				return;
       			}
-				$("tab-content-group-list").innerHTML = "";
+				  document.getElementById("tab-content-group-list").innerHTML = "";
 
 				var tb1 = new Element("div", {'class':'toolbarrow'});
-				$("tab-content-group-list").insert(tb1);
+				document.getElementById("tab-content-group-list").appendChild(tb1);
 
 				var total = json.groupset[0].totalno;
 
@@ -278,7 +284,9 @@ function loadgroups(context,args){
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
 
-				$("tab-content-group-list").update(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
+				const tabcontentgrouplist = document.getElementById("tab-content-group-list");
+				tabcontentgrouplist.innerHTML = "";
+				tabcontentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
 
 				if(json.groupset[0].count > 0){
 					//preprosses nodes to add searchid if it is there
@@ -294,13 +302,13 @@ function loadgroups(context,args){
 					var tb2 = new Element("div", {'class':'toolbarrow'});
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>', members: '<?php echo $LNG->SORT_MEMBERS; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
-					$("tab-content-group-list").insert(tb2);
-					displayGroups($("tab-content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, false, true);
+					document.getElementById("tab-content-group-list").appendChild(tb2);
+					displayGroups(document.getElementById("tab-content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, false, true);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-group-list").insert(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
+					document.getElementById("tab-content-group-list").appendChild(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
 				}
     		}
   		});
@@ -313,8 +321,8 @@ function loadgroups(context,args){
 function reorderIssues(){
  	// change the sort and orderby ARG values
  	ISSUE_ARGS['start'] = 0;
- 	ISSUE_ARGS['sort'] = $('select-sort-issue').options[$('select-sort-issue').selectedIndex].value;
- 	ISSUE_ARGS['orderby'] = $('select-orderby-issue').options[$('select-orderby-issue').selectedIndex].value;
+ 	ISSUE_ARGS['sort'] = document.getElementById('select-sort-issue').options[document.getElementById('select-sort-issue').selectedIndex].value;
+ 	ISSUE_ARGS['orderby'] = document.getElementById('select-orderby-issue').options[document.getElementById('select-orderby-issue').selectedIndex].value;
 
  	loadissues(CONTEXT,ISSUE_ARGS);
 }
@@ -325,8 +333,8 @@ function reorderIssues(){
 function reorderGroups(){
 	// change the sort and orderby ARG values
 	GROUP_ARGS['start'] = 0;
-	GROUP_ARGS['sort'] = $('select-sort-group').options[$('select-sort-group').selectedIndex].value;
-	GROUP_ARGS['orderby'] = $('select-orderby-group').options[$('select-orderby-group').selectedIndex].value;
+	GROUP_ARGS['sort'] = document.getElementById('select-sort-group').options[document.getElementById('select-sort-group').selectedIndex].value;
+	GROUP_ARGS['orderby'] = document.getElementById('select-orderby-group').options[document.getElementById('select-orderby-group').selectedIndex].value;
 
 	loadgroups(CONTEXT,GROUP_ARGS);
 }
@@ -335,9 +343,9 @@ function reorderGroups(){
  *	Filter the issues by search criteria
  */
 function filterSearchIssues() {
-	ISSUE_ARGS['q'] = $('qissue').value;
+	ISSUE_ARGS['q'] = document.getElementById('qissue').value;
 	var scope = 'all';
-	if ($('scopeissuemy') && $('scopeissuemy').selected) {
+	if (document.getElementById('scopeissuemy') && document.getElementById('scopeissuemy').selected) {
 		scope = 'my';
 	}
 	ISSUE_ARGS['scope'] = scope;
@@ -354,12 +362,12 @@ function filterSearchIssues() {
 					ISSUE_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.issue = false;
-				setTabPushed($('tab-issue-list-obj'),'issue-list');
+				setTabPushed(document.getElementById('tab-issue-list-obj'),'issue-list');
 			}
 		});
 	} else {
 		DATA_LOADED.issue = false;
-		setTabPushed($('tab-issue-list-obj'),'issue-list');
+		setTabPushed(document.getElementById('tab-issue-list-obj'),'issue-list');
 	}
 }
 
@@ -367,9 +375,9 @@ function filterSearchIssues() {
  *	Filter the groups by search criteria
  */
 function filterSearchGroups() {
-	GROUP_ARGS['q'] = $('qgroup').value;
+	GROUP_ARGS['q'] = document.getElementById('qgroup').value;
 	var scope = 'all';
-	if ($('scopegroupmy') && $('scopegroupmy').selected) {
+	if (document.getElementById('scopegroupmy') && document.getElementById('scopegroupmy').selected) {
 		scope = 'my';
 	}
 	GROUP_ARGS['scope'] = scope;
@@ -386,12 +394,12 @@ function filterSearchGroups() {
 					GROUP_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.group = false;
-				setTabPushed($('tab-group-list-obj'),'group-list');
+				setTabPushed(document.getElementById('tab-group-list-obj'),'group-list');
 			}
 		});
 	} else {
 		DATA_LOADED.group = false;
-		setTabPushed($('tab-group-list-obj'),'group-list');
+		setTabPushed(document.getElementById('tab-group-list-obj'),'group-list');
 	}
 }
 
@@ -404,7 +412,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
 
     var selOrd = new Element("select");
- 	Event.observe(selOrd,'change',handler);
+ 	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
@@ -421,7 +429,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
- 	Event.observe(sortBy,'change',handler);
+ 	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
@@ -458,15 +466,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("active");
-	        Event.observe(prevSpan,"click", function(){
+	        prevSpan.classList.add("active");
+	        prevSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) - newArr["max"];
 	            eval("load"+type+"(context,newArr)");
-	        });
+	        };
 	    } else {
 			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("inactive");
+	        prevSpan.classList.add("inactive");
 	    }
 		
 		pageUL.insert(prevSpan)
@@ -477,12 +485,12 @@ function createNav(total, start, count, argArray, context, type){
 	    for (var i = 1; i < totalPages +1; i++){
 	    	var page = new Element("li", {'class':"page-link"}).insert(i);
 	    	if(i != currentPage){
-		    	page.addClassName("active");
+		    	page.classList.add("active");
 		    	var newArr = Object.clone(argArray);
 		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+				page.addEventListener("click", function(event) { Pages.next.call(Pages, type, context, newArr); });
 	    	} else {
-	    		page.addClassName("currentpage");
+	    		page.classList.add("currentpage");
 	    	}
 	    	pageUL.insert(page);
 	    }
@@ -491,15 +499,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("active");
-	        Event.observe(nextSpan,"click", function(){
+	        nextSpan.classList.add("active");
+	        nextSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
 	            eval("load"+type+"(context, newArr)");
-	        });
+	        };
 	    } else {
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("inactive");
+	        nextSpan.classList.add("inactive");
 	    }
 
 		pageUL.insert(nextSpan);

@@ -81,7 +81,7 @@ function loadExploreGroupStackedArea(){
 
 	var restoreButton = new Element('div', {'id':'restore','class':'restorebtn theme button white'});
 	restoreButton.insert('<?php echo $LNG->STATS_GROUP_STACKEDAREA_RESTORE_BUTTON; ?>');
-	Event.observe(restoreButton,'click',function (){
+	restoreButton.addEventListener('click', function() {
  		stackedAreaChart.restore();
 	});
 	stackedareaInfoDiv.insert(restoreButton);
@@ -89,7 +89,8 @@ function loadExploreGroupStackedArea(){
 
 function loadData(stackedAreaChart, messagearea) {
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 	var jsondata = NODE_ARGS['jsondata'];
  	if (jsondata != "") {

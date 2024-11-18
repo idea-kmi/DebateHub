@@ -54,7 +54,7 @@
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-group-net.js.php"); ?>', 'stats-groups-group-net-script');
 	});
 </script>

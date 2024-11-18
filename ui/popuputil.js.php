@@ -34,33 +34,34 @@ function showFormHint(type, evt, panelName, extra) {
 
  	var event = evt || window.event;
 
-	$("resourceMessage").innerHTML="";
+	const resourcemessage = document.getElementById("resourceMessage");
+	resourcemessage.innerHTML="";
 
 	// Issue Forms
 	if (type == "IssueSummary") {
-		$("resourceMessage").insert('<?php echo $LNG->ISSUE_SUMMARY_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->ISSUE_SUMMARY_FORM_HINT; ?>';
 	} else if (type == "IssueDesc") {
-		$("resourceMessage").insert('<?php echo $LNG->ISSUE_DESC_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->ISSUE_DESC_FORM_HINT; ?>';
  	} else if (type == "IssuePhoto") {
-		$("resourceMessage").insert('<?php echo $LNG->ISSUE_PHOTO_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->ISSUE_PHOTO_FORM_HINT; ?>';
 	} else if (type == "IssueDates") {
-		$("resourceMessage").insert('<?php echo $LNG->FORM_LABEL_DEBATE_DATES_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->FORM_LABEL_DEBATE_DATES_HINT; ?>';
  	} else if (type == "IssueDiscussionDates") {
-		$("resourceMessage").insert('<?php echo $LNG->FORM_LABEL_DISCUSSION_DATES_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->FORM_LABEL_DISCUSSION_DATES_HINT; ?>';
  	} else if (type == "IssueReducingDates") {
-		$("resourceMessage").insert('<?php echo $LNG->FORM_LABEL_LEMONING_DATES_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->FORM_LABEL_LEMONING_DATES_HINT; ?>';
  	} else if (type == "IssueVotingDates") {
-		$("resourceMessage").insert('<?php echo $LNG->FORM_LABEL_VOTING_DATES_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->FORM_LABEL_VOTING_DATES_HINT; ?>';
 
 	// Group Forms
  	} else if (type == "GroupSummary") {
-		$("resourceMessage").insert('<?php echo $LNG->GROUP_NAME_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->GROUP_NAME_FORM_HINT; ?>';
  	} else if (type == "GroupDesc") {
-		$("resourceMessage").insert('<?php echo $LNG->GROUP_DESC_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->GROUP_DESC_FORM_HINT; ?>';
  	} else if (type == "GroupWebsite") {
-		$("resourceMessage").insert('<?php echo $LNG->GROUP_WEBSITE_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->GROUP_WEBSITE_FORM_HINT; ?>';
  	} else if (type == "GroupPhoto") {
-		$("resourceMessage").insert('<?php echo $LNG->GROUP_PHOTO_FORM_HINT; ?>');
+		resourcemessage.innerHTML = '<?php echo $LNG->GROUP_PHOTO_FORM_HINT; ?>';
 
 	} else {
 		return false;
@@ -77,16 +78,16 @@ function showFormHint(type, evt, panelName, extra) {
 function removeMultiple(key, i) {
 	var answer = confirm("<?php echo $LNG->FORM_REMOVE_MULTI; ?>");
     if(answer){
-		if ($(key+'form') && $(key+'field'+i)) {
-		    if(	$(key+'form').childElements()[0].nodeName.toUpperCase() != "HR"){
-			    $(key+'field'+i).remove();
+		if (document.getElementById(key+'form') && document.getElementById(key+'field'+i)) {
+		    if(	document.getElementById(key+'form').childElements()[0].nodeName.toUpperCase() != "HR"){
+			    document.getElementById(key+'field'+i).remove();
 			    try {
-			        $(key+'hr'+ i).remove();
+			        document.getElementById(key+'hr'+ i).remove();
 			    } catch (err) {
 			        // do nowt
 			    }
-			    if($(key+'form').childElements()[0] && $(key+'form').childElements()[0].nodeName.toUpperCase() == "HR"){
-			        $(key+'form').childElements()[0].remove();
+			    if(document.getElementById(key+'form').childElements()[0] && document.getElementById(key+'form').childElements()[0].nodeName.toUpperCase() == "HR"){
+			        document.getElementById(key+'form').childElements()[0].remove();
 			    }
 		    }
 		}
@@ -112,7 +113,7 @@ function addIdea(noIdeas) {
 	newitem += '<a id="idearemovebutton-'+noIdeas+'" href="javascript:void(0)" onclick="javascript:removeMultiple(\'idea\', \''+noIdeas+'\')" class="form" style="clear:both;float:right"><?php echo $LNG->FORM_BUTTON_REMOVE; ?></a><br>';
 	newitem += '</div>';
 
-	$('ideaformdiv').insert(newitem);
+	document.getElementById('ideaformdiv').innerHTML = newitem;
 
 	noIdeas++;
 	return noIdeas;
@@ -124,60 +125,60 @@ function initialisePhaseDates() {
 	initialising = true;
 
 	// Debate dates
-	var time = $('utcstarttime').value;
+	var time = document.getElementById('utcstarttime').value;
 	if (time > 0) {
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('startdate').value = fomatedDate;
+		document.getElementById('startdate').value = fomatedDate;
 	}
 
 	if (time > 0) {
-		var time = $('utcendtime').value;
+		var time = document.getElementById('utcendtime').value;
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('enddate').value = fomatedDate;
+		document.getElementById('enddate').value = fomatedDate;
 	}
 
-	if ($('utcstarttime').value != 0 && $('utcendtime').value != 0) {
+	if (document.getElementById('utcstarttime').value != 0 && document.getElementById('utcendtime').value != 0) {
 		turnOnPhasing();
 	}
 
 	//Discussion Phase date
-	var time = $('utcdiscussionendtime').value;
+	var time = document.getElementById('utcdiscussionendtime').value;
 	if (time > 0) {
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('discussionend').value = fomatedDate;
+		document.getElementById('discussionend').value = fomatedDate;
 	}
 
 	//Lemoning Phase dates
-	var time = $('utclemoningstarttime').value;
+	var time = document.getElementById('utclemoningstarttime').value;
 	if (time > 0) {
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('lemoningstart').value = fomatedDate;
+		document.getElementById('lemoningstart').value = fomatedDate;
 	}
 
 	if (time > 0) {
-		var time = $('utclemoningendtime').value;
+		var time = document.getElementById('utclemoningendtime').value;
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('lemoningend').value = fomatedDate;
+		document.getElementById('lemoningend').value = fomatedDate;
 	}
 
 	//Voting Phase dates
-	var time = $('utcvotingstarttime').value;
+	var time = document.getElementById('utcvotingstarttime').value;
 	if (time > 0) {
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('votingstart').value = fomatedDate;
+		document.getElementById('votingstart').value = fomatedDate;
 	}
 
 	if (time > 0) {
-		var time = $('utcvotingendtime').value;
+		var time = document.getElementById('utcvotingendtime').value;
 		var localDate = convertUTCTimeToLocalDate(time);
 		var fomatedDate = localDate.format(DATE_FORMAT_PHASE);
-		$('votingend').value = fomatedDate;
+		document.getElementById('votingend').value = fomatedDate;
 	}
 
 	initialising = false;
@@ -189,59 +190,59 @@ function issueStartDateChanged(obj) {
 
 	clearIssuePhaseBackgrounds();
 
-	var issuestartdate = Date.parse($('startdate').value);
-	var issueenddate = Date.parse($('enddate').value);
-	var discussionenddate = Date.parse($('discussionend').value);
-	var lemoningstartdate = Date.parse($('lemoningstart').value);
-	var lemoningenddate = Date.parse($('lemoningend').value);
-	var votingstartdate = Date.parse($('votingstart').value);
+	var issuestartdate = Date.parse($document.getElementById('startdate').value);
+	var issueenddate = Date.parse(document.getElementById('enddate').value);
+	var discussionenddate = Date.parse(document.getElementById('discussionend').value);
+	var lemoningstartdate = Date.parse(document.getElementById('lemoningstart').value);
+	var lemoningenddate = Date.parse(document.getElementById('lemoningend').value);
+	var votingstartdate = Date.parse(document.getElementById('votingstart').value);
 
 	if (
-		($('startdate').value != "" && $('enddate').value != ""
+		(document.getElementById('startdate').value != "" && document.getElementById('enddate').value != ""
 			&& issueenddate < issuestartdate)
 	) {
 		alert('<?php echo $LNG->FORM_ISSUE_START_END_DATE_ERROR; ?>');
-		$('startdate').value = "";
-		$('utcstarttime').value = 0;
-		$('startdate').style.background = 'LightYellow ';
-		setTimeout((function() { $('startdate').focus() }), 0);
+		document.getElementById('startdate').value = "";
+		document.getElementById('utcstarttime').value = 0;
+		document.getElementById('startdate').style.background = 'LightYellow ';
+		setTimeout((function() { document.getElementById('startdate').focus() }), 0);
 	} else {
 		var utctime = 0;
-		if ($('startdate').value.trim() == "") {
-			$('utcstarttime').value = 0;
+		if (document.getElementById('startdate').value.trim() == "") {
+			document.getElementById('utcstarttime').value = 0;
 		} else {
 			var localtime = Date.parse(obj.value);
 			var newDate = new Date(localtime);
 			utctime = convertLocalDateToUTCTime(newDate);
-			$('utcstarttime').value = utctime;
+			$document.getElementById('utcstarttime').value = utctime;
 		}
 
-		if ($('startdate').value.trim() != "" && ($('enddate').value).trim() != "") {
+		if (document.getElementById('startdate').value.trim() != "" && (document.getElementById('enddate').value).trim() != "") {
 			turnOnPhasing();
 
 			if (issuestartdate > discussionenddate) {
-				$('discussionend').value = "";
-				$('utcdiscussionendtime').value = 0;
+				document.getElementById('discussionend').value = "";
+				document.getElementById('utcdiscussionendtime').value = 0;
 			}
 			if (issuestartdate > lemoningstartdate) {
-				$('lemoningstart').value = "";
-				$('utclemoningstarttime').value = 0;
+				document.getElementById('lemoningstart').value = "";
+				document.getElementById('utclemoningstarttime').value = 0;
 			}
 			if (issuestartdate > lemoningenddate) {
-				$('lemoningend').value = "";
-				$('utclemoningendtime').value = 0;
+				document.getElementById('lemoningend').value = "";
+				document.getElementById('utclemoningendtime').value = 0;
 			}
 			if (issuestartdate > votingstartdate) {
-				$('votingstart').value = "";
-				$('utcvotingstarttime').value = 0;
+				document.getElementById('votingstart').value = "";
+				document.getElementById('utcvotingstarttime').value = 0;
 			}
 		} else {
 			turnOffPhasing();
 
 			// highlight next field
-			if ($('enddate').value == "") {
-				$('enddate').style.background = 'LightYellow ';
-				setTimeout((function() { $('enddate').focus() }), 0);
+			if (document.getElementById('enddate').value == "") {
+				document.getElementById('enddate').style.background = 'LightYellow ';
+				setTimeout((function() { document.getElementById('enddate').focus() }), 0);
 			}
 		}
 	}
@@ -252,61 +253,61 @@ function issueEndDateChanged(obj) {
 
 	clearIssuePhaseBackgrounds();
 
-	var issuestartdate = Date.parse($('startdate').value);
-	var issueenddate = Date.parse($('enddate').value);
-	var discussionenddate = Date.parse($('discussionend').value);
-	var lemoningstartdate = Date.parse($('lemoningstart').value);
-	var lemoningenddate = Date.parse($('lemoningend').value);
-	var votingstartdate = Date.parse($('votingstart').value);
+	var issuestartdate = Date.parse(document.getElementById('startdate').value);
+	var issueenddate = Date.parse(document.getElementById('enddate').value);
+	var discussionenddate = Date.parse(document.getElementById('discussionend').value);
+	var lemoningstartdate = Date.parse(document.getElementById('lemoningstart').value);
+	var lemoningenddate = Date.parse(document.getElementById('lemoningend').value);
+	var votingstartdate = Date.parse(document.getElementById('votingstart').value);
 	if (
-		($('startdate').value != "" && $('enddate').value != ""
+		($document.getElementById('startdate').value != "" && document.getElementById('enddate').value != ""
 			&& issueenddate < issuestartdate)
 	) {
 		alert('<?php echo $LNG->FORM_ISSUE_START_END_DATE_ERROR; ?>');
-		$('enddate').value = "";
-		$('utcendtime').value = 0;
-		$('enddate').style.background = 'LightYellow ';
-		setTimeout((function() { $('enddate').focus() }), 0);
+		document.getElementById('enddate').value = "";
+		document.getElementById('utcendtime').value = 0;
+		document.getElementById('enddate').style.background = 'LightYellow ';
+		setTimeout((function() { document.getElementById('enddate').focus() }), 0);
 	} else {
 		var utctime = 0;
-		if ($('enddate').value.trim() == "") {
-			$('utcendtime').value = 0;
+		if (document.getElementById('enddate').value.trim() == "") {
+			document.getElementById('utcendtime').value = 0;
 		} else {
 			var localtime = Date.parse(obj.value);
 			var newDate = new Date(localtime);
 			utctime = convertLocalDateToUTCTime(newDate);
-			$('utcendtime').value = utctime;
+			document.getElementById('utcendtime').value = utctime;
 		}
 
-		if ($('startdate').value.trim() != "" && ($('enddate').value).trim() != "") {
+		if (document.getElementById('startdate').value.trim() != "" && (document.getElementById('enddate').value).trim() != "") {
 			turnOnPhasing();
-			if ($('votingon').checked) {
-				$('votingend').value = $('enddate').value;
-				$('utcvotingendtime').value = utctime;
+			if (document.getElementById('votingon').checked) {
+				document.getElementById('votingend').value = $document.getElementById('enddate').value;
+				document.getElementById('utcvotingendtime').value = utctime;
 			}
 		} else {
 			turnOffPhasing();
-			if ( ($('startdate').value).trim() == "") {
-				$('startdate').style.background = 'LightYellow ';
-				setTimeout((function() { $('startdate').focus() }), 0);
+			if ( ($document.getElementById('startdate').value).trim() == "") {
+				document.getElementById('startdate').style.background = 'LightYellow ';
+				setTimeout((function() { document.getElementById('startdate').focus() }), 0);
 			}
 		}
 
 		if (issueenddate < discussionenddate) {
-			$('discussionend').value = "";
-			$('utcdiscussionendtime').value = 0;
+			document.getElementById('discussionend').value = "";
+			document.getElementById('utcdiscussionendtime').value = 0;
 		}
 		if (issueenddate < lemoningstartdate) {
-			$('lemoningstart').value = "";
-			$('utclemoningstarttime').value = 0;
+			document.getElementById('lemoningstart').value = "";
+			document.getElementById('utclemoningstarttime').value = 0;
 		}
 		if (issueenddate < lemoningenddate) {
-			$('lemoningend').value = "";
-			$('utclemoningendtime').value = 0;
+			document.getElementById('lemoningend').value = "";
+			document.getElementById('utclemoningendtime').value = 0;
 		}
 		if (issueenddate < votingstartdate) {
-			$('votingstart').value = "";
-			$('utcvotingstarttime').value = 0;
+			document.getElementById('votingstart').value = "";
+			document.getElementById('utcvotingstarttime').value = 0;
 		}
 	}
 }
@@ -316,42 +317,42 @@ function discussionEndDateChanged(obj) {
 
 	clearIssuePhaseBackgrounds();
 
-	var startdate = Date.parse($('startdate').value);
-	var discussionenddate = Date.parse($('discussionend').value);
-	var issueenddate = Date.parse($('enddate').value);
-	var lemoningenddate = Date.parse($('lemoningend').value);
+	var startdate = Date.parse(document.getElementById('startdate').value);
+	var discussionenddate = Date.parse(document.getElementById('discussionend').value);
+	var issueenddate = Date.parse(document.getElementById('enddate').value);
+	var lemoningenddate = Date.parse(document.getElementById('lemoningend').value);
 	if (
-		($('discussionend').value != "" && discussionenddate <= startdate) ||
-		($('enddate').value != "" && discussionenddate > issueenddate)
+		(document.getElementById('discussionend').value != "" && discussionenddate <= startdate) ||
+		(document.getElementById('enddate').value != "" && discussionenddate > issueenddate)
 	) {
 		alert('<?php echo $LNG->FORM_ISSUE_DISCUSSION_END_DATE_ERROR; ?>');
-		$('discussionend').value = "";
-		$('utcdiscussionendtime').value = 0;
-		$('discussionend').style.background = 'LightYellow ';
-		setTimeout((function() { $('discussionend').focus() }), 0);
+		document.getElementById('discussionend').value = "";
+		document.getElementById('utcdiscussionendtime').value = 0;
+		document.getElementById('discussionend').style.background = 'LightYellow ';
+		setTimeout((function() { document.getElementById('discussionend').focus() }), 0);
 	} else {
 		var localtime = Date.parse(obj.value);
 		var newDate = new Date(localtime);
 		var utctime = convertLocalDateToUTCTime(newDate);
-		$('utcdiscussionendtime').value = utctime;
+		document.getElementById('utcdiscussionendtime').value = utctime;
 
-		if ($('lemoningon').checked) {
-			$('lemoningstart').value = $('discussionend').value;
-			$('utclemoningstarttime').value = $('utcdiscussionendtime').value;
+		if (document.getElementById('lemoningon').checked) {
+			document.getElementById('lemoningstart').value = document.getElementById('discussionend').value;
+			document.getElementById('utclemoningstarttime').value = document.getElementById('utcdiscussionendtime').value;
 
 			if (lemoningenddate <= discussionenddate) {
-				$('lemoningend').value = "";
-				$('utclemoningendtime').value = 0;
+				document.getElementById('lemoningend').value = "";
+				document.getElementById('utclemoningendtime').value = 0;
 			}
 
 			// highlight next field if empty
-			if ($('lemoningend').value == ""){
-				$('lemoningend').style.background = 'LightYellow ';
-				setTimeout((function() { $('lemoningend').focus() }), 0);
+			if (document.getElementById('lemoningend').value == ""){
+				document.getElementById('lemoningend').style.background = 'LightYellow ';
+				setTimeout((function() { document.getElementById('lemoningend').focus() }), 0);
 			}
-		} else if ($('votingon').checked) {
-			$('votingstart').value = $('discussionend').value;
-			$('utcvotingstarttime').value = $('utcdiscussionendtime').value;
+		} else if (document.getElementById('votingon').checked) {
+			document.getElementById('votingstart').value = document.getElementById('discussionend').value;
+			document.getElementById('utcvotingstarttime').value = document.getElementById('utcdiscussionendtime').value;
 		}
 	}
 }
@@ -361,63 +362,62 @@ function lemoningEndDateChanged(obj) {
 
 	clearIssuePhaseBackgrounds();
 
-	var lemonstartdate = Date.parse($('lemoningstart').value);
-	var lemonenddate = Date.parse($('lemoningend').value);
-	var discussionenddate = Date.parse($('discussionend').value);
-	var issueenddate = Date.parse($('enddate').value);
-	var votingstartdate = Date.parse($('votingstart').value);
+	var lemonstartdate = Date.parse(document.getElementById('lemoningstart').value);
+	var lemonenddate = Date.parse(document.getElementById('lemoningend').value);
+	var discussionenddate = Date.parse(document.getElementById('discussionend').value);
+	var issueenddate = Date.parse(document.getElementById('enddate').value);
+	var votingstartdate = Date.parse(document.getElementById('votingstart').value);
 
-	if ($(
-		('lemoningstart').value != "" && $('lemoningend').value != "" && lemonenddate <= lemonstartdate ) ||
-		($('enddate').value != "" && $('discussionend').value != "" && lemonenddate <= discussionenddate) ||
-		($('enddate').value != "" && $('lemoningend').value != "" && lemonenddate > issueenddate)
+	if (document.getElementById('lemoningstart').value != "" && document.getElementById('lemoningend').value != "" && lemonenddate <= lemonstartdate ) ||
+		(document.getElementById('enddate').value != "" && document.getElementById('discussionend').value != "" && lemonenddate <= discussionenddate) ||
+		(document.getElementById('enddate').value != "" && document.getElementById('lemoningend').value != "" && lemonenddate > issueenddate)
 		) {
 		alert('<?php echo $LNG->FORM_ISSUE_LEMONING_END_DATE_ERROR; ?>');
-		$('lemoningend').value = "";
-		$('utclemoningendtime').value = 0;
-		$('lemoningend').style.background = 'LightYellow ';
-		setTimeout((function() { $('lemoningend').focus() }), 0);
+		document.getElementById('lemoningend').value = "";
+		document.getElementById('utclemoningendtime').value = 0;
+		document.getElementById('lemoningend').style.background = 'LightYellow ';
+		setTimeout((function() { document.getElementById('lemoningend').focus() }), 0);
 	} else {
 		var localtime = Date.parse(obj.value);
 		var newDate = new Date(localtime);
 		var utctime = convertLocalDateToUTCTime(newDate);
-		$('utclemoningendtime').value = utctime;
+		document.getElementById('utclemoningendtime').value = utctime;
 
-		if ($('votingon').checked) {
-			$('votingstart').value = $('lemoningend').value;
-			$('utcvotingstarttime').value = $('utclemoningendtime').value;
+		if (document.getElementById('votingon').checked) {
+			document.getElementById('votingstart').value = document.getElementById('lemoningend').value;
+			document.getElementById('utcvotingstarttime').value = document.getElementById('utclemoningendtime').value;
 		}
 	}
 }
 
 function lemoningCheckedbox() {
 	clearIssuePhaseBackgrounds();
-	if ($('lemoningon').checked) {
-		$('lemoningstart').disabled = false;
-		$('lemoningend').disabled = false;
+	if (document.getElementById('lemoningon').checked) {
+		document.getElementById('lemoningstart').disabled = false;
+		document.getElementById('lemoningend').disabled = false;
 
-		if ($('discussionend').value != "" && $('discussionend').value != $('enddate').value) {
-			$('lemoningstart').value = $('discussionend').value;
-			$('utclemoningstarttime').value = $('utcdiscussionendtime').value;
+		if (document.getElementById('discussionend').value != "" && document.getElementById('discussionend').value != document.getElementById('enddate').value) {
+			document.getElementById('lemoningstart').value = document.getElementById('discussionend').value;
+			document.getElementById('utclemoningstarttime').value = document.getElementById('utcdiscussionendtime').value;
 		} else {
-			$('discussionend').value = "";
-			$('utcdiscussionendtime').value = 0;
-			$('discussionend').style.background = 'LightYellow ';
-			setTimeout((function() { $('discussionend').focus() }), 0);
+			document.getElementById('discussionend').value = "";
+			document.getElementById('utcdiscussionendtime').value = 0;
+			document.getElementById('discussionend').style.background = 'LightYellow ';
+			setTimeout((function() { document.getElementById('discussionend').focus() }), 0);
 		}
 	} else {
-		$('lemoningstart').value = "";
-		$('lemoningend').value = "";
-		$('utclemoningstarttime').value = 0;
-		$('utclemoningendtime').value = 0;
-		$('lemoningstart').style.background = null;
-		$('lemoningend').style.background = null;
-		$('lemoningstart').disabled = true;
-		$('lemoningend').disabled = true;
+		document.getElementById('lemoningstart').value = "";
+		document.getElementById('lemoningend').value = "";
+		document.getElementById('utclemoningstarttime').value = 0;
+		document.getElementById('utclemoningendtime').value = 0;
+		document.getElementById('lemoningstart').style.background = null;
+		document.getElementById('lemoningend').style.background = null;
+		document.getElementById('lemoningstart').disabled = true;
+		document.getElementById('lemoningend').disabled = true;
 
-		if ($('votingon').checked) {
-			$('votingstart').value = $('discussionend').value;
-			$('utcvotingstarttime').value = $('utcdiscussionendtime').value;
+		if (document.getElementById('votingon').checked) {
+			document.getElementById('votingstart').value = document.getElementById('discussionend').value;
+			document.getElementById('utcvotingstarttime').value = document.getElementById('utcdiscussionendtime').value;
 		}
 	}
 }
@@ -425,70 +425,70 @@ function lemoningCheckedbox() {
 function votingCheckedbox() {
 	clearIssuePhaseBackgrounds();
 
-	if ($('votingon').checked) {
-		$('votingend').value = $('enddate').value;
-		$('utcvotingendtime').value = $('utcendtime').value;
-		if ($('lemoningon').checked && $('lemoningend').value != "") {
-			$('votingstart').value = $('lemoningend').value;
-			$('utcvotingstarttime').value = $('utclemoningendtime').value;
-		} else if ($('discussionend').value != "") {
-			$('votingstart').value = $('discussionend').value;
-			$('utcvotingstarttime').value = $('utcdiscussionendtime').value;
+	if (document.getElementById('votingon').checked) {
+		document.getElementById('votingend').value = document.getElementById('enddate').value;
+		document.getElementById('utcvotingendtime').value = document.getElementById('utcendtime').value;
+		if (document.getElementById('lemoningon').checked && document.getElementById('lemoningend').value != "") {
+			document.getElementById('votingstart').value = document.getElementById('lemoningend').value;
+			document.getElementById('utcvotingstarttime').value = document.getElementById('utclemoningendtime').value;
+		} else if (document.getElementById('discussionend').value != "") {
+			document.getElementById('votingstart').value = document.getElementById('discussionend').value;
+			document.getElementById('utcvotingstarttime').value = document.getElementById('utcdiscussionendtime').value;
 		}
 	} else {
-		$('votingstart').value = "";
-		$('votingend').value = "";
-		$('utcvotingstarttime').value = 0;
-		$('utcvotingendtime').value = 0;
+		document.getElementById('votingstart').value = "";
+		document.getElementById('votingend').value = "";
+		document.getElementById('utcvotingstarttime').value = 0;
+		document.getElementById('utcvotingendtime').value = 0;
 	}
 }
 
 function clearIssuePhaseBackgrounds() {
-	$('startdate').style.background = 'white';
-	$('enddate').style.background = 'white';
-	if ($('discussionend').disabled == false) {
-		$('discussionend').style.background = 'white';
+	document.getElementById('startdate').style.background = 'white';
+	document.getElementById('enddate').style.background = 'white';
+	if (document.getElementById('discussionend').disabled == false) {
+		document.getElementById('discussionend').style.background = 'white';
 	}
-	if ($('lemoningend').disabled == false) {
-		$('lemoningend').style.background = 'white';
+	if (document.getElementById('lemoningend').disabled == false) {
+		document.getElementById('lemoningend').style.background = 'white';
 	}
 }
 
 function showCalendar(url, field, format, type, time, hours) {
-	if ($('utcendtime').value != 0 && $('utcstarttime').value != 0) {
+	if (document.getElementById('utcendtime').value != 0 && document.getElementById('utcstarttime').value != 0) {
 		NewCssCal(url, field, format, type, time, hours);
 	}
 }
 
 function turnOnPhasing() {
- 	$('discussionend').disabled = false;
- 	$('lemoningon').disabled = false;
- 	$('votingon').disabled = false;
+	document.getElementById('discussionend').disabled = false;
+	document.getElementById('lemoningon').disabled = false;
+	document.getElementById('votingon').disabled = false;
  	return;
 }
 
 function turnOffPhasing() {
- 	$('discussionend').disabled = true;
+	document.getElementById('discussionend').disabled = true;
 
-	$('discussionend').value = "";
-	$('utcdiscussionendtime').value = 0;
+	document.getElementById('discussionend').value = "";
+	document.getElementById('utcdiscussionendtime').value = 0;
 
 	// clear and turn off lemongin
- 	$('lemoningon').checked = false;
- 	$('lemoningon').disabled = true;
- 	$('lemoningend').disabled = true;
+	document.getElementById('lemoningon').checked = false;
+	document.getElementById('lemoningon').disabled = true;
+	document.getElementById('lemoningend').disabled = true;
 
-	$('lemoningstart').value = "";
-	$('lemoningend').value = "";
-	$('utclemoningstarttime').value = 0;
-	$('utclemoningendtime').value = 0;
+	document.getElementById('lemoningstart').value = "";
+	document.getElementById('lemoningend').value = "";
+	document.getElementById('utclemoningstarttime').value = 0;
+	document.getElementById('utclemoningendtime').value = 0;
 
 	// clear and turn off voting phase
- 	$('votingon').checked = false;
- 	$('votingon').disabled = true;
+	document.getElementById('votingon').checked = false;
+	document.getElementById('votingon').disabled = true;
 
-	$('votingstart').value = "";
-	$('votingend').value = "";
-	$('utcvotingstarttime').value = 0;
-	$('utcvotingendtime').value = 0;
+	document.getElementById('votingstart').value = "";
+	document.getElementById('votingend').value = "";
+	document.getElementById('utcvotingstarttime').value = 0;
+	document.getElementById('utcvotingendtime').value = 0;
 }

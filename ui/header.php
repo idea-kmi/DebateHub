@@ -105,10 +105,11 @@ global $HUB_FLM;
 					'alt': '<?php echo $LNG->HEADER_RSS_FEED_ICON_ALT; ?>',
 					'class': 'active',
 					'style': 'padding-top:0px;'});
-				Event.observe(feed,'click',function(){
+				feed.addEventListener("click", function() {				
 					getNodesFeed(args);
 				});
-				$('rssbuttonfred').insert(feed);
+				const rssbuttonfred = document.getElementById('rssbuttonfred');
+				rssbuttonfred.insert(feed);
 				<?php } ?>
 			}
 			window.onload = init;

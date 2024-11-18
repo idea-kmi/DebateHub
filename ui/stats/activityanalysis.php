@@ -115,19 +115,21 @@
 
 	var NODE_ARGS = new Array();
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 
 		NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
 
+		const messagearea = document.getElementById("messagearea");
 		var data = NODE_ARGS['data'];
 		if (data.length > 0) {
 			document.getElementById("allStatsArea").style.visibility = "visible";
-			$('messagearea').update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+			messagearea.innerHTML = "";
+			messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 			displayActivityCrossFilterD3Vis(data, 980);
 		} else {
 			document.getElementById("allStatsArea").style.visibility = "hidden";
 			<?php if ($sdt != "" && $edt != "") {?>
-				$('messagearea').innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+				messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
 			<?php } ?>
 		}	
 	});
@@ -156,7 +158,9 @@
 			}
 		}
 
-		$('messagearea').update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+		const messagearea = document.getElementById("messagearea");
+		messagearea.innerHTML = "";
+		messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 		return true;
 	}	

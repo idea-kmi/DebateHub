@@ -42,44 +42,41 @@ var CURRENT_TAB = DEFAULT_TAB;
 var DATA_LOADED = {"home":false, "group":false, "social":false, "issue":false, "solution":false, "pro":false, "con":false, "comment":false};
 
 //define events for clicking on the tabs
-var stpHome = setTabPushed.bindAsEventListener($('tab-home-list-obj'),'home');
-var stpData = setTabPushed.bindAsEventListener($('tab-data-list-obj'),'data');
-var stpGroup = setTabPushed.bindAsEventListener($('tab-group-list-obj'),'group');
-var stpSocial = setTabPushed.bindAsEventListener($('tab-social-list-obj'),'social');
+var stpHome = function(event) { setTabPushed.call(document.getElementById('tab-home-list-obj'), event, 'home'); };
+var stpData = function(event) { setTabPushed.call(document.getElementById('tab-data-list-obj'), event, 'data'); };
+var stpGroup = function(event) { setTabPushed.call(document.getElementById('tab-group-list-obj'), event, 'group'); };
+var stpSocial = function(event) { setTabPushed.call(document.getElementById('tab-social-list-obj'), event, 'social'); };
 
-var stpIssueList = setTabPushed.bindAsEventListener($('tab-issue-list-obj'),'data-issue');
-var stpSolutionList = setTabPushed.bindAsEventListener($('tab-solution-list-obj'),'data-solution');
-var stpProList = setTabPushed.bindAsEventListener($('tab-pro-list-obj'),'data-pro');
-var stpConList = setTabPushed.bindAsEventListener($('tab-con-list-obj'),'data-con');
-var stpCommentList = setTabPushed.bindAsEventListener($('tab-comment-list-obj'),'data-comment');
+var stpIssueList = function(event) { setTabPushed.call(document.getElementById('tab-issue-list-obj'), event, 'data-issue'); };
+var stpSolutionList = function(event) { setTabPushed.call(document.getElementById('tab-solution-list-obj'), event, 'data-solution'); };
+var stpProList = function(event) { setTabPushed.call(document.getElementById('tab-pro-list-obj'), event, 'data-pro'); };
+var stpConList = function(event) { setTabPushed.call(document.getElementById('tab-con-list-obj'), event, 'data-con'); };
+var stpCommentList = function(event) { setTabPushed.call(document.getElementById('tab-comment-list-obj'), event, 'data-comment'); };
 
 /**
  *	set which tab to show and load first
  */
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
 
 	// add events for clicking on the main tabs
-	Event.observe('tab-home','click', stpHome);
-	Event.observe('tab-data','click', stpData);
-	Event.observe('tab-group','click', stpGroup);
-	Event.observe('tab-social','click', stpSocial);
+	document.getElementById('tab-home').addEventListener('click', stpHome);
+	document.getElementById('tab-data').addEventListener('click', stpData);
+	document.getElementById('tab-group').addEventListener('click', stpGroup);
+	document.getElementById('tab-social').addEventListener('click', stpSocial);
 
-	Event.observe('tab-data-issue','click', stpIssueList);
-	Event.observe('tab-data-solution','click', stpSolutionList);
-	Event.observe('tab-data-pro','click', stpProList);
-	Event.observe('tab-data-con','click', stpConList);
-	Event.observe('tab-data-comment','click', stpCommentList);
+	document.getElementById('tab-data-issue').addEventListener('click', stpIssueList);
+	document.getElementById('tab-data-solution').addEventListener('click', stpSolutionList);
+	document.getElementById('tab-data-pro').addEventListener('click', stpProList);
+	document.getElementById('tab-data-con').addEventListener('click', stpConList);
+	document.getElementById('tab-data-comment').addEventListener('click', stpCommentList);
 
-	setTabPushed($('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
+	setTabPushed(document.getElementById('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
 });
 
 /**
  *	switch between tabs
  */
-function setTabPushed(e) {
-
-	var data = $A(arguments);
-	var tabID = data[1];
+function setTabPushed(e, tabID) {
 
 	// get tab and the visualisation from the #
 	var parts = tabID.split("-");
@@ -101,27 +98,22 @@ function setTabPushed(e) {
 
 	var i="";
 	for (i in TABS){
-
-		if ($("tab-"+i)) {
+		const tabobj = document.getElementById('tab-'+i);
+		const tabContent = document.getElementById('tab-content-'+i+'-div');
+		if (tabobj) {
 			if(tab == i){
-				if($("tab-"+i)) {
-					$("tab-"+i).addClassName("active");
-					if ($("tab-content-"+i+"-div")) {
-						$("tab-content-"+i+"-div").show();
-					}
+				tabobj.classList.add("active");				
+				if (tabContent) {
+					tabContent.style.display = "block";
 				}
 			} else {
-				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("active");
-					if ($("tab-content-"+i+"-div")) {
-						$("tab-content-"+i+"-div").hide();
-					}
+				tabobj.classList.remove("active");
+				if (tabContent) {
+					tabContent.style.display = "none";
 				}
 			}
 		}
 	}
-
-
 
 	if (tab =="data") {
 		if (viz == "") {
@@ -129,17 +121,20 @@ function setTabPushed(e) {
 		}
 
 		for (i in DATAVIZ){
+			const tabtab = document.getElementById('tab-'+tab+'-'+i);
+			const tabcontentdiv = document.getElementById('tab-content-'+tab+'-'+i+'-div');
+			const tabcontent = document.getElementById('tab-content-'+tab+'-'+i);
 			if(viz == i){
-				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).addClassName("active");
-					$("tab-content-"+tab+"-"+i+"-div").show();
-					$("tab-content-"+tab+"-"+i).show();
+				if (tabtab) {
+					tabtab.classList.add("active");
+					tabcontentdiv.style.display = "block";
+					tabcontent.style.display = "block";
 				}
 			} else {
-				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("active");
-					$("tab-content-"+tab+"-"+i+"-div").hide();
-					$("tab-content-"+tab+"-"+i).hide();
+				if (tabtab) {
+					tabtab.classList.remove("active");
+					tabcontentdiv.style.display = "none";
+					tabcontent.style.display = "none";
 				}
 			}
 		}
@@ -154,9 +149,9 @@ function setTabPushed(e) {
 			loadUserHomeNet();
 		}
 	} else if (tab == "group") {
-		$('tab-group').setAttribute("href",'#group');
-		Event.stopObserving('tab-group','click');
-		Event.observe('tab-group','click', stpGroup);
+		const tabgroup  = document.getElementById('tab-group');
+		tabgroup.setAttribute("href",'#group');
+		tabgroup.onclick = stpGroup;
 		if(!DATA_LOADED.group) {
 			GROUP_ARGS['start'] = (page-1) * GROUP_ARGS['max'];
 			loadmygroups(CONTEXT,GROUP_ARGS);
@@ -164,9 +159,9 @@ function setTabPushed(e) {
 	} else if (tab == "data") {
 		switch(viz){
 			case 'issue':
-				$('tab-data').setAttribute("href",'#data-issue');
-				StopObservingDataTab();
-				Event.observe('tab-data','click', stpIssueList);
+				const tabdata = document.getElementById('tab-data');
+				tabdata.setAttribute("href",'#data-issue');
+				tabdata.onclick = stpIssueList;
 				if(!DATA_LOADED.issue){
 					ISSUE_ARGS['start'] = (page-1) * ISSUE_ARGS['max'];
 					loadissues(CONTEXT,ISSUE_ARGS);
@@ -175,9 +170,9 @@ function setTabPushed(e) {
 				}
 				break;
 			case 'solution':
-				$('tab-data').setAttribute("href",'#data-solution');
-				StopObservingDataTab();
-				Event.observe('tab-data','click', stpSolutionList);
+				const tabdata = document.getElementById('tab-data');
+				tabdata.setAttribute("href",'#data-solution');
+				tabdata.onclick', stpSolutionList;
 				if(!DATA_LOADED.solution){
 					SOLUTION_ARGS['start'] = (page-1) * SOLUTION_ARGS['max'];
 					loadsolutions(CONTEXT,SOLUTION_ARGS);
@@ -186,9 +181,9 @@ function setTabPushed(e) {
 				}
 				break;
 			case 'pro':
-				$('tab-data').setAttribute("href",'#data-pro');
-				StopObservingDataTab();
-				Event.observe('tab-data','click', stpProList);
+				const tabdata = document.getElementById('tab-data');
+				tabdata.setAttribute("href",'#data-pro');
+				tabdata.onclick = stpProList;
 				if(!DATA_LOADED.pro){
 					PRO_ARGS['start'] = (page-1) * PRO_ARGS['max'];
 					loadpros(CONTEXT,PRO_ARGS);
@@ -197,9 +192,9 @@ function setTabPushed(e) {
 				}
 				break;
 			case 'con':
-				$('tab-data').setAttribute("href",'#data-con');
-				StopObservingDataTab();
-				Event.observe('tab-data','click', stpConList);
+				const tabdata = document.getElementById('tab-data');
+				tabdata.setAttribute("href",'#data-con');
+				tabdata.onclick = stpConList;
 				if(!DATA_LOADED.con){
 					CON_ARGS['start'] = (page-1) * CON_ARGS['max'];
 					loadcons(CONTEXT,CON_ARGS);
@@ -208,9 +203,9 @@ function setTabPushed(e) {
 				}
 				break;
 			case 'comment':
-				$('tab-data').setAttribute("href",'#data-comment');
-				StopObservingDataTab();
-				Event.observe('tab-data','click', stpCommentList);
+				const tabdata = document.getElementById('tab-data');
+				tabdata.setAttribute("href",'#data-comment');
+				tabdata.onclick = stpCommentList;
 				if(!DATA_LOADED.comment){
 					COMMENT_ARGS['start'] = (page-1) * COMMENT_ARGS['max'];
 					loadcomments(CONTEXT,COMMENT_ARGS);
@@ -220,10 +215,6 @@ function setTabPushed(e) {
 				break;
 		}
 	}
-}
-
-function StopObservingDataTab() {
-	Event.stopObserving('tab-data','click');
 }
 
 function refreshGroups() {
@@ -279,7 +270,9 @@ function loadmygroups(context,args){
 
 	//updateAddressParameters(args);
 
-	$("tab-content-group-list").update(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+	const tabcontentgrouplist = document.getElementById("tab-content-group-list");
+	tabcontentgrouplist.innerHTML = "";
+	tabcontentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getmygroups&userid="+args['userid'];
 
@@ -295,10 +288,10 @@ function loadmygroups(context,args){
 				alert(json.error[0].message);
 				return;
 			}
-			$("tab-content-group-list").innerHTML = "";
-			$("tab-content-group").style.display = 'none';
-			$("tab-content-group-admin-list").innerHTML = "";
-			$("tab-content-group-admin").style.display = 'none';
+			document.getElementById("tab-content-group-list").innerHTML = "";
+			document.getElementById("tab-content-group").style.display = 'none';
+			document.getElementById("tab-content-group-admin-list").innerHTML = "";
+			document.getElementById("tab-content-group-admin").style.display = 'none';
 
 			var total = json.groupset[0].groups.length;
 			//alert(total);
@@ -348,20 +341,20 @@ function loadmygroups(context,args){
 									finalgroups.push(groups[k]);
 								}
 							}
-							$("tab-content-group-admin").style.display = 'block';
-							$("tab-content-group").style.display = 'block';
+							document.getElementById("tab-content-group-admin").style.display = 'block';
+							document.getElementById("tab-content-group").style.display = 'block';
 
-							displayMyGroups($("tab-content-group-admin-list"),admingroups, 1);
-							displayMyGroups($("tab-content-group-list"),finalgroups, 1);
+							displayMyGroups(document.getElementById("tab-content-group-admin-list"),admingroups, 1);
+							displayMyGroups(document.getElementById("tab-content-group-list"),finalgroups, 1);
 						} else {
-							$("tab-content-group").style.display = 'block';
-							displayGroups($("tab-content-group-list"),groups, 1, 466,180, false, true);
+							document.getElementById("tab-content-group").style.display = 'block';
+							displayGroups(document.getElementById("tab-content-group-list"),groups, 1, 466,180, false, true);
 						}
 					}
 				});
 			} else {
-				$("tab-content-group").style.display = 'block';
-				$("tab-content-group").insert('<?php echo $LNG->WIDGET_NO_GROUPS_FOUND; ?>');
+				document.getElementById("tab-content-group").style.display = 'block';
+				document.getElementById("tab-content-group").innerHTML += '<?php echo $LNG->WIDGET_NO_GROUPS_FOUND; ?>';
 			}
 		}
 	});
@@ -382,7 +375,9 @@ function loadcons(context,args){
 	}
 	updateAddressParameters(args);
 
-	$("tab-content-data-con").update(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
+	const tabcontentdatacon = document.getElementById("tab-content-data-con");
+	tabcontentdatacon.innerHTML = "";
+	tabcontentdatacon.appendChild(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -407,7 +402,7 @@ function loadcons(context,args){
 				}
 				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con")
 
-				$("tab-content-data-con").update(navbar);
+				document.getElementById("tab-content-data-con").appendChild(navbar);
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -426,13 +421,13 @@ function loadcons(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'con',reorderCons));
 
-					$("tab-content-data-con").insert(tb3);
-					displayUsersNodes($("tab-content-data-con"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+					document.getElementById("tab-content-data-con").appendChild(tb3);
+					displayUsersNodes(document.getElementById("tab-content-data-con"),json.nodeset[0].nodes,parseInt(args['start'])+1);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-con").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+					document.getElementById("tab-content-data-con").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
 				}
     		}
   		});
@@ -451,7 +446,9 @@ function loadpros(context,args){
 	}
 	updateAddressParameters(args);
 
-	$("tab-content-data-pro").update(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
+	const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+	tabcontentdatapro.innerHTML = "";
+	tabcontentdatapro.appendChild(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -476,7 +473,9 @@ function loadpros(context,args){
 				}
 				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro")
 
-				$("tab-content-data-pro").update(navbar);
+				const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+				tabcontentdatapro.innerHTML = "";
+				tabcontentdatapro.appanedChild(navbar);
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -495,13 +494,15 @@ function loadpros(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'pro',reorderPros));
 
-					$("tab-content-data-pro").insert(tb3);
-					displayUsersNodes($("tab-content-data-pro"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+					const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+					tabcontentdatapro.appendChild(tb3);
+					displayUsersNodes(tabcontentdatapro,json.nodeset[0].nodes,parseInt(args['start'])+1);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-pro").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+					const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+					tabcontentdatapro.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
 				}
     		}
   		});
@@ -515,7 +516,9 @@ function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 	updateAddressParameters(args);
 
-	$("tab-content-data-issue").update(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	const tabcontentdataissue = document.getElementById("tab-content-data-issue");
+	tabcontentdataissue.innerHTML = "";	
+	tabcontentdataissue.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -539,7 +542,10 @@ function loadissues(context,args){
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
-				$("tab-content-data-issue").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+
+				const tabcontentdataissue = document.getElementById("tab-content-data-issue");
+				tabcontentdataissue.innerHTML = "";
+				tabcontentdataissue.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -558,15 +564,15 @@ function loadissues(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
-					$("tab-content-data-issue").insert(tb3);
+					document.getElementById("tab-content-data-issue").appendChild(tb3);
 
-					//displayIssueNodes($("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1);
-					displayIssueNodes(466, 210, $("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
+					//displayIssueNodes(document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+					displayIssueNodes(466, 210, document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-issue").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+					document.getElementById("tab-content-data-issue").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 				}
     		}
   		});
@@ -580,7 +586,9 @@ function loadsolutions(context,args){
 	args['filternodetypes'] = "Solution";
 	updateAddressParameters(args);
 
-	$("tab-content-data-solution").update(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
+	const tabcontentdatasolution = document.getElementById("tab-content-data-solution");
+	tabcontentdatasolution.innerHTML = "";
+	tabcontentdatasolution.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -604,7 +612,9 @@ function loadsolutions(context,args){
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
-				$("tab-content-data-solution").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+				const tabcontentdatasolution = document.getElementById("tab-content-data-solution");
+				tabcontentdatasolution.innerHTML = "";
+				tabcontentdatasolution.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
 
 				if(json.nodeset[0].nodes.length > 0){
 					//preprosses nodes to add searchid if it is there
@@ -622,13 +632,13 @@ function loadsolutions(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
 
-					$("tab-content-data-solution").insert(tb3);
-					displayUsersNodes($("tab-content-data-solution"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+					document.getElementById("tab-content-data-solution").appendChild(tb3);
+					displayUsersNodes(document.getElementById("tab-content-data-solution"),json.nodeset[0].nodes,parseInt(args['start'])+1);
 				}
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-solution").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+					document.getElementById("tab-content-data-solution").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
 				}
     		}
   		});
@@ -642,7 +652,9 @@ function loadcomments(context,args) {
 	args['filternodetypes'] = 'Comment';
 	updateAddressParameters(args);
 
-	$("tab-content-data-comment").update(getLoading("<?php echo $LNG->LOADING_COMMENTS; ?>"));
+	const tabcontentdatacomment = document.getElementById("tab-content-data-comment");
+	tabcontentdatacomment.innerHTML = "";
+	tabcontentdatacomment.appendChild(getLoading("<?php echo $LNG->LOADING_COMMENTS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -673,7 +685,9 @@ function loadcomments(context,args) {
 				var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 				window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 			}
-			$("tab-content-data-comment").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
+			const tabcontentdatacomment = document.getElementById("tab-content-data-comment");
+			tabcontentdatacomment.innerHTML = "";
+			tabcontentdatacomment.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
 
 			if(nodes.length > 0){
 				//preprosses nodes to add searchid if it is there
@@ -688,14 +702,14 @@ function loadcomments(context,args) {
 				var tb3 = new Element("div", {'class':'toolbarrow'});
 				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>'};
 				tb3.insert(displaySortForm(sortOpts,args,'comment',reorderComments));
-				$("tab-content-data-comment").insert(tb3);
+				document.getElementById("tab-content-data-comment").appendChild(tb3);
 
-				displayUsersNodes($("tab-content-data-comment"),nodes,parseInt(args['start'])+1);
+				displayUsersNodes(document.getElementById("tab-content-data-comment"),nodes,parseInt(args['start'])+1);
 			}
 
 			//display nav
 			if (total > parseInt( args["max"] )) {
-				$("tab-content-data-comment").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
+				document.getElementById("tab-content-data-comment").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
 			}
 		}
 	});
@@ -709,8 +723,8 @@ function loadcomments(context,args) {
 function reorderPros(){
  	// change the sort and orderby ARG values
  	PRO_ARGS['start'] = 0;
- 	PRO_ARGS['sort'] = $('select-sort-pro').options[$('select-sort-pro').selectedIndex].value;
- 	PRO_ARGS['orderby'] = $('select-orderby-pro').options[$('select-orderby-pro').selectedIndex].value;
+ 	PRO_ARGS['sort'] = document.getElementById('select-sort-pro').options[document.getElementById('select-sort-pro').selectedIndex].value;
+ 	PRO_ARGS['orderby'] = document.getElementById('select-orderby-pro').options[document.getElementById('select-orderby-pro').selectedIndex].value;
 
  	loadpros(CONTEXT,PRO_ARGS);
 }
@@ -721,8 +735,8 @@ function reorderPros(){
 function reorderCons(){
 	// change the sort and orderby ARG values
 	CON_ARGS['start'] = 0;
-	CON_ARGS['sort'] = $('select-sort-con').options[$('select-sort-con').selectedIndex].value;
-	CON_ARGS['orderby'] = $('select-orderby-con').options[$('select-orderby-con').selectedIndex].value;
+	CON_ARGS['sort'] = document.getElementById('select-sort-con').options[document.getElementById('select-sort-con').selectedIndex].value;
+	CON_ARGS['orderby'] = document.getElementById('select-orderby-con').options[document.getElementById('select-orderby-con').selectedIndex].value;
 
 	loadcons(CONTEXT,CON_ARGS);
 }
@@ -733,8 +747,8 @@ function reorderCons(){
 function reorderIssues(){
  	// change the sort and orderby ARG values
  	ISSUE_ARGS['start'] = 0;
- 	ISSUE_ARGS['sort'] = $('select-sort-issue').options[$('select-sort-issue').selectedIndex].value;
- 	ISSUE_ARGS['orderby'] = $('select-orderby-issue').options[$('select-orderby-issue').selectedIndex].value;
+ 	ISSUE_ARGS['sort'] = document.getElementById('select-sort-issue').options[document.getElementById('select-sort-issue').selectedIndex].value;
+ 	ISSUE_ARGS['orderby'] = document.getElementById('select-orderby-issue').options[document.getElementById('select-orderby-issue').selectedIndex].value;
 
  	loadissues(CONTEXT,ISSUE_ARGS);
 }
@@ -746,8 +760,8 @@ function reorderIssues(){
 function reorderSolutions(){
 	// change the sort and orderby ARG values
 	SOLUTION_ARGS['start'] = 0;
-	SOLUTION_ARGS['sort'] = $('select-sort-solution').options[$('select-sort-solution').selectedIndex].value;
-	SOLUTION_ARGS['orderby'] = $('select-orderby-solution').options[$('select-orderby-solution').selectedIndex].value;
+	SOLUTION_ARGS['sort'] = document.getElementById('select-sort-solution').options[document.getElementById('select-sort-solution').selectedIndex].value;
+	SOLUTION_ARGS['orderby'] = document.getElementById('select-orderby-solution').options[document.getElementById('select-orderby-solution').selectedIndex].value;
 
 	loadsolutions(CONTEXT,SOLUTION_ARGS);
 }
@@ -758,8 +772,8 @@ function reorderSolutions(){
 function reorderUsers(){
 	// change the sort and orderby ARG values
 	USER_ARGS['start'] = 0;
-	USER_ARGS['sort'] = $('select-sort-user').options[$('select-sort-user').selectedIndex].value;
-	USER_ARGS['orderby'] = $('select-orderby-user').options[$('select-orderby-user').selectedIndex].value;
+	USER_ARGS['sort'] = document.getElementById('select-sort-user').options[document.getElementById('select-sort-user').selectedIndex].value;
+	USER_ARGS['orderby'] = document.getElementById('select-orderby-user').options[document.getElementById('select-orderby-user').selectedIndex].value;
 
 	loadusers(CONTEXT,USER_ARGS);
 }
@@ -770,8 +784,8 @@ function reorderUsers(){
 function reorderComments(){
 	// change the sort and orderby ARG values
 	COMMENT_ARGS['start'] = 0;
-	COMMENT_ARGS['sort'] = $('select-sort-comment').options[$('select-sort-comment').selectedIndex].value;
-	COMMENT_ARGS['orderby'] = $('select-orderby-comment').options[$('select-orderby-comment').selectedIndex].value;
+	COMMENT_ARGS['sort'] = document.getElementById('select-sort-comment').options[document.getElementById('select-sort-comment').selectedIndex].value;
+	COMMENT_ARGS['orderby'] = document.getElementById('select-orderby-comment').options[document.getElementById('select-orderby-comment').selectedIndex].value;
 
 	loadcomments(CONTEXT,COMMENT_ARGS);
 }
@@ -780,7 +794,7 @@ function reorderComments(){
  *	Filter the pro by search criteria
  */
  function filterSearchPros() {
- 	PRO_ARGS['q'] = $('qpro').value;
+ 	PRO_ARGS['q'] = document.getElementById('qpro').value;
  	var scope = 'all';
  	PRO_ARGS['scope'] = scope;
 
@@ -796,12 +810,12 @@ function reorderComments(){
 					PRO_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.pro = false;
-				setTabPushed($('tab-pro-list-obj'),'data-pro');
+				setTabPushed(document.getElementById('tab-pro-list-obj'),'data-pro');
 			}
 		});
 	} else {
 		DATA_LOADED.pro = false;
-		setTabPushed($('tab-pro-list-obj'),'data-pro');
+		setTabPushed(document.getElementById('tab-pro-list-obj'),'data-pro');
 	}
  }
 
@@ -809,7 +823,7 @@ function reorderComments(){
  *	Filter the cons by search criteria
  */
 function filterSearchCons() {
-	CON_ARGS['q'] = $('qcon').value;
+	CON_ARGS['q'] = document.getElementById('qcon').value;
 	var scope = 'all';
 	CON_ARGS['scope'] = scope;
 
@@ -825,12 +839,12 @@ function filterSearchCons() {
 					CON_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.con = false;
-				setTabPushed($('tab-con-list-obj'),'data-con');
+				setTabPushed(document.getElementById('tab-con-list-obj'),'data-con');
 			}
 		});
 	} else {
 		DATA_LOADED.con = false;
-		setTabPushed($('tab-con-list-obj'),'data-con');
+		setTabPushed(document.getElementById('tab-con-list-obj'),'data-con');
 	}
 }
 
@@ -838,7 +852,7 @@ function filterSearchCons() {
  *	Filter the issues by search criteria
  */
 function filterSearchIssues() {
-	ISSUE_ARGS['q'] = $('qissue').value;
+	ISSUE_ARGS['q'] = document.getElementById('qissue').value;
 	var scope = 'all';
 	ISSUE_ARGS['scope'] = scope;
 
@@ -854,12 +868,12 @@ function filterSearchIssues() {
 					ISSUE_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.issue = false;
-				setTabPushed($('tab-issue-list-obj'),'data-issue');
+				setTabPushed(document.getElementById('tab-issue-list-obj'),'data-issue');
 			}
 		});
 	} else {
 		DATA_LOADED.issue = false;
-		setTabPushed($('tab-issue-list-obj'),'data-issue');
+		setTabPushed(document.getElementById('tab-issue-list-obj'),'data-issue');
 	}
 }
 
@@ -867,7 +881,7 @@ function filterSearchIssues() {
  *	Filter the solutions by search criteria
  */
 function filterSearchSolutions() {
-	SOLUTION_ARGS['q'] = $('qsolution').value;
+	SOLUTION_ARGS['q'] = document.getElementById('qsolution').value;
 	var scope = 'all';
 	SOLUTION_ARGS['scope'] = scope;
 
@@ -883,12 +897,12 @@ function filterSearchSolutions() {
 					SOLUTION_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.solution = false;
-				setTabPushed($('tab-solution-list-obj'),'data-solution');
+				setTabPushed(document.getElementById('tab-solution-list-obj'),'data-solution');
 			}
 		});
 	} else {
 		DATA_LOADED.solution = false;
-		setTabPushed($('tab-solution-list-obj'),'data-solution');
+		setTabPushed(document.getElementById('tab-solution-list-obj'),'data-solution');
 	}
 }
 
@@ -896,7 +910,7 @@ function filterSearchSolutions() {
  *	Filter the websites by search criteria
  */
 function filterSearchResources() {
-	RESOURCE_ARGS['q'] = $('qweb').value;
+	RESOURCE_ARGS['q'] = document.getElementById('qweb').value;
 	var scope = 'all';
 	RESOURCE_ARGS['scope'] = scope;
 
@@ -912,12 +926,12 @@ function filterSearchResources() {
 					RESOURCE_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.resource = false;
-				setTabPushed($('tab-resource-list-obj'),'data-resource');
+				setTabPushed(document.getElementById('tab-resource-list-obj'),'data-resource');
 			}
 		});
 	} else {
 		DATA_LOADED.resource = false;
-		setTabPushed($('tab-resource-list-obj'),'data-resource');
+		setTabPushed(document.getElementById('tab-resource-list-obj'),'data-resource');
 	}
 }
 
@@ -925,7 +939,7 @@ function filterSearchResources() {
  *	Filter the users by search criteria
  */
 function filterSearchComments() {
-	COMMENT_ARGS['q'] = $('qcomment').value;
+	COMMENT_ARGS['q'] = document.getElementById('qcomment').value;
 	var scope = 'all';
 	COMMENT_ARGS['scope'] = scope;
 
@@ -941,12 +955,12 @@ function filterSearchComments() {
 					COMMENT_ARGS['searchid'] = searchid;
 				}
 				DATA_LOADED.comment = false;
-				setTabPushed($('tab-comment-list-obj'),'data-comment');
+				setTabPushed(document.getElementById('tab-comment-list-obj'),'data-comment');
 			}
 		});
 	} else {
 		DATA_LOADED.comment = false;
-		setTabPushed($('tab-comment-list-obj'),'data-comment');
+		setTabPushed(document.getElementById('tab-comment-list-obj'),'data-comment');
 	}
 }
 
@@ -959,7 +973,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
 
     var selOrd = new Element("select");
- 	Event.observe(selOrd,'change',handler);
+ 	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
@@ -976,7 +990,7 @@ function displaySortForm(sortOpts,args,tab,handler){
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
- 	Event.observe(sortBy,'change',handler);
+ 	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
@@ -1001,12 +1015,15 @@ function displaySortForm(sortOpts,args,tab,handler){
 function setSelectedNodeTypes(types) {
 	SELECTED_NODETYPES = types;
 
-	if ($('select-filter-conn')) {
-		$('select-filter-conn').options[0].selected = true;
-	} else if ($('select-filter-neighbourhood')) {
-		$('select-filter-neighbourhood').options[0].selected = true;
-	} else if ($('nodetypegroups')) {
-		($('nodetypegroups')).options[0].selected = true;
+	const selectfiltercon = document.getElementById('select-filter-conn');
+	const selectfilterneighbourhood = document.getElementById('select-filter-neighbourhood');
+	const nodetypegroups = document.getElementById('nodetypegroups');
+	if (selectfiltercon) {
+		selectfiltercon.options[0].selected = true;
+	} else if (selectfilterneighbourhood) {
+		selectfilterneighbourhood.options[0].selected = true;
+	} else if (nodetypegroups) {
+		nodetypegroups.options[0].selected = true;
 	}
 }
 
@@ -1016,12 +1033,15 @@ function setSelectedNodeTypes(types) {
 function setSelectedLinkTypes(types) {
 	SELECTED_LINKTYES = types;
 
-	if ($('select-filter-conn')) {
-		$('select-filter-conn').options[0].selected = true;
-	} else if ($('select-filter-neighbourhood')) {
-		$('select-filter-neighbourhood').options[0].selected = true;
-	} else if ($('linktypegroups')) {
-		($('linktypegroups')).options[0].selected = true;
+	const selectfiltercon = document.getElementById('select-filter-conn');
+	const selectfilterneighbourhood = document.getElementById('select-filter-neighbourhood');
+	const linktypegroups = document.getElementById('linktypegroups');
+	if (selectfiltercon) {
+		selectfiltercon.options[0].selected = true;
+	} else if (selectfilterneighbourhood) {
+		selectfilterneighbourhood.options[0].selected = true;
+	} else if (linktypegroups) {
+		linktypegroups.options[0].selected = true;
 	}
 }
 
@@ -1050,15 +1070,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("active");
-	        Event.observe(prevSpan,"click", function(){
+	        prevSpan.classList.add("active");
+	        prevSpan.onclick =  function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) - newArr["max"];
 	            eval("load"+type+"(context,newArr)");
-	        });
+	        };
 	    } else {
 			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("inactive");
+	        prevSpan.classList.add("inactive");
 	    }
 		
 		pageUL.insert(prevSpan);
@@ -1070,12 +1090,14 @@ function createNav(total, start, count, argArray, context, type){
 	    for (var i = 1; i < totalPages +1; i++){
 	    	var page = new Element("li", {'class':"page-link"}).insert(i);
 	    	if(i != currentPage){
-		    	page.addClassName("active");
+		    	page.classList.add("active");
 		    	var newArr = Object.clone(argArray);
 		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+				page.addEventListener("click", function(event) {
+    				Pages.next.call(Pages, type, context, newArr, event);
+				});
 	    	} else {
-	    		page.addClassName("currentpage");
+	    		page.classList.add("currentpage");
 	    	}
 	    	pageUL.insert(page);
 	    }
@@ -1084,15 +1106,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("active");
-	        Event.observe(nextSpan,"click", function(){
+	        nextSpan.classList.add("active");
+	        nextSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
 	            eval("load"+type+"(context, newArr)");
-	        });
+	        };
 	    } else {
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("inactive");
+	        nextSpan.classList.add("inactive");
 	    }
 		pageUL.insert(nextSpan);
 

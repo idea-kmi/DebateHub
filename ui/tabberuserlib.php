@@ -147,10 +147,10 @@ function displayUserTabs($context,$args, $wasEmpty){
 																$q = stripslashes(optional_param("q","",PARAM_TEXT));
 															?>
 															<div class="input-group">
-																<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('issue-go-button').onclick();}" id="qissue" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+																<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { document.getElementById('issue-go-button').onclick();}" id="qissue" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
 																<div id="q_choices" class="autocomplete"></div>
 																<button class="btn btn-outline-dark bg-light" type="button" onclick="filterSearchIssues();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-																<button class="btn btn-outline-dark bg-light" type="button" onclick="ISSUE_ARGS['q'] = ''; ISSUE_ARGS['scope'] = 'all'; $('qissue').value='';if ($('scopechallangeall'))  $('scopechallangeall').checked=true; refreshIssues();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+																<button class="btn btn-outline-dark bg-light" type="button" onclick="ISSUE_ARGS['q'] = ''; ISSUE_ARGS['scope'] = 'all'; document.getElementById('qissue').value='';if (document.getElementById('scopechallangeall'))  document.getElementById('scopechallangeall').checked=true; refreshIssues();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
 															</div>
 														</div>
 														<div class="col-lg-4 col-md-12">
@@ -182,10 +182,10 @@ function displayUserTabs($context,$args, $wasEmpty){
 												<div class="row">
 													<div class="col-lg-4 col-md-12">
 														<div class="input-group">
-															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_SOLUTION_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_SOLUTION_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('solution-go-button').onclick();}" id="qsolution" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_SOLUTION_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_SOLUTION_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { document.getElementById('solution-go-button').onclick();}" id="qsolution" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
 															<div id="q_choices" class="autocomplete"></div>
 															<button class="btn btn-outline-dark bg-light" type="button" onclick="filterSearchSolutions();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-															<button class="btn btn-outline-dark bg-light" type="button" onclick="SOLUTION_ARGS['q'] = ''; SOLUTION_ARGS['scope'] = 'all'; $('qsolution').value='';if ($('scopesolutionall'))  $('scopesolutionall').checked=true; refreshSolutions();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+															<button class="btn btn-outline-dark bg-light" type="button" onclick="SOLUTION_ARGS['q'] = ''; SOLUTION_ARGS['scope'] = 'all'; document.getElementById('qsolution').value='';if (document.getElementById('scopesolutionall'))  document.getElementById('scopesolutionall').checked=true; refreshSolutions();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
 														</div>
 														<?php
 															// if search term is present in URL then show in search box
@@ -220,10 +220,10 @@ function displayUserTabs($context,$args, $wasEmpty){
 												<div class="row">
 													<div class="col-lg-4 col-md-12">
 														<div class="input-group">
-															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_PRO_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_PRO_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('pro-go-button').onclick();}" id="qpro" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_PRO_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_PRO_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { document.getElementById('pro-go-button').onclick();}" id="qpro" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
 															<div id="q_choices" class="autocomplete"></div>
 															<button class="btn btn-outline-dark bg-light" type="button" onclick="filterSearchPros();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-															<button class="btn btn-outline-dark bg-light" type="button" onclick="PRO_ARGS['q'] = ''; PRO_ARGS['scope'] = 'all'; $('qpro').value='';if ($('scopeproall'))  $('scopeproall').checked=true; refreshPros();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+															<button class="btn btn-outline-dark bg-light" type="button" onclick="PRO_ARGS['q'] = ''; PRO_ARGS['scope'] = 'all'; document.getElementById('qpro').value='';if (document.getElementById('scopeproall'))  document.getElementById('scopeproall').checked=true; refreshPros();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
 														</div>
 														<?php
 															// if search term is present in URL then show in search box
@@ -258,10 +258,10 @@ function displayUserTabs($context,$args, $wasEmpty){
 												<div class="row">
 													<div class="col-lg-4 col-md-12">
 														<div class="input-group">
-															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_CON_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_CON_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('con-go-button').onclick();}" id="qcon" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_CON_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_CON_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { document.getElementById('con-go-button').onclick();}" id="qcon" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
 															<div id="q_choices" class="autocomplete"></div>
 															<button class="btn btn-outline-dark bg-light" type="button" onclick="filterSearchCons();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-															<button class="btn btn-outline-dark bg-light" type="button" onclick="CON_ARGS['q'] = ''; CON_ARGS['scope'] = 'all'; $('qcon').value='';if ($('scopeconall'))  $('scopeconall').checked=true; refreshCons();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+															<button class="btn btn-outline-dark bg-light" type="button" onclick="CON_ARGS['q'] = ''; CON_ARGS['scope'] = 'all'; document.getElementById('qcon').value='';if (document.getElementById('scopeconall'))  document.getElementById('scopeconall').checked=true; refreshCons();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
 														</div>
 														<?php
 															// if search term is present in URL then show in search box
@@ -296,10 +296,10 @@ function displayUserTabs($context,$args, $wasEmpty){
 												<div class="row">
 													<div class="col-lg-4 col-md-12">
 														<div class="input-group">
-															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_COMMENT_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_COMMENT_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('comment-go-button').onclick();}" id="qcomment" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+															<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_COMMENT_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_COMMENT_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { document.getElementById('comment-go-button').onclick();}" id="qcomment" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
 															<div id="q_choices" class="autocomplete"></div>
 															<button class="btn btn-outline-dark bg-light" type="button" onclick="filterSearchComments();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-															<button class="btn btn-outline-dark bg-light" type="button" onclick="COMMENT_ARGS['q'] = ''; COMMENT_ARGS['searchid'] = ''; COMMENT_ARGS['scope'] = 'all'; $('qcomment').value='';if ($('scopeproall'))  $('scopeproall').checked=true; refreshComments();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
+															<button class="btn btn-outline-dark bg-light" type="button" onclick="COMMENT_ARGS['q'] = ''; COMMENT_ARGS['searchid'] = ''; COMMENT_ARGS['scope'] = 'all'; document.getElementById('qcomment').value='';if (document.getElementById('scopeproall'))  document.getElementById('scopeproall').checked=true; refreshComments();"><?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?></button>
 														</div>
 														<?php
 															// if search term is present in URL then show in search box
@@ -372,6 +372,6 @@ function displayUserTabs($context,$args, $wasEmpty){
 
 <script type='text/javascript'>
 	function updateUserFollow() {
-		$('followupdate').submit()
+		document.getElementById('followupdate').submit()
 	}
 </script>

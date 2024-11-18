@@ -118,18 +118,16 @@
 			?>
 
 			<script type="text/javascript">
-				Event.observe(window, 'load', function() {
-
-					buildSearchToolbar($("content-controls"));
-					loadissues(CONTEXT,ISSUE_ARGS);
-
-					loadsolutions(CONTEXT,SOLUTION_ARGS);
-					loadpros(CONTEXT,PRO_ARGS);
-					loadcons(CONTEXT,CON_ARGS);
-					loadcomment(CONTEXT,COMMENT_ARGS);
-
-					loadusers(CONTEXT,USER_ARGS);
-					loadgroups(CONTEXT,GROUP_ARGS);
+				window.addEventListener('load', function() {
+					const contentControls = document.getElementById('content-controls');
+					buildSearchToolbar(controls);
+					loadissues(CONTEXT, ISSUE_ARGS);
+					loadsolutions(CONTEXT, SOLUTION_ARGS);
+					loadpros(CONTEXT, PRO_ARGS);
+					loadcons(CONTEXT, CON_ARGS);
+					loadcomment(CONTEXT, COMMENT_ARGS);
+					loadusers(CONTEXT, USER_ARGS);
+					loadgroups(CONTEXT, GROUP_ARGS);
 				});
 			</script>
 

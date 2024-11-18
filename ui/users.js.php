@@ -142,8 +142,9 @@ function followUser(obj) {
    			} else {
 				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
 				obj.setAttribute('title', '<?php echo $LNG->USERS_UNFOLLOW; ?>');
-				Event.stopObserving(obj, 'click');
-				Event.observe(obj,'click', function (){ unfollowUser(this) } );
+				obj.onclick = function() {
+					unfollowUser(this);
+				}
    			}
    		}
   	});
@@ -163,8 +164,9 @@ function unfollowUser(obj) {
    			} else {
 				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 				obj.setAttribute('title', '<?php echo $LNG->USERS_FOLLOW; ?>');
-				Event.stopObserving(obj, 'click');
-				Event.observe(obj,'click', function (){ followUser(this) } );
+				obj.onclick = function() {
+        			followUser(this);
+    			};
    			}
    		}
   	});
@@ -231,7 +233,7 @@ function reportGroupSpamAlert(obj, group) {
 				obj.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
 				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
 				obj.style.cursor = 'auto';
-				$(obj).unbind("click");
+				obj.unbind("click");
 				Event.stopObserving(obj, 'click');
 				if (group !== undefined) {
 					group.status = 1;
@@ -256,7 +258,7 @@ function reportUserSpamAlert(obj, user) {
 				obj.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
 				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
 				obj.style.cursor = 'auto';
-				$(obj).unbind("click");
+				obj.unbind("click");
 				Event.stopObserving(obj, 'click');
 				if (user !== undefined) {
 					user.status = 1;
@@ -287,7 +289,7 @@ function createGroupSpamButton(group) {
 			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
 			spamimg.classList.add('active');
 			spamimg.id = group.groupid;
-			Event.observe(spamimg,'click',function () { reportGroupSpamAlert(this, group) } );
+			spaming.onclick = function () { reportGroupSpamAlert(this, group) };
 		}
 	} else {
 		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_LOGIN_REPORT_ALT; ?>');
@@ -319,7 +321,7 @@ function createUserSpamButton(user) {
 			spamimg.classList.add('active');
 			spamimg.id = user.userid;
 			spamimg['data-label'] = user.name;
-			Event.observe(spamimg,'click',function (){ reportUserSpamAlert(this, user) } );
+			spamimg.onclick = function (){ reportUserSpamAlert(this, user) };
 		}
 	} else {
 		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>');
@@ -395,11 +397,11 @@ function renderUser(user){
 		followbutton.userid = user.userid;
 		followDiv.insert(followbutton);
 		if (user.userfollow && user.userfollow == "Y") {
-			Event.observe(followbutton,'click',function (){ unfollowUser(this) } );
+			follow.onclick =  function (){ unfollowUser(this) };
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
 			followbutton.setAttribute('title', '<?php echo $LNG->USERS_UNFOLLOW; ?>');
 		} else {
-			Event.observe(followbutton,'click',function (){ followUser(this) } );
+			followbutton.onclick = function (){ followUser(this) };
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 			followbutton.setAttribute('title', '<?php echo $LNG->USERS_FOLLOW; ?>');
 		}
@@ -544,7 +546,7 @@ function renderGroup(group, mainheading, cropdesc){
 			var code = URL_ROOT+'api/conversations/'+NODE_ARGS['groupid'];
 			textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE_GROUP; ?>', code, "", "", "");
 		};
-		Event.observe(jsonldButton,"click", jsonldButtonhandler);
+		jsonldButton.onclick = jsonldButtonhandler;
 		toolbarDiv.insert(jsonldButton);
 	}
 
@@ -739,7 +741,7 @@ function renderMyGroup(group){
 		var code = URL_ROOT+'api/conversations/'+group.groupid;
 		textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE_GROUP; ?>', code, "", "", "");
 	};
-	Event.observe(jsonldButton,"click", jsonldButtonhandler);
+	jsonldButton.onclick = jsonldButtonhandler;
 	toolbarDiv.insert(jsonldButton);
 
 	iDiv.insert(nodetableDiv);

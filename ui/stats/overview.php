@@ -137,7 +137,7 @@
 			next.insert(nodename);
 			if (homepage && homepage != "") {
 				next.className = "active";
-				Event.observe(next,'click',function (){
+				next.addEventListener('click', function() {
 					loadDialog('details', homepage, 1024,768);
 				});
 			}
@@ -151,7 +151,9 @@
 
 	function loadOverviewData() {
 
-		$('messagearea').update(getLoading("<?php echo $LNG->STATS_OVERVIEW_LOADING_MESSAGE; ?>"));
+		const messagearea = document.getElementById("messagearea");
+		messagearea.innerHTML = "";
+		messagearea.appendChild(getLoading("<?php echo $LNG->STATS_OVERVIEW_LOADING_MESSAGE; ?>"));
 
 		var args = {}; //must be an empty object to send down the url, or all the Array functions get sent too.
 		args["style"] = 'shortactivity';
@@ -635,7 +637,7 @@
 		});
 	}
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		loadOverviewData();
 	});
 </script>

@@ -75,7 +75,8 @@ function loadExploreGroupSunburst(){
 
 function loadData(sunburstGraph, messagearea) {
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 	var jsonnodes = NODE_ARGS['jsonnodes'];
 	var jsonusers = NODE_ARGS['jsonusers'];

@@ -138,13 +138,13 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
+	window.addEventListener('load', function() {
+		NODE_ARGS['jsondata'] = JSON.parse('<?php echo addslashes($json); ?>');
+		NODE_ARGS['groupid'] = '<?php echo addslashes($groupid); ?>';
 
-	Event.observe(window, 'load', function() {
-		NODE_ARGS['jsondata'] = <?php echo $json; ?>;
-		NODE_ARGS['groupid'] = '<?php echo $groupid; ?>';
-
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-stackedarea.js.php"); ?>', 'stats-groups-stackedarea-script');
+		addScriptDynamically('<?php echo addslashes($HUB_FLM->getCodeWebPath("ui/networkmaps/stats-stackedarea.js.php")); ?>', 'stats-groups-stackedarea-script');
 	});
+
 </script>
 
 <div class="d-flex flex-column">

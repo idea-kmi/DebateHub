@@ -92,7 +92,7 @@
     /**
      *  set which tab to show and load first
      */
-    Event.observe(window, 'load', function() {
+    window.addEventListener('load', function() {
 	    $('dialogheader').insert('<?php echo '<span style="color: black">'.$node->name.'</span><br>'.$LNG->BUILTFROM_DIALOG_TITLE; ?>');
         getNodes();
     });

@@ -30,27 +30,35 @@
 
 function init() {
 
-	var date = new Date();
-	$('date').update(date);
+	const date = new Date();
+	const datefield = document.getElementById("date");
+	datefield.update(date);
 
-	var time = date.getTime();
-	$('time').update(time);
+	const time = date.getTime();
+	const timefield = document.getElementById("time");
+	timefield.update(time);
 
-	var offset = date.getTimezoneOffset();
-	$('offset').update(offset);
+	const offset = date.getTimezoneOffset();
+	const offsetfield = document.getElementById("offset");
+	offsetfield.update(offset);
 
-	$('newtime').update(parseInt((time + (offset*60000))/1000));
+	const newtime = parseInt((time + (offset*60000))/1000);
+	const newtimefield = document.getElementById("newtime");
+	newtimefield.update(parseInt(newtime);
 
-	$('localutc').update(date.toUTCString());
+	const localutc = date.toUTCString();
+	const localutcfield = document.getElementById("localutc");
+	localutcfield.update(localutc);
 
-	var final = new Date(date.toUTCString());
-	var finaltime = final.getTime()/1000;
-	$('final').update(finaltime);
+	const final = new Date(date.toUTCString());
+	const finaltime = final.getTime()/1000;
+	const finalfield = document.getElementById("final");
+	finalfield.update(finaltime);
 
 	var newDate = new Date();
 	newDate.setTime(finaltime*1000)
-
-	$('final').update(newDate);
+	const reversefield = document.getElementById("reverse");
+	reversefield.update(newDate);
 }
 
 window.onload = init;

@@ -300,14 +300,14 @@
 													<?php echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">'; ?>
 														<input type="hidden" id="groupid" name="groupid" value="<?= $group->groupid ?>" />
 														<input type="hidden" id="restoregroup" name="restoregroup" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ $(\'second-'.$group->groupid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ document.getElementById(\'second-'.$group->groupid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
 													<?php echo '<form id="fourth-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormSuspend(\''.htmlspecialchars($group->name).'\');">'; ?>
 														<input type="hidden" id="groupid" name="groupid" value="<?= $group->groupid ?>" />
 														<input type="hidden" id="archivegroup" name="archivegroup" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($group->name).'\')){ $(\'fourth-'.$group->groupid.'\').submit(); }" id="archivegroup" name="archivegroup">'.$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormSuspend(\''.htmlspecialchars($group->name).'\')){ document.getElementById(\'fourth-'.$group->groupid.'\').submit(); }" id="archivegroup" name="archivegroup">'.$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
@@ -366,7 +366,7 @@
 													<?php echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">'; ?>
 														<input type="hidden" id="groupid" name="groupid" value="<?= $group->groupid ?>" />
 														<input type="hidden" id="restorearchivedgroup" name="restorearchivedgroup" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ $(\'second-'.$group->groupid.'\').submit(); }" id="restorearchivedgroup" name="restorearchivedgroup">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($group->name).'\')){ document.getElementById(\'second-'.$group->groupid.'\').submit(); }" id="restorearchivedgroup" name="restorearchivedgroup">'.$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td class="d-none">

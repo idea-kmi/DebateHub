@@ -301,7 +301,7 @@ function addScatterPlotDetailItem(nodeid, nodename, nodetype, homepage) {
 		next.insert(nodename);
 		if (homepage && homepage != "") {
 			next.className = "active";
-			Event.observe(next,'click',function (){
+			next.addEventListener('click', function() {
 				loadDialog('details', homepage, 1024,768);
 			});
 		}
@@ -469,7 +469,7 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 						}
 
 						next.insert(d.name);
-						Event.observe(next,'click',function (){
+						next.addEventListener('click', function() {
 							loadDialog('details', URL_ROOT+"explore.php?id="+d.id, 1024,768);
 						});
 					} else {

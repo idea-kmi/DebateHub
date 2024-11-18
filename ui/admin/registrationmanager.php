@@ -262,14 +262,14 @@
 													<?php echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">
 														<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />'; ?>
 														<input type="hidden" id="acceptuser" name="acceptuser" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ document.getElementById(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
 													<?php echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">'; ?>
 														<input type="hidden" id="userid" name="userid" value="<?= $user->userid ?>" />
 														<input type="hidden" id="rejectuser" name="rejectuser" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { document.getElementById(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 											</tr>
@@ -321,14 +321,14 @@
 													<?php echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">
 														<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />'; ?>
 														<input type="hidden" id="revalidateuser" name="revalidateuser" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ document.getElementById(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
 													<?php echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">'; ?>
 														<input type="hidden" id="userid" name="userid" value="<?= $user->userid ?>" />
 														<input type="hidden" id="removeuser" name="removeuser" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { document.getElementById(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 											</tr>

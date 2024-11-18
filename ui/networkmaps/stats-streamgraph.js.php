@@ -59,8 +59,8 @@ function loadStreamGraph(){
 function loadStreamGraphData(messagearea, streamgraphdiv, width) {
 
 	//displayStreamGraphD3VisTest(streamgraphdiv, width);
-
-	messagearea.update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+	messagarea.innerHTML = "";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 	var data = NODE_ARGS['data'];
  	if (data != "") {

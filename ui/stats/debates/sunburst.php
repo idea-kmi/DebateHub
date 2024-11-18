@@ -210,7 +210,7 @@ echo "</script>";
 ?>
 
 <script type='text/javascript'>
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
 
 	NODE_ARGS['jsonnodes'] = JSON.parse('<?php echo addslashes($jsonnodes); ?>');
 	NODE_ARGS['jsonusers'] = JSON.parse('<?php echo addslashes($jsonusers); ?>');

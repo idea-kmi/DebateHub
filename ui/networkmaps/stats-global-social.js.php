@@ -66,7 +66,7 @@ function loadSocialNet() {
 	$("social-global-div").insert({top: keybar});
 
 	//event to resize
-	Event.observe(window,"resize",function() {
+	window.addEventListener("resize", function() {
 		resizeFDGraph(forcedirectedGraph, "social-global-div", false);
 	});
 
@@ -79,7 +79,8 @@ function loadSocialNet() {
 
 function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
-	messagearea.update(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
 
 	var nodetypes = "";
 

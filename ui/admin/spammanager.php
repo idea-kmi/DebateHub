@@ -318,14 +318,14 @@
 													<?php echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">'; ?>
 														<input type="hidden" id="nodeid" name="nodeid" value="<?= $node->nodeid ?>" />
 														<input type="hidden" id="restorenode" name="restorenode" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ document.getElementById(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
 													<?php echo '<form id="third-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormArchive(\''.htmlspecialchars($node->name).'\');">'; ?>
 														<input type="hidden" id="nodeid" name="nodeid" value="<?= $node->nodeid ?>" />
 														<input type="hidden" id="archivenode" name="archivenode" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormArchive(\''.htmlspecialchars($node->name).'\')) { $(\'third-'.$node->nodeid.'\').submit(); }" id="archivenode" name="archivenode">'.$LNG->SPAM_ADMIN_ARCHIVE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormArchive(\''.htmlspecialchars($node->name).'\')) { document.getElementById(\'third-'.$node->nodeid.'\').submit(); }" id="archivenode" name="archivenode">'.$LNG->SPAM_ADMIN_ARCHIVE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td>
@@ -391,7 +391,7 @@
 													<?php echo '<form id="second-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($node->name).'\');">'; ?>
 														<input type="hidden" id="nodeid" name="nodeid" value="<?= $node->nodeid ?>" />
 														<input type="hidden" id="restorenodearchive" name="restorenodearchive" value="" />
-														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ $(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</span>'; ?>
+														<?php echo '<span class="active" onclick="if (checkFormRestore(\''.htmlspecialchars($node->name).'\')){ document.getElementById(\'second-'.$node->nodeid.'\').submit(); }" id="restorenode" name="restorenode">'.$LNG->SPAM_ADMIN_RESTORE_BUTTON.'</span>'; ?>
 													</form>
 												</td>
 												<td class="d-none">

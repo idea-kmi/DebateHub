@@ -64,7 +64,7 @@ function loadSocialDebateNet() {
 	$("social-debate-div").insert({top: keybar});
 
 	//event to resize
-	Event.observe(window,"resize",function() {
+	window.addEventListener("resize", function() {
 		resizeFDGraph(forcedirectedGraph, "social-debate-div", false);
 	});
 
@@ -77,7 +77,8 @@ function loadSocialDebateNet() {
 
 function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
-	messagearea.update(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
 
 	var args = {}; //must be an empty object to send down the url, or all the Array functions get sent too.
 	args["nodeid"] = NODE_ARGS['nodeid'];

@@ -50,7 +50,9 @@ function buildSearchToolbar(container) {
 function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 
-	$("content-issue-list").update(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	const contentissuelist = document.getElementById('content-issue-list');
+	contentissuelist.innerHTML = "";
+	contentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -85,40 +87,42 @@ function loadissues(context,args){
 				}
 
 				//set the count in header
-				$('issue-list-count').innerHTML = "";
-				$('issue-list-count-main').innerHTML = "";
-				$('content-issue-list').innerHTML = "";
-				$('issue-list-title').innerHTML = "";
+				document.getElementById('issue-list-count').innerHTML = "";
+				document.getElementById('issue-list-count-main').innerHTML = "";
+				document.getElementById('content-issue-list').innerHTML = "";
+				document.getElementById('issue-list-title').innerHTML = "";
 
-				$('content-issue-main').style.display = "block";
-				$('issue-result-menu').href = "#issueresult";
-				$('issue-result-menu').className = '';
+				document.getElementById('content-issue-main').style.display = "block";
+				document.getElementById('issue-result-menu').href = "#issueresult";
+				document.getElementById('issue-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-issue-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+					const contentissuelist = document.getElementById('content-issue-list');
+					contentissuelist.innerHTML = "";	
+					contentissuelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 				}
 
-				$('issue-list-count').insert(json.nodeset[0].totalno);
-				$('issue-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('issue-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('issue-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("issue-list-title").insert("<?php echo $LNG->ISSUES_NAME; ?>");
+					document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUES_NAME; ?>";
 				} else {
-					$("issue-list-title").insert("<?php echo $LNG->ISSUE_NAME; ?>");
+					document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUE_NAME; ?>";
 				}
 
-				displaySearchNodes($("content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-issue-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+					document.getElementById("content-issue-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 				}
 			} else {
-				$('content-issue-main').style.display = "none";
-				$('content-issue-list').innerHTML = "";
-				$('issue-result-menu').href = "javascript:return false";
-				$('issue-result-menu').className = 'inactive';
-				$('issue-list-count-main').innerHTML = "";
-				$('issue-list-count-main').insert('0');
+				document.getElementById('content-issue-main').style.display = "none";
+				document.getElementById('content-issue-list').innerHTML = "";
+				document.getElementById('issue-result-menu').href = "javascript:return false";
+				document.getElementById('issue-result-menu').className = 'inactive';
+				document.getElementById('issue-list-count-main').innerHTML = "";
+				document.getElementById('issue-list-count-main').insert('0');
 			}
 		}
 	});
@@ -130,7 +134,9 @@ function loadissues(context,args){
 function loadsolutions(context,args){
 	args['filternodetypes'] = "Solution";
 
-	$("content-solution-list").update(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
+	const contentsolutionlist = document.getElementById('content-solution-list');
+	contentsolutionlist.innerHTML = "";
+	contentsolutionlist.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -163,39 +169,41 @@ function loadsolutions(context,args){
 				}
 
 				//set the count in header
-				$('solution-list-count').innerHTML = "";
-				$('solution-list-count-main').innerHTML = "";
-				$('content-solution-list').innerHTML = "";
-				$('solution-list-title').innerHTML = "";
+				document.getElementById('solution-list-count').innerHTML = "";
+				document.getElementById('solution-list-count-main').innerHTML = "";
+				document.getElementById('content-solution-list').innerHTML = "";
+				document.getElementById('solution-list-title').innerHTML = "";
 
-				$('content-solution-main').style.display = "block";
-				$('solution-result-menu').href = "#solutionresult";
-				$('solution-result-menu').className = '';
+				document.getElementById('content-solution-main').style.display = "block";
+				document.getElementById('solution-result-menu').href = "#solutionresult";
+				document.getElementById('solution-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-solution-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+					const contentsolutionlist = document.getElementById('content-solution-list');
+					contentsolutionlist.innerHTML = "";
+					contentsolutionlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
 				}
 
-				$('solution-list-count').insert(json.nodeset[0].totalno);
-				$('solution-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('solution-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('solution-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("solution-list-title").insert("<?php echo $LNG->SOLUTIONS_NAME; ?>");
+					document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTIONS_NAME; ?>";
 				} else {
-					$("solution-list-title").insert("<?php echo $LNG->SOLUTION_NAME; ?>");
+					document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTION_NAME; ?>";
 				}
-				displaySearchNodes($("content-solution-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-solution-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-solution-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+					document.getElementById("content-solution-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
 				}
 			} else {
-				$('content-solution-main').style.display = "none";
-				$('content-solution-list').innerHTML = "";
-				$('solution-result-menu').href = "javascript:return false";
-				$('solution-result-menu').className = 'inactive';
-				$('solution-list-count-main').innerHTML = "";
-				$('solution-list-count-main').insert('0');
+				document.getElementById('content-solution-main').style.display = "none";
+				document.getElementById('content-solution-list').innerHTML = "";
+				document.getElementById('solution-result-menu').href = "javascript:return false";
+				document.getElementById('solution-result-menu').className = 'inactive';
+				document.getElementById('solution-list-count-main').innerHTML = "";
+				document.getElementById('solution-list-count-main').insert('0');
 			}
 		}
 	});
@@ -213,8 +221,10 @@ function loadpros(context,args){
 		args['filternodetypes'] = types;
 	}
 
-	$('content-pro-main').style.display = "block";
-	$("content-pro-list").update(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
+	document.getElementById('content-pro-main').style.display = "block";
+	const contentprolist = document.getElementById('content-pro-list');
+	contentprolist.innerHTML = "";
+	contentprolist.appendChild(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -248,39 +258,43 @@ function loadpros(context,args){
 				}
 
 				//set the count in tab header
-				$('pro-list-count').innerHTML = "";
-				$('pro-list-count-main').innerHTML = "";
-				$('content-pro-list').innerHTML = "";
-				$('pro-list-title').innerHTML = "";
+				document.getElementById('pro-list-count').innerHTML = "";
+				document.getElementById('pro-list-count-main').innerHTML = "";
+				document.getElementById('content-pro-list').innerHTML = "";
+				document.getElementById('pro-list-title').innerHTML = "";
 
 				if (total > parseInt( args["max"] )) {
-					$("content-pro-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+					const contentprolist = document.getElementById('content-pro-list');
+					contentprolist.innerHTML = "";
+					contentprolist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
 				}
 
-				$('content-pro-main').style.display = "block";
-				$('pro-result-menu').href = "#proresult";
-				$('pro-result-menu').className = '';
+				document.getElementById('content-pro-main').style.display = "block";
+				document.getElementById('pro-result-menu').href = "#proresult";
+				document.getElementById('pro-result-menu').className = '';
 
-				$('pro-list-count').insert(json.nodeset[0].totalno);
-				$('pro-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('pro-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('pro-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("pro-list-title").insert("<?php echo $LNG->PROS_NAME; ?>");
+					document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PROS_NAME; ?>";
 				} else {
-					$("pro-list-title").insert("<?php echo $LNG->PRO_NAME; ?>");
+					document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PRO_NAME; ?>";
 				}
-				displaySearchNodes($("content-pro-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-pro-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-pro-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+					const contentprolist = document.getElementById('content-pro-list');
+					contentprolist.innerHTML = "";
+					contentprolist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
 				}
 			} else {
-				$('content-pro-main').style.display = "none";
-				$('content-pro-list').innerHTML = "";
-				$('pro-result-menu').href = "javascript:return false";
-				$('pro-result-menu').className = 'inactive';
-				$('pro-list-count-main').innerHTML = "";
-				$('pro-list-count-main').insert('0');
+				document.getElementById('content-pro-main').style.display = "none";
+				document.getElementById('content-pro-list').innerHTML = "";
+				document.getElementById('pro-result-menu').href = "javascript:return false";
+				document.getElementById('pro-result-menu').className = 'inactive';
+				document.getElementById('pro-list-count-main').innerHTML = "";
+				document.getElementById('pro-list-count-main').insert('0');
 			}
 		}
 	});
@@ -297,8 +311,10 @@ function loadcons(context,args) {
 		args['filternodetypes'] = types;
 	}
 
-	$('content-con-main').style.display = "block";
-	$("content-con-list").update(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
+	document.getElementById('content-con-main').style.display = "block";
+	const contentconlist = document.getElementById('content-con-list');
+	contentconlist.innerHTML = "";
+	contentconlist.appendChild(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
@@ -331,40 +347,44 @@ function loadcons(context,args) {
 				}
 
 				//set the count in header
-				$('con-list-count').innerHTML = "";
-				$('con-list-count-main').innerHTML = "";
-				$('content-con-list').innerHTML = "";
-				$('con-list-title').innerHTML = "";
+				document.getElementById('con-list-count').innerHTML = "";
+				document.getElementById('con-list-count-main').innerHTML = "";
+				document.getElementById('content-con-list').innerHTML = "";
+				document.getElementById('con-list-title').innerHTML = "";
 
-				$('content-con-main').style.display = "block";
-				$('con-result-menu').href = "#conresult";
-				$('con-result-menu').className = '';
+				document.getElementById('content-con-main').style.display = "block";
+				document.getElementById('con-result-menu').href = "#conresult";
+				document.getElementById('con-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-con-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+					const contentconlist = document.getElementById('content-con-list');
+					contentconlist.innerHTML = "";
+					contentconlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
 				}
 
-				$('con-list-count').insert(json.nodeset[0].totalno);
-				$('con-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('con-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('con-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("con-list-title").insert("<?php echo $LNG->CONS_NAME; ?>");
+					document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CONS_NAME; ?>";
 				} else {
-					$("con-list-title").insert("<?php echo $LNG->CON_NAME; ?>");
+					document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CON_NAME; ?>";
 				}
 
-				displaySearchNodes($("content-con-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-con-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-evidence-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+					const contentevidencelist = document.getElementById('content-evidence-list');
+					contentevidencelist.innerHTML = "";
+					contentevidencelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
 				}
 			} else {
-				$('content-con-main').style.display = "none";
-				$('content-con-list').innerHTML = "";
-				$('con-result-menu').href = "javascript:return false";
-				$('con-result-menu').className = 'inactive';
-				$('con-list-count-main').innerHTML = "";
-				$('con-list-count-main').insert('0');
+				document.getElementById('content-con-main').style.display = "none";
+				document.getElementById('content-con-list').innerHTML = "";
+				document.getElementById('con-result-menu').href = "javascript:return false";
+				document.getElementById('con-result-menu').className = 'inactive';
+				document.getElementById('con-list-count-main').innerHTML = "";
+				document.getElementById('con-list-count-main').insert('0');
 			}
 		}
 	});
@@ -375,7 +395,9 @@ function loadcons(context,args) {
  */
 function loadusers(context,args){
 
-	$("content-user-list").update(getLoading("<?php echo $LNG->LOADING_USERS; ?>"));
+	const contentuserlist = document.getElementById('content-user-list');
+	contentuserlist.innerHTML = "";
+	contentuserlist.appendChild(getLoading("<?php echo $LNG->LOADING_USERS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getusersby" + context + "&includegroups=false&" + Object.toQueryString(args);
 
@@ -405,48 +427,52 @@ function loadusers(context,args){
 				}
 
 				//set the count in header
-				$('user-list-count').innerHTML = "";
-				$('user-list-count-main').innerHTML = "";
-				$('content-user-list').innerHTML = "";
-				$('user-list-title').innerHTML = "";
+				document.getElementById('user-list-count').innerHTML = "";
+				document.getElementById('user-list-count-main').innerHTML = "";
+				document.getElementById('content-user-list').innerHTML = "";
+				document.getElementById('user-list-title').innerHTML = "";
 
-				$('user-result-menu').href = "#userresult";
-				$('user-result-menu').className = '';
+				document.getElementById('user-result-menu').href = "#userresult";
+				document.getElementById('user-result-menu').className = '';
 
-				$('content-user-main').style.display = "block";
+				document.getElementById('content-user-main').style.display = "block";
 
 				if (total > parseInt( args["max"] )) {
-					$("content-user-list").update(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
+					const contentuserlist = document.getElementById('content-user-list');
+					contentuserlist.innerHTML = "";
+					contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
 				}
 
-				$('user-list-count').insert(json.userset[0].totalno);
-				$('user-list-count-main').insert(json.userset[0].totalno);
+				document.getElementById('user-list-count').innerHTML = json.userset[0].totalno;
+				document.getElementById('user-list-count-main').innerHTML = json.userset[0].totalno;
 
 				if (json.userset[0].users.length > 1) {
-					$("user-list-title").insert("<?php echo $LNG->USERS_NAME; ?>");
+					document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USERS_NAME; ?>";
 				} else {
-					$("user-list-title").insert("<?php echo $LNG->USER_NAME; ?>");
+					document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USER_NAME; ?>";
 				}
 
 				if (json.userset[0].users.length > 1) {
 					var tb2 = new Element("div", {'class':'toolbarrow'});
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
-					$("content-user-list").insert(tb2);
+					document.getElementById("content-user-list").appendChild(tb2);
 				}
 
-				displayUsers($("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
+				displayUsers(document.getElementById("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-user-list").insert(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
+					const contentuserlist = document.getElementById('content-user-list');
+					contentuserlist.innerHTML = "";					
+					contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
 				}
 			} else {
-				$('content-user-main').style.display = "none";
-				$('content-user-list').innerHTML = "";
-				$('user-result-menu').href = "javascript:return false";
-				$('user-result-menu').className = 'inactive';
-				$('user-list-count-main').innerHTML = "";
-				$('user-list-count-main').insert('0');
+				document.getElementById('content-user-main').style.display = "none";
+				document.getElementById('content-user-list').innerHTML = "";
+				document.getElementById('user-result-menu').href = "javascript:return false";
+				document.getElementById('user-result-menu').className = 'inactive';
+				document.getElementById('user-list-count-main').innerHTML = "";
+				document.getElementById('user-list-count-main').insert('0');
 			}
 		}
 	});
@@ -457,7 +483,9 @@ function loadusers(context,args){
  */
 function loadgroups(context,args){
 
-	$("content-group-list").update(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+	const contentgrouplist = document.getElementById('content-group-list');
+	contentgrouplist.innerHTML = "";
+	contentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getgroupsby" + context + "&" + Object.toQueryString(args);
 
@@ -493,48 +521,52 @@ function loadgroups(context,args){
 				}
 
 				//set the count in header
-				$('group-list-count').innerHTML = "";
-				$('group-list-count-main').innerHTML = "";
-				$('content-group-list').innerHTML = "";
-				$('group-list-title').innerHTML = "";
+				document.getElementById('group-list-count').innerHTML = "";
+				document.getElementById('group-list-count-main').innerHTML = "";
+				document.getElementById('content-group-list').innerHTML = "";
+				document.getElementById('group-list-title').innerHTML = "";
 
-				$('group-result-menu').href = "#groupresult";
-				$('group-result-menu').className = '';
+				document.getElementById('group-result-menu').href = "#groupresult";
+				document.getElementById('group-result-menu').className = '';
 
-				$('content-group-main').style.display = "block";
+				document.getElementById('content-group-main').style.display = "block";
 
 				if (total > parseInt( args["max"] )) {
-					$("content-group-list").update(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
+					const contentgrouplist = document.getElementById('content-group-list');
+					contentgrouplist.innerHTML = "";
+					contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
 				}
 
-				$('group-list-count').insert(json.groupset[0].totalno);
-				$('group-list-count-main').insert(json.groupset[0].totalno);
+				document.getElementById('group-list-count').innerHTML = json.groupset[0].totalno;
+				document.getElementById('group-list-count-main').innerHTML = json.groupset[0].totalno;
 
 				if (json.groupset[0].groups.length > 1) {
-					$("group-list-title").insert("<?php echo $LNG->GROUPS_NAME; ?>");
+					document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUPS_NAME; ?>";
 				} else {
-					$("group-list-title").insert("<?php echo $LNG->GROUP_NAME; ?>");
+					document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUP_NAME; ?>";
 				}
 
 				if (json.groupset[0].groups.length > 1) {
 					var tb2 = new Element("div", {'class':'toolbarrow'});
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
-					$("content-group-list").insert(tb2);
+					document.getElementById("content-group-list").appendChild(tb2);
 				}
 
-				displayGroups($("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
+				displayGroups(document.getElementById("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-group-list").insert(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
+					const contentgrouplist = document.getElementById('content-group-list');
+					contentgrouplist.innerHTML = "";					
+					contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
 				}
 			} else {
-				$('content-group-main').style.display = "none";
-				$('content-group-list').innerHTML = "";
-				$('group-result-menu').href = "javascript:return false";
-				$('group-result-menu').className = 'inactive';
-				$('group-list-count-main').innerHTML = "";
-				$('group-list-count-main').insert('0');
+				document.getElementById('content-group-main').style.display = "none";
+				document.getElementById('content-group-list').innerHTML = "";
+				document.getElementById('group-result-menu').href = "javascript:return false";
+				document.getElementById('group-result-menu').className = 'inactive';
+				document.getElementById('group-list-count-main').innerHTML = "";
+				document.getElementById('group-list-count-main').insert('0');
 			}
 		}
 	});
@@ -551,7 +583,9 @@ function loadcomment(context,args) {
 		args['filternodetypes'] = types;
 	}
 
-	$("content-comment-list").update(getLoading("<?php echo $LNG->LOADING_RESOURCES; ?>"));
+	const contentcommentlist = document.getElementById('content-comment-list');
+	contentcommentlist.innerHTML = "";
+	contentcommentlist.appendChild(getLoading("<?php echo $LNG->LOADING_RESOURCES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	new Ajax.Request(reqUrl, { method:'get',
@@ -577,39 +611,43 @@ function loadcomment(context,args) {
 				}
 
 				//set the count in header
-				$('comment-list-count').innerHTML = "";
-				$('comment-list-count-main').innerHTML = "";
-				$('content-comment-list').innerHTML = "";
-				$('comment-list-title').innerHTML = "";
+				document.getElementById('comment-list-count').innerHTML = "";
+				document.getElementById('comment-list-count-main').innerHTML = "";
+				document.getElementById('content-comment-list').innerHTML = "";
+				document.getElementById('comment-list-title').innerHTML = "";
 
-				$('content-comment-main').style.display = "block";
-				$('comment-result-menu').href = "#commentresult";
-				$('comment-result-menu').className = '';
+				document.getElementById('content-comment-main').style.display = "block";
+				document.getElementById('comment-result-menu').href = "#commentresult";
+				document.getElementById('comment-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-comment-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+					const contentcommentlist = document.getElementById('content-comment-list');
+					contentcommentlist.innerHTML = "";
+					contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
 				}
 
-				$('comment-list-count').insert(json.nodeset[0].totalno);
-				$('comment-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('comment-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('comment-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("comment-list-title").insert("<?php echo $LNG->COMMENTS_NAME; ?>");
+					document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENTS_NAME; ?>";
 				} else {
-					$("comment-list-title").insert("<?php echo $LNG->COMMENT_NAME; ?>");
+					document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENT_NAME; ?>";
 				}
-				displaySearchNodes($("content-comment-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-comment-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-comment-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+					const contentcommentlist = document.getElementById('content-comment-list');
+					contentcommentlist.innerHTML = "";
+					contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
 				}
 			} else {
-				$('content-comment-main').style.display = "none";
-				$('content-comment-list').innerHTML = "";
-				$('comment-result-menu').href = "javascript:return false";
-				$('comment-result-menu').className = 'inactive';
-				$('comment-list-count-main').innerHTML = "";
-				$('comment-list-count-main').insert('0');
+				document.getElementById('content-comment-main').style.display = "none";
+				document.getElementById('content-comment-list').innerHTML = "";
+				document.getElementById('comment-result-menu').href = "javascript:return false";
+				document.getElementById('comment-result-menu').className = 'inactive';
+				document.getElementById('comment-list-count-main').innerHTML = "";
+				document.getElementById('comment-list-count-main').insert('0');
 			}
 		}
 	});
@@ -626,7 +664,9 @@ function loadnews(context,args) {
 		args['filternodetypes'] = types;
 	}
 
-	$("content-news-list").update(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+	const contentnewslist = document.getElementById('content-news-list');
+	contentnewslist.innerHTML = "";
+	contentnewslist.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	new Ajax.Request(reqUrl, { method:'get',
@@ -652,38 +692,42 @@ function loadnews(context,args) {
 				}
 
 				//set the count in header
-				$('news-list-count').innerHTML = "";
-				$('news-list-count-main').innerHTML = "";
-				$('content-news-list').innerHTML = "";
-				$('news-list-title').innerHTML = "";
+				document.getElementById('news-list-count').innerHTML = "";
+				document.getElementById('news-list-count-main').innerHTML = "";
+				document.getElementById('content-news-list').innerHTML = "";
+				document.getElementById('news-list-title').innerHTML = "";
 
-				$('content-news-main').style.display = "block";
-				$('news-result-menu').href = "#newsresult";
-				$('news-result-menu').className = '';
+				document.getElementById('content-news-main').style.display = "block";
+				document.getElementById('news-result-menu').href = "#newsresult";
+				document.getElementById('news-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-news-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
+					const contentnewslist = document.getElementById('content-news-list');
+					contentnewslist.innerHTML = "";
+					contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
 				}
 
-				$('news-list-count').insert(json.nodeset[0].totalno);
-				$('news-list-count-main').insert(json.nodeset[0].totalno);
+				document.getElementById('news-list-count').innerHTML = json.nodeset[0].totalno;
+				document.getElementById('news-list-count-main').innerHTML = json.nodeset[0].totalno;
 
 				if (json.nodeset[0].nodes.length > 1) {
-					$("news-list-title").insert("<?php echo $LNG->NEWSS_NAME; ?>");
+					document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWSS_NAME; ?>";
 				} else {
-					$("news-list-title").insert("<?php echo $LNG->NEWS_NAME; ?>");
+					document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWS_NAME; ?>";
 				}
-				displaySearchNodes($("content-news-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+				displaySearchNodes(document.getElementById("content-news-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-news-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
+					const contentnewslist = document.getElementById('content-news-list');
+					contentnewslist.innerHTML = "";
+					contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
 				}
 			} else {
-				$('content-news-main').style.display = "none";
-				$('news-result-menu').href = "javascript:return false";
-				$('news-result-menu').className = 'inactive';
-				$('news-list-count-main').innerHTML = "";
-				$('news-list-count-main').insert('0');
+				document.getElementById('content-news-main').style.display = "none";
+				document.getElementById('news-result-menu').href = "javascript:return false";
+				document.getElementById('news-result-menu').className = 'inactive';
+				document.getElementById('news-list-count-main').innerHTML = "";
+				document.getElementById('news-list-count-main').insert('0');
 			}
 		}
 	});
@@ -695,8 +739,8 @@ function loadnews(context,args) {
 function reorderGroups(){
 	// change the sort and orderby ARG values
 	GROUP_ARGS['start'] = 0;
-	GROUP_ARGS['sort'] = $('select-sort-group').options[$('select-sort-group').selectedIndex].value;
-	GROUP_ARGS['orderby'] = $('select-orderby-group').options[$('select-orderby-group').selectedIndex].value;
+	GROUP_ARGS['sort'] = document.getElementById('select-sort-group').options[document.getElementById('select-sort-group').selectedIndex].value;
+	GROUP_ARGS['orderby'] = document.getElementById('select-orderby-group').options[document.getElementById('select-orderby-group').selectedIndex].value;
 
 	loadgroups(CONTEXT,GROUP_ARGS);
 }
@@ -707,8 +751,8 @@ function reorderGroups(){
 function reorderUsers(){
 	// change the sort and orderby ARG values
 	USER_ARGS['start'] = 0;
-	USER_ARGS['sort'] = $('select-sort-user').options[$('select-sort-user').selectedIndex].value;
-	USER_ARGS['orderby'] = $('select-orderby-user').options[$('select-orderby-user').selectedIndex].value;
+	USER_ARGS['sort'] = document.getElementById('select-sort-user').options[document.getElementById('select-sort-user').selectedIndex].value;
+	USER_ARGS['orderby'] = document.getElementById('select-orderby-user').options[document.getElementById('select-orderby-user').selectedIndex].value;
 
 	loadusers(CONTEXT,USER_ARGS);
 }
@@ -725,7 +769,7 @@ function displayUserSortForm(sortOpts,args,tab,handler){
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
- 	Event.observe(selOrd,'change',handler);
+ 	selOrd.onchange = handler;
     sbTool.insert(selOrd);
     for(var key in sortOpts){
         var opt = new Element("option");
@@ -741,7 +785,7 @@ function displayUserSortForm(sortOpts,args,tab,handler){
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
- 	Event.observe(sortBy,'change',handler);
+ 	sortBy.onchange = handler;
     sbTool.insert(sortBy);
     for(var key in sortBys){
         var opt = new Element("option");
@@ -762,8 +806,8 @@ function displayUserSortForm(sortOpts,args,tab,handler){
 function handleSort() {
 	// used as global holding space
 	NODE_ARGS['start'] = 0;
-	NODE_ARGS['sort'] = $('select-sort-node').options[$('select-sort-node').selectedIndex].value;
-	NODE_ARGS['orderby'] = $('select-orderby-node').options[$('select-orderby-node').selectedIndex].value;
+	NODE_ARGS['sort'] = document.getElementById('select-sort-node').options[document.getElementById('select-sort-node').selectedIndex].value;
+	NODE_ARGS['orderby'] = document.getElementById('select-orderby-node').options[document.getElementById('select-orderby-node').selectedIndex].value;
 
 	ISSUE_ARGS['start'] = 0;
 	ISSUE_ARGS['sort'] = NODE_ARGS['sort'];
@@ -809,7 +853,7 @@ function displaySortForm(sortOpts){
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
     sbTool.insert(selOrd);
- 	Event.observe(selOrd,'change',handleSort);
+ 	selOrd.onchange = handleSort;
     for(var key in sortOpts){
         var opt = new Element("option");
         opt.value=key;
@@ -825,7 +869,7 @@ function displaySortForm(sortOpts){
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
     sbTool.insert(sortBy);
- 	Event.observe(sortBy,'change',handleSort);
+ 	sortBy.onchange = handleSort;
     for(var key in sortBys){
         var opt = new Element("option");
         opt.value=key;
@@ -857,15 +901,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("active");
-	        Event.observe(prevSpan,"click", function(){
+	        prevSpan.classList.add("active");
+	        prevSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) - newArr["max"];
 	            eval("load"+type+"(context,newArr)");
-	        });
+	        };
 	    } else {
 			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
-	        prevSpan.addClassName("inactive");
+	        prevSpan.classList.add("inactive");
 	    }
 
 		pageUL.insert(prevSpan);
@@ -877,12 +921,12 @@ function createNav(total, start, count, argArray, context, type){
 	    for (var i = 1; i < totalPages+1; i++){
 	    	var page = new Element("li", {'class':"nav-page"}).insert(i);
 	    	if(i != currentPage){
-		    	page.addClassName("active");
+		    	page.classList.add("active");
 		    	var newArr = Object.clone(argArray);
 		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+				page.addEventListener("click", function(event) { Pages.next.call(Pages, type, context, newArr); });
 	    	} else {
-	    		page.addClassName("currentpage");
+	    		page.classList.add("currentpage");
 	    	}
 	    	pageUL.insert(page);
 	    }
@@ -891,15 +935,15 @@ function createNav(total, start, count, argArray, context, type){
 	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("active");
-	        Event.observe(nextSpan,"click", function(){
+	        nextSpan.classList.add("active");
+	        nextSpan.onclick = function() {
 	            var newArr = argArray;
 	            newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
 	            eval("load"+type+"(context, newArr)");
-	        });
+	        };
 	    } else {
 			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
-	        nextSpan.addClassName("inactive");
+	        nextSpan.classList.add("inactive");
 	    }
 
 		pageUL.insert(nextSpan);

@@ -51,7 +51,7 @@
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-debate-net.js.php"); ?>', 'stats-debates-debate-net-script');
 	});
 </script>

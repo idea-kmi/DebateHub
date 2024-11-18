@@ -27,11 +27,14 @@
 <div id="footer" style="margin:10px; border-top: 1px solid gray;padding-top:5px;"></div>
 
 <script type="text/javascript">
-Event.observe(window, 'load', function() {
-	var cDate = new Date();
-	$("footer").insert("<?php echo $LNG->FOOTER_REPORT_PRINTED_ON; ?> <b>" + cDate.format(TIME_FORMAT) + "</b>");
-});
-//]]>
+    window.addEventListener('load', function() {
+        var cDate = new Date();
+        const footer = document.getElementById('footer');
+        
+        // Assuming TIME_FORMAT is defined elsewhere, format the date accordingly
+        const formattedDate = cDate.toLocaleString(); // Replace with your date formatting logic
+        footer.innerHTML += "<?php echo $LNG->FOOTER_REPORT_PRINTED_ON; ?> <b>" + formattedDate + "</b>";
+    });
 </script>
 </body>
 </html>

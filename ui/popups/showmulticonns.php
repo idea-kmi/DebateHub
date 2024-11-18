@@ -189,7 +189,9 @@
 	function getConnections(){
 		if (connectionids != "") {
 
-			$("connectiondetails").update(getLoading("(Loading connections...)"));
+			const connectiondetails = document.getElementById("connectiondetails");
+			connectiondetails.innerHTML = "";
+			connectiondetails.appendChild(getLoading("(Loading connections...)"));
 
 			var reqUrl = SERVICE_ROOT + "&method=getmulticonnections&connectionids="+connectionids;
 
@@ -203,28 +205,28 @@
 		      				return;
 		      			}
 						if(json.connectionset[0].connections.length > 0){
-							$("connectiondetails").innerHTML = "";
-							displayMultipleConnections($('connectiondetails'), json.connectionset[0].connections, 1, 'right', false, 'active')
+							connectiondetails.innerHTML = "";
+							displayMultipleConnections(connectiondetails, json.connectionset[0].connections, 1, 'right', false, 'active')
 						} else {
-							$("connectiondetails").innerHTML = "<p><h3>No Connections found</h3></p>";
+							connectiondetails.innerHTML = "<p><h3>No Connections found</h3></p>";
 						}
 		       		}
 		      	});
 		} else if (window.opener.getLastConnections) {
 			connections = window.opener.getLastConnections();
 			if (connections != "" && connections.length > 0){
-				$("connectiondetails").innerHTML = "";
-				displayMultipleConnectionsArray($('connectiondetails'), connections, 1, 'right', false, 'inactive')
+				connectiondetails.innerHTML = "";
+				displayMultipleConnectionsArray(connectiondetails, connections, 1, 'right', false, 'inactive')
 			}
 		} else {
-			$("connectiondetails").innerHTML = "<p><h3>Insufficient Data supplied to get Connections</h3></p>";
+			connectiondetails.innerHTML = "<p><h3>Insufficient Data supplied to get Connections</h3></p>";
 		}
    }
 
     /**
      *  set which tab to show and load first
      */
-    Event.observe(window, 'load', function() {
+    window.addEventListener('load', function() {
         getConnections();
 
     });

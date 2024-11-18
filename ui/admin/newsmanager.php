@@ -104,30 +104,30 @@
     	cancelAddNews();
    		cancelAllEdits();
 
-        $('editnewsform'+objno).show();
-        $('savelink'+objno).show();
+        document.getElementById('editnewsform'+objno).style.display = 'block';
+        document.getElementById('savelink'+objno).style.display = 'block';
 
-        $('newslabeldiv'+objno).hide();
-        $('editnewslink'+objno).hide();
-        $('editlink'+objno).hide();
+        document.getElementById('newslabeldiv'+objno).style.display = 'none';
+        document.getElementById('editnewslink'+objno).style.display = 'none';
+        document.getElementById('editlink'+objno).style.display = 'none';
     }
 
     function cancelEditNews(objno){
-    	if ($('editnewsform'+objno)) {
-         	$('editnewsform'+objno).hide();
+    	if (document.getElementById('editnewsform'+objno)) {
+         	document.getElementById('editnewsform'+objno).style.display = 'none';
     	}
-    	if ($('savelink'+objno)) {
-    		$('savelink'+objno).hide();
+    	if (document.getElementById('savelink'+objno)) {
+    		document.getElementById('savelink'+objno).style.display = 'none';
     	}
 
-		if ($('newslabeldiv'+objno)) {
-    		$('newslabeldiv'+objno).show();
+		if (document.getElementById('newslabeldiv'+objno)) {
+    		document.getElementById('newslabeldiv'+objno).style.display = 'block';
     	}
-    	if ($('editnewslink'+objno)) {
-    		$('editnewslink'+objno).show();
+    	if (document.getElementById('editnewslink'+objno)) {
+    		document.getElementById('editnewslink'+objno).style.display = 'block';
     	}
-    	if ($('editlink'+objno)) {
-    		$('editlink'+objno).show();
+    	if (document.getElementById('editlink'+objno)) {
+    		document.getElementById('editlink'+objno).style.display = 'block';
     	}
     }
 
@@ -143,13 +143,13 @@
 
    	function addNews(){
    		cancelAllEdits();
-    	$('newnewsform').show();
-        $('addnewnewslink').hide();
+    	document.getElementById('newnewsform').style.display = 'block';
+        document.getElementById('addnewnewslink').style.display = 'none';
 	}
 
 	function cancelAddNews(){
-        $('newnewsform').hide();
-        $('addnewnewslink').show();
+        document.getElementById('newnewsform').style.display = 'none';
+        document.getElementById('addnewnewslink').style.display = 'block';
    	}
 
 	window.onload = init;
@@ -284,7 +284,7 @@
 							echo '<form id="delete-'.$node->nodeid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormDelete(\''.htmlspecialchars($node->name).'\');">';
 							echo '<input type="hidden" id="nodeid" name="nodeid" value="'.$node->nodeid.'" />';
 							echo '<input type="hidden" id="deletenews" name="deletenews" value="" />';
-							echo '<span class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($node->name).'\')) { $(\'delete-'.$node->nodeid.'\').submit(); }" id="deletenews" name="deletenews">'.$LNG->ADMIN_NEWS_DELETE_LINK.'</a>';
+							echo '<span class="active" onclick="if (checkFormDelete(\''.htmlspecialchars($node->name).'\')) { document.getElementById(\'delete-\' + node.nodeid).submit(); }" id="deletenews" name="deletenews">'.$LNG->ADMIN_NEWS_DELETE_LINK.'</a>';
 							echo '</form>';
 							echo "</td>";
 

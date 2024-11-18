@@ -67,7 +67,7 @@ function loadExploreDebateNet(){
 	$("network-debate-div").insert({top: keybar});
 
 	//event to resize
-	Event.observe(window,"resize",function() {
+	window.addEventListener("resize", function() {
 		resizeFDGraph(forcedirectedGraph, "network-debate-div", false);
 	});
 
@@ -80,7 +80,8 @@ function loadExploreDebateNet(){
 
 function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
 
 	var args = {}; //must be an empty object to send down the url, or all the Array functions get sent too.
 

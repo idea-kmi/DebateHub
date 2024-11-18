@@ -304,14 +304,14 @@ function closeDialog(gotopage){
  * Set display to 'block' for the item with the given pid
  */
 function showPopup(pid){
-    $(pid).setStyle({'display':'block'});
+    document.getElementById(pid).setStyle({'display':'block'});
 }
 
 /**
  * Set display to 'none' for the item with the given pid
  */
 function hidePopup(pid){
-    $(pid).setStyle({'display':'none'});
+    document.getElementById(pid).setStyle({'display':'none'});
 }
 
 /**
@@ -327,12 +327,13 @@ function toggleDiv(div) {
 }
 
 function toggleArrowDiv(div, arrow) {
-	if ( $(div).style.display == "block") {
-		$(div).style.display = "none";
-		$(arrow).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
+	const divobj = document.getElementById(div);
+	if (divobj.style.display == "block") {
+		divobj.style.display = "none";
+		document.getElementById(arrow).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
 	} else {
-		$(div).style.display = "block";
-		$(arrow).src='<?php echo $HUB_FLM->getImagePath("arrow-up-blue.png"); ?>';
+		divobj.style.display = "block";
+		document.getElementById(arrow).src='<?php echo $HUB_FLM->getImagePath("arrow-up-blue.png"); ?>';
 	}
 }
 
@@ -452,27 +453,28 @@ function getPosition(element) {
  */
 function showGlobalHint(type,evt,panelName) {
 
-	$(panelName).style.width="400px";
+	document.getElementById(panelName).style.width="400px";
 
  	var event = evt || window.event;
 
-	$('globalMessage').innerHTML="";
+	const globalMessage = document.getElementById('globalMessage');
+	globalMessage.innerHTML="";
 
 	if (type == "MainSearch") {
 		var text = '<?php echo addslashes($LNG->HEADER_SEARCH_INFO_HINT); ?>';
-		$('globalMessage').insert(text);
+		globalMessage.innerHTML = (text);
 	} else if (type == "StatsOverviewParticipation") {
-		$("globalMessage").insert('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PARTICIPATION_HINT; ?>');
+		globalMessage.innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PARTICIPATION_HINT; ?>';
 	} else if (type == "StatsOverviewViewing") {
-		$("globalMessage").insert('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWING_HINT; ?>');
+		globalMessage..innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWING_HINT; ?>';
 	} else if (type == "StatsOverviewDebate") {
-		$("globalMessage").insert('<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_HINT; ?>');
+		globalMessage..innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_HINT; ?>';
 	} else if (type == "StatsDebateContribution") {
-		$("globalMessage").insert('<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_HELP; ?>');
+		globalMessage..innerHTML += '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_HELP; ?>';
 	} else if (type == "StatsDebateViewing") {
-		$("globalMessage").insert('<?php echo $LNG->STATS_DEBATE_VIEWING_HELP; ?>');
+		globalMessage..innerHTML += '<?php echo $LNG->STATS_DEBATE_VIEWING_HELP; ?>';
 	} else if (type == 'PendingMember') {
-		$("globalMessage").insert('<?php echo $LNG->GROUP_JOIN_REQUEST_MESSAGE; ?>');
+		globalMessage..innerHTML += '<?php echo $LNG->GROUP_JOIN_REQUEST_MESSAGE; ?>';
 	}
 
 	showHint(event, panelName, 10, -10);
@@ -480,9 +482,11 @@ function showGlobalHint(type,evt,panelName) {
 
 function showHintText(evt, text) {
  	var event = evt || window.event;
-	$('globalMessage').innerHTML="";
-	$('globalMessage').insert(text);
-	$('hgrhint').style.width="220px";
+	const globalMessage = document.getElementById('globalMessage');
+
+	globalMessage.innerHTML="";
+	globalMessage.innerHTML = text;
+	document.getElementById('hgrhint').style.width="220px";
 	showHint(event, 'hgrhint', 10, -10);
 }
 
@@ -621,118 +625,122 @@ function hideBoxes() {
 }
 
 function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler, key, nodetofocusid, promptlabel, selectedOption, refresher) {
+	const prompttext = document.getElementById('prompttext');
 
-	$('prompttext').innerHTML="";
-	$('prompttext').style.width = "380px";
-	$('prompttext').style.height = "140px";
+	prompttext.innerHTML="";
+	prompttext.style.width = "380px";
+	prompttext.style.height = "140px";
 
 	var viewportHeight = getWindowHeight();
 	var viewportWidth = getWindowWidth();
 	var x = (viewportWidth-380)/2;
 	var y = (viewportHeight-140)/2;
 
-	$('prompttext').style.left = x+getPageOffsetX()+"px";
-	$('prompttext').style.top = y+getPageOffsetY()+"px";
+	prompttext.style.left = x+getPageOffsetX()+"px";
+	prompttext.style.top = y+getPageOffsetY()+"px";
 
 	var choicehidden = new Element('input', {'name':'radiopromptchoice','id':'radiopromptchoice','type':'hidden', 'value':'supports'});
-	$('prompttext').insert(choicehidden);
+	prompttext.appendChild(choicehidden);
 
 	var labelobj = new Element('label', {'style':'padding-bottom:5px;font-weight:bold;font-size:12pt; color:black;'});
-	labelobj.insert(promptlabel);
-	$('prompttext').insert(labelobj);
+	labelobj.appendChild(promptlabel);
+	prompttext.appendChild (labelobj);
 
-	$('prompttext').insert("<br />");
-	$('prompttext').insert("<br />");
+	prompttext.appendChild("<br />");
+	prompttext.appendChild("<br />");
 
 	var radio = new Element('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'supports'});
 	radio.checked = "checked";
-	Event.observe(radio,'click', function() {
+	radio.addEventListener('click', function() {
 		if (this.checked) {
-			$('radiopromptchoice').value = this.value;
+			document.getElementById('radiopromptchoice').value = this.value;
 		}
 	});
-	$('prompttext').insert(radio);
-	$('prompttext').insert('<img border="0" alt="+" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("plus-16x16.png"); ?>" /><span style="color:black"> Supporting</span>');
-	$('prompttext').insert("<br />");
+	prompttext.appendChild(radio);
+	prompttext.appendChild('<img border="0" alt="+" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("plus-16x16.png"); ?>" /><span style="color:black"> Supporting</span>');
+	prompttext.appendChild("<br />");
 
 	var radio2 = new Element('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'challenges'});
-	Event.observe(radio2,'click', function() {
+	radio2.addEventListener('click', function() {	
 		if (this.checked) {
-			$('radiopromptchoice').value = this.value;
+			document.getElementById('radiopromptchoice').value = this.value;
 		}
 	});
-	$('prompttext').insert(radio2);
-	$('prompttext').insert('<img border="0" alt="-" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("minus-16x16.png"); ?>" /><span style="color:black"> Countering</span>');
-	$('prompttext').insert("<br />");
+	prompttext.appendChild(radio2);
+	prompttext.appendChild('<img border="0" alt="-" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("minus-16x16.png"); ?>" /><span style="color:black"> Countering</span>');
+	prompttext.appendChild("<br />");
 
-	$('prompttext').insert("<br />");
+	prompttext.appendChild("<br />");
 
     var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
-	Event.observe(buttonOK,'click', function() {
-		var valuechosen = $('radiopromptchoice').value;
+	buttonOK.addEventListener('click', function() {	
+		var valuechosen = document.getElementById('radiopromptchoice').value;
 		eval( refresher + '("'+focalnodeid+'","'+filternodetypes+'","'+focalnodeend+'","'+handler+'","'+key+'","'+nodetofocusid+'","'+valuechosen+'")' );
 		textAreaCancel();
 	});
 
     var buttonCancel = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
-	Event.observe(buttonCancel,'click', textAreaCancel);
+	buttonCancel.addEventListener('click', textAreaCancel);
 
 	var buttonDiv = new Element('div', { 'class':'col-auto'});
-	buttonDiv.insert(buttonOK);
-	buttonDiv.insert(buttonCancel);
+	buttonDiv.appendChild(buttonOK);
+	buttonDiv.appendChild(buttonCancel);
 
-	$('prompttext').insert(buttonDiv);
-	$('prompttext').style.display = "block";
+	prompttext.appendChild(buttonDiv);
+	prompttext.style.display = "block";
 }
 
 function textAreaCancel() {
-	$('prompttext').style.display = "none";
-	$('prompttext').update("");
+	const prompttext = document.getElementById('prompttext');
+	prompttext.style.display = "none";
+	prompttext.innerHTML="";
 }
 
 function textAreaPrompt(messageStr, text, connid, handler, refresher, width, height) {
+	const prompttext = document.getElementById('prompttext');
 
-	$('prompttext').innerHTML="";
+	prompttext.innerHTML="";
 	if (width == undefined) {
 		width = 400;
 	}
 	if (height == undefined) {
 		height = 250;
 	}
-	$('prompttext').style.width = width+"px";
-	$('prompttext').style.height = height+"px";
+	prompttext.style.width = width+"px";
+	prompttext.style.height = height+"px";
 
 	var viewportHeight = getWindowHeight();
 	var viewportWidth = getWindowWidth();
 	var x = (viewportWidth-width)/2;
 	var y = (viewportHeight-height)/2;
-	$('prompttext').style.left = x+getPageOffsetX()+"px";
-	$('prompttext').style.top = y+getPageOffsetY()+"px";
+	prompttext.style.left = x+getPageOffsetX()+"px";
+	prompttext.style.top = y+getPageOffsetY()+"px";
 
 	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'messagetextarea'});
 	textarea1.value=text;
 
 	if (connid != "") {
 		var buttonOK = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
-		Event.observe(buttonOK,'click', function() {
+		buttonOK.addEventListener('click', function() {	
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
     var buttonCancel = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
-	Event.observe(buttonCancel,'click', textAreaCancel);
+	buttonCancel.addEventListener('click', textAreaCancel);
 
 	var buttonDiv = new Element('div', { 'class':'col-auto'});
 	if (connid != "") {
-		$('buttonDiv').insert(buttonOK);
+		document.getElementById('buttonDiv').appendChild(buttonOK);
 	}
-	buttonDiv.insert(buttonCancel);
+	buttonDiv.appendChild(buttonCancel);
 
-	$('prompttext').insert('<div class="fw-bold p-2" style="color: #4E725F">'+messageStr+'</div>');
-	$('prompttext').insert(textarea1);
-	$('prompttext').insert(buttonDiv);
-	$('prompttext').style.display = "block";
+	const prompttext = document.getElementById('prompttext');
+	prompttext.appendChild('<div class="fw-bold p-2" style="color: #4E725F">'+messageStr+'</div>');
+	prompttext.appendChild(textarea1);
+	prompttext.appendChild(buttonDiv);
+	prompttext.style.display = "block";
 }
 
 function fadeMessage(messageStr) {
@@ -741,15 +749,15 @@ function fadeMessage(messageStr) {
     var x = (viewportWidth - 300) / 2;
     var y = (viewportHeight - 200) / 2;
 
-	$('message').update("");
-	$('message').update(messageStr);
+	const message = document.getElementById('message');
+	message.innerHTML = messageStr;
 	
-	$('message').style.top = y + 'px';
-	$('message').style.display = "block";
+	message.style.top = y + 'px';
+	message.style.display = "block";
 
-	setTimeout(() => { $('message').style.opacity = 1; }, 10);
-    setTimeout(() => { $('message').style.opacity = 0; }, 3500);
-	setTimeout(() => { $('message').style.display = 'none'; }, 4500);
+	setTimeout(() => { message.style.opacity = 1; }, 10);
+    setTimeout(() => { message.style.opacity = 0; }, 3500);
+	setTimeout(() => { message.style.display = 'none'; }, 4500);
 }
 
 function fadein(){
@@ -789,15 +797,15 @@ function fadeoutloop(){
 
 function getLoading(infoText){
     var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>'/>");
-    loadDiv.insert("<br/>"+infoText);
+    loadDiv.innerHTML = "<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>'/>";
+    loadDiv.innerHTML += "<br/>"+infoText;
     return loadDiv;
 }
 
 function getLoadingLine(infoText){
     var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>' />");
-    loadDiv.insert("&nbsp;"+infoText);
+    loadDiv.innerHTML = "<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>' />");
+    loadDiv.innerHTML += "&nbsp;"+infoText;
     return loadDiv;
 }
 
@@ -973,8 +981,9 @@ function addConnectionToNetworkMap(c, map) {
 	toRole = getNodeTitleAntecedence(toRole, false);
 
 	//create from & to nodes
-	$(map).addNode(fN.nodeid, fromRole+": "+fromName, fromDesc, fN.users[0].user.userid, fN.creationdate, fN.otheruserconnections, fNNodeImage, fN.users[0].user.thumb, fN.users[0].user.name, fromRole, fromHEX);
-	$(map).addNode(tN.nodeid, toRole+": "+toName, toDesc, tN.users[0].user.userid, tN.creationdate, tN.otheruserconnections, tNNodeImage, tN.users[0].user.thumb, tN.users[0].user.name, toRole, toHEX);
+	const map = document.getElementById(map);
+	map.addNode(fN.nodeid, fromRole+": "+fromName, fromDesc, fN.users[0].user.userid, fN.creationdate, fN.otheruserconnections, fNNodeImage, fN.users[0].user.thumb, fN.users[0].user.name, fromRole, fromHEX);
+	map.addNode(tN.nodeid, toRole+": "+toName, toDesc, tN.users[0].user.userid, tN.creationdate, tN.otheruserconnections, tNNodeImage, tN.users[0].user.thumb, tN.users[0].user.name, toRole, toHEX);
 
 	// add edge/conn
 	var fromRoleName = fromRole;
@@ -990,7 +999,7 @@ function addConnectionToNetworkMap(c, map) {
 	var linklabelname = c.linktype[0].linktype.label;
 	linklabelname = getLinkLabelName(fN.role[0].role.name, tN.role[0].role.name, linklabelname);
 
-	$(map).addEdge(c.connid, fN.nodeid, tN.nodeid, c.linktype[0].linktype.grouplabel, linklabelname, c.creationdate, c.userid, c.users[0].user.name, fromRoleName, toRoleName);
+	map.addEdge(c.connid, fN.nodeid, tN.nodeid, c.linktype[0].linktype.grouplabel, linklabelname, c.creationdate, c.userid, c.users[0].user.name, fromRoleName, toRoleName);
 }
 
 /**
@@ -1144,13 +1153,15 @@ function removeHTMLTags(htmlString) {
 /**
  * Used to switch a textarea between plain text and full HTML editor box.
  */
-function switchCKEditorMode(link, divname, editorname) {
-	if ($(divname).style.clear == 'none') {
+ // CKEditor 4
+/*function switchCKEditorMode(link, divname, editorname) {
+	const divnameobj = document.getElementById(divname);
+	if (divnameobj.style.clear == 'none') {
 		CKEDITOR.replace(editorname, {
 			on : { instanceReady : function( ev ) { this.focus(); } }
 		} );
 
-		$(divname).style.clear = 'both';
+		divnameobj.style.clear = 'both';
 		link.innerHTML = '<?php echo $LNG->FORM_DESC_PLAIN_TEXT_LINK; ?>'
 		link.title = '<?php echo $LNG->FORM_DESC_PLAIN_TEXT_HINT; ?>';
 	} else {
@@ -1159,13 +1170,122 @@ function switchCKEditorMode(link, divname, editorname) {
 			if (CKEDITOR.instances[editorname]) {
 				CKEDITOR.instances[editorname].destroy();
 			}
-			$(divname).style.clear = 'none';
+			divnameobj.style.clear = 'none';
 			link.innerHTML = '<?php echo $LNG->FORM_DESC_HTML_TEXT_LINK; ?>';
 			link.title = '<?php echo $LNG->FORM_DESC_HTML_TEXT_HINT; ?>';
-			$(editorname).value = removeHTMLTags($(editorname).value);
+			const editornameobj = document.getElementById(editorname);
+			editornameobj.value = removeHTMLTags(editornameobj.value);
 		}
 	}
+}*/
+
+const editorInstances = {};
+
+async function switchCKEditorMode(link, divname, editorname) {
+
+    const editorElement = document.getElementById(editorname);
+    const divElement = document.getElementById(divname);
+
+	const observer = new MutationObserver((mutations) => {
+		mutations.forEach((mutation) => {
+			console.log('DOM changed:', mutation);
+		});
+	});
+
+	observer.observe(editorElement, { attributes: true, childList: true, subtree: true });	
+
+	if (editorElement) {
+		if (getComputedStyle(divElement).clear === 'none') {
+
+			editorElement.style.display = 'block';
+
+            const existingEditor = editorInstances[editorname];
+            if (existingEditor) {
+                try {
+                    await existingEditor.destroy();
+                    console.log(`Existing editor "${editorname}" destroyed`);
+                    delete editorInstances[editorname];
+                } catch (error) {
+                    console.error('Error destroying existing editor:', error);
+                }
+            }			
+			
+			divElement.style.clear = 'both';
+			console.log(editorElement);
+
+			
+			try {
+				// Initialize CKEditor 5
+				const editor = await ClassicEditor.create(editorElement, { // Use editorElement directly
+					initialData: editorElement.value,
+					toolbar: [
+						'bold', 'italic', 'underline', 'strikethrough', '|',
+						'fontSize', 'fontFamily', '|',
+						'numberedList', 'bulletedList', '|',
+						'outdent', 'indent', '|',
+						'alignment', '|',
+						'link', 'blockQuote', 'insertTable', '|',
+						'undo', 'redo', '|',
+						'removeFormat', 'selectAll', 'cut', 'copy', 'paste', 'pasteText', 'pasteFromWord', '|',
+						'print', 'spellCheck', '|',
+						'maximise'
+					],
+					heading: {
+						options: [
+							{ model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+							{ model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+							{ model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+							{ model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+							{ model: 'codeBlock', title: 'Code Block', class: 'ck-heading_codeBlock' }
+						]
+					},
+					image: {
+						toolbar: [
+							'imageTextAlternative', '|',
+							'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight'
+						]
+					},
+					ckfinder: {
+						uploadUrl: '/ui/lib/kcfinder/upload.php?type=images',
+						browseUrl: '/ui/lib/kcfinder/browse.php?type=images'
+					}
+				});
+				editorInstances[editorname] = editor; 				
+				link.innerHTML = '<?php echo $LNG->FORM_DESC_PLAIN_TEXT_LINK; ?>';
+				link.title = '<?php echo $LNG->FORM_DESC_PLAIN_TEXT_HINT; ?>';					
+				editor.focus();
+			} catch (error) {
+				console.error('Error creating editor:', error);
+				console.error('Editor element:', editorElement);				
+            }
+		} else {
+			const ans = confirm("<?php echo $LNG->FORM_DESC_HTML_SWITCH_WARNING; ?>");
+			if (ans) {
+				const editor = editorInstances[editorname]; 
+				if (editor) {
+					try {
+						await editor.destroy();
+
+						console.log(`Editor "${editorname}" destroyed`);
+						delete editorInstances[editorname]; 
+						divElement.style.clear = 'none';
+						link.innerHTML = '<?php echo $LNG->FORM_DESC_HTML_TEXT_LINK; ?>';
+						link.title = '<?php echo $LNG->FORM_DESC_HTML_TEXT_HINT; ?>';
+						editorElement.value = removeHTMLTags(editorElement.value);							
+					} catch (error) {
+                        console.error('Error destroying editor:', error);
+                    }
+				} else {
+					console.log(`No editor found with the name "${editorname}"`);
+				}
+			}
+		}
+	} else {
+		console.log('editorElement:');
+		console.log(editorElement);
+	}
 }
+
 
 function htmlspecialchars_decode (string, quote_style) {
   // http://kevin.vanzonneveld.net
@@ -1376,9 +1496,14 @@ function loadModeratorAlertsData(nodealertDiv, useralertDiv, alertmessagearea, i
 	loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issuenodeid);
 }
 
+function isVisible(element) {
+    return element.offsetWidth > 0 && element.offsetHeight > 0 && getComputedStyle(element).visibility !== 'hidden';
+}
+
 function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issuenodeid) {
 
-	alertmessagearea.update(getLoading("<?php echo $LNG->LOADING_MESSAGE; ?>"));
+	alertmessagearea.innerHTML = "";
+	alertmessagearea.appendChild(getLoading("<?php echo $LNG->LOADING_MESSAGE; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getalerts&" + Object.toQueryString(args);
 	//alert(reqUrl);
@@ -1446,9 +1571,9 @@ function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issu
 						if (USER && USER === userid) {
 							var user = usersDataArray[userid];
 							/*if (user.homepage && user.homepage != "") {
-								useralertDiv.insert('<br><h2 style="font-size:10pt"><a href="'+user.homepage+'" target="_blank">'+user.name+'</a></h2>');
+								useralertDiv.innerHTML = '<br><h2 style="font-size:10pt"><a href="'+user.homepage+'" target="_blank">'+user.name+'</a></h2>';
 							} else {
-								useralertDiv.insert('<br><h2 style="font-size:10pt">'+user.name+'</h2>');
+								useralertDiv.innerHTML = '<br><h2 style="font-size:10pt">'+user.name+'</h2>';
 							}*/
 
 							var alertTypes = userarray[userid][0];
@@ -1457,15 +1582,15 @@ function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issu
 									//alert(alertype);
 									var alertName = getAlertName(alerttype);
 									var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
-									title.insert(alertName);
+									title.innerHTML = alertName;
 									var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
-									title.insert(countspan);
+									title.appendChild(countspan);
 									if (i > 0) {
 										title.style.marginTop = '10px';
 									} else {
 										title.style.marginTop = '0px';
 									}
-									useralertDiv.insert(title);
+									useralertDiv.appendChild(title);
 									i++;
 									var posts = alertTypes[alerttype][0];
 									var k=0;
@@ -1486,15 +1611,15 @@ function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issu
 											}
 										}
 									}
-									countspan.insert("("+k+")");
+									countspan.innerHTML = "("+k+")";
 									if (k>ALERT_COUNT) {
 										var morebutton = new Element('span', {'class':'active','style':'color:#A6156C;margin-bottom:10px;'});
-										morebutton.insert('<?php echo $LNG->ALERT_SHOW_ALL; ?>');
+										morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
 										morebutton.alerttype = alerttype;
-										Event.observe(morebutton,"click", function(){
+										morebutton.addEventListener('click', function() {
 											toggleAlertPosts(this, this.alerttype);
 										});
-										useralertDiv.insert(morebutton);
+										useralertDiv.appendChild(morebutton);
 									}
 								}
 							}
@@ -1515,15 +1640,15 @@ function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issu
 						i++;
 						var alertName = getAlertName(alerttype);
 						var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
-						title.insert(alertName);
+						title.innerHTML = alertName;
 						var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
-						title.insert(countspan);
+						title.appendChild(countspan);
 						if (i > 0) {
 							title.style.marginTop = '10px';
 						} else {
 							title.style.marginTop = '0px';
 						}
-						nodealertDiv.insert(title);
+						nodealertDiv.appendChild(title);
 						var posts = alertarray[alerttype][0];
 						var k=0;
 						for (post in posts) {
@@ -1543,15 +1668,15 @@ function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issu
 								}
 							}
 						}
-						countspan.insert("("+k+")");
+						countspan.innerHTML = "("+k+")";
 						if (k>ALERT_COUNT) {
 							var morebutton = new Element('div', {'class':'active','style':'color:#A6156C;margin-top:5px;margin-bottom:10px;'});
-							morebutton.insert('<?php echo $LNG->ALERT_SHOW_ALL; ?>');
+							morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
 							morebutton.alerttype = alerttype;
-							Event.observe(morebutton,"click", function(){
+							morebutton.addEventListener('click', function() {
 								toggleAlertPosts(this, this.alerttype);
 							});
-							nodealertDiv.insert(morebutton);
+							nodealertDiv.appendChild(morebutton);
 						}
 					}
 				}
@@ -1583,20 +1708,20 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (role.image != null && role.image != "") {
 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;padding-top:6px;padding-right:5px;','border':'0','src': URL_ROOT + role.image});
-		nodespan.insert(nodeicon);
+		nodespan.appendChild(nodeicon);
 	}
 
 	if (nodeObj && nodeObj.nodeid == postid) {
 		var nodespantext = new Element('span', {'style':'display:inline'});
-		nodespantext.insert(name);
-		nodespan.insert(nodespantext);
+		nodespantext.innerHTML = name;
+		nodespan.appendChild(nodespantext);
 	} else {
 		var desc = "<?php echo $LNG->ALERT_CLICK_HIGHLIGHT; ?>";
 		var nodespantext = new Element('span', {'class':'active', 'title':desc, 'style':'display:inline'});
 		nodespantext.postid = postid;
 		nodespantext.alerttype = alerttype;
-		nodespantext.insert(name);
-		Event.observe(nodespantext,"click", function(){
+		nodespantext.innerHTML = name;
+		nodespantext.addEventListener('click', function() {		
 			//NODE_ARGS['selectednodeid'] = postid;
 			//refreshSolutions();
 
@@ -1636,9 +1761,9 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 			}
 
 		});
-		nodespan.insert(nodespantext);
+		nodespan.appendChild(nodespantext);
 	}
-	container.insert(nodespan);
+	container.appendChild(nodespan);
 }
 
 function createAlertUserLink(alerttype, postid, inneruser, container, display) {
@@ -1652,13 +1777,13 @@ function createAlertUserLink(alerttype, postid, inneruser, container, display) {
 	var nodespantext = new Element('span', {'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>: '+inneruser.name, });
 	nodespantext.userid = inneruser.userid;
 	nodespantext.alerttype = alerttype;
-	nodespantext.insert('<span>'+inneruser.name+'</span>');
-	Event.observe(nodespantext,"click", function(){
+	nodespantext.innerHTML = '<span>'+inneruser.name+'</span>';
+	nodespantext.addEventListener('click', function() {
 		//auditAlertClicked(this.userid, this.alerttype);
 		viewUserHome(this.userid)
 	});
-	nodespan.insert(nodespantext);
-	container.insert(nodespan);
+	nodespan.appendChild(nodespantext);
+	container.appendChild(nodespan);
 }
 
 function toggleAlertPosts(obj, alerttype) {
@@ -1668,10 +1793,10 @@ function toggleAlertPosts(obj, alerttype) {
 		var item = items[i];
 		if (item.style.display == 'none') {
 			item.style.display = 'block';
-			obj.update('<?php echo $LNG->ALERT_SHOW_LESS; ?>');
+			obj.innerHTML = '<?php echo $LNG->ALERT_SHOW_LESS; ?>';
 		} else {
 			item.style.display = 'none';
-			obj.update('<?php echo $LNG->ALERT_SHOW_ALL; ?>');
+			obj.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
 		}
 	}
 }

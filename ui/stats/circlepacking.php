@@ -165,7 +165,7 @@
 <script type='text/javascript'>
 	var NODE_ARGS = new Array();
 
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		NODE_ARGS['jsondata'] = <?php echo $json; ?>;
 
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-circlepacking.js.php"); ?>', 'stats-circlepacking-script');

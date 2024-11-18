@@ -91,16 +91,16 @@
 				<td class="text-end"><?php echo $c ?></td>
 				<td class="text-end">
 					<?php
-						if ($n == 'Issue') {
-							echo '<a href="#data-issue" class="active" onclick="setTabPushed($(\'tab-issue-list-obj\'),\'data-issue\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
+						if ($n == 'Issue') {							
+							echo '<a href="#data-issue" class="active" onclick="setTabPushed(document.getElementById(\'tab-issue-list-obj\'),\'data-issue\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
 						} else if ($n == 'Solution') {
-							echo '<a href="#data-solution" class="active" onclick="setTabPushed($(\'tab-solution-list-obj\'),\'data-solution\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
+							echo '<a href="#data-solution" class="active" onclick="setTabPushed(document.getElementById(\'tab-solution-list-obj\'),\'data-solution\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
 						} else if ($n == 'Comment') {
-							echo '<a href="#data-comment" class="active" onclick="setTabPushed($(\'tab-comment-list-obj\'),\'data-comment\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
+							echo '<a href="#data-comment" class="active" onclick="setTabPushed(document.getElementById(\'tab-comment-list-obj\'),\'data-comment\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
 						} else if ($n == 'Pro') {
-							echo '<a href="#data-pro" class="active" onclick="setTabPushed($(\'tab-pro-list-obj\'),\'data-pro\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
+							echo '<a href="#data-pro" class="active" onclick="setTabPushed(document.getElementById(\'tab-pro-list-obj\'),\'data-pro\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
 						} else if ($n == 'Con') {
-							echo '<a href="#data-con" class="active" onclick="setTabPushed($(\'tab-con-list-obj\'),\'data-con\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
+							echo '<a href="#data-con" class="active" onclick="setTabPushed(document.getElementById(\'tab-con-list-obj\'),\'data-con\');">'.$LNG->USER_HOME_TABLE_VIEW.'</a>';
 						}
 					?>
 				</td>

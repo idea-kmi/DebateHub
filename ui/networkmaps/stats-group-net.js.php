@@ -66,7 +66,7 @@ function loadExploreGroupNet(){
 	$("network-group-div").insert({top: keybar});
 
 	//event to resize
-	Event.observe(window,"resize",function() {
+	window.addEventListener("resize", function() {
 		resizeFDGraph(forcedirectedGraph, "network-group-div", false);
 	});
 
@@ -79,7 +79,8 @@ function loadExploreGroupNet(){
 
 function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
+	messagearea.innerHTML = "";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
 
 	var nodetypes = "";
 

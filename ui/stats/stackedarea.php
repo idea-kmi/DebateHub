@@ -154,7 +154,7 @@
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
+	window.addEventListener('load', function() {
 		NODE_ARGS['jsondata'] = <?php echo $json; ?>;
 
 		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-stackedarea.js.php"); ?>', 'stats-stackedarea-script');

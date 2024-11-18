@@ -99,14 +99,14 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 ?>
 
 <script type='text/javascript'>
-	var NODE_ARGS = new Array();
+    var NODE_ARGS = [];
 
-	Event.observe(window, 'load', function() {
-		NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
-		NODE_ARGS['groupid'] = <?php echo $groupid; ?>;
+    window.addEventListener('load', function() {
+        NODE_ARGS['data'] = <?php echo json_encode($data, JSON_INVALID_UTF8_IGNORE); ?>;
+        NODE_ARGS['groupid'] = <?php echo $groupid; ?>;
 
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-streamgraph.js.php"); ?>', 'stats-groups-streamgraph-script');
-	});
+        addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-streamgraph.js.php"); ?>', 'stats-groups-streamgraph-script');
+    });
 </script>
 
 <div class="d-flex flex-column">

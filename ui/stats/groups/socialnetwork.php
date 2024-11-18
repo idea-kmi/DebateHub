@@ -54,8 +54,8 @@ echo "</script>";
 ?>
 
 <script type='text/javascript'>
-	Event.observe(window, 'load', function() {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/stats-group-social.js.php"); ?>', 'stats-groups-group-social-script');
+	window.addEventListener('load', function() {
+		addScriptDynamically('<?php echo addslashes($HUB_FLM->getCodeWebPath("ui/networkmaps/stats-group-social.js.php")); ?>', 'stats-groups-group-social-script');
 	});
 </script>
 

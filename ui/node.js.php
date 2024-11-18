@@ -487,7 +487,7 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	nodeTable.className = "toConnectionsTable";
 	if (type == "connselect") {
 		nodeTable.style.cursor = 'pointer';
-		Event.observe(nodeTable,'click',function (){
+		nodeTable.addEventListener("click", function() {	
 			loadConnectionNode(node, role);
 		});
 	}
@@ -630,7 +630,7 @@ function renderPickerNode(node, role, includeUser){
 		itDiv.insert(alttext+": ");
 	}
 
-	Event.observe(itDiv,'click',function (){
+	itDiv.addEventListener("click", ,function () {
 		loadSelecteditem(node);
 	});
 
@@ -864,7 +864,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	if (type == "active") {
 		if (USER == user.userid) {
 			var edit = new Element('img',{'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
-			Event.observe(edit,'click',function (){loadDialog('editissue',URL_ROOT+"ui/popups/issueedit.php?nodeid="+node.nodeid, 770,550)});
+			edit.onclick = function (){loadDialog('editissue',URL_ROOT+"ui/popups/issueedit.php?nodeid="+node.nodeid, 770,550)};
 			toolbarDiv.insert(edit);
 			var del = new Element('img',{'id':'deletebutton'+uniQ, 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
 			toolbarDiv.insert(del);
@@ -873,9 +873,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 				del.src = '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>';
 				del.alt = '<?php echo $LNG->DELETE_BUTTON_ALT;?>';
 				del.title = '<?php echo $LNG->DELETE_BUTTON_HINT;?>';
-				Event.observe(del,'click',function (){
-					deleteNode(node.nodeid, deletename, role.name);
-				});
+				del.onclick = function () {	deleteNode(node.nodeid, deletename, role.name);	};
 			}
 		}
 	}
@@ -900,16 +898,16 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			toolbarDiv.insert(followbutton);
 
 			if (node.userfollow && node.userfollow == "Y") {
-				Event.observe(followbutton,'click',function (){ unfollowNode(node, this, "") } );
+				followbutton.onclick = function (){ unfollowNode(node, this, "") };
 				followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
 				followbutton.setAttribute('title', '<?php echo $LNG->NODE_UNFOLLOW_ITEM_HINT; ?>');
 			} else {
-				Event.observe(followbutton,'click',function (){ followNode(node, this, "") } );
+				followbutton.onclick = function (){ followNode(node, this, "") };
 				followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 				followbutton.setAttribute('title', '<?php echo $LNG->NODE_FOLLOW_ITEM_HINT; ?>');
 			}
 		} else {
-			toolbarDiv.insert("<img onclick='$(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' />");
+			toolbarDiv.insert("<img onclick='document.getElementById(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' />");
 		}
 	}
 
@@ -937,11 +935,11 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 				if(USER != ""){
 					voteforimg.style.cursor = 'pointer';
 					if (node.uservote && node.uservote == 'Y') {
-						Event.observe(voteforimg,'click',function (){ deleteNodeVote(this) } );
+						voteforimg.onclick = function (){ deleteNodeVote(this) };
 						voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled3.png"); ?>');
 						voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 					} else if (!node.uservote || node.uservote != 'Y') {
-						Event.observe(voteforimg,'click',function (){ nodeVote(this) } );
+						voteforimg.onclick = function (){ nodeVote(this) };
 						voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-empty3.png"); ?>');
 						voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_FOR_ADD_HINT; ?>');
 					}
@@ -969,11 +967,11 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 				if(USER != ""){
 					voteagainstimg.style.cursor = 'pointer';
 					if (node.uservote && node.uservote == 'N') {
-						Event.observe(voteagainstimg,'click',function (){ deleteNodeVote(this) } );
+						voteagainstimg.onclick = function (){ deleteNodeVote(this) };
 						voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-filled3.png"); ?>');
 						voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 					} else if (!node.uservote || node.uservote != 'N') {
-						Event.observe(voteagainstimg,'click',function (){ nodeVote(this) } );
+						voteagainstimg.onclick = function (){ nodeVote(this) };
 						voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-empty3.png"); ?>');
 						voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_AGAINST_ADD_HINT; ?>');
 					}
@@ -994,7 +992,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
 			textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE; ?>', code, "", "", "");
 		};
-		Event.observe(jsonldButton,"click", jsonldButtonhandler);
+		jsonldButton.onclick = jsonldButtonhandler;
 		toolbarDiv.insert(jsonldButton);
 	}
 
@@ -1197,32 +1195,32 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker'});
 
 	if (USER != "" && NODE_ARGS['currentphase'] == REDUCE_PHASE) {
-		Event.observe(itDiv,"dragover", function(e){
+		itDiv.ondragover = function(e) {
 			e.dataTransfer.dropEffect = 'copy';
 			e.preventDefault();
 			e.stopPropagation();
 			return true;
-		});
+		};
 
-		Event.observe(itDiv,"dragenter", function(e){
+		itDiv.ondragenter = function(e){
 			e.preventDefault();
 			e.stopPropagation();
 			return true;
-		});
+		};
 
-		Event.observe(itDiv,"drop", function(e){
+		itDiv.ondrop = function(e) {
 			var name = e.dataTransfer.getData('text');
 			e.preventDefault();
 			e.stopPropagation();
 			if (name == 'addlemon') {
 				document.body.style.cursor = 'wait';
 				var callback = function () {
-					var lemoncount = parseInt($('lemoncount'+node.nodeid).innerHTML);
+					var lemoncount = parseInt(document.getElementById('lemoncount'+node.nodeid).innerHTML);
 					if (lemoncount == 0) {
-						$('lemondiv'+node.nodeid).style.display = 'block';
+						document.getElementById('lemondiv'+node.nodeid).style.display = 'block';
 					}
-					$('lemoncount'+node.nodeid).innerHTML = lemoncount + 1;
-					$('lemonbasketcount').innerHTML = parseInt($('lemonbasketcount').innerHTML) - 1;
+					document.getElementById('lemoncount'+node.nodeid).innerHTML = lemoncount + 1;
+					document.getElementById('lemonbasketcount').innerHTML = parseInt(document.getElementById('lemonbasketcount').innerHTML) - 1;
 					document.body.style.cursor = 'default';
 				}
 				lemonNode(node.nodeid, NODE_ARGS['nodeid'], callback);
@@ -1230,7 +1228,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			} else {
 				return false;
 			}
-		});
+		};
 	}
 
 	var nodeTable = new Element('table', {'class':'table'});
@@ -1290,12 +1288,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		boxCell.userid = nodeuser.userid;
 		boxCell.nodeid = node.nodeid;
 		var inChk = new Element("input",{'class':'nodecheck','type':'checkbox','id':'nodecheck'+node.nodeid, 'value':node.nodeid, 'aria-label':'test'});
-		Event.observe(inChk,'click',function (){
-			var toAdd = getSelectedNodeIDs($('tab-content-idea-list'));
+		inChk.onclick = function () {
+			var toAdd = getSelectedNodeIDs(document.getElementById('tab-content-idea-list'));
 			if(toAdd.length < 2) {
-				$('mergeideadiv').style.display='none';
+				document.getElementById('mergeideadiv').style.display='none';
 			}
-		} );
+		};
 		boxCell.insert(inChk);
 	}
 	<?php } ?>
@@ -1303,7 +1301,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	//update stats
 	if (node.parentid) {
 		if (connection) {
-			var votestats = $('debatestatsvotes'+node.parentid);
+			var votestats = document.getElementById('debatestatsvotes'+node.parentid);
 			if (votestats) {
 				votestats.votes[node.nodeid] = parseInt(parseInt(connection.positivevotes)+parseInt(connection.negativevotes));
 			}
@@ -1360,8 +1358,8 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 					} else {
 						voteforimg.style.cursor = 'pointer';
 						voteforimg.handler = function() {
-							var votevar = $('votebardiv'+uniQ);
-							var other = $(this.connid+'against');
+							var votevar = document.getElementById('votebardiv'+uniQ);
+							var other = document.getElementById(this.connid+'against');
 							// switching vote from against to for
 							if (other.src == '<?php echo $HUB_FLM->getImagePath("thumb-down-filled.png"); ?>') {
 								votevar.negativevotes = parseInt(votevar.negativevotes)-1;
@@ -1374,22 +1372,22 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 							//promptForArgument(node, uniQ, 'pro', "Pro", type, includeUser, status);
 						}
 						voteforimg.handlerdelete = function() {
-							var votevar = $('votebardiv'+uniQ);
+							var votevar = document.getElementById('votebardiv'+uniQ);
 							votevar.positivevotes = parseInt(votevar.positivevotes)-1;
 							drawVotesBar(votevar, uniQ, node.parentid);
 							recalculatePeople();
 						}
 						voteforimg.oldtitle = '<?php echo $LNG->NODE_VOTE_FOR_SOLUTION_HINT; ?> '+toRoleName;
 						if (connection.uservote && connection.uservote == 'Y') {
-							Event.observe(voteforimg,'click',function () {
+							voteforimg.onclick = function () {
 								deleteConnectionVote(this)
-							} );
+							};
 							voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled.png"); ?>');
 							voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 						} else if (!connection.uservote || connection.uservote != 'Y') {
-							Event.observe(voteforimg,'click',function () {
+							voteforimg.onclick = function () {
 								connectionVote(this);
-							});
+							};
 
 							voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-empty.png"); ?>');
 							voteforimg.setAttribute('title', voteforimg.oldtitle);
@@ -1427,8 +1425,8 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 					} else {
 						voteagainstimg.style.cursor = 'pointer';
 						voteagainstimg.handler = function() {
-							var votebar = $('votebardiv'+uniQ);
-							var other = $(this.connid+'for');
+							var votebar = document.getElementById('votebardiv'+uniQ);
+							var other = document.getElementById(his.connid+'for');
 							//switching from for against vote to for vote
 							if (other.src == '<?php echo $HUB_FLM->getImagePath("thumb-up-filled.png"); ?>') {
 								votebar.negativevotes = parseInt(votebar.negativevotes)+1;
@@ -1440,7 +1438,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 							recalculatePeople();
 						}
 						voteagainstimg.handlerdelete = function() {
-							var votebar = $('votebardiv'+uniQ);
+							var votebar = document.getElementById('votebardiv'+uniQ);
 							votebar.negativevotes = parseInt(votebar.negativevotes)-1;
 							drawVotesBar(votebar, uniQ, node.parentid);
 							recalculatePeople();
@@ -1448,15 +1446,15 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 						voteagainstimg.oldtitle = '<?php echo $LNG->NODE_VOTE_AGAINST_SOLUTION_HINT; ?> '+toRoleName;
 						if (connection.uservote && connection.uservote == 'N') {
-							Event.observe(voteagainstimg,'click',function (){
+							voteagainstimg.onclick = function () {
 								deleteConnectionVote(this)
-							} );
+							};
 							voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-filled.png"); ?>');
 							voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 						} else if (!connection.uservote || connection.uservote != 'N') {
-							Event.observe(voteagainstimg,'click',function (){
+							voteagainstimg.onclick = function () {
 								connectionVote(this);
-							});
+							};
 							voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-empty.png"); ?>');
 							voteagainstimg.setAttribute('title', voteagainstimg.oldtitle);
 						}
@@ -1525,11 +1523,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	textspan.insert(title);
 	textspan.datadisabled = false;
 	textDiv.insert(textspan);
-	Event.observe(textspan,'click',function (){
+	textspan.onclick = function () {
 		if (textspan.datadisabled == false) {
 			ideatoggle('arguments'+uniQ, uniQ, node.nodeid, 'arguments', role.name);
 		}
-	});
+	};
 
 	if (USER == nodeuser.userid && type == 'active' && NODE_ARGS['issueDiscussing']) {
 		var editbutton = new Element("img", {			
@@ -1538,9 +1536,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'title':'<?php echo $LNG->NODE_EDIT_SOLUTION_ICON_HINT; ?>',
 		});
 		textDiv.insert(editbutton);
-		Event.observe(editbutton,'click',function (){
+		editbutton.onclick = function () {
 			editInline(uniQ, 'idea');
-		});
+		};
 
 		if (!node.otheruserconnections || node.otheruserconnections == 0) {
 			var deletename = node.name;
@@ -1550,12 +1548,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 				'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
 				'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'
 			});
-			Event.observe(del,'click',function (){
+			del.onclick = function () {
 				var callback = function () {
 					refreshSolutions();
 				}
 				deleteNode(node.nodeid, deletename, role.name, callback);
-			});
+			};
 			textDiv.insert(del);
 		} else {
 			var del = new Element('img',{ 	
@@ -1581,12 +1579,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
 		});
 		textDiv.appendChild(menuButton);
-		Event.observe(menuButton,'mouseout',function (event){
+		menuButton.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
-		});
-		Event.observe(menuButton,'mouseover',function (event) {
+		};
+		menuButton.onmouseover = function (event) {
 			var position = getPosition(this);
-			var panel = $('toolbardiv'+uniQ);
+			var panel = document.getElementById('toolbardiv'+uniQ);
 			var panelWidth = 200;
 
 			var viewportHeight = getWindowHeight();
@@ -1607,12 +1605,12 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			panel.style.top = y+"px";
 
 			showBox('toolbardiv'+uniQ);
-		});
+		};
 		var toolbarDiv = new Element("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
-		Event.observe(toolbarDiv,'mouseout',function (event){
+		toolbarDiv.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
-		});
-		Event.observe(toolbarDiv,'mouseover',function (event){ showBox('toolbardiv'+uniQ); });
+		};
+		toolbarDiv.onmouseover = function (event) { showBox('toolbardiv'+uniQ); };
 		textDiv.appendChild(toolbarDiv);
 
 		for(var i=0; i< node.urls.length; i++){
@@ -1634,9 +1632,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'alt':'built from', 
 			'title': 'built from', 'src': '<?php echo $HUB_FLM->getImagePath("desc.png"); ?>'
 		});
-		Event.observe(more,'click',function (){
+		more.onclick = function () {
 			loadDialog('builtfroms',URL_ROOT+"ui/popups/builtfroms.php?nodeid="+node.nodeid, 800,550);
-		});
+		};
 		textDiv.insert(more);
 		loadBuiltFromsCount(more, node.nodeid);
 
@@ -1657,9 +1655,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			}
 			splitbutton.insert('<?php echo $LNG->FORM_BUTTON_SPLIT; ?>');
 			textDiv.insert(splitbutton);
-			Event.observe(splitbutton,'click',function (){
+			splitbutton.onclick = function () {
 				loadDialog('split',URL_ROOT+"ui/popups/split.php?nodeid="+node.nodeid+"&debateid="+node.parentid+"&groupid="+node.groupid, 770,550);
-			});
+			};
 		}
 		<?php } ?>
 	}
@@ -1675,27 +1673,27 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 		var minuslemon = new Element('span', {'class':'lemoningbuttons'});
 		minuslemon.insert('&#8211');
-		Event.observe(minuslemon,"click", function(e){
+		minuslemon.onclick = function(e) {
 			document.body.style.cursor = 'wait';
 			var callback = function () {
-				var lemoncount = parseInt($('lemoncount'+node.nodeid).innerHTML);
+				var lemoncount = parseInt(document.getElementById('lemoncount'+node.nodeid).innerHTML);
 				if (lemoncount == 1) {
-					$('lemondiv'+node.nodeid).style.display = 'none';
+					document.getElementById('lemondiv'+node.nodeid).style.display = 'none';
 				}
-				$('lemoncount'+node.nodeid).innerHTML = lemoncount - 1;
-				$('lemonbasketcount').innerHTML = parseInt($('lemonbasketcount').innerHTML) + 1;
+				document.getElementById('lemoncount'+node.nodeid).innerHTML = lemoncount - 1;
+				document.getElementById('lemonbasketcount').innerHTML = parseInt(document.getElementById('lemonbasketcount').innerHTML) + 1;
 				document.body.style.cursor = 'default';
 			}
 			unlemonNode(node.nodeid, NODE_ARGS['nodeid'], callback);
-		});
+		};
 		lemonigDiv.insert(minuslemon);
 
 		var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimg' });
 		lemonimg.setAttribute('draggable', 'true');
-		Event.observe(lemonimg,"dragstart", function(e){
+		lemonimg.ondragstart = function(e) {
 			e.dataTransfer.setData("text", node.nodeid);
 			e.dataTransfer.effectAllowed = "move";
-		});
+		};
 		lemonigDiv.insert(lemonimg);
 
 		var lemoncountnum = new Element('span',{'id':'lemoncount'+node.nodeid, 'class':'lemoncount'});
@@ -1704,25 +1702,25 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 		var pluslemon = new Element('span', {'class':'lemoningbuttons'});
 		pluslemon.insert('+');
-		Event.observe(pluslemon,"click", function(e){
-			var remaininglemons = parseInt($('lemonbasketcount').innerHTML);
+		pluslemon.onclick = function(e) {
+			var remaininglemons = parseInt(document.getElementById('lemonbasketcount').innerHTML);
 			if (remaininglemons > 0) {
 				document.body.style.cursor = 'wait';
 				var callback = function () {
-					var lemoncount = parseInt($('lemoncount'+node.nodeid).innerHTML);
+					var lemoncount = parseInt(document.getElementById('lemoncount'+node.nodeid).innerHTML);
 					var lemoncount = lemoncount + 1;
 					if (lemoncount > 0) {
-						$('lemondiv'+node.nodeid).style.display = 'block';
+						document.getElementById('lemondiv'+node.nodeid).style.display = 'block';
 					}
-					$('lemoncount'+node.nodeid).innerHTML = lemoncount;
-					$('lemonbasketcount').innerHTML = parseInt($('lemonbasketcount').innerHTML) - 1;
+					document.getElementById('lemoncount'+node.nodeid).innerHTML = lemoncount;
+					document.getElementById('lemonbasketcount').innerHTML = parseInt(document.getElementById('lemonbasketcount').innerHTML) - 1;
 					document.body.style.cursor = 'default';
 				}
 				lemonNode(node.nodeid, NODE_ARGS['nodeid'], callback);
 			} else {
 				alert('<?php echo $LNG->LEMONING_COUNT_FINISHED; ?>');
 			}
-		});
+		};
 		lemonigDiv.insert(pluslemon);
 
 		textDiv.insert(lemonigDiv);
@@ -1769,11 +1767,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	});
 	argumentLink.nodeid = node.nodeid;
 	argumentLink.datadisabled = false;
-	Event.observe(argumentLink,'click',function (){
+	argumentLink.onclick = function () {
 		if (argumentLink.datadisabled == false) {
 			ideatoggle('arguments'+uniQ, uniQ, node.nodeid, 'arguments', role.name);
 		}
-	});
+	};
 
 	<?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']) { ?>
 	if (USER == '' && NODE_ARGS['issueDiscussing']) {
@@ -1802,11 +1800,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	});
 	commentLink.nodeid = node.nodeid;
 	commentLink.datadisabled = false;
-	Event.observe(commentLink,'click',function (){
+	commentLink.onclick = function () {
 		if (commentLink.datadisabled == false) {
 			ideatoggle('comments'+uniQ, uniQ, node.nodeid, 'comments', role.name);
 		}
-	});
+	};
 
 	commentLink.insert('<?php echo $LNG->IDEA_COMMENTS_LINK; ?>');
 	var commentCount = new Element("span", {'id':'ideacommentscount'+node.nodeid});
@@ -1937,9 +1935,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'class':'hgrinput',
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
-		Event.observe(addURL,'click',function (){
+		addURL.onclick = function () {
 			insertIdeaLink(uniQ, 'edit');
-		});
+		};
 		rowDiv5.insert(addURL);
 		var rowDiv3 = new Element("div", {
 			'class':'formrowsm',
@@ -1952,9 +1950,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'name':'editidea',
 			'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>',
 		});
-		Event.observe(editideasave,'click',function (){
+		editideasave.onclick = function () {
 			editIdeaNode(node, uniQ, 'idea', type, includeUser, status);
-		});
+		};
 
 		rowDiv3.insert(editideasave);
 		var editideacancel = new Element("input", {
@@ -1964,9 +1962,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'name':'editidea',
 			'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>',
 		});
-		Event.observe(editideacancel,'click',function (){
+		editideacancel.onclick = function () {
 			cancelEditAction(uniQ, 'idea');
-		});
+		};
 
 		rowDiv3.insert(editideacancel);
 
@@ -2056,9 +2054,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'name':'addcomment',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
 		});
-		Event.observe(addcommentsave,'click',function (){
+		addcommentsave.onclick = function () {
 			addCommentNode(node, uniQ, 'comment', type, includeUser, status);
-		});
+		};
 		rowDiv3.insert(addcommentsave);
 
 		commentCell.insert(addCommentDiv);
@@ -2158,9 +2156,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'href':'javascript:void(0)',
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
-		Event.observe(addURL,'click',function (){
+		addURL.onclick = function () {
 			insertArgumentLink(uniQ, 'pro');
-		});
+		};
 		rowDiv4.insert(addURL);
 
 		var rowDiv5 = new Element("div", {
@@ -2174,9 +2172,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'name':'addprosave',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
 		});
-		Event.observe(addprosave,'click',function (){
+		addprosave.onclick = function () {
 			addArgumentNode(node, uniQ, 'pro', 'Pro', type, includeUser, status);
-		});
+		};
 		rowDiv5.insert(addprosave);
 
 		forCell.insert(addProDiv);
@@ -2261,9 +2259,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'href':'javascript:void(0)',
 		});
 		addURL.insert('<?php echo $LNG->FORM_MORE_LINKS_BUTTONS; ?>');
-		Event.observe(addURL,'click',function (){
+		addURL.onclick = function () {
 			insertArgumentLink(uniQ, 'con');
-		});
+		};
 		rowDiv4.insert(addURL);
 
 		var rowDiv5 = new Element("div", {
@@ -2277,9 +2275,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			'name':'addconsave',
 			'value':'<?php echo $LNG->FORM_BUTTON_SUBMIT; ?>',
 		});
-		Event.observe(addconsave,'click',function (){
+		addconsave.onclick = function () {
 			addArgumentNode(node, uniQ, 'con', 'Con', type, includeUser, status);
-		});
+		};
 		rowDiv5.insert(addconsave);
 
 		conCell.insert(addConDiv);
@@ -2426,11 +2424,11 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	textspan.insert(title);
 	textspan.datadisabled = false;
 	textDiv.insert(textspan);
-	Event.observe(textspan,'click',function (){
+	textspan.onclick = function () {
 		if (textspan.datadisabled == false) {
 			ideatoggle('arguments'+uniQ, uniQ, node.nodeid, 'arguments', role.name);
 		}
-	});
+	};
 
 	// LEMONING
 	var lemonigDiv = new Element('div', {'name':'lemondiv','id':'lemondiv'+node.nodeid,'style':'float:right;padding:0px;margin:0px;'});
@@ -2459,11 +2457,11 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	});
 	argumentLink.nodeid = node.nodeid;
 	argumentLink.datadisabled = false;
-	Event.observe(argumentLink,'click',function (){
+	argumentLink.onclick = function () {
 		if (argumentLink.datadisabled == false) {
 			ideatoggle('arguments'+uniQ, uniQ, node.nodeid, 'arguments', role.name);
 		}
-	});
+	};
 
 	argumentLink.insert('<?php echo $LNG->IDEA_ARGUMENTS_LINK; ?> (');
 	var argumentCount = new Element("span", {
@@ -2485,11 +2483,11 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	});
 	commentLink.nodeid = node.nodeid;
 	commentLink.datadisabled = false;
-	Event.observe(commentLink,'click',function (){
+	commentLink.onclick = function () {
 		if (commentLink.datadisabled == false) {
 			ideatoggle('comments'+uniQ, uniQ, node.nodeid, 'comments', role.name);
 		}
-	});
+	};
 
 	commentLink.insert('<?php echo $LNG->IDEA_COMMENTS_LINK; ?>');
 	var commentCount = new Element("span", {'id':'ideacommentscount'+node.nodeid});
@@ -2717,14 +2715,14 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			'title':'<?php echo $LNG->NODE_EDIT_SOLUTION_ICON_HINT; ?>',
 		});
 		textDiv.insert(editbutton);
-		Event.observe(editbutton,'click',function (){
+		editbutton.onclick = function () {
 			var innertype = "pro";
 			if (role.name == "Con") {
 				innertype = "con";
 			}
 			hideAddForm(node.parentuniq, innertype);
 			editInline(uniQ, 'argument');
-		});
+		};
 
 		var deletename = node.name;
 		var del = new Element('img',{		
@@ -2733,20 +2731,43 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
 			'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'
 		});
-		Event.observe(del,'click',function (){
+		
+		del.onclick = function () {
 			var callback = function () {
 				if (role.name == "Con") {
-					$('counterkidsdiv'+node.parentuniq).loaded = 'false';
-					loadChildArguments('counterkidsdiv'+node.parentuniq, node.parentid, '<?php echo $LNG->CONS_NAME; ?>', '<?php echo $CFG->LINK_CON_SOLUTION; ?>', 'Con', node.parentid, node.groupid, node.parentuniq, $('count-counter'+node.parentuniq), type, status, $('votebardiv'+node.parentuniq));
+					document.getElementById('counterkidsdiv'+node.parentuniq).loaded = 'false';
+					loadChildArguments('counterkidsdiv'+node.parentuniq, 
+										node.parentid, 
+										'<?php echo $LNG->CONS_NAME; ?>', 
+										'<?php echo $CFG->LINK_CON_SOLUTION; ?>', 
+										'Con', 
+										node.parentid, 
+										node.groupid, 
+										node.parentuniq, 
+										document.getElementById('count-counter'+node.parentuniq), 
+										type, 
+										status, 
+										document.getElementById('votebardiv'+node.parentuniq));
 					refreshStats();
 				} else if (role.name == 'Pro') {
-					$('supportkidsdiv'+node.parentuniq).loaded = 'false';
-					loadChildArguments('supportkidsdiv'+node.parentuniq, node.parentid, '<?php echo $LNG->PROS_NAME; ?>', '<?php echo $CFG->LINK_PRO_SOLUTION; ?>', 'Pro', node.parentid, node.groupid, node.parentuniq, $('count-support'+node.parentuniq), type, status, $('votebardiv'+node.parentuniq));
+					document.getElementById('supportkidsdiv'+node.parentuniq).loaded = 'false';
+					loadChildArguments('supportkidsdiv'+node.parentuniq, 
+										node.parentid, 
+										'<?php echo $LNG->PROS_NAME; ?>', 
+										'<?php echo $CFG->LINK_PRO_SOLUTION; ?>', 
+										'Pro', 
+										node.parentid, 
+										node.groupid, 
+										node.parentuniq, 
+										document.getElementById('count-support'+node.parentuniq), 
+										type, 
+										status, 
+										document.getElementById('votebardiv'+node.parentuniq));
 					refreshStats();
 				}
 			}
 			deleteNode(node.nodeid, deletename, role.name, callback);
-		});
+		};
 		textDiv.insert(del);
 	}
 
@@ -2763,12 +2784,12 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
 		});
 		textDiv.appendChild(menuButton);		
-		Event.observe(menuButton,'mouseout',function (event){
+		menuButton.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
-		});
-		Event.observe(menuButton,'mouseover',function (event) {
+		};
+		menuButton.onmouseover = function (event) {
 			var position = getPosition(this);
-			var panel = $('toolbardiv'+uniQ);
+			var panel = document.getElementById('toolbardiv'+uniQ);
 			var panelWidth = 200;
 
 			var viewportHeight = getWindowHeight();
@@ -2789,12 +2810,12 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			panel.style.top = y+"px";
 
 			showBox('toolbardiv'+uniQ);
-		});
+		};
 		var toolbarDiv = new Element("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
-		Event.observe(toolbarDiv,'mouseout',function (event){
+		toolbarDiv.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
-		});
-		Event.observe(toolbarDiv,'mouseover',function (event){ showBox('toolbardiv'+uniQ); });
+		};
+		toolbarDiv.onmouseover = function (event){ showBox('toolbardiv'+uniQ); };
 		textDiv.appendChild(toolbarDiv);
 
 		for(var i=0; i< node.urls.length; i++){
@@ -2858,8 +2879,8 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 					voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_OWN_HINT; ?>');
 				} else {
 					voteforimg.handler = function() {
-						var votebar = $('votebardiv'+node.parentuniq);
-						var other = $(this.connid+'against');
+						var votebar = document.getElementById('votebardiv'+node.parentuniq);
+						var other = document.getElementById(this.connid+'against');
 						// switching vote from against to for
 						if (other.src == '<?php echo $HUB_FLM->getImagePath("thumb-down-filled.png"); ?>') {
 							if (role.name == "Con") {
@@ -2894,7 +2915,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 						recalculatePeople();
 					}
 					voteforimg.handlerdelete = function() {
-						var votebar = $('votebardiv'+node.parentuniq);
+						var votebar = document.getElementById('votebardiv'+node.parentuniq);
 						if (role.name == "Con") {
 							votebar.conpositivevotes = parseInt(votebar.conpositivevotes)-1;
 						} else if (role.name == "Pro") {
@@ -2907,11 +2928,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 					voteforimg.style.cursor = 'pointer';
 					voteforimg.oldtitle = '<?php echo $LNG->NODE_VOTE_FOR_EVIDENCE_SOLUTION_HINT; ?> '+toRoleName;
 					if (connection.uservote && connection.uservote == 'Y') {
-						Event.observe(voteforimg,'click',function (){ deleteConnectionVote(this) } );
+						voteforimg.onclick = function (){ deleteConnectionVote(this) };
 						voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled.png"); ?>');
 						voteforimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 					} else if (!connection.uservote || connection.uservote != 'Y') {
-						Event.observe(voteforimg,'click',function (){ connectionVote(this) } );
+						voteforimg.onclick = function (){ connectionVote(this) };
 						voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-empty.png"); ?>');
 						voteforimg.setAttribute('title', voteforimg.oldtitle);
 					}
@@ -2941,8 +2962,8 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 					voteagainstimg.setAttribute('title', '<?php echo $LNG->NODE_VOTE_OWN_HINT; ?>');
 				} else {
 					voteagainstimg.handler = function() {
-						var votebar = $('votebardiv'+node.parentuniq);
-						var other = $(this.connid+'for');
+						var votebar = document.getElementById('votebardiv'+node.parentuniq);
+						var other = document.getElementById(this.connid+'for');
 						//switching from for against vote to for vote
 						if (other.src == '<?php echo $HUB_FLM->getImagePath("thumb-up-filled.png"); ?>') {
 							if (role.name == "Con") {
@@ -2963,7 +2984,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 						recalculatePeople();
 					}
 					voteagainstimg.handlerdelete = function() {
-						var votebar = $('votebardiv'+node.parentuniq);
+						var votebar = document.getElementById('votebardiv'+node.parentuniq);
 						if (role.name == "Con") {
 							votebar.connegativevotes = parseInt(votebar.connegativevotes)-1;
 						} else if (role.name == "Pro") {
@@ -3301,8 +3322,8 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;margin-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
 		Event.observe(del,'click',function (){
 			var callback = function () {
-				$('commentslist'+node.parentuniq).loaded = 'false';
-				loadChildComments('commentslist'+node.parentuniq, node.parentid, '<?php echo $LNG->COMMENTS_NAME; ?>', '<?php echo $CFG->LINK_COMMENT_NODE; ?>', 'Comment', node.parentid, node.groupid, node.parentuniq, $('count-comment'+node.parentuniq), type, status);
+				document.getElementById('commentslist'+node.parentuniq).loaded = 'false';
+				loadChildComments('commentslist'+node.parentuniq, node.parentid, '<?php echo $LNG->COMMENTS_NAME; ?>', '<?php echo $CFG->LINK_COMMENT_NODE; ?>', 'Comment', node.parentid, node.groupid, node.parentuniq, document.getElementById('count-comment'+node.parentuniq), type, status);
 				refreshStats();
 			}
 			deleteNode(node.nodeid, deletename, role.name, callback);
@@ -3648,41 +3669,53 @@ var TREE_OPEN_ARRAY = {};
  * Open and close the knowledge tree
  */
 function toggleDebate(section, uniQ) {
-    $(section).toggle();
+    var sectionobj = document.getElementById(section); // Select the section element
 
-    if($(section).visible()){
+	if (sectionobj.style.display === 'none' || section.style.display === '') {
+    	sectionobj.style.display = 'block'; // Show the element
+	} else {
+    	sectionobj.style.display = 'none'; // Hide the element
+	}
+
+    if(isVisible(document.getElementById(section))){
     	DEBATE_TREE_OPEN_ARRAY[section] = true;
-    	$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
+    	document.getElementById('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
 	} else {
     	DEBATE_TREE_OPEN_ARRAY[section] = false;
-		$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>';
+		document.getElementById('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>';
 	}
 }
 
 function ideaArgumentToggle(section, uniQ, id, sect, rolename, focalnodeid, groupid) {
-   $(section).toggle();
-   if($('arrow'+section)){
-        if($(section).visible()){
-            $('arrow'+section).src = "<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>";
+   	const sectionobj = document.getElementById(section);
+   	if (sectionobj.style.display === 'none' || section.style.display === '') {
+    	sectionobj.style.display = 'block'; // Show the element
+	} else {
+    	sectionobj.style.display = 'none'; // Hide the element
+	}
+
+   	if(document.getElementById('arrow'+section)){
+        if(isVisible(document.getElementById(section))){
+            document.getElementById('arrow'+section).src = "<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>";
         } else {
-            $('arrow'+section).src = "<?php echo $HUB_FLM->getImagePath("arrow-down2.png"); ?>";
+            document.getElementById('arrow'+section).src = "<?php echo $HUB_FLM->getImagePath("arrow-down2.png"); ?>";
         }
 	}
 }
 
 function ideatoggle(section, uniQ, id, sect, rolename, focalnodeid, groupid) {
-
-   if ($(section).style.display == 'block') {
-   		$(section).style.display = 'none';
-   } else if ($(section).style.display == 'none') {
-   		$(section).style.display = 'block';
-   }
+	const sectionobj = document.getElementById(section);
+    if (sectionobj.style.display == 'block') {
+		sectionobj.style.display = 'none';
+    } else if (sectionobj.style.display == 'none') {
+		sectionobj.style.display = 'block';
+    }
 
 	//Audit viewing of child lists only if opening area
-	if ($(section).style.display == 'block') {
+	if (sectionobj.style.display == 'block') {
 		if (sect == "comments") {
-			if ($(section).commentnodes) {
-				var nodes = $(section).commentnodes;
+			if (sectionobj.commentnodes) {
+				var nodes = sectionobj.commentnodes;
 				var count = nodes.length;
 				var nodeids = "";
 				for (var i=0; i<count;i++) {
@@ -3704,8 +3737,8 @@ function ideatoggle(section, uniQ, id, sect, rolename, focalnodeid, groupid) {
 				});
 			}
 		} else if (sect == "arguments") {
-			if ($(section).pronodes) {
-				var nodes = $(section).pronodes;
+			if (sectionobj.pronodes) {
+				var nodes = sectionobj.pronodes;
 				var count = nodes.length;
 				var nodeids = "";
 				for (var i=0; i<count; i++) {
@@ -3727,8 +3760,8 @@ function ideatoggle(section, uniQ, id, sect, rolename, focalnodeid, groupid) {
 				});
 			}
 
-			if ($(section).connodes) {
-				var nodes = $(section).connodes;
+			if (sectionobj.connodes) {
+				var nodes = sectionobj.connodes;
 				var count = nodes.length;
 				var nodeids = "";
 				for (var i=0; i<count;i++) {
@@ -3752,11 +3785,15 @@ function ideatoggle(section, uniQ, id, sect, rolename, focalnodeid, groupid) {
 		}
 	}
 
-	if ($('idearowitem'+uniQ)) {
-		if( ($('comments'+uniQ) && $('comments'+uniQ).style.display == 'none' && $('arguments'+uniQ).style.display == 'none') || (!$('comments'+uniQ) && $('arguments'+uniQ).style.display == 'none') ){
-			$('idearowitem'+uniQ).style.background = "transparent";
+	if (document.getElementById('idearowitem'+uniQ)) {
+		if( (document.getElementById('comments'+uniQ) 
+				&& document.getElementById('comments'+uniQ).style.display == 'none' 
+				&& document.getElementById('arguments'+uniQ).style.display == 'none') || (!document.getElementById('comments'+uniQ) 
+				&& document.getElementById('arguments'+uniQ).style.display == 'none') ){
+			
+			document.getElementById('idearowitem'+uniQ).style.background = "transparent";
 		} else {
-			$('idearowitem'+uniQ).style.background = "#E8E8E8";
+			document.getElementById('idearowitem'+uniQ).style.background = "#E8E8E8";
    		}
    	}
 }
@@ -3799,7 +3836,7 @@ function loadStats(nodeid, peoplearea, ideaarea, votearea) {
 function loadChildComments(section, nodeid, title, linktype, nodetype, focalnodeid, groupid, uniQ, countArea, type, status){
 
 	if (typeof section === "string") {
-		section = $(section);
+		section = document.getElementById(section);
 	}
 
 	if (section.loaded == undefined) {
@@ -3812,7 +3849,8 @@ function loadChildComments(section, nodeid, title, linktype, nodetype, focalnode
 
     if(section.visible() && (!section.loaded || section.loaded == 'false')){
 
-    	section.update(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+		section.innerHTML = "";
+    	section.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
 
 		var reqUrl = SERVICE_ROOT + "&method=getconnectionsbynode&style=long&sort=ASC&orderby=date&status="+status;
 		reqUrl += "&filterlist="+linktype+"&filternodetypes="+nodetype+"&scope=all&start=0&max=-1&nodeid="+nodeid;
@@ -3828,7 +3866,9 @@ function loadChildComments(section, nodeid, title, linktype, nodetype, focalnode
 				}
 				var conns = json.connectionset[0].connections;
 				section.update("");
-				$('ideacommentscount'+nodeid).update(0);
+
+				const ideacommentscount = document.getElementById('ideacommentscount'+nodeid);
+				ideacommentscount.innerHTML = 0;
 				if (countArea) {
 					countArea.update(0);
 				}
@@ -3889,8 +3929,8 @@ function loadChildComments(section, nodeid, title, linktype, nodetype, focalnode
 				if (countArea) {
 					countArea.update(nodes.length);
 				}
-				if ($('ideacommentscount'+nodeid)) {
-					$('ideacommentscount'+nodeid).update(nodes.length);
+				if (document.getElementById('ideacommentscount'+nodeid)) {
+					document.getElementById('ideacommentscount'+nodeid).innerHTML = nodes.length;
 				}
 
 				if (nodes.length > 0){
@@ -3913,7 +3953,7 @@ function loadChildComments(section, nodeid, title, linktype, nodetype, focalnode
 function loadChildArguments(section, nodeid, title, linktype, nodetype, focalnodeid, groupid, uniQ, countArea, type, status, votebar){
 
 	if (typeof section === "string") {
-		section = $(section);
+		section = document.getElementById(section);
 	}
 
 	if (section.loaded == undefined) {
@@ -3926,7 +3966,8 @@ function loadChildArguments(section, nodeid, title, linktype, nodetype, focalnod
 
     if(section.visible() && (!section.loaded || section.loaded == 'false')){
 
-    	section.update(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+		section.innerHTML = "";
+    	section.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
 
 		var reqUrl = SERVICE_ROOT + "&method=getconnectionsbynode&style=long&sort=ASC&orderby=date&status="+status;
 		reqUrl += "&filterlist="+linktype+"&filternodetypes="+nodetype+"&scope=all&start=0&max=-1&nodeid="+nodeid;
@@ -3942,8 +3983,8 @@ function loadChildArguments(section, nodeid, title, linktype, nodetype, focalnod
 				}
 				var conns = json.connectionset[0].connections;
 				section.update("");
-				if ($('ideaargumentcount'+nodeid)) {
-					$('ideaargumentcount'+nodeid).update(0);
+				if (document.getElementById('ideaargumentcount'+nodeid)) {
+					document.getElementById('ideaargumentcount'+nodeid).innerHTML = "0";
 				}
 				if (countArea) {
 					countArea.update(0);
@@ -4029,23 +4070,23 @@ function loadChildArguments(section, nodeid, title, linktype, nodetype, focalnod
 				}
 				var otherAmount = 0;
 				if (nodetype == "Pro") {
-					otherAmount = parseInt($('count-counter'+uniQ).innerHTML);
+					otherAmount = parseInt(document.getElementById('count-counter'+uniQ).innerHTML);
 				} else {
-					otherAmount = parseInt($('count-support'+uniQ).innerHTML);
+					otherAmount = parseInt(document.getElementById('count-support'+uniQ).innerHTML);
 				}
-				if ($('ideaargumentcount'+nodeid)) {
-					$('ideaargumentcount'+nodeid).update(otherAmount+nodes.length);
+				if (document.getElementById('ideaargumentcount'+nodeid)) {
+					document.getElementById('ideaargumentcount'+nodeid).innerHTML = otherAmount+nodes.length;
 				}
 
 				if (nodes.length > 0){
 					displayArgumentNodes(section, nodes, parseInt(0), true, uniQ, type, status);
 
 					// for View auditing on toggle
-					if ($('arguments'+uniQ)) {
+					if (document.getElementById('arguments'+uniQ)) {
 						if (nodetype == "Con") {
-							$('arguments'+uniQ).connodes = nodes;
+							document.getElementById('arguments'+uniQ).connodes = nodes;
 						} else {
-							$('arguments'+uniQ).pronodes = nodes;
+							document.getElementById('arguments'+uniQ).pronodes = nodes;
 						}
 					}
 				}
@@ -4065,7 +4106,7 @@ function loadChildArguments(section, nodeid, title, linktype, nodetype, focalnod
 
 				// if in the voting phase, expand arguments and audit views.
 				if (NODE_ARGS['currentphase'] == DECIDE_PHASE && nodes.length > 0) {
-					$('arguments'+uniQ).style.display = "block";
+					document.getElementById('arguments'+uniQ).style.display = "block";
 
 					//audit views of this child list now it is opened
 					var count = nodes.length;
@@ -4195,16 +4236,37 @@ function nodeVote(obj) {
 						followNode(nodeObj, null, 'refreshMainIssue');
 					}
 
-  					$$("#nodevotefor"+obj.nodeid).each(function(elmt) { elmt.innerHTML = json.cnode[0].positivevotes; });
+					var nodevoteforelements = document.querySelectorAll('#nodevotefor' + obj.nodeid);
+					nodevoteforelements.forEach(function(elmt) {
+						elmt.innerHTML = json.cnode[0].positivevotes;
+					});
 
-   					$$("#nodefor"+obj.nodeid).each(function(elmt) {
-   						elmt.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled3.png"); ?>');
-   						elmt.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
-   						Event.stopObserving(elmt, 'click');
-   						Event.observe(elmt,'click', function (){deleteNodeVote(this);});
-   					});
+					var nodeforelements = document.querySelectorAll('#nodefor' + obj.nodeid);
+					nodeforelements.forEach(function(elmt) {
+						elmt.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled3.png"); ?>');
+						elmt.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
 
-  					$$("#nodevoteagainst"+obj.nodeid).each(function(elmt) { elmt.innerHTML = json.cnode[0].negativevotes; });
+						// Remove existing click event listeners (if needed)
+						var newClickHandler = function() { deleteNodeVote(this); };
+						elmt.removeEventListener('click', newClickHandler); // Ensure to remove the previous listener
+						elmt.addEventListener('click', newClickHandler); // Add the new click event listener
+					});					
+
+					var nodeforelements = document.querySelectorAll('#nodefor' + obj.nodeid);
+					elements.forEach(function(elmt) {
+						elmt.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-filled3.png"); ?>');
+						elmt.setAttribute('title', '<?php echo $LNG->NODE_VOTE_REMOVE_HINT; ?>');
+
+						// Remove existing click event listeners (if needed)
+						elmt.removeEventListener('click', deleteNodeVote); // Ensure to remove the previous listener
+						elmt.addEventListener('click', function() { deleteNodeVote(this); }); // Add the new click event listener
+					});
+
+
+				    var nodevoteagainstelements = document.querySelectorAll('#nodevoteagainst' + obj.nodeid);
+					nodevoteagainstelements.forEach(function(elmt) {
+						elmt.innerHTML = json.cnode[0].negativevotes;
+					});
 
   					$$("#nodeagainst"+obj.nodeid).each(function(elmt) {
   						elmt.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-empty3.png"); ?>');

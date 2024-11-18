@@ -46,7 +46,7 @@
 	var context = '<?php echo $CFG->GLOBAL_CONTEXT; ?>';
 
 	function init() {
-		$("tab-connections-overview").innerHTML = "";
+		document.getElementById("tab-connections-overview").innerHTML = "";
 
 		var nextrow = new Element("div", {'class':'d-flex flex-row mt-4 gap-2 align-items-stretch'});
 
@@ -62,7 +62,7 @@
 		connectedsolutions.insert(set);
 		nextrow.insert(connectedsolutions);
 
-		$("tab-connections-overview").insert( nextrow );
+		document.getElementById("tab-connections-overview").insert( nextrow );
 	}
 
 	function overviewNodeWidget(context, title, filternodetypes, orderby, sort, count, buttontitle, key, hinttype, uniqueid, filtertype) {
@@ -76,7 +76,7 @@
 		legend.insert(title);
 		set.insert(legend);
 		var main = new Element("div", {'style':'height: 300px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;'});
-		main.insert(getLoading("(<?php echo $LNG->WIDGET_LOADING; ?> "+title+"...)"));
+		main.appendChild(getLoading("(<?php echo $LNG->WIDGET_LOADING; ?> "+title+"...)"));
 		set.insert(main);
 
 		var args = new Object();
@@ -115,8 +115,7 @@
 		if (buttontitle && buttontitle != "") {
 			var allbutton = new Element("a", {'href':'#'+key+'-list', 'class':'active', 'title':'<?php echo $LNG->WIDGET_CLICK_EXPLORE_HINT; ?> '+hinttype, 'style':''});
 			allbutton.insert(buttontitle);
-			Event.observe(allbutton,'click',function() {
-
+			allbutton.addEventListener("click",function() {
 				window.location.href = "<?php echo $CFG->homeAddress; ?>"+"#"+key;
 			});
 			set.insert(allbutton);

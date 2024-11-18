@@ -183,7 +183,8 @@
 <script>
 	jQuery.noConflict();
 	jQuery(document).ready(function($) {
-		$('#adminTableDiv').DataTable({
+		const adminTableDiv = document.getElementById('adminTableDiv');
+		adminTableDiv.DataTable({
 			"autoWidth": true,
 			"responsive": true,
 			"pageLength": 25,

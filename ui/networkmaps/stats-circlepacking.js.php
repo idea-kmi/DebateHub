@@ -61,7 +61,8 @@ function loadCirclePackingData(messagearea) {
 
 	//displayCirclePackingD3VisTest();
 
-	messagearea.update(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
+	messagearea.innerHTML="";
+	messagearea.appendChild(getLoadingLine("<?php echo $LNG->LOADING_DATA; ?>"));
 
 	var jsondata = NODE_ARGS['jsondata'];
 	//alert(jsondata.toSource());

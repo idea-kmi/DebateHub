@@ -1,0 +1,84 @@
+<?php
+/********************************************************************************
+ *                                                                              *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
+ *                                                                              *
+ *  This software is freely distributed in accordance with                      *
+ *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+ *  as published by the Free Software Foundation.                               *
+ *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+ *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+ *                                                                              *
+ *  This software is provided by the copyright holders and contributors "as is" *
+ *  and any express or implied warranties, including, but not limited to, the   *
+ *  implied warranties of merchantability and fitness for a particular purpose  *
+ *  are disclaimed. In no event shall the copyright owner or contributors be    *
+ *  liable for any direct, indirect, incidental, special, exemplary, or         *
+ *  consequential damages (including, but not limited to, procurement of        *
+ *  substitute goods or services; loss of use, data, or profits; or business    *
+ *  interruption) however caused and on any theory of liability, whether in     *
+ *  contract, strict liability, or tort (including negligence or otherwise)     *
+ *  arising in any way out of the use of this software, even if advised of the  *
+ *  possibility of such damage.                                                 *
+ *                                                                              *
+ ********************************************************************************/
+ 
+ $desc = "<p>View all Activity for this person popup ug: This is for my activity from today so not sure why XML is saving wrongly today! But we will need to investigate not really a UI thing but recording so I dont forget. All older activities seem fine.</p>
+<p>So new bug? Perhaps from php move. All todays activity seems fine on the live site but depends on what the activity was exactly. I wont have done like for like necessarily. For example, maybe voting or a specific type of activity is not being recorded with correct XML in the activity logs table, and I only did that on the live site. So we need to debug, which activity items those two are exactly.Â </p>
+<p>Also the Type column never seems to be being filled in! And often not the Action column either. Ne Debate Moderation  Should not be able to moderate a closed debate, but button still showing.</p>
+<p>If you click the button you get the merge button but not the checkboxes (so checkbox behaviour is correct, as you should not be able to moderate at all). We just need to figure out why the button is not hiding on a closed debate. Maybe the button lost its id?</p>";
+ 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta charset="utf-8">
+   	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TEST</title>
+
+
+	<link rel="stylesheet" href="theme/default/styles/bootstrap.css" type="text/css" />
+	<link rel="stylesheet" href="theme/default/styles/all.css" type="text/css" />
+	<link rel="stylesheet" href="theme/default/styles/tabber.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="theme/default/styles/node.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="theme/default/styles/dialogstyle.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="theme/default/styles/stylecustom.css" type="text/css" media="screen" />
+
+	<script src="ui/lib/ckeditor5/ckeditor.js" type="text/javascript"></script>
+	<script src="ui/util.js.php" type="text/javascript"></script>
+	<script src="ui/popuputil.js.php" type="text/javascript"></script>
+	<script src="ui/node.js.php'" type="text/javascript"></script>
+
+	<script src="ui/lib/prototype.js" type="text/javascript"></script>
+	<script src="ui/lib/dateformat.js" type="text/javascript"></script>
+	<script src="ui/lib/datetimepicker/datetimepicker_css.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="mb-3 row" id="descdiv">
+		<label for="desc" class="col-sm-3 col-form-label">
+			TEST
+			<a class="active" onMouseOver="showFormHint('<?php echo $hintname; ?>', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"></a>
+			<span class="required">*</span>
+			<br />		
+			<a id="editortogglebutton" href="javascript:void(0)" onclick="switchCKEditorMode(this, 'textareadiv', 'desc')">Toggle Editor</a>
+			
+		<div class="col-sm-9" id="textareadiv">
+			<textarea rows="4" class="ckeditor form-control" id="desc" name="desc"><?php echo( $desc ); ?></textarea>
+		</div>
+	</div>
+    <script>
+        const editorElement = document.getElementById('editor');
+
+        ClassicEditor.create(editorElement)
+            .then(editor => {
+                console.log('Active Plugins:', editor.plugins);
+            })
+            .catch(error => {
+                console.error('Error creating editor:', error);
+            });
+    </script>
+</body>
+</html>

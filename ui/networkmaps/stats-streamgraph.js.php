@@ -29,11 +29,11 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 function loadStreamGraph(){
 
-	$("streamgraph-div").innerHTML = "";
+	document.getElementById("streamgraph-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("streamgraph-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("streamgraph-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -51,7 +51,7 @@ function loadStreamGraph(){
 	outerDiv.insert(messagearea);
 	outerDiv.insert(streamgraphdiv);
 
-	$("streamgraph-div").insert(outerDiv);
+	document.getElementById("streamgraph-div").insert(outerDiv);
 
 	loadStreamGraphData(messagearea, streamgraphdiv, width);
 }

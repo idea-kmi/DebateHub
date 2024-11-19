@@ -149,14 +149,14 @@
 
 			<script type="text/javascript">
 				function init() {
-					$('dialogheader').insert('<?php echo $LNG->GROUP_MANAGE_TITLE; ?>');
+					document.getElementById('dialogheader').insert('<?php echo $LNG->GROUP_MANAGE_TITLE; ?>');
 				}
 				function loadgroup(){
-					var groupid = $('groupid').options[$('groupid').selectedIndex].value;
+					var groupid = document.getElementById('groupid').options[document.getElementById('groupid').selectedIndex].value;
 					window.location.href = "?groupid="+groupid;
 				}
 				<?php if($groupid != ""){ ?>
-					function admintoggle(user){
+					async function admintoggle(user){
 						var id = user.id.replace('admin-','');
 						var service="removegroupadmin";
 						if(user.checked){
@@ -164,111 +164,112 @@
 						}
 
 						var reqUrl = SERVICE_ROOT + "&method="+service+"&groupid=<?php echo $group->groupid;?>&userid="+id ;
-
-						new Ajax.Request(reqUrl, { method:'get',
-							onSuccess: function(transport){
-								var json = transport.responseText.evalJSON();
-								if(json.error){
-									alert(json.error[0].message);
-									return;
-								}
+						try {
+							const json = await makeAPICall(reqUrl, 'GET');
+							if (json.error) {
+								alert(json.error[0].message);
+								return;
 							}
-						});
+						} catch (err) {
+							alert("There was an error: "+err.message);
+							console.log(err)
+						}
 					}
-					function deletemember(user){
+					async function deletemember(user){
 						var id = user.id.replace('remove-','');
-						var username = $('name-'+id).value;
+						var username = document.getElementById('name-'+id).value;
 						var answer = confirm("<?php echo $LNG->GROUP_FORM_REMOVE_MESSAGE_PART1;?> "+ username +" <?php echo $LNG->GROUP_FORM_REMOVE_MESSAGE_PART2; ?>");
 						if(answer){
 							//send request
-							var reqUrl = SERVICE_ROOT + "&method=removegroupmember&groupid=<?php echo $group->groupid;?>&userid="+id ;
-							new Ajax.Request(reqUrl, { method:'get',
-								onSuccess: function(transport){
-									var json = transport.responseText.evalJSON();
-									if(json.error){
-										alert(json.error[0].message);
-										return;
-									}
-									$('member-'+id).remove();
+							var reqUrl = SERVICE_ROOT + "&method=removegroupmember&groupid=<?php echo $group->groupid;?>&userid="+id;
+							try {
+								const json = await makeAPICall(reqUrl, 'GET');
+								if (json.error) {
+									alert(json.error[0].message);
+									return;
 								}
-							});
+								document.getElementById('member-'+id).remove();
+							} catch (err) {
+								alert("There was an error: "+err.message);
+								console.log(err)
+							}								
 						} else {
 							//uncheck
-							$('remove-'+id).checked = false;
+							document.getElementById('remove-'+id).checked = false;
 						}
 					}
-					function rejectpendingmember(user){
+					async function rejectpendingmember(user){
 						var id = user.id.replace('reject-','');
-						var username = $('pendingname-'+id).value;
+						var username = document.getElementById('pendingname-'+id).value;
 						var answer = confirm("<?php echo $LNG->GROUP_FORM_REJECT_MESSAGE_PART1;?> "+ username +" <?php echo $LNG->GROUP_FORM_REJECT_MESSAGE_PART2; ?>");
 						if(answer){
 							//send request
-							var reqUrl = SERVICE_ROOT + "&method=rejectgroupmemberjoin&groupid=<?php echo $group->groupid;?>&userid="+id ;
-							new Ajax.Request(reqUrl, { method:'get',
-								onSuccess: function(transport){
-									var json = transport.responseText.evalJSON();
-									if(json.error){
-										alert(json.error[0].message);
-										return;
-									}
-									$('pendingmember-'+id).remove();
-								}
-							});
-						} else {
+							var reqUrl = SERVICE_ROOT + "&method=rejectgroupmemberjoin&groupid=<?php echo $group->groupid;?>&userid="+id;
+							try {
+								const json = await makeAPICall(reqUrl, 'GET');
+								if (json.error) {
+									alert(json.error[0].message);
+									return;
+								}							
+								document.getElementById('pendingmember-'+id).remove();
+							} catch (err) {
+								alert("There was an error: "+err.message);
+								console.log(err)
+							}						} else {
 							//uncheck
-							$('reject-'+id).checked = false;
+							document.getElementById('reject-'+id).checked = false;
 						}
 					}
-					function approvependingmember(user){
+					async function approvependingmember(user){
 						var id = user.id.replace('approve-','');
-						var username = $('pendingname-'+id).value;
+						var username = document.getElementById('pendingname-'+id).value;
 						var answer = confirm("<?php echo $LNG->GROUP_FORM_APPROVE_MESSAGE_PART1;?> "+ username +" <?php echo $LNG->GROUP_FORM_APPROVE_MESSAGE_PART2; ?>");
 						if(answer){
 							//send request
-							var reqUrl = SERVICE_ROOT + "&method=approvegroupmemberjoin&groupid=<?php echo $group->groupid;?>&userid="+id ;
-							new Ajax.Request(reqUrl, { method:'get',
-								onSuccess: function(transport){
-									var json = transport.responseText.evalJSON();
-									if(json.error){
-										alert(json.error[0].message);
-										return;
-									}
-									// refresh page.
-									window.location.reload();
-									//$('pendingmember-'+id).remove();
-								}
-							});
-						} else {
+							var reqUrl = SERVICE_ROOT + "&method=approvegroupmemberjoin&groupid=<?php echo $group->groupid;?>&userid="+id;
+							try {
+								const json = await makeAPICall(reqUrl, 'GET');
+								if (json.error) {
+									alert(json.error[0].message);
+									return;
+								}							
+								// refresh page.
+								window.location.reload();
+								//document.getElementById('pendingmember-'+id).remove();
+							} catch (err) {
+								alert("There was an error: "+err.message);
+								console.log(err)
+							}						} else {
 							//uncheck
-							$('approve-'+id).checked = false;
+							document.getElementById('approve-'+id).checked = false;
 						}
 					}
-					function deletegroup(){
+					async function deletegroup(){
 						var answer = confirm("Are you sure you want to delete the group '<?php echo $group->name;?>'?");
 						if(answer){
 							//send request
 							var reqUrl = SERVICE_ROOT + "&method=deletegroup&groupid=<?php echo $group->groupid;?>";
-
-							new Ajax.Request(reqUrl, { method:'get',
-								onSuccess: function(transport){
-									var json = transport.responseText.evalJSON();
-									if(json.error){
-										alert(json.error[0].message);
-										return;
-									}
-									alert("Group '<?php echo $group->name;?>' has now been deleted.");
-									window.location.href = "groupedit.php";
-								}
-							});
+							try {
+								const json = await makeAPICall(reqUrl, 'GET');
+								if (json.error) {
+									alert(json.error[0].message);
+									return;
+								}	
+								alert("Group '<?php echo $group->name;?>' has now been deleted.");
+								window.location.href = "groupedit.php";
+							} catch (err) {
+								alert("There was an error: "+err.message);
+								console.log(err)
+							}								
 						}
 					}
 					function checkForm() {
-						var checkname = ($('groupname').value).trim();
+						var checkname = (document.getElementById('groupname').value).trim();
 						if (checkname == ""){
 							alert("<?php echo $LNG->GROUP_FORM_NAME_ERROR; ?>");
 							return false;
 						}
-						$('addgroupform').style.cursor = 'wait';
+						document.getElementById('addgroupform').style.cursor = 'wait';
 						return true;
 					}
 				<?php } ?>

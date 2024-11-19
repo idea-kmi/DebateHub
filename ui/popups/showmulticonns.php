@@ -186,7 +186,7 @@
 		return connDiv;
 	}
 
-	function getConnections(){
+	async function getConnections(){
 		if (connectionids != "") {
 
 			const connectiondetails = document.getElementById("connectiondetails");
@@ -194,24 +194,22 @@
 			connectiondetails.appendChild(getLoading("(Loading connections...)"));
 
 			var reqUrl = SERVICE_ROOT + "&method=getmulticonnections&connectionids="+connectionids;
-
-			//alert(reqUrl);
-
-			new Ajax.Request(reqUrl, { method:'get',
-		  			onSuccess: function(transport){
-		  				var json = transport.responseText.evalJSON();
-		     			if(json.error){
-		      				alert(json.error[0].message);
-		      				return;
-		      			}
-						if(json.connectionset[0].connections.length > 0){
-							connectiondetails.innerHTML = "";
-							displayMultipleConnections(connectiondetails, json.connectionset[0].connections, 1, 'right', false, 'active')
-						} else {
-							connectiondetails.innerHTML = "<p><h3>No Connections found</h3></p>";
-						}
-		       		}
-		      	});
+			try {
+				const json = await makeAPICall(reqUrl, 'GET');
+				if (json.error) {
+					alert(json.error[0].message);
+					return;
+				}
+				if(json.connectionset[0].connections.length > 0){
+					connectiondetails.innerHTML = "";
+					displayMultipleConnections(connectiondetails, json.connectionset[0].connections, 1, 'right', false, 'active')
+				} else {
+					connectiondetails.innerHTML = "<p><h3>No Connections found</h3></p>";
+				}
+			} catch (err) {
+				alert("There was an error: "+err.message);
+				console.log(err)
+			}
 		} else if (window.opener.getLastConnections) {
 			connections = window.opener.getLastConnections();
 			if (connections != "" && connections.length > 0){

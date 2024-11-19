@@ -47,53 +47,54 @@
 	/**
 	 * load child list on solutionas for built froms.
 	 */
-	function getNodes(){
+	async function getNodes(){
 
 		var reqUrl = SERVICE_ROOT + "&method=getconnectionsbynode&style=long&sort=DESC&orderby=date&status=<?php echo $CFG->STATUS_ACTIVE; ?>";
 		reqUrl += "&filterlist=<?php echo $CFG->LINK_BUILT_FROM; ?>&filternodetypes=Solution&scope=all&start=0&max=-1&nodeid="+nodeid;
+		
+		try {
+			const json = await makeAPICall(reqUrl, 'POST');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}
 
-		new Ajax.Request(reqUrl, { method:'post',
-			onSuccess: function(transport){
-				var json = transport.responseText.evalJSON();
-				if(json.error){
-					alert(json.error[0].message);
-					return;
+			var conns = json.connectionset[0].connections;
+
+			document.getElementById("builtfromnodes").innerHTML = "";
+
+			if (conns.length > 0) {
+				var nodes = new Array();
+				for(var i=0; i< conns.length; i++){
+					var c = conns[i].connection;
+					var fN = c.from[0].cnode;
+					var tN = c.to[0].cnode;
+
+					if (fN.nodeid == nodeid) {
+						var next = c.to[0];
+						next.cnode['connection'] = c;
+						next.cnode['parentid'] = "";
+						nodes.push(next);
+					}
 				}
 
-				var conns = json.connectionset[0].connections;
-
-				$("builtfromnodes").innerHTML = "";
-
-				if (conns.length > 0) {
-					var nodes = new Array();
-					for(var i=0; i< conns.length; i++){
-						var c = conns[i].connection;
-						var fN = c.from[0].cnode;
-						var tN = c.to[0].cnode;
-
-						if (fN.nodeid == nodeid) {
-							var next = c.to[0];
-							next.cnode['connection'] = c;
-							next.cnode['parentid'] = "";
-							nodes.push(next);
-						}
-					}
-
-					if (nodes.length > 0){
-						displayIdeaList($("builtfromnodes"),nodes,parseInt(0),true,'builtfrom'+nodeid, 'retired', <?php echo $CFG->STATUS_RETIRED; ?>);
-					} else {
-						$("builtfromnodes").update("<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>");
-					}
+				if (nodes.length > 0){
+					displayIdeaList(document.getElementById("builtfromnodes"),nodes,parseInt(0),true,'builtfrom'+nodeid, 'retired', <?php echo $CFG->STATUS_RETIRED; ?>);
+				} else {
+					document.getElementById("builtfromnodes").innerHTML = "<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>";
 				}
 			}
-		});
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	}
 
     /**
      *  set which tab to show and load first
      */
     window.addEventListener('load', function() {
-	    $('dialogheader').insert('<?php echo '<span style="color: black">'.$node->name.'</span><br>'.$LNG->BUILTFROM_DIALOG_TITLE; ?>');
+	    document.getElementById('dialogheader').insert('<?php echo '<span style="color: black">'.$node->name.'</span><br>'.$LNG->BUILTFROM_DIALOG_TITLE; ?>');
         getNodes();
     });
 //]]>

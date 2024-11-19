@@ -30,11 +30,11 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 var forcedirectedGraph = null;
 
 function loadExploreGroupNet(){
-	$("network-group-div").innerHTML = "";
+	document.getElementById("network-group-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("network-group-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("network-group-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -53,7 +53,7 @@ function loadExploreGroupNet(){
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
-	$("network-group-div").insert(outerDiv);
+	document.getElementById("network-group-div").insert(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraph('graphIssueDiv', '');
 
@@ -62,8 +62,8 @@ function loadExploreGroupNet(){
 	// THE TOOLBAR
 	var toolbar = createGraphToolbar(forcedirectedGraph, "network-group-div");
 
-	$("network-group-div").insert({top: toolbar});
-	$("network-group-div").insert({top: keybar});
+	document.getElementById("network-group-div").insert({top: toolbar});
+	document.getElementById("network-group-div").insert({top: keybar});
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -77,7 +77,7 @@ function loadExploreGroupNet(){
 	loadIssueData(forcedirectedGraph, toolbar, messagearea);
 }
 
-function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
+async function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
 	messagearea.innerHTML = "";
 	messagearea.appendChild(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
@@ -85,7 +85,7 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 	var nodetypes = "";
 
 	var count = BASE_TYPES.length;
-	for(var i=0; i<count; i++){
+	for(var i=0; i < count; i++){
 		if (i == 0) {
 			nodetypes += BASE_TYPES[i];
 		} else {
@@ -110,45 +110,39 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
 	//request to get the current connections
 	var reqUrl = SERVICE_ROOT + "&method=getconnectionsbygroup&"+Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			var json = null;
-			try {
-				json = transport.responseText.evalJSON();
-			} catch(e) {
-				alert(e);
-			}
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var conns = json.connectionset[0].connections;
-			//alert("conns: "+conns.length);
-			let conslenth = 0;
-			if (conns.length > 0) {
-				for(var i=0; i< conns.length; i++){
-					var c = conns[i].connection;
-					if (addConnectionToFDGraph(c, forcedirectedGraph.graph)) {
-						conslenth++;	
-					}
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		var conns = json.connectionset[0].connections;
+		//alert("conns: "+conns.length);
+		let conslenth = 0;
+		if (conns.length > 0) {
+			for(var i=0; i< conns.length; i++){
+				var c = conns[i].connection;
+				if (addConnectionToFDGraph(c, forcedirectedGraph.graph)) {
+					conslenth++;	
 				}
 			}
-
-			$('graphConnectionCount').innerHTML = "";
-			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
-
-			if (conns.length > 0) {
-				computeMostConnectedNode(forcedirectedGraph);
-				layoutAndAnimateFD(forcedirectedGraph, messagearea);
-				toolbar.style.display = 'block';
-			} else {
-				messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-				toolbar.style.display = 'none';
-			}
 		}
-	});
+
+		document.getElementById('graphConnectionCount').innerHTML = "";
+		document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
+
+		if (conns.length > 0) {
+			computeMostConnectedNode(forcedirectedGraph);
+			layoutAndAnimateFD(forcedirectedGraph, messagearea);
+			toolbar.style.display = 'block';
+		} else {
+			messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+			toolbar.style.display = 'none';
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}	
 }
 
 loadExploreGroupNet();

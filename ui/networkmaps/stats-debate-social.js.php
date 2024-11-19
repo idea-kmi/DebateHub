@@ -29,11 +29,11 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 function loadSocialDebateNet() {
 
-	$("social-debate-div").innerHTML = "";
+	document.getElementById("social-debate-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("social-debate-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("social-debate-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 1
@@ -51,7 +51,7 @@ function loadSocialDebateNet() {
 	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
-	$("social-debate-div").insert(outerDiv);
+	document.getElementById("social-debate-div").insert(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraphSocial('graphUserDiv', "");
 
@@ -60,8 +60,8 @@ function loadSocialDebateNet() {
 	// THE TOOLBAR
 	var toolbar = createSocialGraphToolbar(forcedirectedGraph, "social-debate-div");
 
-	$("social-debate-div").insert({top: toolbar});
-	$("social-debate-div").insert({top: keybar});
+	document.getElementById("social-debate-div").insert({top: toolbar});
+	document.getElementById("social-debate-div").insert({top: keybar});
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -75,7 +75,7 @@ function loadSocialDebateNet() {
 	loadSocialData(forcedirectedGraph, toolbar, messagearea);
 }
 
-function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
+async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
 	messagearea.innerHTML = "";
 	messagearea.appendChild(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
@@ -110,48 +110,44 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
 	var reqUrl = SERVICE_ROOT + "&method=getconnectionsbypathbydepth"+extra+"&" + Object.toQueryString(args);
 
-	new Ajax.Request(reqUrl, { method:'post',
-  			onSuccess: function(transport){
-  				var json = null;
-  				try {
-  					json = transport.responseText.evalJSON();
-  				} catch(e) {
-  					alert(e);
-  				}
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
 
-      			var conns = json.connectionset[0].connections;
-				//$('graphConnectionCount').innerHTML = "";
-				//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
+		var conns = json.connectionset[0].connections;
+		//document.getElementById('graphConnectionCount').innerHTML = "";
+		//document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
-				let concount = 0;
-      			if (conns.length > 0) {
-	      			for(var i=0; i< conns.length; i++){
-	      				var c = conns[i].connection;
-						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
-							concount++;
-						}
-	      			}
-	      		}
-
-				let socialcount = 0;
-				for(var i in forcedirectedGraph.graph.nodes) {
-					socialcount++;
+		let concount = 0;
+		if (conns.length > 0) {
+			for(var i=0; i< conns.length; i++){
+				var c = conns[i].connection;
+				if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
+					concount++;
 				}
+			}
+		}
 
-				if (concount > 0 && socialcount > 0) {
-					computeMostConnectedNode(forcedirectedGraph);
-					layoutAndAnimateFD(forcedirectedGraph, messagearea);
-					toolbar.style.display = 'block';
-				} else {
-					messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-					toolbar.style.display = 'none';
-				}
-      		}
-      	});
+		let socialcount = 0;
+		for(var i in forcedirectedGraph.graph.nodes) {
+			socialcount++;
+		}
+
+		if (concount > 0 && socialcount > 0) {
+			computeMostConnectedNode(forcedirectedGraph);
+			layoutAndAnimateFD(forcedirectedGraph, messagearea);
+			toolbar.style.display = 'block';
+		} else {
+			messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+			toolbar.style.display = 'none';
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 loadSocialDebateNet();

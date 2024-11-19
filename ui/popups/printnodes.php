@@ -57,29 +57,29 @@
 //<![CDATA[
 	var dataurl = '<?php echo $dataurl; ?>'+'&filternodetypes='+encodeURIComponent('<?php echo $filternodetypes; ?>');
 
-	function getNodes(){
-		new Ajax.Request(dataurl, { method:'post',
-	  			onSuccess: function(transport){
-	  				var json = transport.responseText.evalJSON();
-	     			if(json.error){
-	      				alert(json.error[0].message);
-	      				return;
-	      			}
+	async function getNodes() {
+		try {
+			const json = await makeAPICall(reqUrl, 'POST');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}
+			document.getElementById("printnodes").innerHTML = "";
 
-					$("printnodes").innerHTML = "";
-
-					if(json.nodeset[0].nodes.length > 0) {
-						var lOL = displayReportNodes($("printnodes"), json.nodeset[0].nodes, 1);
-					}
-	       		}
-	      	});
+			if(json.nodeset[0].nodes.length > 0) {
+				var lOL = displayReportNodes(document.getElementById("printnodes"), json.nodeset[0].nodes, 1);
+			}
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
    }
 
     /**
      *  set which tab to show and load first
      */
     window.addEventListener('load', function() {
-	    $('dialogheader').insert('<?php echo $title; ?>');
+	    document.getElementById('dialogheader').insert('<?php echo $title; ?>');
         getNodes();
     });
 //]]>

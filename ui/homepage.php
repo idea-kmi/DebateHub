@@ -99,100 +99,90 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 	/**
 	*	load my groups
 	*/
-	function loadmygroups(){
+	async function loadmygroups(){
 		const container = document.getElementById('mygroupsBar');
 		container.innerHTML = "";
 		container.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getmygroups&start=0&max=-1&orderby=date&sort=DESC";
-		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport){
-				try {
-					var json = transport.responseText.evalJSON();
-				} catch(err) {
-					console.log(err);
-					loadrecentgroups();
-					return;
-				}
-				if(json.error){
-					console.log(json.error[0].message);
-					loadrecentgroups();
-					return;
-				}
-				container.innerHTML = "";
-				if(json.groupset[0].groups.length > 0){
-					container.style.width = (json.groupset[0].groups.length*450)+'px';
-					displayGroups(container,json.groupset[0].groups,0, false, true);
-					document.getElementById("tab-content-home-recent-mygroup-div").style.display = 'block';
-				} else {
-					loadrecentgroups();
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				loadrecentgroups();
+				return;
+			}		
+			container.innerHTML = "";
+			if(json.groupset[0].groups.length > 0){
+				container.style.width = (json.groupset[0].groups.length*450)+'px';
+				displayGroups(container,json.groupset[0].groups,0, false, true);
+				document.getElementById("tab-content-home-recent-mygroup-div").style.display = 'block';
+			} else {
+				loadrecentgroups();
 			}
-		});
+		} catch (err) {
+			alert("There was an error loading your groups: "+err.message);
+			loadrecentgroups();
+			console.log(err)
+		}	
 	}
 
 	/**
 	*	load my issues
 	*/
-	function loadmyissues() {
+	async function loadmyissues() {
 		const container = document.getElementById('myissuesBar');
 		container.innerHTML = "";
 		container.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getnodesbyuser&start=0&max=-1&orderby=date&sort=DESC&filternodetypes=Issue&userid="+USER;
-		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport) {
-				try {
-					var json = transport.responseText.evalJSON();
-				} catch(err) {
-					console.log(err);
-					loadrecentissues();
-					return;
-				}
-				if(json.error){
-					console.log(json.error[0].message);
-					loadrecentissues();
-					return;
-				}
-				//display nodes
-				container.innerHTML = "";
-				if(json.nodeset[0].nodes.length > 0){
-					container.style.width = (json.nodeset[0].nodes.length*450)+'px';
-					displayIssueNodes(428, 160, container,json.nodeset[0].nodes,0, false,'recentissues','inactive', false, false, true);
-					document.getElementById("tab-content-home-recent-mydebate-div").style.display = 'block';
-				} else {
-					loadrecentissues();
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				loadrecentissues();
+				return;
+			}		
+
+			//display nodes
+			container.innerHTML = "";
+			if(json.nodeset[0].nodes.length > 0){
+				container.style.width = (json.nodeset[0].nodes.length*450)+'px';
+				displayIssueNodes(428, 160, container,json.nodeset[0].nodes,0, false,'recentissues','inactive', false, false, true);
+				document.getElementById("tab-content-home-recent-mydebate-div").style.display = 'block';
+			} else {
+				loadrecentissues();
 			}
-		});
+		} catch (err) {
+			alert("There was an error loading your debates: "+err.message);
+			loadrecentissues();
+			console.log(err)
+		}	
 	}
 
 	/**
 	*	load latest groups
 	*/
-	function loadrecentgroups() {
+	async function loadrecentgroups() {
 		const container = document.getElementById('groupsBar');
 		container.innerHTML = "";
 		container.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 		var reqUrl = SERVICE_ROOT + "&method=getgroupsbyglobal&start=0&max=4&orderby=members&sort=DESC";
 		document.getElementById("tab-content-home-recent-group-div").style.display = 'block';
-		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport){
-				try {
-					var json = transport.responseText.evalJSON();
-				} catch(err) {
-					console.log(err);
-				}
-				if(json.error){
-					alert(json.error[0].message);
-					return;
-				}
-				container.innerHTML = "";
-				if(json.groupset[0].groups.length > 0){
-					//alert((json.groupset[0].groups.length*450));
-					container.style.width = (json.groupset[0].groups.length*450)+'px';
-					displayHomeGroups(container,json.groupset[0].groups,0, 428,140, false, true);
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}		
+			container.innerHTML = "";
+			if(json.groupset[0].groups.length > 0){
+				//alert((json.groupset[0].groups.length*450));
+				container.style.width = (json.groupset[0].groups.length*450)+'px';
+				displayHomeGroups(container,json.groupset[0].groups,0, 428,140, false, true);
 			}
-		});
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	}
 
 	/**

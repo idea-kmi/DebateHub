@@ -139,8 +139,8 @@
 
 	function checkForm() {
 	//check dates
-	var startdate = ($('startdate').value).trim();
-	var enddate = ($('enddate').value).trim();
+	var startdate = (document.getElementById('startdate').value).trim();
+	var enddate = (document.getElementById('enddate').value).trim();
 
 	if (startdate == "") {
 		alert("<?php echo $LNG->STATS_START_DATE_ERROR; ?>");

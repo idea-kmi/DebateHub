@@ -31,11 +31,11 @@ var forcedirectedGraph = null;
 
 function loadSocialNet() {
 
-	$("tab-content-user-net").innerHTML = "";
+	document.getElementById("tab-content-user-net").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("tab-content-user-net").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("tab-content-user-net").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -53,7 +53,7 @@ function loadSocialNet() {
 	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
-	$("tab-content-user-net").insert(outerDiv);
+	document.getElementById("tab-content-user-net").insert(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraphSocial('graphUserDiv', "");
 
@@ -62,8 +62,8 @@ function loadSocialNet() {
 	// THE TOOLBAR
 	var toolbar = createSocialGraphToolbar(forcedirectedGraph, "tab-content-user-net");
 
-	$("tab-content-user-net").insert({top: toolbar});
-	$("tab-content-user-net").insert({top: keybar});
+	document.getElementById("tab-content-user-net").insert({top: toolbar});
+	document.getElementById("tab-content-user-net").insert({top: keybar});
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -77,7 +77,7 @@ function loadSocialNet() {
 	loadSocialData(forcedirectedGraph, toolbar, messagearea);
 }
 
-function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
+async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
 	messagearea.innerHTML = "";
 	messagearea.appendChild(getLoading("<?php echo $LNG->NETWORKMAPS_SOCIAL_LOADING_MESSAGE; ?>"));
@@ -85,7 +85,7 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 	var nodetypes = "";
 
 	var count = BASE_TYPES.length;
-	for(var i=0; i<count; i++){
+	for(var i=0; i < count; i++){
 		if (i == 0) {
 			nodetypes += BASE_TYPES[i];
 		} else {
@@ -112,51 +112,45 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
 	//request to get the current connections
 	var reqUrl = SERVICE_ROOT + "&method=getconnectionsbysocial&"+Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		var conns = json.connectionset[0].connections;
+		//document.getElementById(('graphConnectionCount').innerHTML = "";
+		//document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
-	new Ajax.Request(reqUrl, { method:'post',
-  			onSuccess: function(transport){
-  				var json = null;
-  				try {
-  					json = transport.responseText.evalJSON();
-  				} catch(e) {
-  					alert(e);
-  				}
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
-
-      			var conns = json.connectionset[0].connections;
-				//$('graphConnectionCount').innerHTML = "";
-				//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
-
-      			//alert("connection count = "+conns.length);
-				let concount = 0;
-      			if (conns.length > 0) {
-      				var connectionadded = false;
-	      			for(var i=0; i< conns.length; i++){
-	      				var c = conns[i].connection;
-						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
-							concount++
-						}
-	      			}
+		//alert("connection count = "+conns.length);
+		let concount = 0;
+		if (conns.length > 0) {
+			var connectionadded = false;
+			for(var i=0; i< conns.length; i++){
+				var c = conns[i].connection;
+				if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
+					concount++
 				}
+			}
+		}
 
-				let socialcount = 0;
-				for(var i in forcedirectedGraph.graph.nodes) {
-					socialcount++;
-				}
+		let socialcount = 0;
+		for(var i in forcedirectedGraph.graph.nodes) {
+			socialcount++;
+		}
 
-				if (concount > 0 && socialcount > 0) {
-					computeMostConnectedNode(forcedirectedGraph);
-					layoutAndAnimateFD(forcedirectedGraph, messagearea);
-					toolbar.style.display = 'block';
-				} else {
-					messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-					toolbar.style.display = 'none';
-				}
-      		}
-      	});
+		if (concount > 0 && socialcount > 0) {
+			computeMostConnectedNode(forcedirectedGraph);
+			layoutAndAnimateFD(forcedirectedGraph, messagearea);
+			toolbar.style.display = 'block';
+		} else {
+			messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+			toolbar.style.display = 'none';
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 loadSocialNet();

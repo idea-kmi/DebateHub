@@ -603,8 +603,8 @@ function layoutAndAnimateFD(graphview, messagearea) {
 				transition: $jit.Trans.Elastic.easeOut,
 				duration: 500,
 				onComplete: function() {
-					var width = $(graphview.config.injectInto+'-outer').offsetWidth;
-					var height = $(graphview.config.injectInto+'-outer').offsetHeight;
+					var width = document.getElementById(graphview.config.injectInto+'-outer').offsetWidth;
+					var height = document.getElementById(graphview.config.injectInto+'-outer').offsetHeight;
 					clipInitialCanvas(graphview, width, height);
 
 					var size = graphview.canvas.getSize();

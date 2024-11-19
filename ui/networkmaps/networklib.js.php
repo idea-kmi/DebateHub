@@ -111,11 +111,11 @@ function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	link.insert('<span id="linkbuttonsvn"><i class="fas fa-expand-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?></span>');
 
 	var handler = function() {
-		if ($('header').style.display == "none") {
-			$('linkbuttonsvn').update('<i class="fas fa-expand-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>');
+		if (document.getElementById('header').style.display == "none") {
+			document.getElementById('linkbuttonsvn').innerHTML = '<i class="fas fa-expand-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>';
 			reduceMap(contentarea, forcedirectedGraph);
 		} else {
-			$('linkbuttonsvn').update('<i class="fas fa-compress-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>');
+			document.getElementById('linkbuttonsvn').innerHTML = '<i class="fas fa-compress-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>';
 			enlargeMap(contentarea, forcedirectedGraph);
 		}
 	};
@@ -448,34 +448,34 @@ function createEmbedNetworkGraphToolbar(forcedirectedGraph,contentarea) {
  * depending if it is reduced or enlarged at present.
  */
 function resizeFDGraph(graphview, contentarea, withInner){
-	if ($('header')&& $('header').style.display == "none") {
-		var width = $(contentarea).offsetWidth - 35;
+	if (document.getElementById('header')&& document.getElementById('header').style.display == "none") {
+		var width = document.getElementById(contentarea).offsetWidth - 35;
 		var height = getWindowHeight();
 		//alert(height);
 
-		if ($('graphkeydivtoolbar')) {
-			height -= $('graphkeydivtoolbar').offsetHeight;
+		if (document.getElementById('graphkeydivtoolbar')) {
+			height -= document.getElementById('graphkeydivtoolbar').offsetHeight;
 		}
-		if ($('graphmaintoolbar')) {
-			height -= $('graphmaintoolbar').offsetHeight;
+		if (document.getElementById('graphmaintoolbar')) {
+			height -= document.getElementById('graphmaintoolbar').offsetHeight;
 		}
-		//if ($('nodearealineartitle')) {
-		//	height -= $('nodearealineartitle').offsetHeight;
+		//if (document.getElementById('nodearealineartitle')) {
+		//	height -= document.getElementById('nodearealineartitle').offsetHeight;
 		//}
 		height -= 20;
 
 		//alert(height);
 
-		$(graphview.config.injectInto+'-outer').style.width = width+"px";
-		$(graphview.config.injectInto+'-outer').style.height = height+"px";
+		document.getElementById(graphview.config.injectInto+'-outer').style.width = width+"px";
+		document.getElementById(graphview.config.injectInto+'-outer').style.height = height+"px";
 
 		//if (withInner) {
 			resizeFDGraphCanvas(graphview, width, height);
 		//}
 	} else {
 		var size = calulateInitialGraphViewport(contentarea)
-		$(graphview.config.injectInto+'-outer').style.width = size.width+"px";
-		$(graphview.config.injectInto+'-outer').style.height = size.height+"px";
+		document.getElementById(graphview.config.injectInto+'-outer').style.width = size.width+"px";
+		document.getElementById(graphview.config.injectInto+'-outer').style.height = size.height+"px";
 
 		//if (withInner) {
 			resizeFDGraphCanvas(graphview, width, height);
@@ -488,51 +488,51 @@ function resizeFDGraph(graphview, contentarea, withInner){
 
 
 function calulateInitialGraphViewport(areaname) {
-	var w = $(areaname).offsetWidth; // - 30;
+	var w = document.getElementById(areaname).offsetWidth; // - 30;
 	var h = getWindowHeight();
 	//alert(h);
 
-	if ($('header')) {
-		h -= $('header').offsetHeight;
+	if (document.getElementById('header')) {
+		h -= document.getElementById('header').offsetHeight;
 	}
 
 	// The explore views toolbar
-	if ($('nodearealineartitle')) {
-		h -= $('nodearealineartitle').offsetHeight;
+	if (document.getElementById('nodearealineartitle')) {
+		h -= document.getElementById('nodearealineartitle').offsetHeight;
 	}
-	if ($('headertoolbar')) {
-		h -= $('headertoolbar').offsetHeight;
+	if (document.getElementById('headertoolbar')) {
+		h -= document.getElementById('headertoolbar').offsetHeight;
 		h -= 30;
 	}
 
-	if ($('graphkeydivtoolbar')) {
-		h -= $('graphkeydivtoolbar').offsetHeight;
+	if (document.getElementById('graphkeydivtoolbar')) {
+		h -= document.getElementById('graphkeydivtoolbar').offsetHeight;
 	}
-	if ($('graphmaintoolbar')) {
-		h -= $('graphmaintoolbar').offsetHeight;
+	if (document.getElementById('graphmaintoolbar')) {
+		h -= document.getElementById('graphmaintoolbar').offsetHeight;
 	}
 
 	// Main social Network
-	if ($('tabs')) { // +user social uses this
-		h -= $('tabs').offsetHeight;
+	if (document.getElementById('tabs')) { // +user social uses this
+		h -= document.getElementById('tabs').offsetHeight;
 	}
-	if ($('tab-content-user-title')) {
-		h -= $('tab-content-user-title').offsetHeight;
+	if (document.getElementById('tab-content-user-title')) {
+		h -= document.getElementById('tab-content-user-title').offsetHeight;
 		h -= 35;
 	}
-	if ($('tab-content-user-search')) {
-		h -= $('tab-content-user-search').offsetHeight;
+	if (document.getElementById('tab-content-user-search')) {
+		h -= document.getElementById('tab-content-user-search').offsetHeight;
 	}
-	if ($('usertabs')) {
-		h -= $('usertabs').offsetHeight;
+	if (document.getElementById('usertabs')) {
+		h -= document.getElementById('usertabs').offsetHeight;
 	}
 
 	// User social network
-	if ($('context')) {
-		h -= $('context').offsetHeight;
+	if (document.getElementById('context')) {
+		h -= document.getElementById('context').offsetHeight;
 	}
-	if ($('tab-content-user-bar')) {
-		h -= $('tab-content-user-bar').offsetHeight;
+	if (document.getElementById('tab-content-user-bar')) {
+		h -= document.getElementById('tab-content-user-bar').offsetHeight;
 		h -= 20;
 	}
 
@@ -545,38 +545,38 @@ function calulateInitialGraphViewport(areaname) {
  */
 function reduceMap(contentarea, forcedirectedGraph) {
 
-	if ($('header')) {
-		$('header').style.display="block";
+	if (document.getElementById('header')) {
+		document.getElementById('header').style.display="block";
 	}
 
 	// The explore views toolbar
-	if ($('headertoolbar')) {
-		$('headertoolbar').style.display="block";
+	if (document.getElementById('headertoolbar')) {
+		document.getElementById('headertoolbar').style.display="block";
 	}
-	if ($('nodearealineartitle')) {
-		$('nodearealineartitle').style.display="block";
+	if (document.getElementById('nodearealineartitle')) {
+		document.getElementById('nodearealineartitle').style.display="block";
 	}
 
 	// Main social Network
-	if ($('tabs')) { // +user social uses this
-		$('tabs').style.display="block";
+	if (document.getElementById('tabs')) { // +user social uses this
+		document.getElementById('tabs').style.display="block";
 	}
-	if ($('tab-content-user-title')) {
-		$('tab-content-user-title').style.display="block";
+	if (document.getElementById('tab-content-user-title')) {
+		document.getElementById('tab-content-user-title').style.display="block";
 	}
-	if ($('tab-content-user-search')) {
-		$('tab-content-user-search').style.display="block";
+	if (document.getElementById('tab-content-user-search')) {
+		document.getElementById('tab-content-user-search').style.display="block";
 	}
-	if ($('usertabs')) {
-		$('usertabs').style.display="block";
+	if (document.getElementById('usertabs')) {
+		document.getElementById('usertabs').style.display="block";
 	}
 
 	// User social network
-	if ($('context')) {
-		$('context').style.display="block";
+	if (document.getElementById('context')) {
+		document.getElementById('context').style.display="block";
 	}
-	if ($('tab-content-user-bar')) {
-		$('tab-content-user-bar').style.display="block";
+	if (document.getElementById('tab-content-user-bar')) {
+		document.getElementById('tab-content-user-bar').style.display="block";
 	}
 
 	resizeFDGraph(forcedirectedGraph, contentarea, true);
@@ -587,38 +587,38 @@ function reduceMap(contentarea, forcedirectedGraph) {
  */
 function enlargeMap(contentarea, forcedirectedGraph) {
 
-	if ($('header')) {
-		$('header').style.display="none";
+	if (document.getElementById('header')) {
+		document.getElementById('header').style.display="none";
 	}
 
 	// The explore views toolbar
-	if ($('headertoolbar')) {
-		$('headertoolbar').style.display="none";
+	if (document.getElementById('headertoolbar')) {
+		document.getElementById('headertoolbar').style.display="none";
 	}
-	if ($('nodearealineartitle')) {
-		$('nodearealineartitle').style.display="none";
+	if (document.getElementById('nodearealineartitle')) {
+		document.getElementById('nodearealineartitle').style.display="none";
 	}
 
 	// Main social Network
-	if ($('tabs')) { // +user social uses this
-		$('tabs').style.display="none";
+	if (document.getElementById('tabs')) { // +user social uses this
+		document.getElementById('tabs').style.display="none";
 	}
-	if ($('tab-content-user-title')) {
-		$('tab-content-user-title').style.display="none";
+	if (document.getElementById('tab-content-user-title')) {
+		document.getElementById('tab-content-user-title').style.display="none";
 	}
-	if ($('tab-content-user-search')) {
-		$('tab-content-user-search').style.display="none";
+	if (document.getElementById('tab-content-user-search')) {
+		document.getElementById('tab-content-user-search').style.display="none";
 	}
-	if ($('usertabs')) {
-		$('usertabs').style.display="none";
+	if (document.getElementById('usertabs')) {
+		document.getElementById('usertabs').style.display="none";
 	}
 
 	// User social network
-	if ($('context')) {
-		$('context').style.display="none";
+	if (document.getElementById('context')) {
+		document.getElementById('context').style.display="none";
 	}
-	if ($('tab-content-user-bar')) {
-		$('tab-content-user-bar').style.display="none";
+	if (document.getElementById('tab-content-user-bar')) {
+		document.getElementById('tab-content-user-bar').style.display="none";
 	}
 
 	resizeFDGraph(forcedirectedGraph, contentarea, true);

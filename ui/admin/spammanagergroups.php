@@ -191,7 +191,7 @@
 		}
 	}
 
-	function viewGroupTree(groupid, containerid, rootname, toggleRow, status) {
+	async function viewGroupTree(groupid, containerid, rootname, toggleRow, status) {
 
 		// close any opened divs
 		const divsArray = document.getElementsByName(rootname);
@@ -220,38 +220,30 @@
 			var reqUrl = SERVICE_ROOT + "&method=adminloadgroupchilddebates&groupid="+groupid+"&status="+status;
 
 			document.body.style.cursor = "wait"; 
-
-			new Ajax.Request(reqUrl, { method:'get',
-				onSuccess: function(transport){
-					var json = null;
-					try {
-						json = transport.responseText.evalJSON();
-					} catch(e) {
-						alert(e);
-					}
-					if(json.error){
-						alert(json.error[0].message);
-						return;
-					}
-					var nodes = json.nodeset[0].nodes;
-					if (nodes && nodes.length > 0) {		
-						for (let i=0; i< nodes.length; i++) {
-							let debatenode = nodes[i];
-							if (debatenode.cnode.children.length > 0) {
-								debatenode.cnode.istop = true;
-							}
-						}
-						document.body.style.cursor = "pointer"; 
-						containerObj.innerHTML = "";
-
-						displayConnectionNodes(containerObj, nodes, parseInt(0), true, groupid+"tree");
-					}					
-				},
-				onFailure: function(transport) {
-					document.body.style.cursor = "pointer"; 
-					containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+			try {
+				const json = await makeAPICall(reqUrl, 'GET');
+				if (json.error) {
+					alert(json.error[0].message);
+					return;
 				}
-			});
+				var nodes = json.nodeset[0].nodes;
+				if (nodes && nodes.length > 0) {		
+					for (let i=0; i< nodes.length; i++) {
+						let debatenode = nodes[i];
+						if (debatenode.cnode.children.length > 0) {
+							debatenode.cnode.istop = true;
+						}
+					}
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "";
+
+					displayConnectionNodes(containerObj, nodes, parseInt(0), true, groupid+"tree");
+				}					
+			} catch (err) {
+				document.body.style.cursor = "pointer"; 
+				containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+				console.log(err)
+			}
 		}
 	}
 	window.onload = init;

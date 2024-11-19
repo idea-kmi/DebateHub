@@ -665,8 +665,8 @@ function layoutAndAnimateSocial(graphview, messagearea) {
 		},
 		onComplete: function(){
 
-			if ($("innerfdmessage")) {
-				$("innerfdmessage").innerHTML="<?php echo $LNG->NETWORKMAPS_SCALING_MESSAGE; ?>";
+			if (document.getElementById("innerfdmessage")) {
+				document.getElementById("innerfdmessage").innerHTML="<?php echo $LNG->NETWORKMAPS_SCALING_MESSAGE; ?>";
 			}
 
 		  	graphview.animate({
@@ -674,8 +674,8 @@ function layoutAndAnimateSocial(graphview, messagearea) {
 				transition: $jit.Trans.Elastic.easeOut,
 				duration: 0,
 				onComplete: function() {
-					var width = $(graphview.config.injectInto+'-outer').offsetWidth;
-					var height = $(graphview.config.injectInto+'-outer').offsetHeight;
+					var width = document.getElementById(graphview.config.injectInto+'-outer').offsetWidth;
+					var height = document.getElementById(graphview.config.injectInto+'-outer').offsetHeight;
 					clipInitialCanvas(graphview, width, height);
 
 					var size = graphview.canvas.getSize();

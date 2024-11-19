@@ -32,33 +32,40 @@ function init() {
 
 	const date = new Date();
 	const datefield = document.getElementById("date");
-	datefield.update(date);
+	datefield.innerHTML = "";
+	datefield.appendChild(date);
 
 	const time = date.getTime();
 	const timefield = document.getElementById("time");
-	timefield.update(time);
+	timefield.innerHTML = "";
+	timefield.appendChild(time);
 
 	const offset = date.getTimezoneOffset();
 	const offsetfield = document.getElementById("offset");
-	offsetfield.update(offset);
+	offsetfield.innerHTML = "";
+	offsetfield.appendChild(offset);
 
 	const newtime = parseInt((time + (offset*60000))/1000);
 	const newtimefield = document.getElementById("newtime");
-	newtimefield.update(parseInt(newtime);
+	newtimefield.innerHTML = "";
+	newtimefield.appendChild(parseInt(newtime);
 
 	const localutc = date.toUTCString();
 	const localutcfield = document.getElementById("localutc");
-	localutcfield.update(localutc);
+	localutcfield.innerHTML = "";
+	localutcfield.appendChild(localutc);
 
 	const final = new Date(date.toUTCString());
 	const finaltime = final.getTime()/1000;
 	const finalfield = document.getElementById("final");
-	finalfield.update(finaltime);
+	finalfield.innerHTML = "";
+	finalfield.appendChild(finaltime);
 
 	var newDate = new Date();
 	newDate.setTime(finaltime*1000)
 	const reversefield = document.getElementById("reverse");
-	reversefield.update(newDate);
+	reversefield.innerHTML = "";
+	reversefield.appendChild(newDate);
 }
 
 window.onload = init;

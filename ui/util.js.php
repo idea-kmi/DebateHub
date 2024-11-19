@@ -1375,7 +1375,7 @@ function parseToXML(xmlStr) {
  * @param handler a function object to run once the auditing has returned (optional).
  * such as the state of the audited element.
  */
-function auditTesting(itemid, testelementid, testevent, state, handler) {
+async function auditTesting(itemid, testelementid, testevent, state, handler) {
 	var args = {};
 	args["trialname"] = '<?php echo $CFG->TEST_TRIAL_NAME; ?>';
     args['itemid'] = itemid;
@@ -1384,20 +1384,20 @@ function auditTesting(itemid, testelementid, testevent, state, handler) {
     args['state'] = parseToXML(state);
 
 	var reqUrl = SERVICE_ROOT + "&method=audittesting&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			} else {
-				if (handler) {
-					handler();
-				}
-				//alert("OK");
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+		if (handler) {
+			handler();
 		}
-	});
+		//alert("OK");
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
 	return;
 }
@@ -1500,199 +1500,190 @@ function isVisible(element) {
     return element.offsetWidth > 0 && element.offsetHeight > 0 && getComputedStyle(element).visibility !== 'hidden';
 }
 
-function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issuenodeid) {
+async function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea, issuenodeid) {
 
 	alertmessagearea.innerHTML = "";
 	alertmessagearea.appendChild(getLoading("<?php echo $LNG->LOADING_MESSAGE; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getalerts&" + Object.toQueryString(args);
 	//alert(reqUrl);
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
+			return;
+		}
+		var data = json.alertdata[0];
+		//alert(data.toSource());
+		if (data && (data.alertarray.length > 0 || data.userarray.length > 0)) {
+			var alertarray = data.alertarray[0];
+			var userarray = data.userarray[0];
+			//alert(alertarray.toSource());
 
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			//alert(transport.responseText);
-
-			var json = null;
-			try {
-				json = transport.responseText.evalJSON();
-			} catch(e) {
-				alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
-				return;
-			}
-			if(json.error){
-				alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
-				return;
-			}
-
-			var data = json.alertdata[0];
-			//alert(data.toSource());
-			if (data && (data.alertarray.length > 0 || data.userarray.length > 0)) {
-				var alertarray = data.alertarray[0];
-				var userarray = data.userarray[0];
-				//alert(alertarray.toSource());
-
-				// Process Users
-				var usersDataArray = new Array();
-				if (data.users) {
-					var userObj = data.users[0];
-					var userSet = userObj.userset;
-					var users = userSet.users;
-					for (user in users) {
-						if (users[user].user) {
-							var cuser = users[user].user;
-							if (cuser.profileid) {
-								usersDataArray[cuser.profileid] = cuser;
-							} else {
-								usersDataArray[cuser.userid] = cuser;
-							}
+			// Process Users
+			var usersDataArray = new Array();
+			if (data.users) {
+				var userObj = data.users[0];
+				var userSet = userObj.userset;
+				var users = userSet.users;
+				for (user in users) {
+					if (users[user].user) {
+						var cuser = users[user].user;
+						if (cuser.profileid) {
+							usersDataArray[cuser.profileid] = cuser;
+						} else {
+							usersDataArray[cuser.userid] = cuser;
 						}
 					}
 				}
+			}
 
-				// Process Nodes
-				var nodesArray = new Array();
-				if (data.nodes) {
-					var nodesObj = data.nodes[0];
-					var nodeSet = nodesObj.nodeset;
-					var nodes = nodeSet.nodes;
-					for (node in nodes) {
-						if (nodes[node].cnode) {
-							var cnode = nodes[node].cnode;
-							nodesArray[cnode.nodeid] = cnode;
-						}
+			// Process Nodes
+			var nodesArray = new Array();
+			if (data.nodes) {
+				var nodesObj = data.nodes[0];
+				var nodeSet = nodesObj.nodeset;
+				var nodes = nodeSet.nodes;
+				for (node in nodes) {
+					if (nodes[node].cnode) {
+						var cnode = nodes[node].cnode;
+						nodesArray[cnode.nodeid] = cnode;
 					}
 				}
+			}
 
 
-				// process user specific alerts
-				var i=0;
-				for (userid in userarray) {
-					if (userarray.hasOwnProperty(userid)) {
-						if (USER && USER === userid) {
-							var user = usersDataArray[userid];
-							/*if (user.homepage && user.homepage != "") {
-								useralertDiv.innerHTML = '<br><h2 style="font-size:10pt"><a href="'+user.homepage+'" target="_blank">'+user.name+'</a></h2>';
-							} else {
-								useralertDiv.innerHTML = '<br><h2 style="font-size:10pt">'+user.name+'</h2>';
-							}*/
+			// process user specific alerts
+			var i=0;
+			for (userid in userarray) {
+				if (userarray.hasOwnProperty(userid)) {
+					if (USER && USER === userid) {
+						var user = usersDataArray[userid];
+						/*if (user.homepage && user.homepage != "") {
+							useralertDiv.innerHTML = '<br><h2 style="font-size:10pt"><a href="'+user.homepage+'" target="_blank">'+user.name+'</a></h2>';
+						} else {
+							useralertDiv.innerHTML = '<br><h2 style="font-size:10pt">'+user.name+'</h2>';
+						}*/
 
-							var alertTypes = userarray[userid][0];
-							for (alerttype in alertTypes) {
-								if (alertTypes.hasOwnProperty(alerttype)) {
-									//alert(alertype);
-									var alertName = getAlertName(alerttype);
-									var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
-									title.innerHTML = alertName;
-									var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
-									title.appendChild(countspan);
-									if (i > 0) {
-										title.style.marginTop = '10px';
-									} else {
-										title.style.marginTop = '0px';
-									}
-									useralertDiv.appendChild(title);
-									i++;
-									var posts = alertTypes[alerttype][0];
-									var k=0;
-									for (post in posts) {
-										if (posts.hasOwnProperty(post)) {
-											k++;
-											var display = 'block';
-											if (k>ALERT_COUNT) {
-												display = 'none';
-											}
-											var postid = posts[post];
-											if (nodesArray[postid]) {
-												var node = nodesArray[postid];
-												createAlertNodeLink(alerttype, postid, node, useralertDiv, display);
-											} else if (usersDataArray[postid]) {
-												var inneruser = usersDataArray[postid];
-												createAlertUserLink(alerttype, postid, inneruser, useralertDiv, display);
-											}
+						var alertTypes = userarray[userid][0];
+						for (alerttype in alertTypes) {
+							if (alertTypes.hasOwnProperty(alerttype)) {
+								//alert(alertype);
+								var alertName = getAlertName(alerttype);
+								var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
+								title.innerHTML = alertName;
+								var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
+								title.appendChild(countspan);
+								if (i > 0) {
+									title.style.marginTop = '10px';
+								} else {
+									title.style.marginTop = '0px';
+								}
+								useralertDiv.appendChild(title);
+								i++;
+								var posts = alertTypes[alerttype][0];
+								var k=0;
+								for (post in posts) {
+									if (posts.hasOwnProperty(post)) {
+										k++;
+										var display = 'block';
+										if (k>ALERT_COUNT) {
+											display = 'none';
+										}
+										var postid = posts[post];
+										if (nodesArray[postid]) {
+											var node = nodesArray[postid];
+											createAlertNodeLink(alerttype, postid, node, useralertDiv, display);
+										} else if (usersDataArray[postid]) {
+											var inneruser = usersDataArray[postid];
+											createAlertUserLink(alerttype, postid, inneruser, useralertDiv, display);
 										}
 									}
-									countspan.innerHTML = "("+k+")";
-									if (k>ALERT_COUNT) {
-										var morebutton = new Element('span', {'class':'active','style':'color:#A6156C;margin-bottom:10px;'});
-										morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
-										morebutton.alerttype = alerttype;
-										morebutton.addEventListener('click', function() {
-											toggleAlertPosts(this, this.alerttype);
-										});
-										useralertDiv.appendChild(morebutton);
-									}
 								}
-							}
-						}
-					}
-				}
-
-				var hasData = false;
-				if (i > 0) {
-					hasData = true;
-					nodealertDiv.style.marginTop = "20px";
-				}
-
-				// process map specific alerts
-				i=0;
-				for (alerttype in alertarray) {
-					if (alertarray.hasOwnProperty(alerttype)) {
-						i++;
-						var alertName = getAlertName(alerttype);
-						var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
-						title.innerHTML = alertName;
-						var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
-						title.appendChild(countspan);
-						if (i > 0) {
-							title.style.marginTop = '10px';
-						} else {
-							title.style.marginTop = '0px';
-						}
-						nodealertDiv.appendChild(title);
-						var posts = alertarray[alerttype][0];
-						var k=0;
-						for (post in posts) {
-							if (posts.hasOwnProperty(post)) {
-								k++;
-								var display = 'block';
+								countspan.innerHTML = "("+k+")";
 								if (k>ALERT_COUNT) {
-									display = 'none';
-								}
-								var postid = posts[post];
-								if (nodesArray[postid]) {
-									var node = nodesArray[postid];
-									createAlertNodeLink(alerttype, postid, node, nodealertDiv, display);
-								} else if (usersDataArray[postid]) {
-									var inneruser = usersDataArray[postid];
-									createAlertUserLink(alerttype, postid, inneruser, nodealertDiv, display);
+									var morebutton = new Element('span', {'class':'active','style':'color:#A6156C;margin-bottom:10px;'});
+									morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
+									morebutton.alerttype = alerttype;
+									morebutton.addEventListener('click', function() {
+										toggleAlertPosts(this, this.alerttype);
+									});
+									useralertDiv.appendChild(morebutton);
 								}
 							}
 						}
-						countspan.innerHTML = "("+k+")";
-						if (k>ALERT_COUNT) {
-							var morebutton = new Element('div', {'class':'active','style':'color:#A6156C;margin-top:5px;margin-bottom:10px;'});
-							morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
-							morebutton.alerttype = alerttype;
-							morebutton.addEventListener('click', function() {
-								toggleAlertPosts(this, this.alerttype);
-							});
-							nodealertDiv.appendChild(morebutton);
-						}
 					}
 				}
-				if (i > 0) {
-					hasData = true;
+			}
+
+			var hasData = false;
+			if (i > 0) {
+				hasData = true;
+				nodealertDiv.style.marginTop = "20px";
+			}
+
+			// process map specific alerts
+			i=0;
+			for (alerttype in alertarray) {
+				if (alertarray.hasOwnProperty(alerttype)) {
+					i++;
+					var alertName = getAlertName(alerttype);
+					var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
+					title.innerHTML = alertName;
+					var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
+					title.appendChild(countspan);
+					if (i > 0) {
+						title.style.marginTop = '10px';
+					} else {
+						title.style.marginTop = '0px';
+					}
+					nodealertDiv.appendChild(title);
+					var posts = alertarray[alerttype][0];
+					var k=0;
+					for (post in posts) {
+						if (posts.hasOwnProperty(post)) {
+							k++;
+							var display = 'block';
+							if (k>ALERT_COUNT) {
+								display = 'none';
+							}
+							var postid = posts[post];
+							if (nodesArray[postid]) {
+								var node = nodesArray[postid];
+								createAlertNodeLink(alerttype, postid, node, nodealertDiv, display);
+							} else if (usersDataArray[postid]) {
+								var inneruser = usersDataArray[postid];
+								createAlertUserLink(alerttype, postid, inneruser, nodealertDiv, display);
+							}
+						}
+					}
+					countspan.innerHTML = "("+k+")";
+					if (k>ALERT_COUNT) {
+						var morebutton = new Element('div', {'class':'active','style':'color:#A6156C;margin-top:5px;margin-bottom:10px;'});
+						morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
+						morebutton.alerttype = alerttype;
+						morebutton.addEventListener('click', function() {
+							toggleAlertPosts(this, this.alerttype);
+						});
+						nodealertDiv.appendChild(morebutton);
+					}
 				}
-				if (hasData) {
-					alertmessagearea.innerHTML="";
-				} else {
-					alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
-				}
+			}
+			if (i > 0) {
+				hasData = true;
+			}
+			if (hasData) {
+				alertmessagearea.innerHTML="";
 			} else {
 				alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
 			}
+		} else {
+			alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
 		}
-	});
+	} catch (err) {
+		alertmessagearea.innerHTML="<?php echo $LNG->ALERT_NO_RESULTS; ?>";
+		console.log(err)
+	}
 }
 
 function createAlertNodeLink(alerttype, postid, node, container, display) {
@@ -1727,7 +1718,7 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 
 			var found = false;
 			var items = document.getElementsByName('idearowitem');
-			for (var i=0; i<items.length; i++) {
+			for (var i=0; i < items.length; i++) {
 				var item = items[i];
 				var nodeid = item.getAttribute('nodeid');
 				if (nodeid == postid) {
@@ -1743,7 +1734,7 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 			}
 			if (!found) {
 				var items = document.getElementsByName('argumentrowitem');
-				for (var i=0; i<items.length; i++) {
+				for (var i=0; i < items.length; i++) {
 					var item = items[i];
 					var nodeid = item.getAttribute('nodeid');
 					if (nodeid == postid) {
@@ -2188,5 +2179,27 @@ function addScriptDynamically(url, id) {
 			scriptobj.setAttribute("id", id);
 		}
 		headarea.appendChild(scriptobj);
+	}
+}
+
+/**
+ * This makes a fecth call to a url
+ * @param url - the url to call.
+ * @param type = POST or GET
+ * @returns json data or throws an error
+ */
+async function makeAPICall(url, type) {
+
+	try {
+		const response = await fetch(url, {
+			method: type
+		});
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const json = await response.json();
+		return json;
+	} catch (err) {
+		throw(err);
 	}
 }

@@ -29,11 +29,11 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 function loadCirclePacking(){
 
-	$("circlepacking-div").innerHTML = "";
+	document.getElementById("circlepacking-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("circlepacking-div").insert('<div style="font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("circlepacking-div").insert('<div style="font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -51,7 +51,7 @@ function loadCirclePacking(){
 	outerDiv.insert(messagearea);
 	outerDiv.insert(circlepackingdiv);
 
-	$("circlepacking-div").insert(outerDiv);
+	document.getElementById("circlepacking-div").insert(outerDiv);
 
 	createCirclePackingD3Vis(circlepackingdiv);
 	loadCirclePackingData(messagearea);

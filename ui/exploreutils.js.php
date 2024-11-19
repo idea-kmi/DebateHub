@@ -276,7 +276,8 @@ function refreshIssueWhenPhaseChanges() {
 function refreshMainIssue() {
 	var itemobj = renderIssueNode("760","", nodeObj, 'mainnode', nodeObj.role, true, 'active', false, false, false, true, true);
 	const mainnodediv = document.getElmenetById('mainnodediv');
-	mainnodediv.update(itemobj);
+	mainnodediv.innerHTML = "";
+	mainnodediv.appendChild(itemobj);
 }
 
 function refreshStats() {
@@ -520,7 +521,7 @@ function auditDebateStatsLink(link) {
 /**
  * Draw the participation health indicator
  */
-function loadParticipationStats() {
+async function loadParticipationStats() {
 	var nodeid = nodeObj.nodeid;
 
 	var args = {}; //must be an empty object to send down the url, or all the Array functions get sent too.
@@ -528,55 +529,58 @@ function loadParticipationStats() {
     args['style'] = "long";
 
 	var reqUrl = SERVICE_ROOT + "&method=getdebateparticipationstats&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
 
-			var stats = json.debateparticipationstats[0];
-			var peoplecount = parseInt(stats.peoplecount);
-
-			const healthparticipation = document.getElmenetById('health-participation');
-			if (healthparticipation) {
-				const healthparticipationcount = document.getElmenetById('health-participation-count');
-				healthparticipationcount.update(peoplecount);
-				var person = peoplecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-				const healthparticipationmessage = document.getElmenetById('health-participation-message');
-				healthparticipationmessage.update(person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>');
-				const healthparticipationrecomendation = document.getElmenetById('health-participation-recomendation');
-
-				if (peoplecount < 3) {
-					healthparticipation.trafficlight = 'red';
-					const healthparticipationred = document.getElmenetById('health-participation-red');
-					healthparticipationred.className = 'trafficlightredon';
-					healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-				} else if (peoplecount >= 3 && peoplecount <= 5) {
-					healthparticipation.trafficlight = 'orange';
-					const healthparticipationorange = document.getElmenetById('health-participation-orange');
-					healthparticipationorange.className = 'trafficlightorangeon';
-					healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-				} else if (peoplecount > 5) {
-					healthparticipation.trafficlight = 'green';
-					const healthparticipationgreen = document.getElmenetById('health-participation-green');
-					healthparticipationgreen.className = 'trafficlightgreenon';
-					healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-				}
-				healthparticipation.style.display = 'block';
-			}
-
-			const debateparticipationcount = document.getElmenetById('debate-participation-count');
-			debateparticipationcount.update(peoplecount);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+
+		var stats = json.debateparticipationstats[0];
+		var peoplecount = parseInt(stats.peoplecount);
+
+		const healthparticipation = document.getElmenetById('health-participation');
+		if (healthparticipation) {
+			const healthparticipationcount = document.getElmenetById('health-participation-count');
+			healthparticipationcount.update(peoplecount);
+			var person = peoplecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+			const healthparticipationmessage = document.getElmenetById('health-participation-message');
+			healthparticipationmessage.update(person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>');
+			const healthparticipationrecomendation = document.getElmenetById('health-participation-recomendation');
+
+			if (peoplecount < 3) {
+				healthparticipation.trafficlight = 'red';
+				const healthparticipationred = document.getElmenetById('health-participation-red');
+				healthparticipationred.className = 'trafficlightredon';
+				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+			} else if (peoplecount >= 3 && peoplecount <= 5) {
+				healthparticipation.trafficlight = 'orange';
+				const healthparticipationorange = document.getElmenetById('health-participation-orange');
+				healthparticipationorange.className = 'trafficlightorangeon';
+				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+			} else if (peoplecount > 5) {
+				healthparticipation.trafficlight = 'green';
+				const healthparticipationgreen = document.getElmenetById('health-participation-green');
+				healthparticipationgreen.className = 'trafficlightgreenon';
+				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+			}
+			healthparticipation.style.display = 'block';
+		}
+
+		const debateparticipationcount = document.getElmenetById('debate-participation-count');
+		debateparticipationcount.update(peoplecount);
+
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  * load and draw the Contribution health indicator
  */
-function loadContributionStats() {
+async function loadContributionStats() {
 
 	var nodeid = nodeObj.nodeid;
 
@@ -585,131 +589,134 @@ function loadContributionStats() {
     args['style'] = "long";
 
 	var reqUrl = SERVICE_ROOT + "&method=getdebatecontributionstats&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+
+		var stats = json.debatecontributionstats[0];
+
+		var totalvotes = parseInt(stats.totalvotes);
+		var positivevotes = parseInt(stats.positivevotes);
+		var negativevotes = parseInt(stats.negativevotes);
+		var ideacount = parseInt(stats.ideacount);
+		var procount = parseInt(stats.procount);
+		var concount = parseInt(stats.concount);
+
+		var contributioncount = totalvotes+ideacount+procount+concount;
+
+		const healthdebate = document.getElmenetById('health-debate');
+		healthdebate.procount = procount;
+		healthdebate.concount = concount;
+		healthdebate.ideacount = ideacount;
+		healthdebate.totalvotes = totalvotes;
+		healthdebate.contributioncount = contributioncount;
+
+		var ideaRatio = ideacount/contributioncount;
+		var proRatio = procount/contributioncount;
+		var conRatio = concount/contributioncount;
+		var votingRatio = totalvotes/contributioncount;
+
+		//If one of the four ratios <= 0.1 then red traffic light
+		//If all of the four ratios are > 0.1 but one of them is <=0.2 then yellow traffic light.
+
+		const healthdebateRecomendation = document.getElmenetById('health-debate-recomendation');
+		const healthdebateMessage = document.getElmenetById('health-debate-message');
+
+		if (ideacount == 0 || procount == 0 || concount == 0 || totalvotes == 0
+				|| ideaRatio <= 0.1 || votingRatio <= 0.1 || proRatio <= 0.1 || conRatio <= 0.1) {
+					
+			healthdebate.trafficlight = 'red';
+
+			var message = '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_MESSAGE; ?>';
+			var needsAnd = false;
+			if (ideacount == 0 || ideaRatio <= 0.1) {
+				message += ' <?php echo $LNG->SOLUTIONS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (procount == 0 || proRatio <= 0.1) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
+				}
+				message += ' <?php echo $LNG->PROS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (concount == 0 || conRatio <= 0.1) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
+				}
+				message += ' <?php echo $LNG->CONS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (totalvotes == 0 || votingRatio <= 0.1) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
+				}
+				message += ' <?php echo $LNG->VOTES_NAME; ?>';
 			}
 
-			var stats = json.debatecontributionstats[0];
+			healthdebateMessage.update(message);
+			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+			const healthdebateRed = document.getElmenetById('health-debate-red');
+			healthdebateRed.className = "trafficlightredon";
+		} else if (ideaRatio > 0.1 && votingRatio > 0.1 && proRatio > 0.1 && conRatio > 0.1
+				&& (ideaRatio <= 0.2 || votingRatio <= 0.2 || proRatio <= 0.2 || conRatio <= 0.2)) {
 
-			var totalvotes = parseInt(stats.totalvotes);
-			var positivevotes = parseInt(stats.positivevotes);
-			var negativevotes = parseInt(stats.negativevotes);
-			var ideacount = parseInt(stats.ideacount);
-			var procount = parseInt(stats.procount);
-			var concount = parseInt(stats.concount);
-
-			var contributioncount = totalvotes+ideacount+procount+concount;
-
-			const healthdebate = document.getElmenetById('health-debate');
-			healthdebate.procount = procount;
-			healthdebate.concount = concount;
-			healthdebate.ideacount = ideacount;
-			healthdebate.totalvotes = totalvotes;
-			healthdebate.contributioncount = contributioncount;
-
-			var ideaRatio = ideacount/contributioncount;
-			var proRatio = procount/contributioncount;
-			var conRatio = concount/contributioncount;
-			var votingRatio = totalvotes/contributioncount;
-
-			//If one of the four ratios <= 0.1 then red traffic light
-			//If all of the four ratios are > 0.1 but one of them is <=0.2 then yellow traffic light.
-
-			const healthdebateRecomendation = document.getElmenetById('health-debate-recomendation');
-			const healthdebateMessage = document.getElmenetById('health-debate-message');
-
-			if (ideacount == 0 || procount == 0 || concount == 0 || totalvotes == 0
-					|| ideaRatio <= 0.1 || votingRatio <= 0.1 || proRatio <= 0.1 || conRatio <= 0.1) {
-						
-				healthdebate.trafficlight = 'red';
-
-				var message = '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_MESSAGE; ?>';
-				var needsAnd = false;
-				if (ideacount == 0 || ideaRatio <= 0.1) {
-					message += ' <?php echo $LNG->SOLUTIONS_NAME; ?>';
-					needsAnd = true;
+			var message = '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_MESSAGE; ?>';
+			var needsAnd = false;
+			if (ideaRatio <= 0.2) {
+				message += ' <?php echo $LNG->SOLUTIONS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (proRatio <= 0.2) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
 				}
-				if (procount == 0 || proRatio <= 0.1) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->PROS_NAME; ?>';
-					needsAnd = true;
+				message += ' <?php echo $LNG->PROS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (conRatio <= 0.2) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
 				}
-				if (concount == 0 || conRatio <= 0.1) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->CONS_NAME; ?>';
-					needsAnd = true;
+				message += ' <?php echo $LNG->CONS_NAME; ?>';
+				needsAnd = true;
+			}
+			if (votingRatio <= 0.2) {
+				if (needsAnd) {
+					message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
 				}
-				if (totalvotes == 0 || votingRatio <= 0.1) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->VOTES_NAME; ?>';
-				}
-
-				healthdebateMessage.update(message);
-				healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-				const healthdebateRed = document.getElmenetById('health-debate-red');
-				healthdebateRed.className = "trafficlightredon";
-			} else if (ideaRatio > 0.1 && votingRatio > 0.1 && proRatio > 0.1 && conRatio > 0.1
-					&& (ideaRatio <= 0.2 || votingRatio <= 0.2 || proRatio <= 0.2 || conRatio <= 0.2)) {
-
-				var message = '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_MESSAGE; ?>';
-				var needsAnd = false;
-				if (ideaRatio <= 0.2) {
-					message += ' <?php echo $LNG->SOLUTIONS_NAME; ?>';
-					needsAnd = true;
-				}
-				if (proRatio <= 0.2) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->PROS_NAME; ?>';
-					needsAnd = true;
-				}
-				if (conRatio <= 0.2) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->CONS_NAME; ?>';
-					needsAnd = true;
-				}
-				if (votingRatio <= 0.2) {
-					if (needsAnd) {
-						message += ' <?php echo $LNG->STATS_DEBATE_AND; ?>';
-					}
-					message += ' <?php echo $LNG->VOTES_NAME; ?>';
-				}
-
-				healthdebate.trafficlight = 'orange';
-				healthdebateMessage.update(message);
-				healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-				const healthdebateorange = document.getElmenetById('health-debate-orange');
-				healthdebateorange.className = "trafficlightorangeon";
-			} else {
-				healthdebate.trafficlight = 'green';
-				healthdebateMessage.update('<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_GREEN; ?>');
-				healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-				const healthdebategreen = document.getElmenetById('health-debate-green');
-				healthdebategreen.className = "trafficlightgreenon";
+				message += ' <?php echo $LNG->VOTES_NAME; ?>';
 			}
 
-			healthdebate.style.display = 'block';
+			healthdebate.trafficlight = 'orange';
+			healthdebateMessage.update(message);
+			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+			const healthdebateorange = document.getElmenetById('health-debate-orange');
+			healthdebateorange.className = "trafficlightorangeon";
+		} else {
+			healthdebate.trafficlight = 'green';
+			healthdebateMessage.update('<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_GREEN; ?>');
+			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+			const healthdebategreen = document.getElmenetById('health-debate-green');
+			healthdebategreen.className = "trafficlightgreenon";
 		}
-	});
+
+		healthdebate.style.display = 'block';
+
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  * load and draw the Viewing health indicator
  */
-function loadViewingStats() {
+async function loadViewingStats() {
 	if (NODE_ARGS["groupid"] && NODE_ARGS["groupid"] != "") {
 
 		var nodeid = nodeObj.nodeid;
@@ -718,57 +725,59 @@ function loadViewingStats() {
 		args["groupid"] = NODE_ARGS["groupid"];
 
 		var reqUrl = SERVICE_ROOT + "&method=getdebateviewingstats&" + Object.toQueryString(args);
-		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport){
-				var json = transport.responseText.evalJSON();
-				if(json.error){
-					alert(json.error[0].message);
-					return;
-				}
-
-				var stats = json.debateviewingstats[0];
-
-				var groupmembercount = parseInt(stats.groupmembercount);
-				var viewingmembercount = parseInt(stats.viewingmembercount);
-
-				var ratio = viewingmembercount/groupmembercount;
-
-				const healthviewing = document.getElmenetById('health-viewing');
-				const healthviewingpeoplecount = document.getElmenetById('health-viewingpeople-count');
-				const healthviewinggroupcount = document.getElmenetById('health-viewinggroup-count');
-
-				healthviewingpeoplecount.update(viewingmembercount);
-				healthviewinggroupcount.update(groupmembercount);
-
-				var person = viewingmembercount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-
-				const healthviewingmessage = document.getElmenetById('health-viewing-message');
-				const healthviewingmessagepart2 = document.getElmenetById('health-viewing-message-part2');
-				const healthviewingrecomendation = document.getElmenetById('health-viewing-recomendation');
-
-				healthviewingmessage.update(person+' '+'<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART1; ?>');
-				healthviewingmessagepart2.update('<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART2; ?>');
-
-				if (ratio >= 0.5) {
-					healthviewing.trafficlight = 'green';
-					const healthviewinggreen = document.getElmenetById('health-viewing-green');
-					healthviewinggreen.className = "trafficlightgreenon";
-					healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-				} else if (ratio < 0.5 && ratio >= 0.2) {
-					healthviewing.trafficlight = 'orange';
-					const healthviewingorange = document.getElmenetById('health-viewing-orange');
-					healthviewingorange.className = "trafficlightorangeon";
-					healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-				} else {
-					healthviewing.trafficlight = 'red';
-					const healthviewingred = document.getElmenetById('health-viewing-red');
-					healthviewingred.className = "trafficlightredon";
-					healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-				}
-
-				healthviewing.style.display = 'block';
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
 			}
-		});
+
+			var stats = json.debateviewingstats[0];
+
+			var groupmembercount = parseInt(stats.groupmembercount);
+			var viewingmembercount = parseInt(stats.viewingmembercount);
+
+			var ratio = viewingmembercount/groupmembercount;
+
+			const healthviewing = document.getElmenetById('health-viewing');
+			const healthviewingpeoplecount = document.getElmenetById('health-viewingpeople-count');
+			const healthviewinggroupcount = document.getElmenetById('health-viewinggroup-count');
+
+			healthviewingpeoplecount.update(viewingmembercount);
+			healthviewinggroupcount.update(groupmembercount);
+
+			var person = viewingmembercount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+
+			const healthviewingmessage = document.getElmenetById('health-viewing-message');
+			const healthviewingmessagepart2 = document.getElmenetById('health-viewing-message-part2');
+			const healthviewingrecomendation = document.getElmenetById('health-viewing-recomendation');
+
+			healthviewingmessage.update(person+' '+'<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART1; ?>');
+			healthviewingmessagepart2.update('<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART2; ?>');
+
+			if (ratio >= 0.5) {
+				healthviewing.trafficlight = 'green';
+				const healthviewinggreen = document.getElmenetById('health-viewing-green');
+				healthviewinggreen.className = "trafficlightgreenon";
+				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+			} else if (ratio < 0.5 && ratio >= 0.2) {
+				healthviewing.trafficlight = 'orange';
+				const healthviewingorange = document.getElmenetById('health-viewing-orange');
+				healthviewingorange.className = "trafficlightorangeon";
+				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+			} else {
+				healthviewing.trafficlight = 'red';
+				const healthviewingred = document.getElmenetById('health-viewing-red');
+				healthviewingred.className = "trafficlightredon";
+				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+			}
+
+			healthviewing.style.display = 'block';
+
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	}
 }
 
@@ -1137,7 +1146,7 @@ function refreshSolutions() {
 /**
  *	load next/previous set of nodes
  */
-function loadsolutions(context,args){
+async function loadsolutions(context,args){
 
 	var focalnodeid = args['nodeid'];
 	var title = "<?php echo $LNG->SOLUTIONS_NAME; ?>";
@@ -1162,120 +1171,118 @@ function loadsolutions(context,args){
 	//alert(reqUrl);
 
 	//var time = Math.round(+new Date()/1000);
-	new Ajax.Request(reqUrl, { method:'post',
-  		onSuccess: function(transport){
-  			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+
+		var conns = json.connectionset[0].connections;
+		//alert("conns="+conns.length);
+
+		if (conns.length == 0) {
+			container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+		} else {
+			var nodes = new Array();
+			var nodeids = "";
+			for(var i=0; i <  conns.length; i++){
+				var c = conns[i].connection;
+				var fN = c.from[0].cnode;
+				var tN = c.to[0].cnode;
+
+				if (fN.nodeid != focalnodeid) {
+					if (fN.name != "") {
+						var next = c.from[0];
+						if (next.cnode.status != 2) {
+							next.cnode['connection'] = c;
+							next.cnode['parentid'] = focalnodeid;
+							next.cnode['handler'] = '';
+							if (args['searchid'] && args['searchid'] != "") {
+								next.cnode.searchid = args['searchid'];
+							}
+							if (args['groupid'] && args['groupid'] != "") {
+								next.cnode.groupid = args['groupid'];
+							} else {
+								next.cnode.groupid = "";
+							}
+
+							nodes.push(next);
+							nodeids  = nodeids+","+next.cnode.nodeid;
+						}
+					}
+				} else if (tN.nodeid != focalnodeid) {
+					if (tN.name != "") {
+						var next = c.to[0];
+						if (next.cnode.status != 2) {
+							next.cnode['connection'] = c;
+							next.cnode['parentid'] = focalnodeid;
+							next.cnode['handler'] = '';
+							if (args['searchid'] && args['searchid'] != "") {
+								next.cnode.searchid = args['searchid'];
+							}
+							if (args['groupid'] && args['groupid'] != "") {
+								next.cnode.groupid = args['groupid'];
+							}
+							nodes.push(next);
+							nodeids  = nodeids+","+next.cnode.nodeid;
+						}
+					}
+				}
+			}
+			if (nodes.length > 0) {
+				const remainingcount = document.getElmenetById('remaining-count');
+				if (remainingcount) {
+					remainingcount.update('('+nodes.length+')');
+					const removedcount = document.getElmenetById('removed-count');
+					removedcount.update('('+(parseInt(json.connectionset[0].totalno)-nodes.length)+')');
+				}
+
+				// Audit ideas viewed
+				nodeids = nodeids.substr(1); // remove first comma
+				var innerreqUrl = SERVICE_ROOT + "&method=auditnodeviewmulti&nodeids="+nodeids+"&viewtype=list";
+				const innerjson = await makeAPICall(innerreqUrl, 'POST');
+				if (innerjson.error) {
+					//alert(innerjson.error[0].message);
+					return;
+				}
+
+				// clear list
+				container.update("");
+
+				if (NODE_ARGS['currentphase'] != CLOSED_PHASE && NODE_ARGS['currentphase'] != DECIDE_PHASE) {
+					var tb3 = new Element("div", {'class':'toolbarrow'});
+					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', fromname: '<?php echo $LNG->SORT_TITLE; ?>', random:'<?php echo $LNG->SORT_RANDOM; ?>'};
+					//sortOpts.vote = '<?php echo $LNG->SORT_VOTES; ?>';
+					tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
+
+					container.insert(tb3);
+				}
+
+				displayIdeaList(container,nodes,parseInt(0), true, 'explore');
+
+				// Set Idea count on Issue
+				const debatestatsideas = document.getElmenetById('debatestatsideas'+focalnodeid);
+				debatestatsideas.update(json.connectionset[0].totalno);
+				const debatestatsideasnow = document.getElmenetById('debatestatsideasnow'+focalnodeid);
+				if (debatestatsideasnow) {
+					debatestatsideasnow.update(nodes.length);
+				}
+			} else {
+				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
 			}
 
-			var conns = json.connectionset[0].connections;
-			//alert("conns="+conns.length);
+			// It also updates the Issue participants count. So do it here.
+			loadParticipationStats();
 
-			if (conns.length == 0) {
-				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
-			} else {
-				var nodes = new Array();
-				var nodeids = "";
-				for(var i=0; i <  conns.length; i++){
-					var c = conns[i].connection;
-					var fN = c.from[0].cnode;
-					var tN = c.to[0].cnode;
-
-					if (fN.nodeid != focalnodeid) {
-						if (fN.name != "") {
-							var next = c.from[0];
-							if (next.cnode.status != 2) {
-								next.cnode['connection'] = c;
-								next.cnode['parentid'] = focalnodeid;
-								next.cnode['handler'] = '';
-								if (args['searchid'] && args['searchid'] != "") {
-									next.cnode.searchid = args['searchid'];
-								}
-								if (args['groupid'] && args['groupid'] != "") {
-									next.cnode.groupid = args['groupid'];
-								} else {
-									next.cnode.groupid = "";
-								}
-
-								nodes.push(next);
-								nodeids  = nodeids+","+next.cnode.nodeid;
-							}
-						}
-					} else if (tN.nodeid != focalnodeid) {
-						if (tN.name != "") {
-							var next = c.to[0];
-							if (next.cnode.status != 2) {
-								next.cnode['connection'] = c;
-								next.cnode['parentid'] = focalnodeid;
-								next.cnode['handler'] = '';
-								if (args['searchid'] && args['searchid'] != "") {
-									next.cnode.searchid = args['searchid'];
-								}
-								if (args['groupid'] && args['groupid'] != "") {
-									next.cnode.groupid = args['groupid'];
-								}
-								nodes.push(next);
-								nodeids  = nodeids+","+next.cnode.nodeid;
-							}
-						}
-					}
-				}
-				if (nodes.length > 0) {
-					const remainingcount = document.getElmenetById('remaining-count');
-					if (remainingcount) {
-						remainingcount.update('('+nodes.length+')');
-						const removedcount = document.getElmenetById('removed-count');
-						removedcount.update('('+(parseInt(json.connectionset[0].totalno)-nodes.length)+')');
-					}
-
-					// Audit ideas viewed
-					nodeids = nodeids.substr(1); // remove first comma
-					var reqUrl = SERVICE_ROOT + "&method=auditnodeviewmulti&nodeids="+nodeids+"&viewtype=list";
-					new Ajax.Request(reqUrl, { method:'post',
-						onSuccess: function(transport){
-							var json = transport.responseText.evalJSON();
-							if(json.error){
-								//alert(json.error[0].message);
-							}
-						}
-					});
-
-					// clear list
-					container.update("");
-
-					if (NODE_ARGS['currentphase'] != CLOSED_PHASE && NODE_ARGS['currentphase'] != DECIDE_PHASE) {
-						var tb3 = new Element("div", {'class':'toolbarrow'});
-						var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', fromname: '<?php echo $LNG->SORT_TITLE; ?>', random:'<?php echo $LNG->SORT_RANDOM; ?>'};
-						//sortOpts.vote = '<?php echo $LNG->SORT_VOTES; ?>';
-						tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
-
-						container.insert(tb3);
-					}
-
-					displayIdeaList(container,nodes,parseInt(0), true, 'explore');
-
-					// Set Idea count on Issue
-					const debatestatsideas = document.getElmenetById('debatestatsideas'+focalnodeid);
-					debatestatsideas.update(json.connectionset[0].totalno);
-					const debatestatsideasnow = document.getElmenetById('debatestatsideasnow'+focalnodeid);
-					if (debatestatsideasnow) {
-						debatestatsideasnow.update(nodes.length);
-					}
-				} else {
-					container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
-				}
-
-				// It also updates the Issue participants count. So do it here.
-				loadParticipationStats();
-
-				if (NODE_ARGS['mode'] == 'Organize' ) {
-					setMode(NODE_ARGS['mode']);
-				}
+			if (NODE_ARGS['mode'] == 'Organize' ) {
+				setMode(NODE_ARGS['mode']);
 			}
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
 	DATA_LOADED.remaining = true;
 }
@@ -1283,7 +1290,7 @@ function loadsolutions(context,args){
 /**
  *	load removed solutions
  */
-function loadremovedsolutions(context,args){
+async function loadremovedsolutions(context,args){
 
 	const container = document.getElmenetById('tab-content-removed-div');
 	continaer.innerHTML = "";
@@ -1294,90 +1301,92 @@ function loadremovedsolutions(context,args){
 	var reqUrl = SERVICE_ROOT + "&method=getdebateideaconnectionsremoved&style=long&issueid="+focalnodeid;
 
 	//alert(reqUrl);
-	new Ajax.Request(reqUrl, { method:'post',
-  		onSuccess: function(transport){
-  			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+		var conns = json.connectionset[0].connections;
+		//alert("conns="+conns.length);
 
-			var conns = json.connectionset[0].connections;
-			//alert("conns="+conns.length);
-
-			if (conns.length == 0) {
-				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
-			} else {
-				var nodes = new Array();
-				var nodeids = "";
-				for(var i=0; i <  conns.length; i++){
-					var c = conns[i].connection;
-					var fN = c.from[0].cnode;
-					var tN = c.to[0].cnode;
-					if (fN.nodeid != focalnodeid) {
-						if (fN.name != "") {
-							var next = c.from[0];
-							if (next.cnode.status != 2) {
-								next.cnode['connection'] = c;
-								next.cnode['parentid'] = focalnodeid;
-								next.cnode['handler'] = '';
-								if (args['searchid'] && args['searchid'] != "") {
-									next.cnode.searchid = args['searchid'];
-								}
-								if (args['groupid'] && args['groupid'] != "") {
-									next.cnode.groupid = args['groupid'];
-								} else {
-									next.cnode.groupid = "";
-								}
-
-
-								nodes.push(next);
-								nodeids  = nodeids+","+next.cnode.nodeid;
+		if (conns.length == 0) {
+			container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+		} else {
+			var nodes = new Array();
+			var nodeids = "";
+			for(var i=0; i <  conns.length; i++){
+				var c = conns[i].connection;
+				var fN = c.from[0].cnode;
+				var tN = c.to[0].cnode;
+				if (fN.nodeid != focalnodeid) {
+					if (fN.name != "") {
+						var next = c.from[0];
+						if (next.cnode.status != 2) {
+							next.cnode['connection'] = c;
+							next.cnode['parentid'] = focalnodeid;
+							next.cnode['handler'] = '';
+							if (args['searchid'] && args['searchid'] != "") {
+								next.cnode.searchid = args['searchid'];
 							}
+							if (args['groupid'] && args['groupid'] != "") {
+								next.cnode.groupid = args['groupid'];
+							} else {
+								next.cnode.groupid = "";
+							}
+
+
+							nodes.push(next);
+							nodeids  = nodeids+","+next.cnode.nodeid;
 						}
-					} else if (tN.nodeid != focalnodeid) {
-						if (tN.name != "") {
-							var next = c.to[0];
-							if (next.cnode.status != 2) {
-								next.cnode['connection'] = c;
-								next.cnode['parentid'] = focalnodeid;
-								next.cnode['handler'] = '';
-								if (args['searchid'] && args['searchid'] != "") {
-									next.cnode.searchid = args['searchid'];
-								}
-								if (args['groupid'] && args['groupid'] != "") {
-									next.cnode.groupid = args['groupid'];
-								}
-								nodes.push(next);
-								nodeids  = nodeids+","+next.cnode.nodeid;
+					}
+				} else if (tN.nodeid != focalnodeid) {
+					if (tN.name != "") {
+						var next = c.to[0];
+						if (next.cnode.status != 2) {
+							next.cnode['connection'] = c;
+							next.cnode['parentid'] = focalnodeid;
+							next.cnode['handler'] = '';
+							if (args['searchid'] && args['searchid'] != "") {
+								next.cnode.searchid = args['searchid'];
 							}
+							if (args['groupid'] && args['groupid'] != "") {
+								next.cnode.groupid = args['groupid'];
+							}
+							nodes.push(next);
+							nodeids  = nodeids+","+next.cnode.nodeid;
 						}
 					}
 				}
-				if (nodes.length > 0) {
-					const removedcount = document.getElmenetById('removed-count');
-					removedcount.update('('+nodes.length+')');
+			}
+			if (nodes.length > 0) {
+				const removedcount = document.getElmenetById('removed-count');
+				removedcount.update('('+nodes.length+')');
 
-					// Audit ideas viewed
-					nodeids = nodeids.substr(1); // remove first comma
-					var reqUrl = SERVICE_ROOT + "&method=auditnodeviewmulti&nodeids="+nodeids+"&viewtype=list";
-					new Ajax.Request(reqUrl, { method:'post',
-						onSuccess: function(transport){
-							var json = transport.responseText.evalJSON();
-							if(json.error){
-								//alert(json.error[0].message);
-							}
-						}
-					});
-
-					container.update("");
-					displayRemovedIdeaList(container,nodes,parseInt(0), true, 'explore-removed');
-				} else {
-					container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+				// Audit ideas viewed
+				nodeids = nodeids.substr(1); // remove first comma
+				var innerreqUrl = SERVICE_ROOT + "&method=auditnodeviewmulti&nodeids="+nodeids+"&viewtype=list";
+				try {
+					const innerjson = await makeAPICall(innerreqUrl, 'POST');
+					if (innerjson.error) {
+						//alert(innerjson.error[0].message);
+						return;
+					}
+				} catch (err) {
+					//alert("There was an error: "+err.message);
+					console.log(err)
 				}
+
+				container.update("");
+				displayRemovedIdeaList(container,nodes,parseInt(0), true, 'explore-removed');
+			} else {
+				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
 			}
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
 	DATA_LOADED.removed = true;
 }
@@ -1441,7 +1450,7 @@ function editIdeaNode(orinode, uniQ, type, actiontype, includeUser, status) {
 	}
 }
 
-function editExploreNode(orinode, nodeid, nodetypeid, name, desc, type, uniQ, actiontype, includeUser, status) {
+async function editExploreNode(orinode, nodeid, nodetypeid, name, desc, type, uniQ, actiontype, includeUser, status) {
 
 	var reqUrl = SERVICE_ROOT + "&method=editnode&nodeid=" + encodeURIComponent(nodeid);
 	reqUrl += "&name="+ encodeURIComponent(name);
@@ -1487,56 +1496,51 @@ function editExploreNode(orinode, nodeid, nodetypeid, name, desc, type, uniQ, ac
 		}
 	}
 
-	//alert("FRED: "+reqUrl);
+	try {
+		const json = await makeAPICall(innerreqUrl, 'POST');
 
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			//now refresh the page
-			const editformdiv = document.getElmenetById('editformdiv'+type+uniQ);
-			editformdiv.style.cursor = 'pointer';
+		const editformdiv = document.getElmenetById('editformdiv'+type+uniQ);
+		editformdiv.style.cursor = 'pointer';
 
-			// get returned new node so I can get nodeid;
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+
+		var node = json.cnode[0];
+		try {
+			clearSelections();
+
+			orinode.name = name;
+			orinode.description = desc;
+			orinode.urls = node.urls;
+
+			document.getElmenetById('edit'+type+'name'+uniQ).value = name;
+			document.getElmenetById('edit'+type+'desc'+uniQ).value = desc;
+			editformdiv.style.display = "none";
+
+			if (type == 'idea') {
+				const blobNode = renderIdeaList(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
+				const ideablobdiv = document.getElmenetById('ideablobdiv'+uniQ);
+				ideablobdiv.update(blobNode);
+			} else if (type == 'comment') {
+				NODE_ARGS['selectednodeid'] = orinode.nodeid;
+				const blobNode = renderCommentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
+				const commentblobdiv = document.getElmenetById('commentblobdiv'+uniQ);
+				commentblobdiv.update(blobNode);
+			} else if (type == 'argument') {
+				NODE_ARGS['selectednodeid'] = orinode.nodeid;
+				const blobNode = renderArgumentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
+				const argumentblobdiv = document.getElmenetById('argumentblobdiv'+uniQ);
+				argumentblobdiv.update(blobNode);
 			}
-			var node = json.cnode[0];
-			try {
-				clearSelections();
-
-				orinode.name = name;
-				orinode.description = desc;
-				orinode.urls = node.urls;
-
-				document.getElmenetById('edit'+type+'name'+uniQ).value = name;
-				document.getElmenetById('edit'+type+'desc'+uniQ).value = desc;
-				editformdiv.style.display = "none";
-
-				if (type == 'idea') {
-					const blobNode = renderIdeaList(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
-					const ideablobdiv = document.getElmenetById('ideablobdiv'+uniQ);
-					ideablobdiv.update(blobNode);
-				} else if (type == 'comment') {
-					NODE_ARGS['selectednodeid'] = orinode.nodeid;
-					const blobNode = renderCommentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
-					const commentblobdiv = document.getElmenetById('commentblobdiv'+uniQ);
-					commentblobdiv.update(blobNode);
-				} else if (type == 'argument') {
-					NODE_ARGS['selectednodeid'] = orinode.nodeid;
-					const blobNode = renderArgumentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
-					const argumentblobdiv = document.getElmenetById('argumentblobdiv'+uniQ);
-					argumentblobdiv.update(blobNode);
-				}
-			} catch(err) {
-				//do nothing
-			}
-   		},
-   		onFailure: function(transport) {
-			document.getElmenetById('editformdiv'+type+uniQ).style.cursor = 'pointer';
-   			alert("FAILED");
-   		}
- 	});
+		} catch(err) {
+			//do nothing
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 <?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']){ ?>
@@ -1690,7 +1694,7 @@ function addIdeaNode(parentnode, uniQ, type, actiontype, includeUser, status) {
 	}
 }
 
-function addExploreNode(parentnode, nodetypename, linktypename, name, desc, type, uniQ, actiontype, includeUser, status) {
+async function addExploreNode(parentnode, nodetypename, linktypename, name, desc, type, uniQ, actiontype, includeUser, status) {
 
 	var reqUrl = SERVICE_ROOT + "&method=addnodeandconnect";
 	reqUrl += "&name="+ encodeURIComponent(name);
@@ -1740,111 +1744,106 @@ function addExploreNode(parentnode, nodetypename, linktypename, name, desc, type
 		}
 	}
 
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
+	try {
+		const json = await makeAPICall(innerreqUrl, 'POST');
 
-			const addformdiv = document.getElmenetById('addformdiv'+type+uniQ);
-			addformdiv.style.cursor = 'pointer';
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+		const addformdiv = document.getElmenetById('addformdiv'+type+uniQ);
+		addformdiv.style.cursor = 'pointer';
+
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+
+		var connection = json.connection[0];
+
+		// if they add an idea/pro/con, make usre they follow the issue
+		if (nodeObj && nodeObj.role.name == 'Issue' && !nodeObj.userfollow || nodeObj.userfollow == "N") {
+			followNode(nodeObj, null, 'refreshMainIssue');
+		}
+
+		// change the sort if idea added
+		if (type == 'idea') {
+			NODE_ARGS['orderby'] = 'date';
+			NODE_ARGS['sort'] = 'DESC';
+		}
+
+		try {
+			clearSelections();
+
+			var fromnode = connection.from[0].cnode;
+			fromnode['connection'] = connection;
+			fromnode['parentid'] = parentnode.nodeid;
+			fromnode['handler'] = '';
+			if (NODE_ARGS['searchid'] && NODE_ARGS['searchid'] != "") {
+				fromnode.searchid = NODE_ARGS['searchid'];
 			}
-			var connection = json.connection[0];
-
-			// if they add an idea/pro/con, make usre they follow the issue
-			if (nodeObj && nodeObj.role.name == 'Issue' && !nodeObj.userfollow || nodeObj.userfollow == "N") {
-				followNode(nodeObj, null, 'refreshMainIssue');
+			if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "") {
+				fromnode.groupid = NODE_ARGS['groupid'];
 			}
 
-			// change the sort if idea added
+			NODE_ARGS['selectednodeid'] = fromnode.nodeid;
+
+			document.getElementById('add'+type+'name'+uniQ).value = "";
+			document.getElementById('add'+type+'desc'+uniQ).value = "";
+
 			if (type == 'idea') {
-				NODE_ARGS['orderby'] = 'date';
-				NODE_ARGS['sort'] = 'DESC';
+				//document.getElementById('newideaform').style.display = "none";
+				refreshSolutions();
+			} else if (type == 'comment') {
+				document.getElementById('commentslist'+uniQ).loaded = 'false';
+				const commentcount = document.getElementById('count-comment'+uniQ);
+				loadChildComments('commentslist'+uniQ, parentnode.nodeid, '<?php echo $LNG->COMMENTS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, commentcount, actiontype, status);
+				recalculatePeople();
+			} else if (type == 'con') {
+				document.getElementById('counterkidsdiv'+uniQ).loaded = 'false';
+				const commentcounter = document.getElementById('count-counter'+uniQ);
+				const votebardiv = document.getElementById('votebardiv'+uniQ);
+				loadChildArguments('counterkidsdiv'+uniQ, parentnode.nodeid, '<?php echo $LNG->CONS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, commentcounter, actiontype, status, votebardiv);
+				recalculatePeople();
+			} else if (type == 'pro') {
+				document.getElementById('supportkidsdiv'+uniQ).loaded = 'false';
+				const countsupport = document.getElementById('count-support'+uniQ);
+				const votebardiv = document.getElementById('votebardiv'+uniQ);
+				loadChildArguments('supportkidsdiv'+uniQ, parentnode.nodeid, '<?php echo $LNG->PROS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, countsupport, actiontype, status, votebardiv);
+				recalculatePeople();
 			}
 
-			try {
-				clearSelections();
-
-				var fromnode = connection.from[0].cnode;
-				fromnode['connection'] = connection;
-				fromnode['parentid'] = parentnode.nodeid;
-				fromnode['handler'] = '';
-				if (NODE_ARGS['searchid'] && NODE_ARGS['searchid'] != "") {
-					fromnode.searchid = NODE_ARGS['searchid'];
-				}
-				if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "") {
-					fromnode.groupid = NODE_ARGS['groupid'];
-				}
-
-				NODE_ARGS['selectednodeid'] = fromnode.nodeid;
-
-				document.getElementById('add'+type+'name'+uniQ).value = "";
-				document.getElementById('add'+type+'desc'+uniQ).value = "";
-
-				if (type == 'idea') {
-					//document.getElementById('newideaform').style.display = "none";
-					refreshSolutions();
-				} else if (type == 'comment') {
-					document.getElementById('commentslist'+uniQ).loaded = 'false';
-					const commentcount = document.getElementById('count-comment'+uniQ);
-					loadChildComments('commentslist'+uniQ, parentnode.nodeid, '<?php echo $LNG->COMMENTS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, commentcount, actiontype, status);
-					recalculatePeople();
-				} else if (type == 'con') {
-					document.getElementById('counterkidsdiv'+uniQ).loaded = 'false';
-					const commentcounter = document.getElementById('count-counter'+uniQ);
-					const votebardiv = document.getElementById('votebardiv'+uniQ);
-					loadChildArguments('counterkidsdiv'+uniQ, parentnode.nodeid, '<?php echo $LNG->CONS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, commentcounter, actiontype, status, votebardiv);
-					recalculatePeople();
-				} else if (type == 'pro') {
-					document.getElementById('supportkidsdiv'+uniQ).loaded = 'false';
-					const countsupport = document.getElementById('count-support'+uniQ);
-					const votebardiv = document.getElementById('votebardiv'+uniQ);
-					loadChildArguments('supportkidsdiv'+uniQ, parentnode.nodeid, '<?php echo $LNG->PROS_NAME; ?>', linktypename, nodetypename, parentnode.parentid, parentnode.groupid, uniQ, countsupport, actiontype, status, votebardiv);
-					recalculatePeople();
-				}
-
-				const healthdebate = document.getElementById('health-debate');
-				if (healthdebate) {
-					loadContributionStats();
-				}
-
-			} catch(err) {
-				//do nothing
+			const healthdebate = document.getElementById('health-debate');
+			if (healthdebate) {
+				loadContributionStats();
 			}
-   		},
-   		onFailure: function(transport) {
-			document.getElementById('editformdiv'+type+uniQ).style.cursor = 'pointer';
-   			alert("FAILED");
-   		}
- 	});
+
+		} catch(err) {
+			//do nothing
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}	
 }
 <?php } ?>
 
-function addCurrentUserAsGroupMember() {
+async function addCurrentUserAsGroupMember() {
 
 	if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "" && USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=addgroupmember";
 		reqUrl += "&groupid="+ encodeURIComponent(NODE_ARGS['groupid']);
 		reqUrl += "&userid="+ encodeURIComponent(USER);
-		new Ajax.Request(reqUrl, { method:'post',
-			onSuccess: function(transport){
 
-				var json = transport.responseText.evalJSON();
-				if(json.error){
-					alert(json.error[0].message);
-					return;
-				}
-				try {
-					window.location.reload(true);
-				} catch(err) {
-					//do nothing
-				}
-			},
-			onFailure: function(transport) {
-				alert("FAILED");
-			}
-		});
+		try {
+			const json = await makeAPICall(innerreqUrl, 'POST');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}		
+
+			window.location.reload(true);
+		
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	}
 }
 
@@ -1875,7 +1874,7 @@ function clearSelections() {
 /**
  *	merge the selected nodes into the new node (details in merge form)
  */
-function mergeSelectedNodes(){
+async function mergeSelectedNodes(){
 
 	const tabcontet = document.getElmenetById('tab-content-idea-list');
 	const toAdd = getSelectedNodeIDs(tabcontet);
@@ -1901,34 +1900,29 @@ function mergeSelectedNodes(){
 	reqUrl += "&title="+ encodeURIComponent(newtitle);
 	reqUrl += "&desc="+ encodeURIComponent(newdesc);
 
-	//alert("FRED: "+reqUrl);
+	try {
+		const json = await makeAPICall(innerreqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}		
 
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			//now refresh the page
-			// get returned new node so I can get nodeid;
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-			var node = json.cnode[0];
-			try {
-				// Clear and close the form
-				document.getElementById = ('mergeidea').value = "";
-				document.getElementById = ('mergeideadesc').value = "";
-				toggleMergeIdeas();
+		var node = json.cnode[0];
+		try {
+			// Clear and close the form
+			document.getElementById = ('mergeidea').value = "";
+			document.getElementById = ('mergeideadesc').value = "";
+			toggleMergeIdeas();
 
-				NODE_ARGS['selectednodeid'] = node.nodeid;
-				refreshSolutions();
-			} catch(err) {
-				//do nothing
-			}
-   		},
-   		onFailure: function(transport) {
-   			alert("FAILED");
-   		}
- 	});
+			NODE_ARGS['selectednodeid'] = node.nodeid;
+			refreshSolutions();
+		} catch(err) {
+			//do nothing
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
@@ -1964,7 +1958,7 @@ function reorderRemovedSolutions(){
 /**
  *	Filter the solutions by search criteria
  */
-function filterSearchSolutions() {
+async function filterSearchSolutions() {
 	NODE_ARGS['q'] = document.getElementById('qsolution').value;
 	var scope = 'all';
 	const scopesolutionmy = document.getElementById('scopesolutionmy');
@@ -1975,20 +1969,23 @@ function filterSearchSolutions() {
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&type=solution&format=text&q="+NODE_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					NODE_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.solution = false;
-				const tabsolutionlistobj = document.getElementById('tab-solution-list-obj');
-				setTabPushed(tabsolutionlistobj,'solution-list');
+		try {
+			const json = await makeAPICall(innerreqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}			
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				NODE_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.solution = false;
+			const tabsolutionlistobj = document.getElementById('tab-solution-list-obj');
+			setTabPushed(tabsolutionlistobj,'solution-list');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.solution = false;
 		const tabsolutionlistobj = document.getElementById('tab-solution-list-obj');

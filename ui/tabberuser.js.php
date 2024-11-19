@@ -266,7 +266,7 @@ function refreshData() {
 /**
  *	load groups for the current user
  */
-function loadmygroups(context,args){
+async function loadmygroups(context,args){
 
 	//updateAddressParameters(args);
 
@@ -275,89 +275,87 @@ function loadmygroups(context,args){
 	tabcontentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getmygroups&userid="+args['userid'];
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		document.getElementById("tab-content-group-list").innerHTML = "";
+		document.getElementById("tab-content-group").style.display = 'none';
+		document.getElementById("tab-content-group-admin-list").innerHTML = "";
+		document.getElementById("tab-content-group-admin").style.display = 'none';
 
-	//alert(reqUrl);
+		var total = json.groupset[0].groups.length;
+		//alert(total);
 
-	new Ajax.Request(reqUrl, { method:'get',
-		onError: function(error) {
-			alert(error);
-		},
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+		if(total > 0){
+			var groups = json.groupset[0].groups;
+			var count = groups.length;
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				for (var i=0; i < count; i++) {
+					var group = groups[i].group;
+					group.searchid = args['searchid'];
+				}
 			}
-			document.getElementById("tab-content-group-list").innerHTML = "";
-			document.getElementById("tab-content-group").style.display = 'none';
-			document.getElementById("tab-content-group-admin-list").innerHTML = "";
-			document.getElementById("tab-content-group-admin").style.display = 'none';
 
-			var total = json.groupset[0].groups.length;
-			//alert(total);
-
-			if(total > 0){
-				var groups = json.groupset[0].groups;
-				var count = groups.length;
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					for (var i=0; i < count; i++) {
-						var group = groups[i].group;
+			var innerreqUrl = SERVICE_ROOT + "&method=getmyadmingroups&userid="+args['userid'];
+			try {
+				const json = await makeAPICall(innerreqUrl, 'GET');
+				if (json.error) {
+					alert(json.error[0].message);
+					return;
+				}			
+				var innerjson = innertransport.responseText.evalJSON();
+				if(innerjson.error){
+					alert(innerjson.error[0].message);
+					return;
+				}
+				var innertotal = innerjson.groupset[0].groups.length;
+				if(innertotal > 0) {
+					var admingroups = innerjson.groupset[0].groups;
+					for (var i=0; i < innertotal; i++) {
+						var group = admingroups[i].group;
 						group.searchid = args['searchid'];
 					}
-				}
 
-				var innerreqUrl = SERVICE_ROOT + "&method=getmyadmingroups&userid="+args['userid'];
-				new Ajax.Request(innerreqUrl, { method:'get',
-					onError: function(error) {
-						alert(error);
-					},
-					onSuccess: function(innertransport){
-						var innerjson = innertransport.responseText.evalJSON();
-						if(innerjson.error){
-							alert(innerjson.error[0].message);
-							return;
+					var finalgroups = new Array();
+					for (var k=0; k < count; k++) {
+						var group = groups[k].group;
+						var found = false;
+						for (var j=0; j < innertotal; j++) {
+							var innergroup = admingroups[j].group;
+							if (innergroup.groupid == group.groupid) {
+								found = true;
+								break;
+							}
 						}
-						var innertotal = innerjson.groupset[0].groups.length;
-						if(innertotal > 0) {
-							var admingroups = innerjson.groupset[0].groups;
-							for (var i=0; i < innertotal; i++) {
-								var group = admingroups[i].group;
-								group.searchid = args['searchid'];
-							}
-
-							var finalgroups = new Array();
-							for (var k=0; k < count; k++) {
-								var group = groups[k].group;
-								var found = false;
-								for (var j=0; j < innertotal; j++) {
-									var innergroup = admingroups[j].group;
-									if (innergroup.groupid == group.groupid) {
-										found = true;
-										break;
-									}
-								}
-								if (!found) {
-									finalgroups.push(groups[k]);
-								}
-							}
-							document.getElementById("tab-content-group-admin").style.display = 'block';
-							document.getElementById("tab-content-group").style.display = 'block';
-
-							displayMyGroups(document.getElementById("tab-content-group-admin-list"),admingroups, 1);
-							displayMyGroups(document.getElementById("tab-content-group-list"),finalgroups, 1);
-						} else {
-							document.getElementById("tab-content-group").style.display = 'block';
-							displayGroups(document.getElementById("tab-content-group-list"),groups, 1, 466,180, false, true);
+						if (!found) {
+							finalgroups.push(groups[k]);
 						}
 					}
-				});
-			} else {
-				document.getElementById("tab-content-group").style.display = 'block';
-				document.getElementById("tab-content-group").innerHTML += '<?php echo $LNG->WIDGET_NO_GROUPS_FOUND; ?>';
+					document.getElementById("tab-content-group-admin").style.display = 'block';
+					document.getElementById("tab-content-group").style.display = 'block';
+
+					displayMyGroups(document.getElementById("tab-content-group-admin-list"),admingroups, 1);
+					displayMyGroups(document.getElementById("tab-content-group-list"),finalgroups, 1);
+				} else {
+					document.getElementById("tab-content-group").style.display = 'block';
+					displayGroups(document.getElementById("tab-content-group-list"),groups, 1, 466,180, false, true);
+				}
+			} catch (innererr) {
+				alert("There was an error: "+innererr.message);
+				console.log(innererr)
 			}
+		} else {
+			document.getElementById("tab-content-group").style.display = 'block';
+			document.getElementById("tab-content-group").innerHTML += '<?php echo $LNG->WIDGET_NO_GROUPS_FOUND; ?>';
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
   	DATA_LOADED.group = true;
 }
 
@@ -366,7 +364,7 @@ function loadmygroups(context,args){
 /**
  *	load next/previous set of con nodes
  */
-function loadcons(context,args){
+async function loadcons(context,args){
 
 	var types = "Con";
 
@@ -380,64 +378,58 @@ function loadcons(context,args){
 	tabcontentdatacon.appendChild(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		var total = json.nodeset[0].totalno;
+		if (CURRENT_TAB == 'data') {
+			var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+			window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		}
+		var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con")
 
-	new Ajax.Request(reqUrl, { method:'get',
-  			onSuccess: function(transport){
+		document.getElementById("tab-content-data-con").appendChild(navbar);
 
-  				try {
-  					var json = transport.responseText.evalJSON();
-  				} catch(err) {
-  					console.log(err);
-  				}
-
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
-
-				var total = json.nodeset[0].totalno;
-				if (CURRENT_TAB == 'data') {
-					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
 				}
-				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con")
+			}
 
-				document.getElementById("tab-content-data-con").appendChild(navbar);
+			var tb3 = new Element("div", {'class':'toolbarrow'});
 
-				//display nodes
-				if(json.nodeset[0].nodes.length > 0){
-					//preprosses nodes to add searchid if it is there
-					if (args['searchid'] && args['searchid'] != "") {
-						var nodes = json.nodeset[0].nodes;
-						var count = nodes.length;
-						for (var i=0; i < count; i++) {
-							var node = nodes[i];
-							node.cnode.searchid = args['searchid'];
-						}
-					}
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'con',reorderCons));
 
-					var tb3 = new Element("div", {'class':'toolbarrow'});
+			document.getElementById("tab-content-data-con").appendChild(tb3);
+			displayUsersNodes(document.getElementById("tab-content-data-con"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+		}
 
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'con',reorderCons));
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			document.getElementById("tab-content-data-con").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
-					document.getElementById("tab-content-data-con").appendChild(tb3);
-					displayUsersNodes(document.getElementById("tab-content-data-con"),json.nodeset[0].nodes,parseInt(args['start'])+1);
-				}
-
-				//display nav
-				if (total > parseInt( args["max"] )) {
-					document.getElementById("tab-content-data-con").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
-				}
-    		}
-  		});
   	DATA_LOADED.con = true;
 }
 
 /**
  *	load next/previous set of pro nodes
  */
-function loadpros(context,args){
+async function loadpros(context,args){
 
 	var types = "Pro";
 
@@ -451,68 +443,62 @@ function loadpros(context,args){
 	tabcontentdatapro.appendChild(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		var total = json.nodeset[0].totalno;
+		if (CURRENT_TAB == 'data') {
+			var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+			window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		}
+		var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro")
 
-	new Ajax.Request(reqUrl, { method:'get',
-  			onSuccess: function(transport){
+		const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+		tabcontentdatapro.innerHTML = "";
+		tabcontentdatapro.appanedChild(navbar);
 
-  				try {
-  					var json = transport.responseText.evalJSON();
-  				} catch(err) {
-  					console.log(err);
-  				}
-
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
-
-				var total = json.nodeset[0].totalno;
-				if (CURRENT_TAB == 'data') {
-					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
 				}
-				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro")
+			}
 
-				const tabcontentdatapro = document.getElementById("tab-content-data-pro");
-				tabcontentdatapro.innerHTML = "";
-				tabcontentdatapro.appanedChild(navbar);
+			var tb3 = new Element("div", {'class':'toolbarrow'});
 
-				//display nodes
-				if(json.nodeset[0].nodes.length > 0){
-					//preprosses nodes to add searchid if it is there
-					if (args['searchid'] && args['searchid'] != "") {
-						var nodes = json.nodeset[0].nodes;
-						var count = nodes.length;
-						for (var i=0; i < count; i++) {
-							var node = nodes[i];
-							node.cnode.searchid = args['searchid'];
-						}
-					}
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'pro',reorderPros));
 
-					var tb3 = new Element("div", {'class':'toolbarrow'});
+			const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+			tabcontentdatapro.appendChild(tb3);
+			displayUsersNodes(tabcontentdatapro,json.nodeset[0].nodes,parseInt(args['start'])+1);
+		}
 
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'pro',reorderPros));
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			const tabcontentdatapro = document.getElementById("tab-content-data-pro");
+			tabcontentdatapro.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
-					const tabcontentdatapro = document.getElementById("tab-content-data-pro");
-					tabcontentdatapro.appendChild(tb3);
-					displayUsersNodes(tabcontentdatapro,json.nodeset[0].nodes,parseInt(args['start'])+1);
-				}
-
-				//display nav
-				if (total > parseInt( args["max"] )) {
-					const tabcontentdatapro = document.getElementById("tab-content-data-pro");
-					tabcontentdatapro.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
-				}
-    		}
-  		});
   	DATA_LOADED.pro = true;
 }
 
 /**
  *	load next/previous set of nodes
  */
-function loadissues(context,args){
+async function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 	updateAddressParameters(args);
 
@@ -521,68 +507,62 @@ function loadissues(context,args){
 	tabcontentdataissue.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		//display nav
+		var total = json.nodeset[0].totalno;
+		if (CURRENT_TAB == 'data') {
+			var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+			window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		}
 
-	new Ajax.Request(reqUrl, { method:'get',
-  			onSuccess: function(transport){
+		const tabcontentdataissue = document.getElementById("tab-content-data-issue");
+		tabcontentdataissue.innerHTML = "";
+		tabcontentdataissue.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 
-  				try {
-  					var json = transport.responseText.evalJSON();
-  				} catch(err) {
-  					console.log(err);
-  				}
-
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
-
-				//display nav
-				var total = json.nodeset[0].totalno;
-				if (CURRENT_TAB == 'data') {
-					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
 				}
+			}
 
-				const tabcontentdataissue = document.getElementById("tab-content-data-issue");
-				tabcontentdataissue.innerHTML = "";
-				tabcontentdataissue.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+			var tb3 = new Element("div", {'class':'toolbarrow'});
 
-				//display nodes
-				if(json.nodeset[0].nodes.length > 0){
-					//preprosses nodes to add searchid if it is there
-					if (args['searchid'] && args['searchid'] != "") {
-						var nodes = json.nodeset[0].nodes;
-						var count = nodes.length;
-						for (var i=0; i < count; i++) {
-							var node = nodes[i];
-							node.cnode.searchid = args['searchid'];
-						}
-					}
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
-					var tb3 = new Element("div", {'class':'toolbarrow'});
+			document.getElementById("tab-content-data-issue").appendChild(tb3);
 
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
+			//displayIssueNodes(document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+			displayIssueNodes(466, 210, document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
+		}
 
-					document.getElementById("tab-content-data-issue").appendChild(tb3);
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			document.getElementById("tab-content-data-issue").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
-					//displayIssueNodes(document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1);
-					displayIssueNodes(466, 210, document.getElementById("tab-content-data-issue"),json.nodeset[0].nodes,parseInt(args['start'])+1, true, "issues", 'active', false, true, true);
-				}
-
-				//display nav
-				if (total > parseInt( args["max"] )) {
-					document.getElementById("tab-content-data-issue").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
-				}
-    		}
-  		});
   	DATA_LOADED.issue = true;
 }
 
 /**
  *	load next/previous set of nodes
  */
-function loadsolutions(context,args){
+async function loadsolutions(context,args){
 	args['filternodetypes'] = "Solution";
 	updateAddressParameters(args);
 
@@ -591,64 +571,57 @@ function loadsolutions(context,args){
 	tabcontentdatasolution.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		//display nav
+		var total = json.nodeset[0].totalno;
+		if (CURRENT_TAB == 'data') {
+			var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+			window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		}
+		const tabcontentdatasolution = document.getElementById("tab-content-data-solution");
+		tabcontentdatasolution.innerHTML = "";
+		tabcontentdatasolution.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
 
-	new Ajax.Request(reqUrl, { method:'get',
-  			onSuccess: function(transport){
-
-  				try {
-  					var json = transport.responseText.evalJSON();
-  				} catch(err) {
-  					console.log(err);
-  				}
-
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
-
-				//display nav
-				var total = json.nodeset[0].totalno;
-				if (CURRENT_TAB == 'data') {
-					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		if(json.nodeset[0].nodes.length > 0){
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
 				}
-				const tabcontentdatasolution = document.getElementById("tab-content-data-solution");
-				tabcontentdatasolution.innerHTML = "";
-				tabcontentdatasolution.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+			}
 
-				if(json.nodeset[0].nodes.length > 0){
-					//preprosses nodes to add searchid if it is there
-					if (args['searchid'] && args['searchid'] != "") {
-						var nodes = json.nodeset[0].nodes;
-						var count = nodes.length;
-						for (var i=0; i < count; i++) {
-							var node = nodes[i];
-							node.cnode.searchid = args['searchid'];
-						}
-					}
+			var tb3 = new Element("div", {'class':'toolbarrow'});
 
-					var tb3 = new Element("div", {'class':'toolbarrow'});
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
 
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
+			document.getElementById("tab-content-data-solution").appendChild(tb3);
+			displayUsersNodes(document.getElementById("tab-content-data-solution"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+		}
 
-					document.getElementById("tab-content-data-solution").appendChild(tb3);
-					displayUsersNodes(document.getElementById("tab-content-data-solution"),json.nodeset[0].nodes,parseInt(args['start'])+1);
-				}
-
-				//display nav
-				if (total > parseInt( args["max"] )) {
-					document.getElementById("tab-content-data-solution").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
-				}
-    		}
-  		});
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			document.getElementById("tab-content-data-solution").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
   	DATA_LOADED.solution = true;
 }
 
 /**
  *	load next/previous set of comment nodes
  */
-function loadcomments(context,args) {
+async function loadcomments(context,args) {
 	args['filternodetypes'] = 'Comment';
 	updateAddressParameters(args);
 
@@ -657,62 +630,56 @@ function loadcomments(context,args) {
 	tabcontentdatacomment.appendChild(getLoading("<?php echo $LNG->LOADING_COMMENTS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-	//alert(reqUrl);
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			try {
-				var json = transport.responseText.evalJSON();
-			} catch(err) {
-				console.log(err);
-			}
-
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var count = 0;
-			if (json.nodeset[0].totalno) {
-				count = json.nodeset[0].totalno;
-			}
-
-			var nodes = json.nodeset[0].nodes;
-
-			//display nav
-			var total = json.nodeset[0].totalno;
-			if (CURRENT_TAB == 'data') {
-				var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-				window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
-			}
-			const tabcontentdatacomment = document.getElementById("tab-content-data-comment");
-			tabcontentdatacomment.innerHTML = "";
-			tabcontentdatacomment.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
-
-			if(nodes.length > 0){
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
-
-				var tb3 = new Element("div", {'class':'toolbarrow'});
-				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>'};
-				tb3.insert(displaySortForm(sortOpts,args,'comment',reorderComments));
-				document.getElementById("tab-content-data-comment").appendChild(tb3);
-
-				displayUsersNodes(document.getElementById("tab-content-data-comment"),nodes,parseInt(args['start'])+1);
-			}
-
-			//display nav
-			if (total > parseInt( args["max"] )) {
-				document.getElementById("tab-content-data-comment").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+		var count = 0;
+		if (json.nodeset[0].totalno) {
+			count = json.nodeset[0].totalno;
+		}
+
+		var nodes = json.nodeset[0].nodes;
+
+		//display nav
+		var total = json.nodeset[0].totalno;
+		if (CURRENT_TAB == 'data') {
+			var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+			window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
+		}
+		const tabcontentdatacomment = document.getElementById("tab-content-data-comment");
+		tabcontentdatacomment.innerHTML = "";
+		tabcontentdatacomment.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
+
+		if(nodes.length > 0){
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
+			}
+
+			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'comment',reorderComments));
+			document.getElementById("tab-content-data-comment").appendChild(tb3);
+
+			displayUsersNodes(document.getElementById("tab-content-data-comment"),nodes,parseInt(args['start'])+1);
+		}
+
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			document.getElementById("tab-content-data-comment").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
+		}
+
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 
   	DATA_LOADED.comment = true;
 }
@@ -793,26 +760,30 @@ function reorderComments(){
 /**
  *	Filter the pro by search criteria
  */
- function filterSearchPros() {
+ async function filterSearchPros() {
  	PRO_ARGS['q'] = document.getElementById('qpro').value;
  	var scope = 'all';
  	PRO_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+PRO_ARGS['userid']+"&type=userpro&format=text&q="+PRO_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					PRO_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.pro = false;
-				setTabPushed(document.getElementById('tab-pro-list-obj'),'data-pro');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
 			}
-		});
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				PRO_ARGS['searchid'] = searchid;
+			}
+			DATA_LOADED.pro = false;
+			setTabPushed(document.getElementById('tab-pro-list-obj'),'data-pro');
+
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.pro = false;
 		setTabPushed(document.getElementById('tab-pro-list-obj'),'data-pro');
@@ -822,26 +793,29 @@ function reorderComments(){
 /**
  *	Filter the cons by search criteria
  */
-function filterSearchCons() {
+async function filterSearchCons() {
 	CON_ARGS['q'] = document.getElementById('qcon').value;
 	var scope = 'all';
 	CON_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+CON_ARGS['userid']+"&type=usercon&format=text&q="+CON_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					CON_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.con = false;
-				setTabPushed(document.getElementById('tab-con-list-obj'),'data-con');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}		
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				CON_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.con = false;
+			setTabPushed(document.getElementById('tab-con-list-obj'),'data-con');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.con = false;
 		setTabPushed(document.getElementById('tab-con-list-obj'),'data-con');
@@ -851,26 +825,29 @@ function filterSearchCons() {
 /**
  *	Filter the issues by search criteria
  */
-function filterSearchIssues() {
+async function filterSearchIssues() {
 	ISSUE_ARGS['q'] = document.getElementById('qissue').value;
 	var scope = 'all';
 	ISSUE_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+ISSUE_ARGS['userid']+"&type=userissue&format=text&q="+ISSUE_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					ISSUE_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.issue = false;
-				setTabPushed(document.getElementById('tab-issue-list-obj'),'data-issue');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}		
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				ISSUE_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.issue = false;
+			setTabPushed(document.getElementById('tab-issue-list-obj'),'data-issue');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.issue = false;
 		setTabPushed(document.getElementById('tab-issue-list-obj'),'data-issue');
@@ -880,26 +857,29 @@ function filterSearchIssues() {
 /**
  *	Filter the solutions by search criteria
  */
-function filterSearchSolutions() {
+async function filterSearchSolutions() {
 	SOLUTION_ARGS['q'] = document.getElementById('qsolution').value;
 	var scope = 'all';
 	SOLUTION_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+SOLUTION_ARGS['userid']+"&type=usersolution&format=text&q="+SOLUTION_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					SOLUTION_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.solution = false;
-				setTabPushed(document.getElementById('tab-solution-list-obj'),'data-solution');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}			
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				SOLUTION_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.solution = false;
+			setTabPushed(document.getElementById('tab-solution-list-obj'),'data-solution');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.solution = false;
 		setTabPushed(document.getElementById('tab-solution-list-obj'),'data-solution');
@@ -909,26 +889,29 @@ function filterSearchSolutions() {
 /**
  *	Filter the websites by search criteria
  */
-function filterSearchResources() {
+async function filterSearchResources() {
 	RESOURCE_ARGS['q'] = document.getElementById('qweb').value;
 	var scope = 'all';
 	RESOURCE_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+RESOURCE_ARGS['userid']+"&type=userresource&format=text&q="+URL_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					RESOURCE_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.resource = false;
-				setTabPushed(document.getElementById('tab-resource-list-obj'),'data-resource');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}			
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				RESOURCE_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.resource = false;
+			setTabPushed(document.getElementById('tab-resource-list-obj'),'data-resource');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.resource = false;
 		setTabPushed(document.getElementById('tab-resource-list-obj'),'data-resource');
@@ -938,26 +921,29 @@ function filterSearchResources() {
 /**
  *	Filter the users by search criteria
  */
-function filterSearchComments() {
+async function filterSearchComments() {
 	COMMENT_ARGS['q'] = document.getElementById('qcomment').value;
 	var scope = 'all';
 	COMMENT_ARGS['scope'] = scope;
 
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&typeitemid="+NODE_ARGS['userid']+"&type=usercomment&format=text&q="+NODE_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					COMMENT_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.comment = false;
-				setTabPushed(document.getElementById('tab-comment-list-obj'),'data-comment');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}		
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				COMMENT_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.comment = false;
+			setTabPushed(document.getElementById('tab-comment-list-obj'),'data-comment');
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.comment = false;
 		setTabPushed(document.getElementById('tab-comment-list-obj'),'data-comment');
@@ -1069,7 +1055,7 @@ function createNav(total, start, count, argArray, context, type){
 		//previous
 	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
-			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
 	        prevSpan.onclick =  function() {
 	            var newArr = argArray;
@@ -1077,7 +1063,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        };
 	    } else {
-			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("inactive");
 	    }
 		
@@ -1105,7 +1091,7 @@ function createNav(total, start, count, argArray, context, type){
 	    //next
 	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
 	        nextSpan.onclick = function() {
 	            var newArr = argArray;
@@ -1113,7 +1099,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        };
 	    } else {
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("inactive");
 	    }
 		pageUL.insert(nextSpan);

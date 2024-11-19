@@ -568,16 +568,21 @@
 
 	<script type="text/javascript">
 		function init(){
-			$('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?>");
+			document.getElementById('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?>");
 
-			$H(activityitems).each(function(pair){
-				$(pair.key).insert(pair.value);
+			Object.entries(activityitems).forEach(function([key, value]) {
+				const element = document.querySelector(key);
+				if (element) {
+					element.insertAdjacentHTML('beforeend', value); // Use appendChild if value is a DOM node
+				}
 			});
 
-			$H(useritems).each(function(pair){
-				$(pair.key).insert(pair.value);
+			Object.entries(useritems).forEach(function([key, value]) {
+				const element = document.querySelector(key);
+				if (element) {
+					element.insertAdjacentHTML('beforeend', value); // Use appendChild if value is a DOM node
+				}
 			});
-
 		}
 
 		window.onload = init;

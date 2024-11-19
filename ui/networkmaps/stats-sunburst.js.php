@@ -31,11 +31,11 @@ var sunburstGraph = null;
 
 function loadExploreGroupSunburst(){
 
-	$("sunburst-div").innerHTML = "";
+	document.getElementById("sunburst-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("sunburst-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("sunburst-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -52,7 +52,7 @@ function loadExploreGroupSunburst(){
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(sunburstdiv);
-	$("sunburst-div").insert(outerDiv);
+	document.getElementById("sunburst-div").insert(outerDiv);
 
 	var sunburstInfoOuter = new Element('div', {'class':'boxshadowsquare', 'id':'sunburstinfoouterdiv'});
 	var sunburstTitleDiv = new Element('div', {'id':'sunbursttitlediv'});
@@ -66,7 +66,7 @@ function loadExploreGroupSunburst(){
 
 	sunburstInfoOuter.insert(sunburstTitleDiv);
 	sunburstInfoOuter.insert(sunburstInfoScrollDiv);
-	$("sunburst-div").insert(sunburstInfoOuter);
+	document.getElementById("sunburst-div").insert(sunburstInfoOuter);
 
 	sunburstGraph = createNewSunburstGraph('sunburstdiv', 'sunburstinfodiv');
 

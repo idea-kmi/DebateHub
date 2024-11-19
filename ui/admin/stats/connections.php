@@ -65,7 +65,7 @@
 		document.getElementById("tab-connections-overview").insert( nextrow );
 	}
 
-	function overviewNodeWidget(context, title, filternodetypes, orderby, sort, count, buttontitle, key, hinttype, uniqueid, filtertype) {
+	async function overviewNodeWidget(context, title, filternodetypes, orderby, sort, count, buttontitle, key, hinttype, uniqueid, filtertype) {
 
 		if (uniqueid == undefined) {
 			uniqueid = 'something';
@@ -87,30 +87,25 @@
 		args["sort"] = sort;
 
 		var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-		new Ajax.Request(reqUrl, { method:'get',
-			onSuccess: function(transport){
-				try {
-					var json = transport.responseText.evalJSON();
-					if(json.error){
-						alert(json.error[0].message);
-						return;
-					}
-				} catch(err) {
-					console.log(err);
-				}
-
-				if(json.nodeset[0].count != 0){
-					var nodes = json.nodeset[0].nodes;
-
-					main.innerHTML="";
-					displayConnectionStatNodes(main,nodes,parseInt(args['start'])+1, true, uniqueid);
-				} else {
-					main.innerHTML="";
-					main.insert("<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>");
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
 			}
-		});
+			if(json.nodeset[0].count != 0){
+				var nodes = json.nodeset[0].nodes;
+
+				main.innerHTML="";
+				displayConnectionStatNodes(main,nodes,parseInt(args['start'])+1, true, uniqueid);
+			} else {
+				main.innerHTML="";
+				main.insert("<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>");
+			}
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 
 		if (buttontitle && buttontitle != "") {
 			var allbutton = new Element("a", {'href':'#'+key+'-list', 'class':'active', 'title':'<?php echo $LNG->WIDGET_CLICK_EXPLORE_HINT; ?> '+hinttype, 'style':''});

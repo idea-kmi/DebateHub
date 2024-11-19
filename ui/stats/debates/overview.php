@@ -151,10 +151,10 @@
 				'style':'float:left;clear:both;margin-top:10px;'});
 			next.insert(nodename);
 		}
-		$(divarea).insert(next);
+		document.getElementById(divarea).insert(next);
 	}
 
-	function loadOverviewData() {
+	async function loadOverviewData() {
 
 		const messagearea = document.getElementById("messagearea");
 		messagearea.innerHTML = "";
@@ -164,506 +164,499 @@
 		args['filternodetypes'] = "Issue,Solution,Pro,Con";
 		args["style"] = 'shortactivity';
 		var reqUrl = SERVICE_ROOT + "&method=getdebate&nodeid="+mainnodeid+"&" + Object.toQueryString(args);
+		try {
+			const json = await makeAPICall(reqUrl, 'POST');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}
 
-		new Ajax.Request(reqUrl, { method:'post',
-			onSuccess: function(transport){
-				//alert(transport.responseText);
-
-				var json = null;
-				try {
-					json = transport.responseText.evalJSON();
-				} catch(e) {
-					alert(e);
-				}
-				if(json.error){
-					alert(json.error[0].message);
-					return;
-				}
-
-				var nodes = new Array();
-				var conns = json.connectionset[0].connections;
-				//alert(conns.length)
-				if (conns.length > 0) {
-					var checkNodes = new Array();
-					for (j=0; j<conns.length;j++) {
-						var con = conns[j].connection;
-						var from = con.from[0];
-						if (checkNodes.indexOf(from.cnode.nodeid) == -1) {
-							checkNodes.push(from.cnode.nodeid);
-							nodes.push(from)
-						}
-						var to = con.to[0];
-						if (checkNodes.indexOf(to.cnode.nodeid) == -1) {
-							checkNodes.push(to.cnode.nodeid);
-							nodes.push(to)
-						}
+			var nodes = new Array();
+			var conns = json.connectionset[0].connections;
+			//alert(conns.length)
+			if (conns.length > 0) {
+				var checkNodes = new Array();
+				for (j=0; j<conns.length;j++) {
+					var con = conns[j].connection;
+					var from = con.from[0];
+					if (checkNodes.indexOf(from.cnode.nodeid) == -1) {
+						checkNodes.push(from.cnode.nodeid);
+						nodes.push(from)
+					}
+					var to = con.to[0];
+					if (checkNodes.indexOf(to.cnode.nodeid) == -1) {
+						checkNodes.push(to.cnode.nodeid);
+						nodes.push(to)
 					}
 				}
+			}
 
-				//var nodes = json.nodeset[0].nodes;
-				//alert("node count = "+nodes.length);
-				if (nodes.length > 0) {
-					var now = new Date();
-					var timeTwoWeeksAgo = now.setDate(now.getDate() - 14);
-					now = new Date();
-					var timeFiveDaysAgo = now.setDate(now.getDate() - 5);
+			//var nodes = json.nodeset[0].nodes;
+			//alert("node count = "+nodes.length);
+			if (nodes.length > 0) {
+				var now = new Date();
+				var timeTwoWeeksAgo = now.setDate(now.getDate() - 14);
+				now = new Date();
+				var timeFiveDaysAgo = now.setDate(now.getDate() - 5);
 
-					var avergaeWordCount = 0;
-					var wordsByUser = {};
-					var viewsByUser = {};
-					var minWordCount = 0;
-					var maxWordCount = 0;
-					var totalWordCount = 0;
-					var contributorCount = 0;
-					var viewCount = 0;
-					var allViews = new Array();
-					var allVotesCount = 0;
-					var contributionsArray = new Array();
-					var contributionsObj = {key:"types", values:contributionsArray};
-					var contributionTypes = {};
+				var avergaeWordCount = 0;
+				var wordsByUser = {};
+				var viewsByUser = {};
+				var minWordCount = 0;
+				var maxWordCount = 0;
+				var totalWordCount = 0;
+				var contributorCount = 0;
+				var viewCount = 0;
+				var allViews = new Array();
+				var allVotesCount = 0;
+				var contributionsArray = new Array();
+				var contributionsObj = {key:"types", values:contributionsArray};
+				var contributionTypes = {};
 
-					for(var i=0; i< nodes.length; i++){
-						var node = nodes[i].cnode;
-						//alert(i);
-						//alert(node.toSource())
+				for(var i=0; i< nodes.length; i++){
+					var node = nodes[i].cnode;
+					//alert(i);
+					//alert(node.toSource())
 
-						var nameCount = countWords(node.name);
-						var descCount = 0;
-						if (node.description) {
-							descCount = countWords(node.description);
-						}
+					var nameCount = countWords(node.name);
+					var descCount = 0;
+					if (node.description) {
+						descCount = countWords(node.description);
+					}
 
-						var userid = node.users[0].user.userid;
-						var nextWordCount = descCount+nameCount;
-						if (nextWordCount>maxWordCount) {
-							maxWordCount = nextWordCount
-						}
-						if (minWordCount == 0 || nextWordCount < minWordCount) {
-							minWordCount = nextWordCount;
-						}
-						totalWordCount = totalWordCount+nextWordCount;
+					var userid = node.users[0].user.userid;
+					var nextWordCount = descCount+nameCount;
+					if (nextWordCount>maxWordCount) {
+						maxWordCount = nextWordCount
+					}
+					if (minWordCount == 0 || nextWordCount < minWordCount) {
+						minWordCount = nextWordCount;
+					}
+					totalWordCount = totalWordCount+nextWordCount;
 
-						node.votedate = 0;
-						node.totalvotes = 0;
+					node.votedate = 0;
+					node.totalvotes = 0;
 
-						var rolename = node.role[0].role.name;
-						if (contributionTypes[rolename]) {
-							contributionTypes[rolename] = contributionTypes[rolename]+1;
-						} else {
-							contributionTypes[rolename] = 1;
-						}
+					var rolename = node.role[0].role.name;
+					if (contributionTypes[rolename]) {
+						contributionTypes[rolename] = contributionTypes[rolename]+1;
+					} else {
+						contributionTypes[rolename] = 1;
+					}
 
-						if (node.activity) {
-							var activity = node.activity;
-							var activities = activity[0].activityset.activities;
-							for (var j=0; j<activities.length; j++) {
-								var next = activities[j].activity;
-								if (next.type == "View") {
-									if (next.userid && next.userid != "") {
-										allViews.push(next);
-									}
+					if (node.activity) {
+						var activity = node.activity;
+						var activities = activity[0].activityset.activities;
+						for (var j=0; j<activities.length; j++) {
+							var next = activities[j].activity;
+							if (next.type == "View") {
+								if (next.userid && next.userid != "") {
+									allViews.push(next);
 								}
 							}
 						}
+					}
 
-						if (node.votes) {
-							var votes = node.votes[0].voting;
-							var totalvotes = 0;
-							var votesArray = new Array();
+					if (node.votes) {
+						var votes = node.votes[0].voting;
+						var totalvotes = 0;
+						var votesArray = new Array();
 
-							for (var j=0; j<votes.positivevoteslist.length; j++) {
-								var vote = votes.positivevoteslist[j].vote;
-								totalvotes++;
-								allVotesCount++;
-								votesArray.push(vote);
-							}
-							for (var j=0; j<votes.negativevoteslist.length; j++) {
-								var vote = votes.negativevoteslist[j].vote;
-								totalvotes++;
-								allVotesCount++;
-								votesArray.push(vote);
-							}
-							for (var j=0; j<votes.positiveconnvoteslist.length; j++) {
-								var vote = votes.positiveconnvoteslist[j].vote;
-								totalvotes++;
-								allVotesCount++;
-								votesArray.push(vote);
-							}
-							for (var j=0; j<votes.negativeconnvoteslist.length; j++) {
-								var vote = votes.negativeconnvoteslist[j].vote;
-								totalvotes++;
-								allVotesCount++;
-								votesArray.push(vote);
-							}
-
-							node.totalvotes = totalvotes;
-							votesArray.sort(activitydatesortdesc);
-							if (votesArray[0]) {
-								node.votedate = votesArray[0].date;
-							}
+						for (var j=0; j<votes.positivevoteslist.length; j++) {
+							var vote = votes.positivevoteslist[j].vote;
+							totalvotes++;
+							allVotesCount++;
+							votesArray.push(vote);
+						}
+						for (var j=0; j<votes.negativevoteslist.length; j++) {
+							var vote = votes.negativevoteslist[j].vote;
+							totalvotes++;
+							allVotesCount++;
+							votesArray.push(vote);
+						}
+						for (var j=0; j<votes.positiveconnvoteslist.length; j++) {
+							var vote = votes.positiveconnvoteslist[j].vote;
+							totalvotes++;
+							allVotesCount++;
+							votesArray.push(vote);
+						}
+						for (var j=0; j<votes.negativeconnvoteslist.length; j++) {
+							var vote = votes.negativeconnvoteslist[j].vote;
+							totalvotes++;
+							allVotesCount++;
+							votesArray.push(vote);
 						}
 
-						if (wordsByUser.hasOwnProperty(userid)) {
-							var count = wordsByUser[userid];
-							count = count+descCount+nameCount;
-							wordsByUser[userid] = count;
-						} else {
-							contributorCount++;
-							var count = descCount+nameCount;
-							wordsByUser[userid] = count;
+						node.totalvotes = totalvotes;
+						votesArray.sort(activitydatesortdesc);
+						if (votesArray[0]) {
+							node.votedate = votesArray[0].date;
 						}
 					}
 
-					// MOST VOTES ON
-					var totaladded = 0;
-					nodes.sort(votedatesortdesc);
-					var count = nodes.length;
-					if (count > 3) {
-						count = 3;
+					if (wordsByUser.hasOwnProperty(userid)) {
+						var count = wordsByUser[userid];
+						count = count+descCount+nameCount;
+						wordsByUser[userid] = count;
+					} else {
+						contributorCount++;
+						var count = descCount+nameCount;
+						wordsByUser[userid] = count;
 					}
-					for (var i=0; i<count; i++) {
-						var nextnode = nodes[i];
-						if (parseInt(nextnode.cnode.totalvotes) > 0) {
-							var votes = '<span style="padding-left:10px;color:dimgray"><?php echo $LNG->STATS_OVERVIEW_VOTES;?>'+parseInt(nextnode.cnode.totalvotes)+'</span>';
-							addOverviewItem($("topvotedlist"), nextnode.cnode, votes);
-							totaladded++;
-						}
-					}
-					if (totaladded == 0) {
-						$('topvoteddiv').style.display = 'none';
-					}
+				}
 
-					// MOST RENCETNLY VOTED ON
-					totaladded = 0;
-					nodes.sort(votesortdesc);
-					count = nodes.length;
-					if (count > 3) {
-						count = 3;
+				// MOST VOTES ON
+				var totaladded = 0;
+				nodes.sort(votedatesortdesc);
+				var count = nodes.length;
+				if (count > 3) {
+					count = 3;
+				}
+				for (var i=0; i<count; i++) {
+					var nextnode = nodes[i];
+					if (parseInt(nextnode.cnode.totalvotes) > 0) {
+						var votes = '<span style="padding-left:10px;color:dimgray"><?php echo $LNG->STATS_OVERVIEW_VOTES;?>'+parseInt(nextnode.cnode.totalvotes)+'</span>';
+						addOverviewItem(document.getElementById("topvotedlist"), nextnode.cnode, votes);
+						totaladded++;
 					}
-					for (var i=0; i<count; i++) {
-						var nextnode = nodes[i];
-						if (nextnode.cnode.votedate) {
-							var creationDate = new Date(nextnode.cnode.votedate*1000);
-							var fomatedDate = "";
-							if (creationDate) {
-								fomatedDate = creationDate.format(DATE_FORMAT_PROJECT);
-							}
-							var date = '<span style="padding-left:10px;color:dimgray"><?php echo $LNG->STATS_OVERVIEW_DATE;?>'+fomatedDate+'</span>';
-							addOverviewItem($("recentvotedlist"), nextnode.cnode, date);
-							totaladded++;
-						}
-					}
-					if (totaladded == 0) {
-						$('recentvoteddiv').style.display = 'none';
-					}
+				}
+				if (totaladded == 0) {
+					document.getElementById('topvoteddiv').style.display = 'none';
+				}
 
-					// RECENTLY ADDED NODES
-					totaladded = 0;
-					nodes.sort(creationdatenodesortdesc);
-					count = nodes.length;
-					if (count > 3) {
-						count = 3;
-					}
-					for (var i=0; i<count; i++) {
-						var nextnode = nodes[i];
-						var creationDate = new Date(nextnode.cnode.creationdate*1000);
+				// MOST RENCETNLY VOTED ON
+				totaladded = 0;
+				nodes.sort(votesortdesc);
+				count = nodes.length;
+				if (count > 3) {
+					count = 3;
+				}
+				for (var i=0; i<count; i++) {
+					var nextnode = nodes[i];
+					if (nextnode.cnode.votedate) {
+						var creationDate = new Date(nextnode.cnode.votedate*1000);
 						var fomatedDate = "";
 						if (creationDate) {
 							fomatedDate = creationDate.format(DATE_FORMAT_PROJECT);
 						}
 						var date = '<span style="padding-left:10px;color:dimgray"><?php echo $LNG->STATS_OVERVIEW_DATE;?>'+fomatedDate+'</span>';
-						addOverviewItem($("latestnodeslist"), nextnode.cnode, date);
+						addOverviewItem(document.getElementById("recentvotedlist"), nextnode.cnode, date);
 						totaladded++;
 					}
-					if (totaladded == 0) {
-						$('latestnodesdiv').style.display = 'none';
-					}
-
-					// WORD STATS
-					var userNodeCount = contributorCount;
-					var averageWordCount = 0;
-					if (userNodeCount != 0) {
-						averageWordCount = parseInt(parseInt(totalWordCount)/parseInt(userNodeCount));
-					}
-
-					$('average-words-count').update(averageWordCount);
-					$('min-words-count').update(minWordCount);
-					$('max-words-count').update(maxWordCount);
-
-
-					// HEALTH PARTICIPATION
-
-					$('health-participation-count').update(userNodeCount);
-					var person = userNodeCount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-					$('health-participation-message').update(person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>');
-					if (userNodeCount < 3) {
-						$('health-participation-red').className = "trafficlightredon";
-						$('health-participation-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-					} else if (userNodeCount >= 3 && userNodeCount <= 5) {
-						$('health-participation-orange').className = "trafficlightorangeon";
-						$('health-participation-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-					} else if (userNodeCount > 5) {
-						$('health-participation-green').className = "trafficlightgreenon";
-						$('health-participation-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-					}
-
-					// HEALTH VIEWING
-					var peoplegreencount = 0;
-					var peopleorangecount = 0;
-					var peopleGreenCheck = new Array();
-					var peopleOrangeCheck = new Array();
-					var orangecount = 0;
-					var greencount = 0;
-					var peoplecount = 0;
-
-					for (var i=0; i<allViews.length; i++) {
-						var nextview = allViews[i];
-						if (nextview) {
-							if (nextview.modificationdate) {
-								var nextdate = parseInt(nextview.modificationdate)*1000;
-								if (nextdate >= timeTwoWeeksAgo) {
-									if (nextdate < timeFiveDaysAgo) {
-										if (peopleOrangeCheck.indexOf(nextview.userid) == -1) {
-											peopleorangecount++;
-											peopleOrangeCheck.push(nextview.userid);
-										}
-										orangecount++;
-									} else if (nextdate >= timeFiveDaysAgo) {
-										if (peopleGreenCheck.indexOf(nextview.userid) == -1) {
-											peoplegreencount++;
-											peopleGreenCheck.push(nextview.userid);
-										}
-										greencount++;
-									}
-								}
-							}
-						}
-					}
-
-					peoplecount = peoplegreencount+peopleorangecount;
-
-					if (peoplecount == 0) {
-						$('health-viewing-messageorange').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>');
-						$('health-viewing-messageorange-part2').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_RED; ?>');
-						$('health-viewing-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-						$('health-viewingpeople-orange-count').update(0);
-						$('health-viewingitem-orange-count').update(0);
-						$('health-viewing-red').className = "trafficlightredon";
-						$('health-viewingorange-div').style.display = "block";
-					} else if (orangecount > 0 && greencount == 0) {
-						var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-						var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-						$('health-viewing-messageorange').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>');
-						$('health-viewing-messageorange-part2').update(orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_ORANGE; ?>');
-						$('health-viewing-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-						$('health-viewingpeople-orange-count').update(peopleorangecount);
-						$('health-viewingitem-orange-count').update(orangecount);
-						$('health-viewing-orange').className = "trafficlightorangeon";
-						$('health-viewingorange-div').style.display = "block";
-					} else if (greencount > 0) {
-						var greenamount = greencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-						var greenperson = peoplegreencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-						$('health-viewing-messagegreen').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+greenperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>');
-						$('health-viewing-messagegreen-part2').update(greenamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_GREEN; ?>');
-						$('health-viewing-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-						$('health-viewingpeople-green-count').update(peoplegreencount);
-						$('health-viewingitem-green-count').update(greencount);
-						$('health-viewing-green').className = "trafficlightgreenon";
-
-						if (orangecount > 0) {
-							var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-							var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-							$('health-viewing-messageorange').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>');
-							$('health-viewing-messageorange-part2').update(orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_ORANGE; ?>');
-							$('health-viewingpeople-orange-count').update(peopleorangecount);
-							$('health-viewingitem-orange-count').update(orangecount);
-							$('health-viewingorange-div').style.display = "block";
-							$('health-viewing-spacer').style.display = 'block';
-						}
-
-						$('health-viewinggreen-div').style.display = "block";
-					}
-
-					// HEALTH CONTRIBUTION
-					peoplegreencount = 0;
-					peopleorangecount = 0;
-					peopleGreenCheck = new Array();
-					peopleOrangeCheck = new Array();
-					orangecount = 0;
-					greencount = 0;
-					peoplecount = 0
-
-					for (var i=0; i<nodes.length; i++) {
-						var node = nodes[i];
-						if (node) {
-							if (node.cnode.creationdate) {
-								var nextdate = parseInt(node.cnode.creationdate)*1000;
-								if (nextdate >= timeTwoWeeksAgo) {
-									if (nextdate < timeFiveDaysAgo) {
-										if (peopleOrangeCheck.indexOf(node.cnode.userid) == -1) {
-											peopleorangecount++;
-											peopleOrangeCheck.push(node.cnode.userid);
-										}
-										orangecount++;
-									} else if (nextdate >= timeFiveDaysAgo) {
-										if (peopleGreenCheck.indexOf(node.cnode.userid) == -1) {
-											peoplegreencount++;
-											peopleGreenCheck.push(node.cnode.userid);
-										}
-										greencount++;
-									}
-								}
-							}
-						}
-					}
-
-					//peoplegreencount = 3;
-					//peopleorangecount = 1;
-					//orangecount = 2;
-					//greencount = 4;
-
-					peoplecount = peoplegreencount+peopleorangecount;
-
-					//$('health-debate-count').update(peoplecount);
-					if (peoplecount == 0) {
-						$('health-debate-messageorange').update('<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>');
-						$('health-debate-messageorange-part2').update('<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_RED; ?>');
-						$('health-debate-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
-						$('health-debatepeople-orange-count').update(0);
-						$('health-debateitem-orange-count').update(0);
-						$('health-debate-red').className = "trafficlightredon";
-						$('health-debateorange-div').style.display = "block";
-					} else if (orangecount > 0 && greencount == 0) {
-						var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-						var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-						$('health-debate-messageorange').update(orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>');
-						$('health-debate-messageorange-part2').update(orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_ORANGE; ?>');
-						$('health-debate-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
-						$('health-debatepeople-orange-count').update(peopleorangecount);
-						$('health-debateitem-orange-count').update(orangecount);
-						$('health-debate-orange').className = "trafficlightorangeon";
-						$('health-debateorange-div').style.display = "block";
-					} else if (greencount > 0) {
-						var greenamount = greencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-						var greenperson = peoplegreencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-						$('health-debate-messagegreen').update(greenperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>');
-						$('health-debate-messagegreen-part2').update(greenamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_GREEN; ?>');
-						$('health-debate-recomendation').update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
-						$('health-debatepeople-green-count').update(peoplegreencount);
-						$('health-debateitem-green-count').update(greencount);
-						$('health-debate-green').className = "trafficlightgreenon";
-						$('health-debategreen-div').style.display = "block";
-
-						if (orangecount > 0) {
-							var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-							var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' : '<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
-							$('health-debate-messageorange').update(orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>');
-							$('health-debate-messageorange-part2').update(orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_ORANGE; ?>');
-							$('health-debate-spacer').style.display = 'block';
-							$('health-debatepeople-orange-count').update(peopleorangecount);
-							$('health-debateitem-orange-count').update(orangecount);
-							$('health-debateorange-div').style.display = "block";
-						}
-					}
-
-					// CONTRIBUTION BAR CHART
-					var message = userNodeCount+' '+person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
-					var innermessage = "";
-					var contributionCount = 0;
-					for (var property in contributionTypes) {
-						if (contributionTypes.hasOwnProperty(property)) {
-							var nextcount = contributionTypes[property];
-							contributionCount += nextcount;
-							var next = {"label":getNodeTitleAntecedence(property, false), "value":nextcount};
-							contributionsArray.push(next);
-							innermessage += next.label+": "+next.value+"; ";
-						}
-					}
-					// add votes
-					contributionsArray.push({"label":'<?php echo $LNG->STATS_OVERVIEW_VOTES;?>', "value":allVotesCount});
-					simpleBarChartTypes($('contribution-chart'), new Array(contributionsObj), 300,100);
-
-					innermessage += '<?php echo $LNG->STATS_OVERVIEW_VOTES;?>'+' '+allVotesCount;
-					var itemname = contributionCount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
-					message += ' '+(contributionCount+allVotesCount)+' '+itemname+':<br><br>';
-					$('contribution-chart-message').update(message+innermessage);
-
-					// VIEWING SPARKLINE
-					// Sort by day
-					var viewDateArray = new Array();
-					for (var i=0; i<allViews.length; i++) {
-						var nextview = allViews[i];
-						if (nextview) {
-							if (nextview.modificationdate) {
-								var date = new Date(nextview.modificationdate*1000);
-								var newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-								var time = newDate.getTime();
-								if (viewDateArray[time]) {
-									viewDateArray[time] = viewDateArray[time] +1;
-								} else {
-									viewDateArray[time] = 1;
-								}
-							}
-						}
-					}
-					var sparklineData = new Array();
-					var hightesviews = 0;
-					var hightesviewsdate = 0;
-					var lowestviews = 0;
-					var lowestviewsdate = 0;
-					for (var property in viewDateArray) {
-						if (viewDateArray.hasOwnProperty(property)) {
-							var countdate = parseInt(property);
-							var viewcount = viewDateArray[property];
-							if (viewcount > hightesviews) {
-								hightesviews = viewcount;
-								hightesviewsdate = countdate;
-							} else if (lowestviews == 0 || viewcount < lowestviews) {
-								lowestviews = viewcount;
-								lowestviewsdate = countdate;
-							}
-							sparklineData.push({"x":countdate, "y":viewcount});
-						}
-					}
-					sparklineData = sparklineData.sort(sparklinedatesortasc);
-					var lastcount = sparklineData[sparklineData.length-1];
-
-					if (sparklineData.length > 0) {
-						sparklineDateNVD3($('viewing-chart'), sparklineData, 500, 100);
-
-						var formatDate = d3.time.format("%e %b %y");
-
-						var viewingmessage = '<?php echo $LNG->STATS_OVERVIEW_VIEWING_HIGHEST; ?>';
-						viewingmessage += " "+hightesviews+" ";
-						viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
-						viewingmessage += " "+formatDate(new Date(hightesviewsdate))+"<br>";
-
-						viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_LOWEST; ?>';
-						viewingmessage += " "+lowestviews+" ";
-						viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
-						viewingmessage += " "+formatDate(new Date(lowestviewsdate))+"<br>";
-
-						if (lastcount) {
-							viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_LAST; ?>';
-							viewingmessage += " "+lastcount.y+" ";
-							viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
-							viewingmessage += " "+formatDate(new Date(lastcount.x));
-						}
-
-						$('viewing-chart-message').update(viewingmessage);
-					} else {
-						$('viewing-chart').innerHTML="<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>";
-					}
-
-					$('messagearea').update("");
-					$("overview-group-div").style.display = "block";
-
-				} else {
-					$('messagearea').innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-					toolbar.style.display = 'none';
 				}
+				if (totaladded == 0) {
+					document.getElementById('recentvoteddiv').style.display = 'none';
+				}
+
+				// RECENTLY ADDED NODES
+				totaladded = 0;
+				nodes.sort(creationdatenodesortdesc);
+				count = nodes.length;
+				if (count > 3) {
+					count = 3;
+				}
+				for (var i=0; i<count; i++) {
+					var nextnode = nodes[i];
+					var creationDate = new Date(nextnode.cnode.creationdate*1000);
+					var fomatedDate = "";
+					if (creationDate) {
+						fomatedDate = creationDate.format(DATE_FORMAT_PROJECT);
+					}
+					var date = '<span style="padding-left:10px;color:dimgray"><?php echo $LNG->STATS_OVERVIEW_DATE;?>'+fomatedDate+'</span>';
+					addOverviewItem(document.getElementById("latestnodeslist"), nextnode.cnode, date);
+					totaladded++;
+				}
+				if (totaladded == 0) {
+					document.getElementById('latestnodesdiv').style.display = 'none';
+				}
+
+				// WORD STATS
+				var userNodeCount = contributorCount;
+				var averageWordCount = 0;
+				if (userNodeCount != 0) {
+					averageWordCount = parseInt(parseInt(totalWordCount)/parseInt(userNodeCount));
+				}
+
+				document.getElementById('average-words-count').innerHTML = averageWordCount;
+				document.getElementById('min-words-count').innerHTML = minWordCount;
+				document.getElementById('max-words-count').innerHTML = maxWordCount;
+
+
+				// HEALTH PARTICIPATION
+
+				document.getElementById('health-participation-count').innerHTML = userNodeCount;
+				var person = userNodeCount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+				document.getElementById('health-participation-message').innerHTML = person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>';
+				if (userNodeCount < 3) {
+					document.getElementById('health-participation-red').className = "trafficlightredon";
+					document.getElementById('health-participation-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
+				} else if (userNodeCount >= 3 && userNodeCount <= 5) {
+					document.getElementById('health-participation-orange').className = "trafficlightorangeon";
+					document.getElementById('health-participation-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
+				} else if (userNodeCount > 5) {
+					document.getElementById('health-participation-green').className = "trafficlightgreenon";
+					document.getElementById('health-participation-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
+				}
+
+				// HEALTH VIEWING
+				var peoplegreencount = 0;
+				var peopleorangecount = 0;
+				var peopleGreenCheck = new Array();
+				var peopleOrangeCheck = new Array();
+				var orangecount = 0;
+				var greencount = 0;
+				var peoplecount = 0;
+
+				for (var i=0; i<allViews.length; i++) {
+					var nextview = allViews[i];
+					if (nextview) {
+						if (nextview.modificationdate) {
+							var nextdate = parseInt(nextview.modificationdate)*1000;
+							if (nextdate >= timeTwoWeeksAgo) {
+								if (nextdate < timeFiveDaysAgo) {
+									if (peopleOrangeCheck.indexOf(nextview.userid) == -1) {
+										peopleorangecount++;
+										peopleOrangeCheck.push(nextview.userid);
+									}
+									orangecount++;
+								} else if (nextdate >= timeFiveDaysAgo) {
+									if (peopleGreenCheck.indexOf(nextview.userid) == -1) {
+										peoplegreencount++;
+										peopleGreenCheck.push(nextview.userid);
+									}
+									greencount++;
+								}
+							}
+						}
+					}
+				}
+
+				peoplecount = peoplegreencount+peopleorangecount;
+
+				if (peoplecount == 0) {
+					document.getElementById('health-viewing-messageorange').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>';
+					document.getElementById('health-viewing-messageorange-part2').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_RED; ?>';
+					document.getElementById('health-viewing-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
+					document.getElementById('health-viewingpeople-orange-count').innerHTML = "0";
+					document.getElementById('health-viewingitem-orange-count').innerHTML = "0";
+					document.getElementById('health-viewing-red').className = "trafficlightredon";
+					document.getElementById('health-viewingorange-div').style.display = "block";
+				} else if (orangecount > 0 && greencount == 0) {
+					var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+					var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+					document.getElementById('health-viewing-messageorange').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>';
+					document.getElementById('health-viewing-messageorange-part2').innerHTML = orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_ORANGE; ?>';
+					document.getElementById('health-viewing-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
+					document.getElementById('health-viewingpeople-orange-count').innerHTML = peopleorangecount;
+					document.getElementById('health-viewingitem-orange-count').innerHTML = orangecount;
+					document.getElementById('health-viewing-orange').className = "trafficlightorangeon";
+					document.getElementById('health-viewingorange-div').style.display = "block";
+				} else if (greencount > 0) {
+					var greenamount = greencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+					var greenperson = peoplegreencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+					document.getElementById('health-viewing-messagegreen').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+greenperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>';
+					document.getElementById('health-viewing-messagegreen-part2').innerHTML = greenamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_GREEN; ?>';
+					document.getElementById('health-viewing-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
+					document.getElementById('health-viewingpeople-green-count').innerHTML = peoplegreencount;
+					document.getElementById('health-viewingitem-green-count').innerHTML = greencount;
+					document.getElementById('health-viewing-green').className = "trafficlightgreenon";
+
+					if (orangecount > 0) {
+						var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+						var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+						document.getElementById('health-viewing-messageorange').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS; ?>'+' '+orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_PART2; ?>';
+						document.getElementById('health-viewing-messageorange-part2').innerHTML = orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWERS_ORANGE; ?>';
+						document.getElementById('health-viewingpeople-orange-count').innerHTML = peopleorangecount;
+						document.getElementById('health-viewingitem-orange-count').innerHTML = orangecount;
+						document.getElementById('health-viewingorange-div').style.display = "block";
+						document.getElementById('health-viewing-spacer').style.display = 'block';
+					}
+
+					document.getElementById('health-viewinggreen-div').style.display = "block";
+				}
+
+				// HEALTH CONTRIBUTION
+				peoplegreencount = 0;
+				peopleorangecount = 0;
+				peopleGreenCheck = new Array();
+				peopleOrangeCheck = new Array();
+				orangecount = 0;
+				greencount = 0;
+				peoplecount = 0
+
+				for (var i=0; i<nodes.length; i++) {
+					var node = nodes[i];
+					if (node) {
+						if (node.cnode.creationdate) {
+							var nextdate = parseInt(node.cnode.creationdate)*1000;
+							if (nextdate >= timeTwoWeeksAgo) {
+								if (nextdate < timeFiveDaysAgo) {
+									if (peopleOrangeCheck.indexOf(node.cnode.userid) == -1) {
+										peopleorangecount++;
+										peopleOrangeCheck.push(node.cnode.userid);
+									}
+									orangecount++;
+								} else if (nextdate >= timeFiveDaysAgo) {
+									if (peopleGreenCheck.indexOf(node.cnode.userid) == -1) {
+										peoplegreencount++;
+										peopleGreenCheck.push(node.cnode.userid);
+									}
+									greencount++;
+								}
+							}
+						}
+					}
+				}
+
+				//peoplegreencount = 3;
+				//peopleorangecount = 1;
+				//orangecount = 2;
+				//greencount = 4;
+
+				peoplecount = peoplegreencount+peopleorangecount;
+
+				//document.getElementById('health-debate-count').innerHTML = peoplecount;
+				if (peoplecount == 0) {
+					document.getElementById('health-debate-messageorange').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
+					document.getElementById('health-debate-messageorange-part2').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>'+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_RED; ?>';
+					document.getElementById('health-debate-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
+					document.getElementById('health-debatepeople-orange-count').innerHTML = "0";
+					document.getElementById('health-debateitem-orange-count').innerHTML = "0";
+					document.getElementById('health-debate-red').className = "trafficlightredon";
+					document.getElementById('health-debateorange-div').style.display = "block";
+				} else if (orangecount > 0 && greencount == 0) {
+					var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+					var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+					document.getElementById('health-debate-messageorange').innerHTML = orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
+					document.getElementById('health-debate-messageorange-part2').innerHTML = orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_ORANGE; ?>';
+					document.getElementById('health-debate-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
+					document.getElementById('health-debatepeople-orange-count').innerHTML = peopleorangecount;
+					document.getElementById('health-debateitem-orange-count').innerHTML = orangecount;
+					document.getElementById('health-debate-orange').className = "trafficlightorangeon";
+					document.getElementById('health-debateorange-div').style.display = "block";
+				} else if (greencount > 0) {
+					var greenamount = greencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+					var greenperson = peoplegreencount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+					document.getElementById('health-debate-messagegreen').innerHTML = greenperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
+					document.getElementById('health-debate-messagegreen-part2').innerHTML = greenamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_GREEN; ?>';
+					document.getElementById('health-debate-recomendation').innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
+					document.getElementById('health-debatepeople-green-count').innerHTML = peoplegreencount;
+					document.getElementById('health-debateitem-green-count').innerHTML = greencount;
+					document.getElementById('health-debate-green').className = "trafficlightgreenon";
+					document.getElementById('health-debategreen-div').style.display = "block";
+
+					if (orangecount > 0) {
+						var orangeamount = orangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+						var orangeperson = peopleorangecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' : '<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
+						document.getElementById('health-debate-messageorange').innerHTML = orangeperson+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
+						document.getElementById('health-debate-messageorange-part2').innerHTML = orangeamount+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_ORANGE; ?>';
+						document.getElementById('health-debate-spacer').style.display = 'block';
+						document.getElementById('health-debatepeople-orange-count').innerHTML = peopleorangecount;
+						document.getElementById('health-debateitem-orange-count').innerHTML = orangecount;
+						document.getElementById('health-debateorange-div').style.display = "block";
+					}
+				}
+
+				// CONTRIBUTION BAR CHART
+				var message = userNodeCount+' '+person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION; ?>';
+				var innermessage = "";
+				var contributionCount = 0;
+				for (var property in contributionTypes) {
+					if (contributionTypes.hasOwnProperty(property)) {
+						var nextcount = contributionTypes[property];
+						contributionCount += nextcount;
+						var next = {"label":getNodeTitleAntecedence(property, false), "value":nextcount};
+						contributionsArray.push(next);
+						innermessage += next.label+": "+next.value+"; ";
+					}
+				}
+				// add votes
+				contributionsArray.push({"label":'<?php echo $LNG->STATS_OVERVIEW_VOTES;?>', "value":allVotesCount});
+				simpleBarChartTypes(document.getElementById('contribution-chart'), new Array(contributionsObj), 300,100);
+
+				innermessage += '<?php echo $LNG->STATS_OVERVIEW_VOTES;?>'+' '+allVotesCount;
+				var itemname = contributionCount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_TIME; ?>' : '<?php echo $LNG->STATS_OVERVIEW_TIMES; ?>';
+				message += ' '+(contributionCount+allVotesCount)+' '+itemname+':<br><br>';
+				document.getElementById('contribution-chart-message').innerHTML = message+innermessage;
+
+				// VIEWING SPARKLINE
+				// Sort by day
+				var viewDateArray = new Array();
+				for (var i=0; i<allViews.length; i++) {
+					var nextview = allViews[i];
+					if (nextview) {
+						if (nextview.modificationdate) {
+							var date = new Date(nextview.modificationdate*1000);
+							var newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+							var time = newDate.getTime();
+							if (viewDateArray[time]) {
+								viewDateArray[time] = viewDateArray[time] +1;
+							} else {
+								viewDateArray[time] = 1;
+							}
+						}
+					}
+				}
+				var sparklineData = new Array();
+				var hightesviews = 0;
+				var hightesviewsdate = 0;
+				var lowestviews = 0;
+				var lowestviewsdate = 0;
+				for (var property in viewDateArray) {
+					if (viewDateArray.hasOwnProperty(property)) {
+						var countdate = parseInt(property);
+						var viewcount = viewDateArray[property];
+						if (viewcount > hightesviews) {
+							hightesviews = viewcount;
+							hightesviewsdate = countdate;
+						} else if (lowestviews == 0 || viewcount < lowestviews) {
+							lowestviews = viewcount;
+							lowestviewsdate = countdate;
+						}
+						sparklineData.push({"x":countdate, "y":viewcount});
+					}
+				}
+				sparklineData = sparklineData.sort(sparklinedatesortasc);
+				var lastcount = sparklineData[sparklineData.length-1];
+
+				if (sparklineData.length > 0) {
+					sparklineDateNVD3(document.getElementById('viewing-chart'), sparklineData, 500, 100);
+
+					var formatDate = d3.time.format("%e %b %y");
+
+					var viewingmessage = '<?php echo $LNG->STATS_OVERVIEW_VIEWING_HIGHEST; ?>';
+					viewingmessage += " "+hightesviews+" ";
+					viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
+					viewingmessage += " "+formatDate(new Date(hightesviewsdate))+"<br>";
+
+					viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_LOWEST; ?>';
+					viewingmessage += " "+lowestviews+" ";
+					viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
+					viewingmessage += " "+formatDate(new Date(lowestviewsdate))+"<br>";
+
+					if (lastcount) {
+						viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_LAST; ?>';
+						viewingmessage += " "+lastcount.y+" ";
+						viewingmessage += '<?php echo $LNG->STATS_OVERVIEW_VIEWING_VIEWS; ?>';
+						viewingmessage += " "+formatDate(new Date(lastcount.x));
+					}
+
+					document.getElementById(document.getElementById('viewing-chart-message').innerHTML = viewingmessage;
+				} else {
+					document.getElementById('viewing-chart').innerHTML="<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>";
+				}
+
+				document.getElementById('messagearea').innerHTML = "";
+				document.getElementById("overview-group-div").style.display = "block";
+
+			} else {
+				document.getElementById('messagearea').innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+				toolbar.style.display = 'none';
 			}
-		});
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	}
 
 	window.addEventListener('load', function() {

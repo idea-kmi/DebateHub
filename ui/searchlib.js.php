@@ -47,7 +47,7 @@ function buildSearchToolbar(container) {
 /**
  *	load next/previous set of nodes
  */
-function loadissues(context,args){
+async function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 
 	const contentissuelist = document.getElementById('content-issue-list');
@@ -55,83 +55,76 @@ function loadissues(context,args){
 	contentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+		//display nav
+		var total = json.nodeset[0].totalno;
 
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
 
-			try {
-				var json = transport.responseText.evalJSON();
-			} catch(err) {
-				console.log(err);
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
 			}
 
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+			//set the count in header
+			document.getElementById('issue-list-count').innerHTML = "";
+			document.getElementById('issue-list-count-main').innerHTML = "";
+			document.getElementById('content-issue-list').innerHTML = "";
+			document.getElementById('issue-list-title').innerHTML = "";
+
+			document.getElementById('content-issue-main').style.display = "block";
+			document.getElementById('issue-result-menu').href = "#issueresult";
+			document.getElementById('issue-result-menu').className = '';
+
+			if (total > parseInt( args["max"] )) {
+				const contentissuelist = document.getElementById('content-issue-list');
+				contentissuelist.innerHTML = "";	
+				contentissuelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 			}
 
-			//display nav
-			var total = json.nodeset[0].totalno;
+			document.getElementById('issue-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('issue-list-count-main').innerHTML = json.nodeset[0].totalno;
 
-			//display nodes
-			if(json.nodeset[0].nodes.length > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
-
-				//set the count in header
-				document.getElementById('issue-list-count').innerHTML = "";
-				document.getElementById('issue-list-count-main').innerHTML = "";
-				document.getElementById('content-issue-list').innerHTML = "";
-				document.getElementById('issue-list-title').innerHTML = "";
-
-				document.getElementById('content-issue-main').style.display = "block";
-				document.getElementById('issue-result-menu').href = "#issueresult";
-				document.getElementById('issue-result-menu').className = '';
-
-				if (total > parseInt( args["max"] )) {
-					const contentissuelist = document.getElementById('content-issue-list');
-					contentissuelist.innerHTML = "";	
-					contentissuelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
-				}
-
-				document.getElementById('issue-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('issue-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUES_NAME; ?>";
-				} else {
-					document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUE_NAME; ?>";
-				}
-
-				displaySearchNodes(document.getElementById("content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					document.getElementById("content-issue-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
-				}
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUES_NAME; ?>";
 			} else {
-				document.getElementById('content-issue-main').style.display = "none";
-				document.getElementById('content-issue-list').innerHTML = "";
-				document.getElementById('issue-result-menu').href = "javascript:return false";
-				document.getElementById('issue-result-menu').className = 'inactive';
-				document.getElementById('issue-list-count-main').innerHTML = "";
-				document.getElementById('issue-list-count-main').insert('0');
+				document.getElementById("issue-list-title").innerHTML = "<?php echo $LNG->ISSUE_NAME; ?>";
 			}
+
+			displaySearchNodes(document.getElementById("content-issue-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				document.getElementById("content-issue-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+			}
+		} else {
+			document.getElementById('content-issue-main').style.display = "none";
+			document.getElementById('content-issue-list').innerHTML = "";
+			document.getElementById('issue-result-menu').href = "javascript:return false";
+			document.getElementById('issue-result-menu').className = 'inactive';
+			document.getElementById('issue-list-count-main').innerHTML = "";
+			document.getElementById('issue-list-count-main').insert('0');
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load next/previous set of nodes
  */
-function loadsolutions(context,args){
+async function loadsolutions(context,args){
 	args['filternodetypes'] = "Solution";
 
 	const contentsolutionlist = document.getElementById('content-solution-list');
@@ -139,81 +132,75 @@ function loadsolutions(context,args){
 	contentsolutionlist.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-
-			try {
-				var json = transport.responseText.evalJSON();
-			} catch(err) {
-				console.log(err);
-			}
-
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var total = json.nodeset[0].totalno;
-
-			if(json.nodeset[0].nodes.length > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
-
-				//set the count in header
-				document.getElementById('solution-list-count').innerHTML = "";
-				document.getElementById('solution-list-count-main').innerHTML = "";
-				document.getElementById('content-solution-list').innerHTML = "";
-				document.getElementById('solution-list-title').innerHTML = "";
-
-				document.getElementById('content-solution-main').style.display = "block";
-				document.getElementById('solution-result-menu').href = "#solutionresult";
-				document.getElementById('solution-result-menu').className = '';
-
-				if (total > parseInt( args["max"] )) {
-					const contentsolutionlist = document.getElementById('content-solution-list');
-					contentsolutionlist.innerHTML = "";
-					contentsolutionlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
-				}
-
-				document.getElementById('solution-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('solution-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTIONS_NAME; ?>";
-				} else {
-					document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTION_NAME; ?>";
-				}
-				displaySearchNodes(document.getElementById("content-solution-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					document.getElementById("content-solution-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
-				}
-			} else {
-				document.getElementById('content-solution-main').style.display = "none";
-				document.getElementById('content-solution-list').innerHTML = "";
-				document.getElementById('solution-result-menu').href = "javascript:return false";
-				document.getElementById('solution-result-menu').className = 'inactive';
-				document.getElementById('solution-list-count-main').innerHTML = "";
-				document.getElementById('solution-list-count-main').insert('0');
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+
+		var total = json.nodeset[0].totalno;
+
+		if(json.nodeset[0].nodes.length > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
+			}
+
+			//set the count in header
+			document.getElementById('solution-list-count').innerHTML = "";
+			document.getElementById('solution-list-count-main').innerHTML = "";
+			document.getElementById('content-solution-list').innerHTML = "";
+			document.getElementById('solution-list-title').innerHTML = "";
+
+			document.getElementById('content-solution-main').style.display = "block";
+			document.getElementById('solution-result-menu').href = "#solutionresult";
+			document.getElementById('solution-result-menu').className = '';
+
+			if (total > parseInt( args["max"] )) {
+				const contentsolutionlist = document.getElementById('content-solution-list');
+				contentsolutionlist.innerHTML = "";
+				contentsolutionlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+			}
+
+			document.getElementById('solution-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('solution-list-count-main').innerHTML = json.nodeset[0].totalno;
+
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTIONS_NAME; ?>";
+			} else {
+				document.getElementById("solution-list-title").innerHTML = "<?php echo $LNG->SOLUTION_NAME; ?>";
+			}
+			displaySearchNodes(document.getElementById("content-solution-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				document.getElementById("content-solution-list").appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"solutions"));
+			}
+		} else {
+			document.getElementById('content-solution-main').style.display = "none";
+			document.getElementById('content-solution-list').innerHTML = "";
+			document.getElementById('solution-result-menu').href = "javascript:return false";
+			document.getElementById('solution-result-menu').className = 'inactive';
+			document.getElementById('solution-list-count-main').innerHTML = "";
+			document.getElementById('solution-list-count-main').insert('0');
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 
 /**
  *	load next/previous set of pro nodes
  */
-function loadpros(context,args){
+async function loadpros(context,args){
 
 	var types = "Pro";
 
@@ -227,83 +214,77 @@ function loadpros(context,args){
 	contentprolist.appendChild(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-
-			try {
-				var json = transport.responseText.evalJSON();
-			} catch(err) {
-				console.log(err);
-			}
-
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var total = json.nodeset[0].totalno;
-
-			//display nodes
-			if(json.nodeset[0].nodes.length > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
-
-				//set the count in tab header
-				document.getElementById('pro-list-count').innerHTML = "";
-				document.getElementById('pro-list-count-main').innerHTML = "";
-				document.getElementById('content-pro-list').innerHTML = "";
-				document.getElementById('pro-list-title').innerHTML = "";
-
-				if (total > parseInt( args["max"] )) {
-					const contentprolist = document.getElementById('content-pro-list');
-					contentprolist.innerHTML = "";
-					contentprolist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
-				}
-
-				document.getElementById('content-pro-main').style.display = "block";
-				document.getElementById('pro-result-menu').href = "#proresult";
-				document.getElementById('pro-result-menu').className = '';
-
-				document.getElementById('pro-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('pro-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PROS_NAME; ?>";
-				} else {
-					document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PRO_NAME; ?>";
-				}
-				displaySearchNodes(document.getElementById("content-pro-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					const contentprolist = document.getElementById('content-pro-list');
-					contentprolist.innerHTML = "";
-					contentprolist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
-				}
-			} else {
-				document.getElementById('content-pro-main').style.display = "none";
-				document.getElementById('content-pro-list').innerHTML = "";
-				document.getElementById('pro-result-menu').href = "javascript:return false";
-				document.getElementById('pro-result-menu').className = 'inactive';
-				document.getElementById('pro-list-count-main').innerHTML = "";
-				document.getElementById('pro-list-count-main').insert('0');
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+
+		var total = json.nodeset[0].totalno;
+
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
+			}
+
+			//set the count in tab header
+			document.getElementById('pro-list-count').innerHTML = "";
+			document.getElementById('pro-list-count-main').innerHTML = "";
+			document.getElementById('content-pro-list').innerHTML = "";
+			document.getElementById('pro-list-title').innerHTML = "";
+
+			if (total > parseInt( args["max"] )) {
+				const contentprolist = document.getElementById('content-pro-list');
+				contentprolist.innerHTML = "";
+				contentprolist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+			}
+
+			document.getElementById('content-pro-main').style.display = "block";
+			document.getElementById('pro-result-menu').href = "#proresult";
+			document.getElementById('pro-result-menu').className = '';
+
+			document.getElementById('pro-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('pro-list-count-main').innerHTML = json.nodeset[0].totalno;
+
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PROS_NAME; ?>";
+			} else {
+				document.getElementById("pro-list-title").innerHTML = "<?php echo $LNG->PRO_NAME; ?>";
+			}
+			displaySearchNodes(document.getElementById("content-pro-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				const contentprolist = document.getElementById('content-pro-list');
+				contentprolist.innerHTML = "";
+				contentprolist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+			}
+		} else {
+			document.getElementById('content-pro-main').style.display = "none";
+			document.getElementById('content-pro-list').innerHTML = "";
+			document.getElementById('pro-result-menu').href = "javascript:return false";
+			document.getElementById('pro-result-menu').className = 'inactive';
+			document.getElementById('pro-list-count-main').innerHTML = "";
+			document.getElementById('pro-list-count-main').insert('0');
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load next/previous set of evidence nodes
  */
-function loadcons(context,args) {
+async function loadcons(context,args) {
 
 	var types = "Con";
 
@@ -317,265 +298,250 @@ function loadcons(context,args) {
 	contentconlist.appendChild(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-
-			try {
-				var json = transport.responseText.evalJSON();
-			} catch(err) {
-				console.log(err);
-			}
-
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var total = json.nodeset[0].totalno;
-
-			if(json.nodeset[0].nodes.length > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
-
-				//set the count in header
-				document.getElementById('con-list-count').innerHTML = "";
-				document.getElementById('con-list-count-main').innerHTML = "";
-				document.getElementById('content-con-list').innerHTML = "";
-				document.getElementById('con-list-title').innerHTML = "";
-
-				document.getElementById('content-con-main').style.display = "block";
-				document.getElementById('con-result-menu').href = "#conresult";
-				document.getElementById('con-result-menu').className = '';
-
-				if (total > parseInt( args["max"] )) {
-					const contentconlist = document.getElementById('content-con-list');
-					contentconlist.innerHTML = "";
-					contentconlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
-				}
-
-				document.getElementById('con-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('con-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CONS_NAME; ?>";
-				} else {
-					document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CON_NAME; ?>";
-				}
-
-				displaySearchNodes(document.getElementById("content-con-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					const contentevidencelist = document.getElementById('content-evidence-list');
-					contentevidencelist.innerHTML = "";
-					contentevidencelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
-				}
-			} else {
-				document.getElementById('content-con-main').style.display = "none";
-				document.getElementById('content-con-list').innerHTML = "";
-				document.getElementById('con-result-menu').href = "javascript:return false";
-				document.getElementById('con-result-menu').className = 'inactive';
-				document.getElementById('con-list-count-main').innerHTML = "";
-				document.getElementById('con-list-count-main').insert('0');
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+		var total = json.nodeset[0].totalno;
+
+		if(json.nodeset[0].nodes.length > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
+			}
+
+			//set the count in header
+			document.getElementById('con-list-count').innerHTML = "";
+			document.getElementById('con-list-count-main').innerHTML = "";
+			document.getElementById('content-con-list').innerHTML = "";
+			document.getElementById('con-list-title').innerHTML = "";
+
+			document.getElementById('content-con-main').style.display = "block";
+			document.getElementById('con-result-menu').href = "#conresult";
+			document.getElementById('con-result-menu').className = '';
+
+			if (total > parseInt( args["max"] )) {
+				const contentconlist = document.getElementById('content-con-list');
+				contentconlist.innerHTML = "";
+				contentconlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+			}
+
+			document.getElementById('con-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('con-list-count-main').innerHTML = json.nodeset[0].totalno;
+
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CONS_NAME; ?>";
+			} else {
+				document.getElementById("con-list-title").innerHTML = "<?php echo $LNG->CON_NAME; ?>";
+			}
+
+			displaySearchNodes(document.getElementById("content-con-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				const contentevidencelist = document.getElementById('content-evidence-list');
+				contentevidencelist.innerHTML = "";
+				contentevidencelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+			}
+		} else {
+			document.getElementById('content-con-main').style.display = "none";
+			document.getElementById('content-con-list').innerHTML = "";
+			document.getElementById('con-result-menu').href = "javascript:return false";
+			document.getElementById('con-result-menu').className = 'inactive';
+			document.getElementById('con-list-count-main').innerHTML = "";
+			document.getElementById('con-list-count-main').insert('0');
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load next/previous set of users
  */
-function loadusers(context,args){
+async function loadusers(context,args){
 
 	const contentuserlist = document.getElementById('content-user-list');
 	contentuserlist.innerHTML = "";
 	contentuserlist.appendChild(getLoading("<?php echo $LNG->LOADING_USERS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getusersby" + context + "&includegroups=false&" + Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'get',
-		onError: function(error) {
-			alert(error);
-		},
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var total = json.userset[0].totalno;
-
-			if(json.userset[0].count > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var users = json.userset[0].users;
-					var count = users.length;
-					for (var i=0; i < count; i++) {
-						var user = users[i].user;
-						user.searchid = args['searchid'];
-					}
-				}
-
-				//set the count in header
-				document.getElementById('user-list-count').innerHTML = "";
-				document.getElementById('user-list-count-main').innerHTML = "";
-				document.getElementById('content-user-list').innerHTML = "";
-				document.getElementById('user-list-title').innerHTML = "";
-
-				document.getElementById('user-result-menu').href = "#userresult";
-				document.getElementById('user-result-menu').className = '';
-
-				document.getElementById('content-user-main').style.display = "block";
-
-				if (total > parseInt( args["max"] )) {
-					const contentuserlist = document.getElementById('content-user-list');
-					contentuserlist.innerHTML = "";
-					contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
-				}
-
-				document.getElementById('user-list-count').innerHTML = json.userset[0].totalno;
-				document.getElementById('user-list-count-main').innerHTML = json.userset[0].totalno;
-
-				if (json.userset[0].users.length > 1) {
-					document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USERS_NAME; ?>";
-				} else {
-					document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USER_NAME; ?>";
-				}
-
-				if (json.userset[0].users.length > 1) {
-					var tb2 = new Element("div", {'class':'toolbarrow'});
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
-					tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
-					document.getElementById("content-user-list").appendChild(tb2);
-				}
-
-				displayUsers(document.getElementById("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
-
-				if (total > parseInt( args["max"] )) {
-					const contentuserlist = document.getElementById('content-user-list');
-					contentuserlist.innerHTML = "";					
-					contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
-				}
-			} else {
-				document.getElementById('content-user-main').style.display = "none";
-				document.getElementById('content-user-list').innerHTML = "";
-				document.getElementById('user-result-menu').href = "javascript:return false";
-				document.getElementById('user-result-menu').className = 'inactive';
-				document.getElementById('user-list-count-main').innerHTML = "";
-				document.getElementById('user-list-count-main').insert('0');
-			}
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
 		}
-	});
+
+		var total = json.userset[0].totalno;
+
+		if(json.userset[0].count > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var users = json.userset[0].users;
+				var count = users.length;
+				for (var i=0; i < count; i++) {
+					var user = users[i].user;
+					user.searchid = args['searchid'];
+				}
+			}
+
+			//set the count in header
+			document.getElementById('user-list-count').innerHTML = "";
+			document.getElementById('user-list-count-main').innerHTML = "";
+			document.getElementById('content-user-list').innerHTML = "";
+			document.getElementById('user-list-title').innerHTML = "";
+
+			document.getElementById('user-result-menu').href = "#userresult";
+			document.getElementById('user-result-menu').className = '';
+
+			document.getElementById('content-user-main').style.display = "block";
+
+			if (total > parseInt( args["max"] )) {
+				const contentuserlist = document.getElementById('content-user-list');
+				contentuserlist.innerHTML = "";
+				contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
+			}
+
+			document.getElementById('user-list-count').innerHTML = json.userset[0].totalno;
+			document.getElementById('user-list-count-main').innerHTML = json.userset[0].totalno;
+
+			if (json.userset[0].users.length > 1) {
+				document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USERS_NAME; ?>";
+			} else {
+				document.getElementById("user-list-title").innerHTML = "<?php echo $LNG->USER_NAME; ?>";
+			}
+
+			if (json.userset[0].users.length > 1) {
+				var tb2 = new Element("div", {'class':'toolbarrow'});
+				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
+				tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
+				document.getElementById("content-user-list").appendChild(tb2);
+			}
+
+			displayUsers(document.getElementById("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
+
+			if (total > parseInt( args["max"] )) {
+				const contentuserlist = document.getElementById('content-user-list');
+				contentuserlist.innerHTML = "";					
+				contentuserlist.appendChild(createNav(total,json.userset[0].start,json.userset[0].count,args,context,"users"));
+			}
+		} else {
+			document.getElementById('content-user-main').style.display = "none";
+			document.getElementById('content-user-list').innerHTML = "";
+			document.getElementById('user-result-menu').href = "javascript:return false";
+			document.getElementById('user-result-menu').className = 'inactive';
+			document.getElementById('user-list-count-main').innerHTML = "";
+			document.getElementById('user-list-count-main').insert('0');
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load next/previous set of groups
  */
-function loadgroups(context,args){
+async function loadgroups(context,args){
 
 	const contentgrouplist = document.getElementById('content-group-list');
 	contentgrouplist.innerHTML = "";
 	contentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getgroupsby" + context + "&" + Object.toQueryString(args);
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
 
-	//alert(reqUrl);
+		var total = json.groupset[0].totalno;
 
-	new Ajax.Request(reqUrl, { method:'get',
-		onError: function(error) {
-			alert(error);
-		},
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
+		//alert(json.groupset[0].count);
 
-			var total = json.groupset[0].totalno;
+		if(json.groupset[0].count > 0){
 
-			//alert(json.groupset[0].count);
-
-			if(json.groupset[0].count > 0){
-
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var groups = json.groupset[0].groups;
-					var count = groups.length;
-					for (var i=0; i < count; i++) {
-						var group = groups[i];
-						if (group) {
-							group.searchid = args['searchid'];
-						}
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var groups = json.groupset[0].groups;
+				var count = groups.length;
+				for (var i=0; i < count; i++) {
+					var group = groups[i];
+					if (group) {
+						group.searchid = args['searchid'];
 					}
 				}
-
-				//set the count in header
-				document.getElementById('group-list-count').innerHTML = "";
-				document.getElementById('group-list-count-main').innerHTML = "";
-				document.getElementById('content-group-list').innerHTML = "";
-				document.getElementById('group-list-title').innerHTML = "";
-
-				document.getElementById('group-result-menu').href = "#groupresult";
-				document.getElementById('group-result-menu').className = '';
-
-				document.getElementById('content-group-main').style.display = "block";
-
-				if (total > parseInt( args["max"] )) {
-					const contentgrouplist = document.getElementById('content-group-list');
-					contentgrouplist.innerHTML = "";
-					contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
-				}
-
-				document.getElementById('group-list-count').innerHTML = json.groupset[0].totalno;
-				document.getElementById('group-list-count-main').innerHTML = json.groupset[0].totalno;
-
-				if (json.groupset[0].groups.length > 1) {
-					document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUPS_NAME; ?>";
-				} else {
-					document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUP_NAME; ?>";
-				}
-
-				if (json.groupset[0].groups.length > 1) {
-					var tb2 = new Element("div", {'class':'toolbarrow'});
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
-					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
-					document.getElementById("content-group-list").appendChild(tb2);
-				}
-
-				displayGroups(document.getElementById("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
-
-				if (total > parseInt( args["max"] )) {
-					const contentgrouplist = document.getElementById('content-group-list');
-					contentgrouplist.innerHTML = "";					
-					contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
-				}
-			} else {
-				document.getElementById('content-group-main').style.display = "none";
-				document.getElementById('content-group-list').innerHTML = "";
-				document.getElementById('group-result-menu').href = "javascript:return false";
-				document.getElementById('group-result-menu').className = 'inactive';
-				document.getElementById('group-list-count-main').innerHTML = "";
-				document.getElementById('group-list-count-main').insert('0');
 			}
+
+			//set the count in header
+			document.getElementById('group-list-count').innerHTML = "";
+			document.getElementById('group-list-count-main').innerHTML = "";
+			document.getElementById('content-group-list').innerHTML = "";
+			document.getElementById('group-list-title').innerHTML = "";
+
+			document.getElementById('group-result-menu').href = "#groupresult";
+			document.getElementById('group-result-menu').className = '';
+
+			document.getElementById('content-group-main').style.display = "block";
+
+			if (total > parseInt( args["max"] )) {
+				const contentgrouplist = document.getElementById('content-group-list');
+				contentgrouplist.innerHTML = "";
+				contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
+			}
+
+			document.getElementById('group-list-count').innerHTML = json.groupset[0].totalno;
+			document.getElementById('group-list-count-main').innerHTML = json.groupset[0].totalno;
+
+			if (json.groupset[0].groups.length > 1) {
+				document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUPS_NAME; ?>";
+			} else {
+				document.getElementById("group-list-title").innerHTML = "<?php echo $LNG->GROUP_NAME; ?>";
+			}
+
+			if (json.groupset[0].groups.length > 1) {
+				var tb2 = new Element("div", {'class':'toolbarrow'});
+				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
+				tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
+				document.getElementById("content-group-list").appendChild(tb2);
+			}
+
+			displayGroups(document.getElementById("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
+
+			if (total > parseInt( args["max"] )) {
+				const contentgrouplist = document.getElementById('content-group-list');
+				contentgrouplist.innerHTML = "";					
+				contentgrouplist.appendChild(createNav(total,json.groupset[0].start,json.userset[0].count,args,context,"groups"));
+			}
+		} else {
+			document.getElementById('content-group-main').style.display = "none";
+			document.getElementById('content-group-list').innerHTML = "";
+			document.getElementById('group-result-menu').href = "javascript:return false";
+			document.getElementById('group-result-menu').className = 'inactive';
+			document.getElementById('group-list-count-main').innerHTML = "";
+			document.getElementById('group-list-count-main').insert('0');
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load comment nodes for search
  */
-function loadcomment(context,args) {
+async function loadcomment(context,args) {
 
 	var types = 'Comment';
 
@@ -588,75 +554,76 @@ function loadcomment(context,args) {
 	contentcommentlist.appendChild(getLoading("<?php echo $LNG->LOADING_RESOURCES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+
+		var total = json.nodeset[0].totalno;
+
+		if(total > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
 			}
 
-			var total = json.nodeset[0].totalno;
+			//set the count in header
+			document.getElementById('comment-list-count').innerHTML = "";
+			document.getElementById('comment-list-count-main').innerHTML = "";
+			document.getElementById('content-comment-list').innerHTML = "";
+			document.getElementById('comment-list-title').innerHTML = "";
 
-			if(total > 0){
+			document.getElementById('content-comment-main').style.display = "block";
+			document.getElementById('comment-result-menu').href = "#commentresult";
+			document.getElementById('comment-result-menu').className = '';
 
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
+			if (total > parseInt( args["max"] )) {
+				const contentcommentlist = document.getElementById('content-comment-list');
+				contentcommentlist.innerHTML = "";
+				contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+			}
 
-				//set the count in header
-				document.getElementById('comment-list-count').innerHTML = "";
-				document.getElementById('comment-list-count-main').innerHTML = "";
-				document.getElementById('content-comment-list').innerHTML = "";
-				document.getElementById('comment-list-title').innerHTML = "";
+			document.getElementById('comment-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('comment-list-count-main').innerHTML = json.nodeset[0].totalno;
 
-				document.getElementById('content-comment-main').style.display = "block";
-				document.getElementById('comment-result-menu').href = "#commentresult";
-				document.getElementById('comment-result-menu').className = '';
-
-				if (total > parseInt( args["max"] )) {
-					const contentcommentlist = document.getElementById('content-comment-list');
-					contentcommentlist.innerHTML = "";
-					contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
-				}
-
-				document.getElementById('comment-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('comment-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENTS_NAME; ?>";
-				} else {
-					document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENT_NAME; ?>";
-				}
-				displaySearchNodes(document.getElementById("content-comment-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					const contentcommentlist = document.getElementById('content-comment-list');
-					contentcommentlist.innerHTML = "";
-					contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
-				}
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENTS_NAME; ?>";
 			} else {
-				document.getElementById('content-comment-main').style.display = "none";
-				document.getElementById('content-comment-list').innerHTML = "";
-				document.getElementById('comment-result-menu').href = "javascript:return false";
-				document.getElementById('comment-result-menu').className = 'inactive';
-				document.getElementById('comment-list-count-main').innerHTML = "";
-				document.getElementById('comment-list-count-main').insert('0');
+				document.getElementById("comment-list-title").innerHTML = "<?php echo $LNG->COMMENT_NAME; ?>";
 			}
+			displaySearchNodes(document.getElementById("content-comment-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				const contentcommentlist = document.getElementById('content-comment-list');
+				contentcommentlist.innerHTML = "";
+				contentcommentlist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+			}
+		} else {
+			document.getElementById('content-comment-main').style.display = "none";
+			document.getElementById('content-comment-list').innerHTML = "";
+			document.getElementById('comment-result-menu').href = "javascript:return false";
+			document.getElementById('comment-result-menu').className = 'inactive';
+			document.getElementById('comment-list-count-main').innerHTML = "";
+			document.getElementById('comment-list-count-main').insert('0');
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  *	load news nodes for search
  */
-function loadnews(context,args) {
+async function loadnews(context,args) {
 
 	var types = 'News';
 
@@ -669,68 +636,68 @@ function loadnews(context,args) {
 	contentnewslist.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-			if(json.error){
-				alert(json.error[0].message);
-				return;
+	try {
+		const json = await makAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}		
+		var total = json.nodeset[0].totalno;
+
+		if(total > 0){
+
+			//preprosses nodes to add searchid if it is there
+			if (args['searchid'] && args['searchid'] != "") {
+				var nodes = json.nodeset[0].nodes;
+				var count = nodes.length;
+				for (var i=0; i < count; i++) {
+					var node = nodes[i];
+					node.cnode.searchid = args['searchid'];
+				}
 			}
 
-			var total = json.nodeset[0].totalno;
+			//set the count in header
+			document.getElementById('news-list-count').innerHTML = "";
+			document.getElementById('news-list-count-main').innerHTML = "";
+			document.getElementById('content-news-list').innerHTML = "";
+			document.getElementById('news-list-title').innerHTML = "";
 
-			if(total > 0){
+			document.getElementById('content-news-main').style.display = "block";
+			document.getElementById('news-result-menu').href = "#newsresult";
+			document.getElementById('news-result-menu').className = '';
 
-				//preprosses nodes to add searchid if it is there
-				if (args['searchid'] && args['searchid'] != "") {
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i < count; i++) {
-						var node = nodes[i];
-						node.cnode.searchid = args['searchid'];
-					}
-				}
+			if (total > parseInt( args["max"] )) {
+				const contentnewslist = document.getElementById('content-news-list');
+				contentnewslist.innerHTML = "";
+				contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
+			}
 
-				//set the count in header
-				document.getElementById('news-list-count').innerHTML = "";
-				document.getElementById('news-list-count-main').innerHTML = "";
-				document.getElementById('content-news-list').innerHTML = "";
-				document.getElementById('news-list-title').innerHTML = "";
+			document.getElementById('news-list-count').innerHTML = json.nodeset[0].totalno;
+			document.getElementById('news-list-count-main').innerHTML = json.nodeset[0].totalno;
 
-				document.getElementById('content-news-main').style.display = "block";
-				document.getElementById('news-result-menu').href = "#newsresult";
-				document.getElementById('news-result-menu').className = '';
-
-				if (total > parseInt( args["max"] )) {
-					const contentnewslist = document.getElementById('content-news-list');
-					contentnewslist.innerHTML = "";
-					contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
-				}
-
-				document.getElementById('news-list-count').innerHTML = json.nodeset[0].totalno;
-				document.getElementById('news-list-count-main').innerHTML = json.nodeset[0].totalno;
-
-				if (json.nodeset[0].nodes.length > 1) {
-					document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWSS_NAME; ?>";
-				} else {
-					document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWS_NAME; ?>";
-				}
-				displaySearchNodes(document.getElementById("content-news-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
-
-				if (total > parseInt( args["max"] )) {
-					const contentnewslist = document.getElementById('content-news-list');
-					contentnewslist.innerHTML = "";
-					contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
-				}
+			if (json.nodeset[0].nodes.length > 1) {
+				document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWSS_NAME; ?>";
 			} else {
-				document.getElementById('content-news-main').style.display = "none";
-				document.getElementById('news-result-menu').href = "javascript:return false";
-				document.getElementById('news-result-menu').className = 'inactive';
-				document.getElementById('news-list-count-main').innerHTML = "";
-				document.getElementById('news-list-count-main').insert('0');
+				document.getElementById("news-list-title").innerHTML = "<?php echo $LNG->NEWS_NAME; ?>";
 			}
+			displaySearchNodes(document.getElementById("content-news-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
+
+			if (total > parseInt( args["max"] )) {
+				const contentnewslist = document.getElementById('content-news-list');
+				contentnewslist.innerHTML = "";
+				contentnewslist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"news"));
+			}
+		} else {
+			document.getElementById('content-news-main').style.display = "none";
+			document.getElementById('news-result-menu').href = "javascript:return false";
+			document.getElementById('news-result-menu').className = 'inactive';
+			document.getElementById('news-list-count-main').innerHTML = "";
+			document.getElementById('news-list-count-main').insert('0');
 		}
-	});
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
@@ -900,7 +867,7 @@ function createNav(total, start, count, argArray, context, type){
 		//previous
 	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
-			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
 	        prevSpan.onclick = function() {
 	            var newArr = argArray;
@@ -908,7 +875,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        };
 	    } else {
-			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("inactive");
 	    }
 
@@ -934,7 +901,7 @@ function createNav(total, start, count, argArray, context, type){
 	    //next
 	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
 	        nextSpan.onclick = function() {
 	            var newArr = argArray;
@@ -942,7 +909,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        };
 	    } else {
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("inactive");
 	    }
 

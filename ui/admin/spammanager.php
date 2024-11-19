@@ -202,7 +202,7 @@
 		}
 	}
 
-	function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow, status) {		
+	async function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow, status) {		
 
 		// close any opened row
 		const divsArray = document.getElementsByName(rootname);
@@ -229,35 +229,26 @@
 			var reqUrl = SERVICE_ROOT + "&method=adminloaddebatechildnodes&nodeid="+nodeid+"&status="+status;
 
 			document.body.style.cursor = "wait"; 
-
-			new Ajax.Request(reqUrl, { method:'get',
-				onSuccess: function(transport){
-					var json = null;
-					try {
-						json = transport.responseText.evalJSON();
-					} catch(e) {
-						alert(e);
-					}
-					if(json.error){
-						alert(json.error[0].message);
-						return;
-					}
-					var children = json.nodeset[0].nodes;
-					
-					if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
-					node.cnode.children = children;
-					if (node.cnode.children && node.cnode.children.length > 0) {  node.cnode.istop = true; 	}
-
-					document.body.style.cursor = "pointer"; 
-					containerObj.innerHTML = "";
-
-					displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
-				},
-				onFailure: function(transport) {
-					document.body.style.cursor = "pointer"; 
-					containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+			try {
+				const json = await makeAPICall(reqUrl, 'GET');
+				if (json.error) {
+					alert(json.error[0].message);
+					return;
 				}
-			});
+				var children = json.nodeset[0].nodes;
+				
+				if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
+				node.cnode.children = children;
+				if (node.cnode.children && node.cnode.children.length > 0) {  node.cnode.istop = true; 	}
+
+				document.body.style.cursor = "pointer"; 
+				containerObj.innerHTML = "";
+
+				displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
+			} catch (err) {
+				document.body.style.cursor = "pointer"; 
+				containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+			}				
 		}
 	}
 </script>

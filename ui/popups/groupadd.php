@@ -149,7 +149,7 @@
 
             <script type="text/javascript">
                 function init() {
-                    $('dialogheader').insert('<?php echo $LNG->GROUP_CREATE_TITLE; ?>');
+                    document.getElementById('dialogheader').insert('<?php echo $LNG->GROUP_CREATE_TITLE; ?>');
                 }
                 function closeGroupDialog(groupid){
                     try {
@@ -161,12 +161,12 @@
                     window.close();
                 }
                 function checkForm() {
-                    var checkname = ($('groupname').value).trim();
+                    var checkname = (document.getElementById('groupname').value).trim();
                     if (checkname == ""){
                         alert("<?php echo $LNG->GROUP_FORM_NAME_ERROR; ?>");
                         return false;
                     }
-                    $('addgroupform').style.cursor = 'wait';
+                    document.getElementById('addgroupform').style.cursor = 'wait';
                     return true;
                 }
                 window.onload = init;

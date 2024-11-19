@@ -297,14 +297,20 @@
 
 <script type="text/javascript">
 	function init(){
-		$('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?> <?php echo htmlspecialchars($node->role->name);?>:<span style='font-size: 11pt'> <?php echo htmlspecialchars($node->name); ?></span>");
+		document.getElementById('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?> <?php echo htmlspecialchars($node->role->name);?>:<span style='font-size: 11pt'> <?php echo htmlspecialchars($node->name); ?></span>");
 
-		$H(activityitems).each(function(pair){
-			$(pair.key).insert(pair.value);
+		Object.entries(activityitems).forEach(function([key, value]) {
+			const element = document.querySelector(key);
+			if (element) {
+				element.insertAdjacentHTML('beforeend', value); // Use appendChild if value is a DOM node
+			}
 		});
 
-		$H(useritems).each(function(pair){
-			$(pair.key).insert(pair.value);
+		Object.entries(useritems).forEach(function([key, value]) {
+			const element = document.querySelector(key);
+			if (element) {
+				element.insertAdjacentHTML('beforeend', value); // Use appendChild if value is a DOM node
+			}
 		});
 
 	}

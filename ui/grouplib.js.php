@@ -73,7 +73,7 @@ function checkIssueAddForm() {
 /**
  *	load next/previous set of nodes
  */
-function loadissues(context,args){
+async function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 
 	updateAddressParameters(args);
@@ -83,58 +83,53 @@ function loadissues(context,args){
 	tabcontentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-	new Ajax.Request(reqUrl, { method:'get',
-  			onSuccess: function(transport){
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
 
-  				try {
-  					var json = transport.responseText.evalJSON();
-  				} catch(err) {
-  					console.log(err);
-  				}
+		//display nav
+		var total = json.nodeset[0].totalno;
+		var currentPage = (json.nodeset[0].start/args["max"]) + 1;
+		window.location.hash = "-"+currentPage;
 
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}
+		document.getElementById("tab-content-issue-list").innerHTML = (createNavCounter(total,json.nodeset[0].start,json.nodeset[0].count,"issues")).innerHTML;
 
-				//display nav
-				var total = json.nodeset[0].totalno;
-				var currentPage = (json.nodeset[0].start/args["max"]) + 1;
-				window.location.hash = "-"+currentPage;
+		const tabcontentissuelist = document.getElementById("tab-content-issue-list");
 
-				document.getElementById("tab-content-issue-list").innerHTML = (createNavCounter(total,json.nodeset[0].start,json.nodeset[0].count,"issues")).innerHTML;
+		//display nodes
+		if(json.nodeset[0].nodes.length > 0){
 
-				const tabcontentissuelist = document.getElementById("tab-content-issue-list");
-
-				//display nodes
-				if(json.nodeset[0].nodes.length > 0){
-
-					//preprosses nodes to add searchid and groupid
-					var nodes = json.nodeset[0].nodes;
-					var count = nodes.length;
-					for (var i=0; i<count; i++) {
-						var node = nodes[i];
-						if (args['searchid'] && args['searchid'] != "") {
-							node.cnode.searchid = args['searchid'];
-						}
-						node.cnode.groupid = args['groupid'];
-					}
-
-					var tb3 = new Element("div", {'class':'toolbarrow'});
-
-					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
-
-					document.getElementById("tab-content-issue-list").appendChild(tb3);
-					displayIssueNodes(466, 210,tabcontentissuelist,json.nodeset[0].nodes,parseInt(args['start'])+1, true, "groupissues", 'active', false, true, true);
+			//preprosses nodes to add searchid and groupid
+			var nodes = json.nodeset[0].nodes;
+			var count = nodes.length;
+			for (var i=0; i<count; i++) {
+				var node = nodes[i];
+				if (args['searchid'] && args['searchid'] != "") {
+					node.cnode.searchid = args['searchid'];
 				}
+				node.cnode.groupid = args['groupid'];
+			}
 
-				//display nav
-				if (total > parseInt( args["max"] )) {
-					tabcontentissuelist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
-				}
-    		}
-  		});
+			var tb3 = new Element("div", {'class':'toolbarrow'});
+
+			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
+			tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
+
+			document.getElementById("tab-content-issue-list").appendChild(tb3);
+			displayIssueNodes(466, 210,tabcontentissuelist,json.nodeset[0].nodes,parseInt(args['start'])+1, true, "groupissues", 'active', false, true, true);
+		}
+
+		//display nav
+		if (total > parseInt( args["max"] )) {
+			tabcontentissuelist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
@@ -154,7 +149,7 @@ function reorderIssues(){
 /**
  *	Filter the issues by search criteria
  */
-function filterSearchIssues() {
+async function filterSearchIssues() {
 	ISSUE_ARGS['q'] = document.getElementByIf('qissue').value;
 	var scope = 'all';
 	const scopeidissuemy = getElementById('scopeissuemy');
@@ -166,19 +161,24 @@ function filterSearchIssues() {
 	const tabissuelistobj = getElementById('tab-issue-list-obj');
 	if (USER != "") {
 		var reqUrl = SERVICE_ROOT + "&method=auditsearch&type=issue&format=text&q="+ISSUE_ARGS['q'];
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-				alert(error);
-			},
-	  		onSuccess: function(transport){
-				var searchid = transport.responseText;
-				if (searchid != "") {
-					ISSUE_ARGS['searchid'] = searchid;
-				}
-				DATA_LOADED.issue = false;
-				setTabPushed(tabissuelistobj,'issue-list');
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}	
+
+			var searchid = transport.responseText;
+			if (searchid != "") {
+				ISSUE_ARGS['searchid'] = searchid;
 			}
-		});
+			DATA_LOADED.issue = false;
+			setTabPushed(tabissuelistobj,'issue-list');
+			
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}
 	} else {
 		DATA_LOADED.issue = false;
 		setTabPushed(tabissuelistobj,'issue-list');
@@ -242,7 +242,7 @@ function createNav(total, start, count, argArray, context, type){
 		//previous
 	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
 	    if(start > 0){
-			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
 	        prevSpan.onclick = function() {
 	            var newArr = argArray;
@@ -250,7 +250,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        };
 	    } else {
-			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("inactive");
 	    }
 
@@ -274,7 +274,7 @@ function createNav(total, start, count, argArray, context, type){
 	    //next
 	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
 		if(parseInt(start)+parseInt(count) < parseInt(total)){		
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
 	        nextSpan.onclick = function() {
 	            var newArr = argArray;
@@ -282,7 +282,7 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        };
 	    } else {
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("inactive");
 	    }
 

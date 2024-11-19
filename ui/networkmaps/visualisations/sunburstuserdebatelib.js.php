@@ -94,7 +94,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 					//var isLink = node.nodeFrom ? true : false;
 					//if (isLink) {
-					//	$(detailpanelname).innerHTML = "I am a link";
+					//	document.getElementById(detailpanelname).innerHTML = "I am a link";
 					//} else {
 			            //rotate
 			            sunburst.rotate(node, animate? 'animate' : 'replot', {
@@ -104,7 +104,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 						if (node.getData('details') && node.getData('details') != "") {
 							//alert("cached details used");
-							$(detailpanelname).innerHTML = node.getData('details');
+							document.getElementById(detailpanelname).innerHTML = node.getData('details');
 						} else {
 							var html = "<h4>" +node.name+ ": "+ node.getData('realname') + "</h4>";
 							var ans = [];
@@ -241,7 +241,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 							html += ans.join("</li><li style='padding-bottom:10px;'>") + "</li></ul>";
 							node.setData('details', html);
 
-							$(detailpanelname).innerHTML = html;
+							document.getElementById(detailpanelname).innerHTML = html;
 						}
 					//}
 				}

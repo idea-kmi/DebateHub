@@ -131,140 +131,147 @@ function displayReportUsers(objDiv,users,start){
 /**
  * Makes ajax call for the current user to follow a person with the userid of the given obj.
  */
-function followUser(obj) {
+async function followUser(obj) {
 	var reqUrl = SERVICE_ROOT + "&method=addfollowing&itemid="+obj.userid;
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-   			if(json.error) {
-   				alert(json.error[0].message);
-   				return;
-   			} else {
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
-				obj.setAttribute('title', '<?php echo $LNG->USERS_UNFOLLOW; ?>');
-				obj.onclick = function() {
-					unfollowUser(this);
-				}
-   			}
-   		}
-  	});
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+		obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
+		obj.setAttribute('title', '<?php echo $LNG->USERS_UNFOLLOW; ?>');
+		obj.onclick = function() {
+		unfollowUser(this);
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  * Makes ajax call for the current user to unfollow a person with the userid of the given obj.
  */
-function unfollowUser(obj) {
+async function unfollowUser(obj) {
 	var reqUrl = SERVICE_ROOT + "&method=deletefollowing&itemid="+obj.userid;
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-   			if(json.error) {
-   				alert(json.error[0].message);
-   				return;
-   			} else {
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-				obj.setAttribute('title', '<?php echo $LNG->USERS_FOLLOW; ?>');
-				obj.onclick = function() {
-        			followUser(this);
-    			};
-   			}
-   		}
-  	});
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}	
+		obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
+		obj.setAttribute('title', '<?php echo $LNG->USERS_FOLLOW; ?>');
+		obj.onclick = function() {
+  			followUser(this);
+		};
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 
 /**
  *  Makes ajax call to follow the given userid. Called from user home page follow list.
  */
-function followMyUser(userid) {
+async function followMyUser(userid) {
 	var reqUrl = SERVICE_ROOT + "&method=addfollowing&itemid="+userid;
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-   			if(json.error) {
-   				alert(json.error[0].message);
-   				return;
-   			} else {
-				try {
-					window.location.reload(true);
-				} catch(err) {
-					//do nothing
-				}
-   			}
-   		}
-  	});
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}		
+		try {
+			window.location.reload(true);
+		} catch(err) {
+			//do nothing
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 /**
  * Makes ajax call to unfollow the given userid. Called from user home page follow list.
  */
-function unfollowMyUser(userid) {
+async function unfollowMyUser(userid) {
 	var reqUrl = SERVICE_ROOT + "&method=deletefollowing&itemid="+userid;
-	new Ajax.Request(reqUrl, { method:'get',
-		onSuccess: function(transport){
-			var json = transport.responseText.evalJSON();
-   			if(json.error) {
-   				alert(json.error[0].message);
-   				return;
-   			} else {
-				try {
-					window.location.reload(true);
-				} catch(err) {
-					//do nothing
-				}
-   			}
-   		}
-  	});
+	try {
+		const json = await makeAPICall(reqUrl, 'GET');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}		
+		try {
+			window.location.reload(true);
+		} catch(err) {
+			//do nothing
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 
 /**
  * Send a spam alert to the server.
  */
-function reportGroupSpamAlert(obj, group) {
+async function reportGroupSpamAlert(obj, group) {
 	var ans = confirm("Are you sure you want to report \n\n"+group.name+"\n\nas an Inappropriate?\n\n");
 	if (ans){
 		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-			},
-			onSuccess: function(transport){
-				obj.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
-				obj.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
-				obj.style.cursor = 'auto';
-				obj.unbind("click");
-				Event.stopObserving(obj, 'click');
-				if (group !== undefined) {
-					group.status = 1;
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}			
+			obj.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
+			obj.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
+			obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
+			obj.style.cursor = 'auto';
+			obj.unbind("click");
+			obj.onclick = null;
+			if (group !== undefined) {
+				group.status = 1;
 			}
-		});
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}			
 	}
 }
 
 /**
  * Send a spam alert to the server.
  */
-function reportUserSpamAlert(obj, user) {
+async function reportUserSpamAlert(obj, user) {
 	var ans = confirm("Are you sure you want to report \n\n"+obj.dataset.label+"\n\nas a Spammer / Inappropriate?\n\n");
 	if (ans){
 		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
-		new Ajax.Request(reqUrl, { method:'get',
-			onError: function(error) {
-			},
-			onSuccess: function(transport){
-				obj.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
-				obj.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
-				obj.style.cursor = 'auto';
-				obj.unbind("click");
-				Event.stopObserving(obj, 'click');
-				if (user !== undefined) {
-					user.status = 1;
-				}
+		try {
+			const json = await makeAPICall(reqUrl, 'GET');
+			if (json.error) {
+				alert(json.error[0].message);
+				return;
+			}			
+			obj.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
+			obj.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
+			obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
+			obj.style.cursor = 'auto';
+			obj.unbind("click");
+			obj.onclick = null;
+			if (user !== undefined) {
+				user.status = 1;
 			}
-		});
+		} catch (err) {
+			alert("There was an error: "+err.message);
+			console.log(err)
+		}			
 	}
 }
 

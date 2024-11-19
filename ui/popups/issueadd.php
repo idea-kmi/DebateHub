@@ -148,21 +148,21 @@
 
 <script type="text/javascript">
 	function init() {
-		$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
+		document.getElementById('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
 		initialisePhaseDates();
 	}
 
 	function checkForm() {
-		var checkname = ($('issue').value).trim();
+		var checkname = (document.getElementById('issue').value).trim();
 		if (checkname == ""){
 		alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
 		return false;
 		}
 
 		//check dates
-		var startdate = ($('startdate').value).trim();
-		var enddate = ($('enddate').value).trim();
-		var votingstart = ($('votingstart').value).trim();
+		var startdate = (document.getElementById('startdate').value).trim();
+		var enddate = (document.getElementById('enddate').value).trim();
+		var votingstart = (document.getElementById('votingstart').value).trim();
 
 		if (startdate != "" && enddate != "") {
 			var sdate = Date.parse(startdate);
@@ -182,7 +182,7 @@
 			}
 		}
 
-		$('issueform').style.cursor = 'wait';
+		document.getElementById('issueform').style.cursor = 'wait';
 		return true;
 	}
 	window.onload = init;

@@ -134,11 +134,11 @@ function createScatterPlotNVD3Vis(container, data, width) {
 	// If the brush is empty, select all circles.
 	function brushend() {
 		if (brush.empty()) {
-			$('nodelistbox').update('<div style="float:left;margin-top:15px;"><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?></div>');
+			document.getElementById('nodelistbox').innerHTML = '<div style="float:left;margin-top:15px;"><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?></div>';
 			d3.selectAll(".hidden").classed("hidden", false);
 		} else {
-			$('nodelistbox').update("");
-			$('nodelistboxstats').update("");
+			document.getElementById('nodelistbox').innerHTML = "";
+			document.getElementById('nodelistboxstats').innerHTML = "";
 			var checkit = new Array();
 			var num = 0;
 			var e = brush.extent();
@@ -153,8 +153,8 @@ function createScatterPlotNVD3Vis(container, data, width) {
 				}
 			});
 
-			$('nodelistboxstats').insert('<span><b>x:</b>'+decimalAdjust(e[0][0], 2)+'-'+decimalAdjust(e[1][0], 2)+' <b>y:</b> '+decimalAdjust(e[0][1], 2)+'-'+decimalAdjust(e[1][1], 2)+'</span>');
-			$('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
+			document.getElementById('nodelistboxstats').insert('<span><b>x:</b>'+decimalAdjust(e[0][0], 2)+'-'+decimalAdjust(e[1][0], 2)+' <b>y:</b> '+decimalAdjust(e[0][1], 2)+'-'+decimalAdjust(e[1][1], 2)+'</span>');
+			document.getElementById('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
 		}
 	}
 
@@ -175,8 +175,8 @@ function createScatterPlotNVD3Vis(container, data, width) {
 		.tooltips(true);
 
 	chart.tooltipContent(function(key, x, y, e, graph) {
-		$('nodelistbox').update("");
-		$('nodelistboxstats').update("");
+		document.getElementById('nodelistbox').innerHTML = "";
+		document.getElementById('nodelistboxstats').innerHTML = "";
 
       	var d = e.series.values[e.pointIndex];
   		var checkit = new Array();
@@ -193,9 +193,9 @@ function createScatterPlotNVD3Vis(container, data, width) {
 			}
 		}
 
-		//$('nodelistboxstats').insert('<span><b>x:</b> '+x+' <b>y:</b> '+y+'</span>');
-		//$('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
-		$('nodelistboxstats').insert('<span><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
+		//document.getElementById('nodelistboxstats').insert('<span><b>x:</b> '+x+' <b>y:</b> '+y+'</span>');
+		//document.getElementById('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
+		document.getElementById('nodelistboxstats').insert('<span><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
 
         return '<h3><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?> ' +num+ '</h3>';
 	});
@@ -310,7 +310,7 @@ function addScatterPlotDetailItem(nodeid, nodename, nodetype, homepage) {
 			'style':'float:left;clear:both;margin-top:10px;'});
 		next.insert(nodename);
 	}
-	$('nodelistbox').insert(next);
+	document.getElementById('nodelistbox').insert(next);
 }
 
 function createScatterPlotMatrixD3Vis(container, data, width) {
@@ -436,10 +436,10 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 	// If the brush is empty, select all circles.
 	function brushend() {
 		if (brush.empty()) {
-			$('nodelistbox').update('<div style="float:left;margin-top:15px;"><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?></div>');
+			document.getElementById('nodelistbox').innerHTML - '<div style="float:left;margin-top:15px;"><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?></div>';
 			svg.selectAll(".hidden").classed("hidden", false);
 		} else {
-			$('nodelistbox').update("");
+			document.getElementById('nodelistbox').innerHTML = "";
 			var checkit = new Array();
 			svg.selectAll("circle:not(.hidden)").each(function(d) {
 				var next;
@@ -477,7 +477,7 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 							'style':'float:left;clear:both;margin-top:10px;'});
 						next.insert(d.name);
 					}
-					$('nodelistbox').insert(next);
+					document.getElementById('nodelistbox').insert(next);
 				}
 			});
 		}

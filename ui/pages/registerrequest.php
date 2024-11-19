@@ -207,11 +207,11 @@
 			?>
 			<script type="text/javascript">
 				function checkForm() {
-					if ($('agreeconditions') && $('agreeconditions').checked == false){
+					if (document.getElementById('agreeconditions') && document.getElementById('agreeconditions').checked == false){
 					alert("<?php echo $LNG->CONDITIONS_AGREE_FAILED_MESSAGE; ?>");
 					return false;
 					}
-					$('register').style.cursor = 'wait';
+					document.getElementById('register').style.cursor = 'wait';
 					return true;
 				}
 			</script>

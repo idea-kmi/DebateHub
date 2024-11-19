@@ -31,10 +31,10 @@ var stackedAreaChart = null;
 
 function loadExploreGroupStackedArea(){
 
-	$("stackedarea-div").innerHTML = "";
+	document.getElementById("stackedarea-div").innerHTML = "";
 
 	if (!isCanvasSupported()) {
-		$("stackedarea-div").insert('<div><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("stackedarea-div").insert('<div><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -58,9 +58,9 @@ function loadExploreGroupStackedArea(){
 
 	stackedareaInfoOuter.insert(stackedareaTitleDiv);
 	stackedareaInfoOuter.insert(stackedareaInfoDiv);
-	$("stackedarea-div").insert(stackedareaInfoOuter);
+	document.getElementById("stackedarea-div").insert(stackedareaInfoOuter);
 
-	$("stackedarea-div").insert(outerDiv);
+	document.getElementById("stackedarea-div").insert(outerDiv);
 
 	stackedAreaChart = createStackedAreaChart('stackedareadiv');
 	loadData(stackedAreaChart, messagearea);

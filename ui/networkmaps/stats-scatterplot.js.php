@@ -29,11 +29,11 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 function loadScatterPlot(){
 
-	$("scatterplot-div").innerHTML = "";
+	document.getElementById("scatterplot-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("scatterplot-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("scatterplot-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -72,7 +72,7 @@ function loadScatterPlot(){
 	outerDiv.insert(scatterplotdiv);
 	outerDiv.insert(detailsarea);
 
-	$("scatterplot-div").insert(outerDiv);
+	document.getElementById("scatterplot-div").insert(outerDiv);
 
 	loadScatterPlotData(messagearea, scatterplotdiv, width);
 }

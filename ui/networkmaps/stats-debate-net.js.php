@@ -31,11 +31,11 @@ var forcedirectedGraph = null;
 
 function loadExploreDebateNet(){
 
-	$("network-debate-div").innerHTML = "";
+	document.getElementById("network-debate-div").innerHTML = "";
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		$("network-debate-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("network-debate-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
 
@@ -54,7 +54,7 @@ function loadExploreDebateNet(){
 
 	outerDiv.insert(messagearea);
 	outerDiv.insert(graphDiv);
-	$("network-debate-div").insert(outerDiv);
+	document.getElementById("network-debate-div").insert(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraph('graphIssueDiv', NODE_ARGS['nodeid']);
 
@@ -63,8 +63,8 @@ function loadExploreDebateNet(){
 	// THE TOOLBAR
 	var toolbar = createGraphToolbar(forcedirectedGraph, "network-debate-div");
 
-	$("network-debate-div").insert({top: toolbar});
-	$("network-debate-div").insert({top: keybar});
+	document.getElementById("network-debate-div").insert({top: toolbar});
+	document.getElementById("network-debate-div").insert({top: keybar});
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -78,7 +78,7 @@ function loadExploreDebateNet(){
 	loadIssueData(forcedirectedGraph, toolbar, messagearea);
 }
 
-function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
+async function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 
 	messagearea.innerHTML = "";
 	messagearea.appendChild(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
@@ -91,45 +91,39 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 	var reqUrl = SERVICE_ROOT + "&method=getdebate&" + Object.toQueryString(args);
 
 	//alert(reqUrl);
-
-	new Ajax.Request(reqUrl, { method:'post',
-		onSuccess: function(transport){
-			var json = null;
-			try {
-				json = transport.responseText.evalJSON();
-			} catch(e) {
-				alert(e);
-			}
-			if(json.error){
-				alert(json.error[0].message);
-				return;
-			}
-
-			var conns = json.connectionset[0].connections;
-			//alert("conns: "+conns.length);
-			let conslenth = 0;
-			if (conns.length > 0) {
-				for(var i=0; i< conns.length; i++){
-					var c = conns[i].connection;
-					if (addConnectionToFDGraph(c, forcedirectedGraph.graph)) {
-						conslenth++;
-					}
+	try {
+		const json = await makeAPICall(reqUrl, 'POST');
+		if (json.error) {
+			alert(json.error[0].message);
+			return;
+		}
+		var conns = json.connectionset[0].connections;
+		//alert("conns: "+conns.length);
+		let conslenth = 0;
+		if (conns.length > 0) {
+			for(var i=0; i< conns.length; i++){
+				var c = conns[i].connection;
+				if (addConnectionToFDGraph(c, forcedirectedGraph.graph)) {
+					conslenth++;
 				}
 			}
-
-			$('graphConnectionCount').innerHTML = "";
-			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
-
-			if (conns.length > 0) {
-				computeMostConnectedNode(forcedirectedGraph);
-				layoutAndAnimateFD(forcedirectedGraph, messagearea);
-				toolbar.style.display = 'block';
-			} else {
-				messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-				toolbar.style.display = 'none';
-			}
 		}
-	});
+
+		document.getElementById('graphConnectionCount').innerHTML = "";
+		document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
+
+		if (conns.length > 0) {
+			computeMostConnectedNode(forcedirectedGraph);
+			layoutAndAnimateFD(forcedirectedGraph, messagearea);
+			toolbar.style.display = 'block';
+		} else {
+			messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
+			toolbar.style.display = 'none';
+		}
+	} catch (err) {
+		alert("There was an error: "+err.message);
+		console.log(err)
+	}
 }
 
 loadExploreDebateNet();

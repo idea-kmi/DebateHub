@@ -215,8 +215,8 @@ function clipInitialCanvas(graphview, width, height) {
 	//alert("bounds AFTER="+boundswidth+":"+boundsheight);
 
 	if (boundswidth < size.width || boundsheight < size.height) {
-		$(graphview.config.injectInto).style.width = boundswidth+"px";
-		$(graphview.config.injectInto).style.height = boundsheight+"px";
+		document.getElementById(graphview.config.injectInto).style.width = boundswidth+"px";
+		document.getElementById(graphview.config.injectInto).style.height = boundsheight+"px";
 		graphview.canvas.resize(boundswidth, boundsheight);
 	}
 }
@@ -237,8 +237,8 @@ function resizeFDGraphCanvas(graphview, width, height) {
 	}
 
 	if (size.width < width || size.height < height) {
-		$(graphview.config.injectInto).style.width = resizeWidth+"px";
-		$(graphview.config.injectInto).style.height = resizeHeight+"px";
+		document.getElementById(graphview.config.injectInto).style.width = resizeWidth+"px";
+		document.getElementById(graphview.config.injectInto).style.height = resizeHeight+"px";
 		graphview.canvas.resize(resizeWidth, resizeHeight);
 	}
 }
@@ -271,8 +271,8 @@ function panToNodeFD(graphview, nodeid) {
 
     //alert(nodePos.x+":"+nodePos.y);
 
-	var viewwidth = $(graphview.config.injectInto+'-outer').offsetWidth;
-	var viewheight = $(graphview.config.injectInto+'-outer').offsetHeight;
+	var viewwidth = document.getElementById(graphview.config.injectInto+'-outer').offsetWidth;
+	var viewheight = document.getElementById(graphview.config.injectInto+'-outer').offsetHeight;
 	var size = canvas.getSize();
 
 	//alert("size="+size.width+":"+size.height);
@@ -331,8 +331,8 @@ function zoomFDFit(graphview) {
 		var mapWidth = rectangle.width;
 		var mapHeight = rectangle.height;
 
-		var outerWidth = $(graphview.config.injectInto+'-outer').offsetWidth;
-		var outerHeight = $(graphview.config.injectInto+'-outer').offsetHeight;
+		var outerWidth = document.getElementById(graphview.config.injectInto+'-outer').offsetWidth;
+		var outerHeight = document.getElementById(graphview.config.injectInto+'-outer').offsetHeight;
 		var canvas = graphview.canvas;
 
 		// if the scale is greater than or equal to 1, scale back to 100% only, do not go higher.

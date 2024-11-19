@@ -263,17 +263,17 @@
 
 <script type="text/javascript">
 	function init() {
-		$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_EDIT; ?>');
+		document.getElementById('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_EDIT; ?>');
 		initialisePhaseDates();
 	}
 
 	function checkForm() {
-		var checkname = ($('issue').value).trim();
+		var checkname = (document.getElementById('issue').value).trim();
 		if (checkname == ""){
 		alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
 		return false;
 		}
-		$('issueform').style.cursor = 'wait';
+		document.getElementById('issueform').style.cursor = 'wait';
 		return true;
 	}
 	window.onload = init;

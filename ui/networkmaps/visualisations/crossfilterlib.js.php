@@ -318,7 +318,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 	// or you can choose to redraw only those charts associated with a specific chart group
 	//dc.redrawAll("group");
 
- 	$('messagearea').innerHTML="";
+	document.getElementById('messagearea').innerHTML="";
 }
 
 function displayUserActivityCrossFilterD3Vis(data, width) {
@@ -615,7 +615,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
           .datum(nest.entries(data))
           .call(legend);
 
- 	$('messagearea').innerHTML="";
+	document.getElementById('messagearea').innerHTML="";
 }
 
 

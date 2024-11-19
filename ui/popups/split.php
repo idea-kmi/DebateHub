@@ -142,20 +142,20 @@ if(!empty($errors)){
 var noIdeas = <?php $count = 0; if (is_countable($ideanamearray)) { $count = count($ideanamearray); } echo $count; ?>;
 
 function init() {
-   	$('dialogheader').insert("Split this idea into two or more ideas.");
+   	document.getElementById('dialogheader').insert("Split this idea into two or more ideas.");
 }
 
 function checkForm() {
 
-	var idea0 = ($('ideaname-0').value).trim();
-	var idea1 = ($('ideaname-1').value).trim();
+	var idea0 = (document.getElementById('ideaname-0').value).trim();
+	var idea1 = (document.getElementById('ideaname-1').value).trim();
 
 	if (idea0 == "" ||  idea1 == ""){
 		alert("<?php echo $LNG->FORM_SPLIT_IDEA_ERROR; ?>");
 		return false;
 	}
 
-    $('issueform').style.cursor = 'wait';
+    document.getElementById('issueform').style.cursor = 'wait';
 
 	return true;
 }

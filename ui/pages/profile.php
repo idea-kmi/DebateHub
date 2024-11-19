@@ -158,7 +158,7 @@
 			<script type="text/javascript">
 				function checkForm() {
 					var originalemail = '<?php echo $email; ?>';
-					var email = ($('email').value).trim();
+					var email = (document.getElementById('email').value).trim();
 					if (email != originalemail){
 						var ans = confirm("<?php echo $LNG->PROFILE_EMAIL_CHANGE_CONFIRM; ?>");
 						if (ans){
@@ -167,7 +167,7 @@
 							return false;
 						}
 					}
-					$('editprofile').style.cursor = 'wait';
+					document.getElementById('editprofile').style.cursor = 'wait';
 					return true;
 				}
 			</script>

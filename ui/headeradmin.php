@@ -81,7 +81,6 @@
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/users.js.php'); ?>" type="text/javascript"></script>
 
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor5/ckeditor5.js" type="text/javascript"></script>
-		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/datetimepicker/datetimepicker_css.js" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/bootstrap/bootstrap.bundle.min.js" type="text/javascript"></script>

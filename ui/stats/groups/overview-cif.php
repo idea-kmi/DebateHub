@@ -130,11 +130,12 @@ function addOverviewItem(divarea, node, metadata) {
 	var homepage = node.homepage;
 
 	if (nodeid != nodename) {
-		next = new Element("span", {
-			'style':'float:left;clear:both;margin-top:5px;margin-bottom:5px;'});
+		next = document.createElement("span");
+		next.style = 'float:left;clear:both;margin-top:5px;margin-bottom:5px;';
 
 		if (nodetype) {
-			var img = new Element("img", {'style':'vertical-align:middle;padding-right:5px'});
+			var img = document.createElement("img");
+			img.style = 'vertical-align:middle;padding-right:5px';
 			if (nodetype == 'Idea') {
 				img.src = '<?php echo $CFG->commenticon; ?>';
 			} else if (nodetype == 'Issue') {
@@ -148,10 +149,10 @@ function addOverviewItem(divarea, node, metadata) {
 			} else {
 				img.src = '<?php echo $CFG->solutionicon; ?>';
 			}
-			next.insert(img);
+			next.appendChild(img);
 		}
 
-		next.insert(nodename);
+		next.innerhtML += nodename;
 		if (homepage && homepage != "") {
 			next.className = "active";
 			next.addEventListener('click', function() {
@@ -159,11 +160,11 @@ function addOverviewItem(divarea, node, metadata) {
 			});
 		}
 	} else {
-		next = new Element("span", {
-			'style':'float:left;clear:both;margin-top:10px;'});
-		next.insert(nodename);
+		next = document.createElement("span");
+		next.style = 'float:left;clear:both;margin-top:10px;';
+		next.innerHTML += nodename;
 	}
-	document.getElementById(divarea).insert(next);
+	document.getElementById(divarea).appendChild(next);
 }
 
 async function loadOverviewData() {

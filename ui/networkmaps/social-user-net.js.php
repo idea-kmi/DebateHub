@@ -33,25 +33,32 @@ function loadSocialNet() {
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("tab-content-social").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("tab-content-social").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE GRAPH ****/
 
-	var graphDiv = new Element('div', {'id':'graphUserDiv', 'style': 'clear:both;float:left'});
+	var graphDiv = document.createElement('div');
+	graphDiv.id = 'graphUserDiv';
+	graphDiv.style = 'clear:both;float:left';
 	var width = 4000;
 	var height = 4000;
 
-	var messagearea = new Element("div", {'id':'netusermessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'netusermessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'float:left;clear:both;font-weight:bold';
 
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;margin-left:5px;margin-bottom:5px;overflow:hidden'});
-	outerDiv.insert(messagearea);
-	outerDiv.insert(graphDiv);
-	document.getElementById("tab-content-social").insert(outerDiv);
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'graphUserDiv-outer';
+	outerDiv.style = 'border:1px solid gray;margin-left:5px;margin-bottom:5px;overflow:hidden';
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(graphDiv);
+	document.getElementById("tab-content-social").appendChild(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraphSocial('graphUserDiv', USER_ARGS['userid']);
 
@@ -60,8 +67,8 @@ function loadSocialNet() {
 	// THE TOOLBAR
 	var toolbar = createSocialGraphToolbar(forcedirectedGraph, "tab-content-social");
 
-	document.getElementById("tab-content-social").insert({top: toolbar});
-	document.getElementById("tab-content-social").insert({top: keybar});
+	document.getElementById("tab-content-social").prepend(toolbar);
+	document.getElementById("tab-content-social").prepend(keybar);
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -97,7 +104,7 @@ async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 
 	nodetypes += ",Pro,Con";
 
-	var args = Object.clone(NODE_ARGS);
+	var args = { ...NODE_ARGS };
 
 	args["scope"] = 'all';
 	args["start"] = 0;
@@ -118,7 +125,7 @@ async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 		}
 		var conns = json.connectionset[0].connections;
 		//document.getElementById('graphConnectionCount').innerHTML = "";
-		//document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
+		//document.getElementById('graphConnectionCount').innerHTML += '<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>';
 
 		//alert("connection count = "+conns.length);
 		let concount = 0;

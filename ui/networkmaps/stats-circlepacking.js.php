@@ -33,25 +33,32 @@ function loadCirclePacking(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("circlepacking-div").insert('<div style="font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("circlepacking-div").innerHTML += '<div style="font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE VIS ****/
-	var circlepackingdiv = new Element('div', {'id':'circlepackingdiv'});
+	var circlepackingdiv = document.createElement('div');
+	circlepackingdiv.id = 'circlepackingdiv';
 	var width = 100;
 	var height = 100;
 
 	circlepackingdiv.style.width = width+"%";
 	circlepackingdiv.style.height = height+"%";
 
-	var messagearea = new Element("div", {'id':'circlepackingmessage','class':'toolbitem','style':'font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'circlepackingdiv-outer', 'style': 'overflow:hidden'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'circlepackingmessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'font-weight:bold';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(circlepackingdiv);
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'circlepackingdiv-outer';
+	outerDiv.style = 'overflow:hidden';
 
-	document.getElementById("circlepacking-div").insert(outerDiv);
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(circlepackingdiv);
+
+	document.getElementById("circlepacking-div").appendChild(outerDiv);
 
 	createCirclePackingD3Vis(circlepackingdiv);
 	loadCirclePackingData(messagearea);

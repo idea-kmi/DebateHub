@@ -47,8 +47,7 @@ function init() {
 
 	const newtime = parseInt((time + (offset*60000))/1000);
 	const newtimefield = document.getElementById("newtime");
-	newtimefield.innerHTML = "";
-	newtimefield.appendChild(parseInt(newtime);
+	newtimefield.innerHTML = parseInt(newtime);
 
 	const localutc = date.toUTCString();
 	const localutcfield = document.getElementById("localutc");

@@ -543,33 +543,33 @@ async function loadParticipationStats() {
 		const healthparticipation = document.getElmenetById('health-participation');
 		if (healthparticipation) {
 			const healthparticipationcount = document.getElmenetById('health-participation-count');
-			healthparticipationcount.update(peoplecount);
+			healthparticipationcount.innerHTML = peoplecount;
 			var person = peoplecount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
 			const healthparticipationmessage = document.getElmenetById('health-participation-message');
-			healthparticipationmessage.update(person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>');
+			healthparticipationmessage.innerHTML = person+' '+'<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTORS; ?>';
 			const healthparticipationrecomendation = document.getElmenetById('health-participation-recomendation');
 
 			if (peoplecount < 3) {
 				healthparticipation.trafficlight = 'red';
 				const healthparticipationred = document.getElmenetById('health-participation-red');
 				healthparticipationred.className = 'trafficlightredon';
-				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+				healthparticipationrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
 			} else if (peoplecount >= 3 && peoplecount <= 5) {
 				healthparticipation.trafficlight = 'orange';
 				const healthparticipationorange = document.getElmenetById('health-participation-orange');
 				healthparticipationorange.className = 'trafficlightorangeon';
-				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+				healthparticipationrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
 			} else if (peoplecount > 5) {
 				healthparticipation.trafficlight = 'green';
 				const healthparticipationgreen = document.getElmenetById('health-participation-green');
 				healthparticipationgreen.className = 'trafficlightgreenon';
-				healthparticipationrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+				healthparticipationrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
 			}
 			healthparticipation.style.display = 'block';
 		}
 
 		const debateparticipationcount = document.getElmenetById('debate-participation-count');
-		debateparticipationcount.update(peoplecount);
+		debateparticipationcount.innerHTML = peoplecount;
 
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -658,8 +658,8 @@ async function loadContributionStats() {
 				message += ' <?php echo $LNG->VOTES_NAME; ?>';
 			}
 
-			healthdebateMessage.update(message);
-			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+			healthdebateMessage.innerHTML = message;
+			healthdebateRecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
 			const healthdebateRed = document.getElmenetById('health-debate-red');
 			healthdebateRed.className = "trafficlightredon";
 		} else if (ideaRatio > 0.1 && votingRatio > 0.1 && proRatio > 0.1 && conRatio > 0.1
@@ -693,14 +693,14 @@ async function loadContributionStats() {
 			}
 
 			healthdebate.trafficlight = 'orange';
-			healthdebateMessage.update(message);
-			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+			healthdebateMessage.innerHTML = message;
+			healthdebateRecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
 			const healthdebateorange = document.getElmenetById('health-debate-orange');
 			healthdebateorange.className = "trafficlightorangeon";
 		} else {
 			healthdebate.trafficlight = 'green';
-			healthdebateMessage.update('<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_GREEN; ?>');
-			healthdebateRecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+			healthdebateMessage.innerHTML = '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_GREEN; ?>';
+			healthdebateRecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
 			const healthdebategreen = document.getElmenetById('health-debate-green');
 			healthdebategreen.className = "trafficlightgreenon";
 		}
@@ -743,8 +743,8 @@ async function loadViewingStats() {
 			const healthviewingpeoplecount = document.getElmenetById('health-viewingpeople-count');
 			const healthviewinggroupcount = document.getElmenetById('health-viewinggroup-count');
 
-			healthviewingpeoplecount.update(viewingmembercount);
-			healthviewinggroupcount.update(groupmembercount);
+			healthviewingpeoplecount.innerHTML = viewingmembercount;
+			healthviewinggroupcount.innerHTML = groupmembercount;
 
 			var person = viewingmembercount == 1 ? '<?php echo $LNG->STATS_OVERVIEW_PERSON; ?>' :'<?php echo $LNG->STATS_OVERVIEW_PEOPLE; ?>';
 
@@ -752,24 +752,24 @@ async function loadViewingStats() {
 			const healthviewingmessagepart2 = document.getElmenetById('health-viewing-message-part2');
 			const healthviewingrecomendation = document.getElmenetById('health-viewing-recomendation');
 
-			healthviewingmessage.update(person+' '+'<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART1; ?>');
-			healthviewingmessagepart2.update('<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART2; ?>');
+			healthviewingmessage.innerHTML = person+' '+'<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART1; ?>';
+			healthviewingmessagepart2.innerHTML = '<?php echo $LNG->STATS_DEBATE_VIEWING_MESSAGE_PART2; ?>';
 
 			if (ratio >= 0.5) {
 				healthviewing.trafficlight = 'green';
 				const healthviewinggreen = document.getElmenetById('health-viewing-green');
 				healthviewinggreen.className = "trafficlightgreenon";
-				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>');
+				healthviewingrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_NO_PROBLEM; ?>';
 			} else if (ratio < 0.5 && ratio >= 0.2) {
 				healthviewing.trafficlight = 'orange';
 				const healthviewingorange = document.getElmenetById('health-viewing-orange');
 				healthviewingorange.className = "trafficlightorangeon";
-				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>');
+				healthviewingrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_MAYBE_PROBLEM; ?>';
 			} else {
 				healthviewing.trafficlight = 'red';
 				const healthviewingred = document.getElmenetById('health-viewing-red');
 				healthviewingred.className = "trafficlightredon";
-				healthviewingrecomendation.update('<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>');
+				healthviewingrecomendation.innerHTML = '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PROBLEM; ?>';
 			}
 
 			healthviewing.style.display = 'block';
@@ -787,15 +787,14 @@ function insertArgumentLink(uniQ, type) {
 	count = count+1;
 	argumentLinkDiv.linkcount = count;
 
-	var weblink = new Element("input", {
-		'class':'form-control mt-2',
-		'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
-		'id':'argumentlink'+type+uniQ+count,
-		'name':'argumentlink'+type+uniQ+'[]',
-		'value':''
-	});
+	var weblink = document.createElement("input");
+	weblink.className = 'form-control mt-2';
+	weblink.placeholder = '<?php echo $LNG->FORM_LINK_LABEL; ?>';
+	weblink.id = 'argumentlink'+type+uniQ+count;
+	weblink.name = 'argumentlink'+type+uniQ+'[]';
+	weblink.value = '';
 
-	argumentLinkDiv.insert(weblink);
+	argumentLinkDiv.appendChild(weblink);
 	weblink.focus();
 }
 
@@ -805,15 +804,14 @@ function insertIdeaLink(uniQ, type) {
 	count = count + 1;
 	argumentLinkDiv.linkcount = count;
 
-	var weblink = new Element("input", {
-		'class':'form-control mt-2',
-		'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
-		'id':'argumentlink'+type+uniQ+count,
-		'name':'argumentlink'+type+uniQ+'[]',
-		'value':''
-	});
+	var weblink = document.createElement("input");
+	weblink.className = 'form-control mt-2';
+	weblink.placeholder = '<?php echo $LNG->FORM_LINK_LABEL; ?>';
+	weblink.id = 'argumentlink'+type+uniQ+count;
+	weblink.name = 'argumentlink'+type+uniQ+'[]';
+	weblink.value = '';
 
-	argumentLinkDiv.insert(weblink);
+	argumentLinkDiv.appendChild(weblink);
 	weblink.focus();
 }
 
@@ -1165,8 +1163,7 @@ async function loadsolutions(context,args){
 	}
 	reqUrl += "&orderby="+args['orderby']+"&sort="+args['sort']+"&issueid="+focalnodeid;
 
-	conatiner.innerHTML = "";
-	container.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
+	container.innerHTML = getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>");
 
 	//alert(reqUrl);
 
@@ -1182,7 +1179,7 @@ async function loadsolutions(context,args){
 		//alert("conns="+conns.length);
 
 		if (conns.length == 0) {
-			container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+			container.innerHTML = "<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>";
 		} else {
 			var nodes = new Array();
 			var nodeids = "";
@@ -1233,9 +1230,9 @@ async function loadsolutions(context,args){
 			if (nodes.length > 0) {
 				const remainingcount = document.getElmenetById('remaining-count');
 				if (remainingcount) {
-					remainingcount.update('('+nodes.length+')');
+					remainingcount.innerHTML = '('+nodes.length+')';
 					const removedcount = document.getElmenetById('removed-count');
-					removedcount.update('('+(parseInt(json.connectionset[0].totalno)-nodes.length)+')');
+					removedcount.innerHTML = '('+(parseInt(json.connectionset[0].totalno)-nodes.length)+')';
 				}
 
 				// Audit ideas viewed
@@ -1248,28 +1245,29 @@ async function loadsolutions(context,args){
 				}
 
 				// clear list
-				container.update("");
+				container.innerHTML = "";
 
 				if (NODE_ARGS['currentphase'] != CLOSED_PHASE && NODE_ARGS['currentphase'] != DECIDE_PHASE) {
-					var tb3 = new Element("div", {'class':'toolbarrow'});
+					var tb3 = document.createElement("div");
+					tb3.className = 'toolbarrow';
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', fromname: '<?php echo $LNG->SORT_TITLE; ?>', random:'<?php echo $LNG->SORT_RANDOM; ?>'};
 					//sortOpts.vote = '<?php echo $LNG->SORT_VOTES; ?>';
-					tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
+					tb3.appendChild(displaySortForm(sortOpts,args,'solution',reorderSolutions));
 
-					container.insert(tb3);
+					container.appendChild(tb3);
 				}
 
 				displayIdeaList(container,nodes,parseInt(0), true, 'explore');
 
 				// Set Idea count on Issue
 				const debatestatsideas = document.getElmenetById('debatestatsideas'+focalnodeid);
-				debatestatsideas.update(json.connectionset[0].totalno);
+				debatestatsideas.innerHTML = json.connectionset[0].totalno;
 				const debatestatsideasnow = document.getElmenetById('debatestatsideasnow'+focalnodeid);
 				if (debatestatsideasnow) {
-					debatestatsideasnow.update(nodes.length);
+					debatestatsideasnow.innerHTML = nodes.length;
 				}
 			} else {
-				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+				container.innerHTML = "<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>";
 			}
 
 			// It also updates the Issue participants count. So do it here.
@@ -1293,8 +1291,7 @@ async function loadsolutions(context,args){
 async function loadremovedsolutions(context,args){
 
 	const container = document.getElmenetById('tab-content-removed-div');
-	continaer.innerHTML = "";
-	container.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
+	container.innerHTML = getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>");
 
 	var focalnodeid = args['nodeid'];
 	var title = "<?php echo $LNG->SOLUTIONS_NAME; ?>";
@@ -1311,7 +1308,7 @@ async function loadremovedsolutions(context,args){
 		//alert("conns="+conns.length);
 
 		if (conns.length == 0) {
-			container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+			container.innerHTML = "<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>";
 		} else {
 			var nodes = new Array();
 			var nodeids = "";
@@ -1361,7 +1358,7 @@ async function loadremovedsolutions(context,args){
 			}
 			if (nodes.length > 0) {
 				const removedcount = document.getElmenetById('removed-count');
-				removedcount.update('('+nodes.length+')');
+				removedcount.innerHTML = '('+nodes.length+')';
 
 				// Audit ideas viewed
 				nodeids = nodeids.substr(1); // remove first comma
@@ -1377,10 +1374,10 @@ async function loadremovedsolutions(context,args){
 					console.log(err)
 				}
 
-				container.update("");
+				container.innerHTML = "";
 				displayRemovedIdeaList(container,nodes,parseInt(0), true, 'explore-removed');
 			} else {
-				container.update("<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>");
+				container.innerHTML = "<?php echo $LNG->WIDGET_NONE_FOUND_PART1; ?> "+title+" <?php echo $LNG->WIDGET_NONE_FOUND_PART2; ?>";
 			}
 		}
 	} catch (err) {
@@ -1522,17 +1519,20 @@ async function editExploreNode(orinode, nodeid, nodetypeid, name, desc, type, un
 			if (type == 'idea') {
 				const blobNode = renderIdeaList(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
 				const ideablobdiv = document.getElmenetById('ideablobdiv'+uniQ);
-				ideablobdiv.update(blobNode);
+				ideablobdiv.innerHTML = "";
+				ideablobdiv.appendChild(blobNode);
 			} else if (type == 'comment') {
 				NODE_ARGS['selectednodeid'] = orinode.nodeid;
 				const blobNode = renderCommentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
 				const commentblobdiv = document.getElmenetById('commentblobdiv'+uniQ);
-				commentblobdiv.update(blobNode);
+				commentblobdiv.innerHTMNL = "";
+				commentblobdiv.appendChild(blobNode);
 			} else if (type == 'argument') {
 				NODE_ARGS['selectednodeid'] = orinode.nodeid;
 				const blobNode = renderArgumentNode(orinode, uniQ, orinode.role[0].role, includeUser, actiontype, status);
 				const argumentblobdiv = document.getElmenetById('argumentblobdiv'+uniQ);
-				argumentblobdiv.update(blobNode);
+				argumentblobdiv.innerHTML = "";
+				argumentblobdiv.appendChild(blobNode);
 			}
 		} catch(err) {
 			//do nothing
@@ -1564,42 +1564,53 @@ function promptForArgument(node, uniQ, type, nodetype, actiontype, includeUser, 
 		prompttext.style.top = y+ document.documentElement.scrollTop+"px";
 	}
 
-	var heading = new Element('h2', {});
+	var heading = document.createElement('h2');
 	if (type == "pro") {
-		heading.insert('<?php echo $LNG->DEBATE_VOTE_ARGUMENT_MESSAGE_PRO; ?>');
+		heading.innerHTML += '<?php echo $LNG->DEBATE_VOTE_ARGUMENT_MESSAGE_PRO; ?>';
 	} else {
-		heading.insert('<?php echo $LNG->DEBATE_VOTE_ARGUMENT_MESSAGE_CON; ?>');
+		heading.innreHTML += '<?php echo $LNG->DEBATE_VOTE_ARGUMENT_MESSAGE_CON; ?>';
 	}
 
-	var heading2 = new Element('h2', {'style':'font-size:11pt;margin:0px;padding-bottom:0px'});
-	heading2.insert('<?php echo $LNG->DEBATE_VOTE_ARGUMENT_PLACEHOLDER; ?>');
+	var heading2 = document.createElement('h2');
+	heading2.style = 'font-size:11pt;margin:0px;padding-bottom:0px';
+	heading2.innerHTML += '<?php echo $LNG->DEBATE_VOTE_ARGUMENT_PLACEHOLDER; ?>';
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'6','style':'color: black; width:300px; border: 1px solid gray; padding: 3px; padding-top:0px;overflow:hidden;z-index:200;margin-top:0px;'});
+	var textarea1 = document.createElement('textarea');
+	textarea1.id = 'messagetextarea';
+	textarea1.rows = '6';
+	textarea.style = 'color: black; width:300px; border: 1px solid gray; padding: 3px; padding-top:0px;overflow:hidden;z-index:200;margin-top:0px;';
 
-	var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_SAVE; ?>'});
+	var buttonOK = document.createElement('input');
+	buttonOK.className = 'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end';
+	buttonOK.type = 'button';
+	buttonOK.value = '<?php echo $LNG->FORM_BUTTON_SAVE; ?>';
 	buttonOK.onclick = function() {
 		var name = textarea1.value;
 		if (name != "") {
 			addArgumentNodeFromVote(name, node, uniQ, type, nodetype, actiontype, includeUser, status);
 		}
 		prompttext.style.display = "none";
-		prompttext.update("");
+		prompttext.innerHTML = "";
 	};
 
-	var buttonCancel = new Element('input', { 'class':'btn btn-secondary mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+	var buttonCancel = document.createElement('input');
+	buttonCancel.classNamne = 'btn btn-secondary mx-3 mt-2 float-end';
+	buttonCancel.type = 'button';
+	buttonCancel.value = '<?php echo $LNG->FORM_BUTTON_CANCEL; ?>';
 	buttonCancel.onclick = function() {
 		prompttext.style.display = "none";
-		prompttext.update("");
+		prompttext.innerHTML = "";
 	};
 
-	var buttonDiv = new Element('div', { 'class':'col-auto'});
-	buttonDiv.insert(buttonOK);
-	buttonDiv.insert(buttonCancel);
+	var buttonDiv = document.createElement('div');
+	buttonDic.className = 'col-auto';
+	buttonDiv.appendChild(buttonOK);
+	buttonDiv.appendChild(buttonCancel);
 
-	prompttext.insert(heading);
-	prompttext.insert(heading2);
-	prompttext.insert(textarea1);
-	prompttext.insert(buttonDiv);
+	prompttext.appendChild(heading);
+	prompttext.appendChild(heading2);
+	prompttext.appendChild(textarea1);
+	prompttext.appendChild(buttonDiv);
 	prompttext.style.display = "block";
 
 	textarea1.focus();
@@ -2066,16 +2077,20 @@ function connectiontypealphanodesort(a, b) {
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
+	var nav = document.createElement ("div");
+	nav.id = 'page-nav';
+	nav.className = 'toolbarrow pb-3';
 
 	var header = createNavCounter(total, start, count, type);
-	nav.insert(header);
+	nav.appendChild(header);
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
+	    var prevSpan = document.createElement("span");
+		prevSpan.id = "nav-previous";
+		prevSpan.className = "page-nav page-chevron";
 	    if(start > 0){
-			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
 			prevSpan.onclick = function() {
 	            var newArr = argArray;
@@ -2083,19 +2098,23 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        };
 	    } else {
-			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+			prevSpan.innerHTML = "<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("inactive");
 	    }
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
+	    var pageSpan = document.createElement("span");
+		pageSpan.id = "nav-pages";
+		pageSpan.className = "page-nav";
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i < totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    	var page = document.createElement("span");
+			page.className = "nav-page";
+			page.innerHTML = i;
 	    	if(i != currentPage){
 		    	page.classList.add("active");
-		    	var newArr = Object.clone(argArray);
+		    	var newArr = { ...argArray };
 		    	newArr["start"] = newArr["max"] * (i-1) ;
 				page.onclick = function(event) {
     				Pages.next.call(Pages, type, context, newArr, event);
@@ -2103,13 +2122,15 @@ function createNav(total, start, count, argArray, context, type){
 	    	} else {
 	    		page.classList.add("currentpage");
 	    	}
-	    	pageSpan.insert(page);
+	    	pageSpan.appendChild(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
+	    var nextSpan = document.createElement("span");
+		nextSpan.id = "nav-next";
+		nextSpan.className = "page-nav page-chevron";
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
 	        nextSpan.onclick = function(){
 	            var newArr = argArray;
@@ -2117,12 +2138,14 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        };
 	    } else {
-			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("inactive");
 	    }
 
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-	    	nav.insert(prevSpan).insert(pageSpan).insert(nextSpan);
+	    	nav.appendChild(prevSpan);
+			prevSpan.appendChild(pageSpan);
+			pageSpan.appendChild(nextSpan);
 	    }
 	}
 
@@ -2135,13 +2158,14 @@ function createNav(total, start, count, argArray, context, type){
 function createNavCounter(total, start, count, type){
 
     if(count != 0){
-    	var objH = new Element("span",{'class':'nav'});
+    	var objH = document.createElement("span");
+		objH.className = 'nav';
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>");
+        objH.innerHTML = "<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>";
     } else {
-    	var objH = new Element("span");
-     	objH.insert("<p><b><?php echo $LNG->LIST_NAV_NO_SOLUTION; ?></b></p>");
+    	var objH = document.createElement("span");
+     	objH.innerHTML = "<p><b><?php echo $LNG->LIST_NAV_NO_SOLUTION; ?></b></p>";
     }
     return objH;
 }
@@ -2172,38 +2196,39 @@ function reorderSolutions(){
  */
 function displaySortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
-    sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
+	var sbTool = document.createElement("span");
+	sbTool.className = 'sortback toolbar2 col-auto';
+    sbTool.innerHTML = "<?php echo $LNG->SORT_BY; ?> ";
 
-    var selOrd = new Element("select");
+    var selOrd = document.createElement("select");
  	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
     selOrd.setAttribute("aria-label","Sort by");
-    sbTool.insert(selOrd);
+    sbTool.appendChild(selOrd);
     for(var key in sortOpts){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortOpts[key].valueOf());
-        selOrd.insert(opt);
+        opt.innerHTML += sortOpts[key].valueOf();
+        selOrd.appendChild(opt);
         if(args.orderby == key){
         	opt.selected = true;
         }
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-    var sortBy = new Element("select");
+    var sortBy = document.createElement("select");
  	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
     sortBy.setAttribute("aria-label","Order by");
-    sbTool.insert(sortBy);
+    sbTool.appendChild(sortBy);
     for(var key in sortBys){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortBys[key]);
-        sortBy.insert(opt);
+        opt.innerHTML += sortBys[key];
+        sortBy.appendChild(opt);
         if(args.sort == key){
         	opt.selected = true;
         }

@@ -112,11 +112,12 @@
 		var homepage = node.homepage;
 
 		if (nodeid != nodename) {
-			next = new Element("span", {
-				'style':'float:left;clear:both;margin-top:5px;margin-bottom:5px;'});
+			next = document.createElement("span");
+			next.style = 'float:left;clear:both;margin-top:5px;margin-bottom:5px;';
 
 			if (nodetype) {
-				var img = new Element("img", {'style':'vertical-align:middle;padding-right:5px'});
+				var img = document.createElement("img");
+				img.style = 'vertical-align:middle;padding-right:5px';
 				if (nodetype == 'Idea') {
 					img.src = '<?php echo $CFG->commenticon; ?>';
 					img.alt = "Idea";
@@ -136,10 +137,10 @@
 					img.src = '<?php echo $CFG->solutionicon; ?>';
 					img.alt = "Solution";
 				}
-				next.insert(img);
+				next.appendChild(img);
 			}
 
-			next.insert(nodename);
+			next.innerHTML += nodename;
 			if (homepage && homepage != "") {
 				next.className = "active";
 				next.addEventListener('click', function() {
@@ -147,11 +148,11 @@
 				});
 			}
 		} else {
-			next = new Element("span", {
-				'style':'float:left;clear:both;margin-top:10px;'});
-			next.insert(nodename);
+			next = document.createElement("span");
+			next.style = 'float:left;clear:both;margin-top:10px;';
+			next.innerHTML += nodename;
 		}
-		document.getElementById(divarea).insert(next);
+		document.getElementById(divarea).appendChild(next);
 	}
 
 	async function loadOverviewData() {

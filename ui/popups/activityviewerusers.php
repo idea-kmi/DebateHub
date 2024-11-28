@@ -568,7 +568,7 @@
 
 	<script type="text/javascript">
 		function init(){
-			document.getElementById('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?>");
+			document.getElementById('dialogheader').innerHTML += "<?php echo $LNG->FORM_ACTIVITY_HEADING; ?>";
 
 			Object.entries(activityitems).forEach(function([key, value]) {
 				const element = document.querySelector(key);

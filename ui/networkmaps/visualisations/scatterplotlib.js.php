@@ -153,8 +153,8 @@ function createScatterPlotNVD3Vis(container, data, width) {
 				}
 			});
 
-			document.getElementById('nodelistboxstats').insert('<span><b>x:</b>'+decimalAdjust(e[0][0], 2)+'-'+decimalAdjust(e[1][0], 2)+' <b>y:</b> '+decimalAdjust(e[0][1], 2)+'-'+decimalAdjust(e[1][1], 2)+'</span>');
-			document.getElementById('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
+			document.getElementById('nodelistboxstats').innerHTML += '<span><b>x:</b>'+decimalAdjust(e[0][0], 2)+'-'+decimalAdjust(e[1][0], 2)+' <b>y:</b> '+decimalAdjust(e[0][1], 2)+'-'+decimalAdjust(e[1][1], 2)+'</span>';
+			document.getElementById('nodelistboxstats').innerHTML += '<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>';
 		}
 	}
 
@@ -182,7 +182,7 @@ function createScatterPlotNVD3Vis(container, data, width) {
   		var checkit = new Array();
 		var series = e.series.values;
 		var num = 0;
-		for (var i=0; i<series.length; i++) {
+		for (var i=0; i < series.length; i++) {
 			var next = series[i];
 			if (checkit.indexOf(next.id) == -1) {
 				checkit.push(next.id);
@@ -193,9 +193,9 @@ function createScatterPlotNVD3Vis(container, data, width) {
 			}
 		}
 
-		//document.getElementById('nodelistboxstats').insert('<span><b>x:</b> '+x+' <b>y:</b> '+y+'</span>');
-		//document.getElementById('nodelistboxstats').insert('<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
-		document.getElementById('nodelistboxstats').insert('<span><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>');
+		//document.getElementById('nodelistboxstats').innerHTML += '<span><b>x:</b> '+x+' <b>y:</b> '+y+'</span>';
+		//document.getElementById('nodelistboxstats').innerHTML += '<span style="padding-left:30px;"><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>';
+		document.getElementById('nodelistboxstats').innerHTML += '<span><b><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?></b> '+num+'</span>';
 
         return '<h3><?php echo $LNG->STATS_SCATTERPLOT_DETAILS_COUNT; ?> ' +num+ '</h3>';
 	});
@@ -277,11 +277,12 @@ function decimalAdjust(value, decimals) {
 
 function addScatterPlotDetailItem(nodeid, nodename, nodetype, homepage) {
 	if (nodeid != nodename) {
-		next = new Element("span", {
-			'style':'float:left;clear:both;margin-top:10px;'});
+		next = document.createElement("span");
+		next.style = 'float:left;clear:both;margin-top:10px;';
 
 		if (nodetype) {
-			var img = new Element("img", {'style':'vertical-align:middle;padding-right:5px'});
+			var img = document.createElement("img");
+			img.style = 'vertical-align:middle;padding-right:5px';
 			if (nodetype == 'Idea') {
 				img.src = '<?php echo $CFG->commenticon; ?>';
 			} else if (nodetype == 'Issue') {
@@ -295,10 +296,10 @@ function addScatterPlotDetailItem(nodeid, nodename, nodetype, homepage) {
 			} else {
 				img.src = '<?php echo $CFG->solutionicon; ?>';
 			}
-			next.insert(img);
+			next.appendChild(img);
 		}
 
-		next.insert(nodename);
+		next.innerHTML += nodename;
 		if (homepage && homepage != "") {
 			next.className = "active";
 			next.addEventListener('click', function() {
@@ -306,11 +307,11 @@ function addScatterPlotDetailItem(nodeid, nodename, nodetype, homepage) {
 			});
 		}
 	} else {
-		next = new Element("span", {
-			'style':'float:left;clear:both;margin-top:10px;'});
-		next.insert(nodename);
+		next = document.createElement("span");
+		next.style = 'float:left;clear:both;margin-top:10px;';
+		next.innerHTML += nodename;
 	}
-	document.getElementById('nodelistbox').insert(next);
+	document.getElementById('nodelistbox').appendChild(next);
 }
 
 function createScatterPlotMatrixD3Vis(container, data, width) {
@@ -446,12 +447,13 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 				if (checkit.indexOf(d.id) == -1) {
 					checkit.push(d.id);
 					if (d.id != d.name) {
-						next = new Element("span", {
-							'style':'float:left;clear:both;margin-top:10px;',
-							'class':'active'});
+						next = document.createElement("span");
+						next.style = 'float:left;clear:both;margin-top:10px;';
+						next.className = 'active';
 
 						if (d.nodetype) {
-							var img = new Element("img", {'style':'vertical-align:middle;padding-right:5px'});
+							var img = document.createElement("img");
+							img.style = 'vertical-align:middle;padding-right:5px';
 							if (d.nodetype == 'Idea') {
 								img.src = '<?php echo $CFG->commenticon; ?>';
 							} else if (d.nodetype == 'Issue') {
@@ -465,19 +467,19 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 							} else {
 								img.src = '<?php echo $CFG->solutionicon; ?>';
 							}
-							next.insert(img);
+							next.appendChild(img);
 						}
 
-						next.insert(d.name);
+						next.innerHTML += d.name;
 						next.addEventListener('click', function() {
 							loadDialog('details', URL_ROOT+"explore.php?id="+d.id, 1024,768);
 						});
 					} else {
-						next = new Element("span", {
-							'style':'float:left;clear:both;margin-top:10px;'});
-						next.insert(d.name);
+						next = document.createElement("span");
+						next.style = 'float:left;clear:both;margin-top:10px;';
+						next.innerHTML += d.name;
 					}
-					document.getElementById('nodelistbox').insert(next);
+					document.getElementById('nodelistbox').appendChild(next);
 				}
 			});
 		}

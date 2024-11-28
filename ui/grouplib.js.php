@@ -79,8 +79,7 @@ async function loadissues(context,args){
 	updateAddressParameters(args);
 
 	const tabcontentissuelist = document.getElementById('tab-content-issue-list');
-	tabcontentissuelist.innerHTML = "";
-	tabcontentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	tabcontentissuelist.innerHTML = getLoading("<?php echo $LNG->LOADING_ISSUES; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -105,7 +104,7 @@ async function loadissues(context,args){
 			//preprosses nodes to add searchid and groupid
 			var nodes = json.nodeset[0].nodes;
 			var count = nodes.length;
-			for (var i=0; i<count; i++) {
+			for (var i=0; i < count; i++) {
 				var node = nodes[i];
 				if (args['searchid'] && args['searchid'] != "") {
 					node.cnode.searchid = args['searchid'];
@@ -113,10 +112,11 @@ async function loadissues(context,args){
 				node.cnode.groupid = args['groupid'];
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div");
+			tb3.className = 'toolbarrow';
 
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
+			tb3.appendChild(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
 			document.getElementById("tab-content-issue-list").appendChild(tb3);
 			displayIssueNodes(466, 210,tabcontentissuelist,json.nodeset[0].nodes,parseInt(args['start'])+1, true, "groupissues", 'active', false, true, true);
@@ -124,7 +124,7 @@ async function loadissues(context,args){
 
 		//display nav
 		if (total > parseInt( args["max"] )) {
-			tabcontentissuelist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
+			tabcontentissuelist.appendChild(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"issues"));
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -190,36 +190,37 @@ async function filterSearchIssues() {
  */
 function displaySortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
-    sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
+	var sbTool = document.createElement("span");
+	sbTool.className = 'sortback toolbar2';
+    sbTool.innerHTML = "<?php echo $LNG->SORT_BY; ?> ";
 
-    var selOrd = new Element("select");
+    var selOrd = document.createElement("select");
  	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar";
     selOrd.name = "orderby";
-    sbTool.insert(selOrd);
+    sbTool.appendChild(selOrd);
     for(var key in sortOpts){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortOpts[key].valueOf());
-        selOrd.insert(opt);
+        opt.innerHTML = sortOpts[key].valueOf();
+        selOrd.appendChild(opt);
         if(args.orderby == key){
         	opt.selected = true;
         }
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-    var sortBy = new Element("select");
+    var sortBy = document.createElement("select");
  	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar";
     sortBy.name = "sort";
-    sbTool.insert(sortBy);
+    sbTool.appendChild(sortBy);
     for(var key in sortBys){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortBys[key]);
-        sortBy.insert(opt);
+        opt.innerHTML = sortBys[key];
+        sortBy.appendChild(opt);
         if(args.sort == key){
         	opt.selected = true;
         }
@@ -233,14 +234,18 @@ function displaySortForm(sortOpts,args,tab,handler){
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
+	var nav = document.createElement("div");
+	nav.id = 'page-nav';
+	nav.className = 'toolbarrow pb-3';
 
 	var header = createNavCounter(total, start, count, type);
-	nav.insert(header);
+	nav.appendChild(header);
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous", "class": "page-nav page-chevron"});
+	    var prevSpan = document.createElement("span");
+		prevSpan.id = "nav-previous";
+		prevSpan.className = "page-nav page-chevron";
 	    if(start > 0){
 			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
@@ -255,24 +260,29 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages"});
+	    var pageSpan = document.createElement("span");
+		pageSpan.id = "nav-pages";
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
-	    for (var i = 1; i<totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    for (var i = 1; i < totalPages+1; i++){
+	    	var page = document.createElement("span");
+			page.className = "nav-page";
+			page.innerHTML = i;
 	    	if(i != currentPage){
 		    	page.classList.add("active");
-		    	var newArr = Object.clone(argArray);
+		    	var newArr = { ...argArray };
 		    	newArr["start"] = newArr["max"] * (i-1) ;
 		    	page.onclick = Pages.next.bindAsEventListener(Pages,type,context,newArr);
 	    	} else {
 	    		page.classList.add("currentpage");
 	    	}
-	    	pageSpan.insert(page);
+	    	pageSpan.appendChild(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next", "class": "page-nav page-chevron"});
+	    var nextSpan = document.createElement("span");
+		nextSpan.id = "nav-next";
+		nextSpan.className = "page-nav page-chevron";
 		if(parseInt(start)+parseInt(count) < parseInt(total)){		
 			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
@@ -287,7 +297,9 @@ function createNav(total, start, count, argArray, context, type){
 	    }
 
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-	    	nav.insert(prevSpan).insert(pageSpan).insert(nextSpan);
+	    	nav.appendChild(prevSpan);
+			nav.appendChild(pageSpan);
+			nav.appendChild(nextSpan);
 	    }
 	}
 
@@ -300,13 +312,14 @@ function createNav(total, start, count, argArray, context, type){
 function createNavCounter(total, start, count, type){
 
     if(count != 0){
-    	var objH = new Element("span",{'class':'nav'});
+    	var objH = document.createElement("span");
+		objh.className = 'class':'nav';
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>");
+        objH.innerHTML = "<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>";
     } else {
-    	var objH = new Element("span");
-		objH.insert("<p><b><?php echo $LNG->LIST_NAV_NO_ITEMS; ?></b></p>");
+    	var objH = document.createElement("span");
+		objH.innerHTML = "<p><b><?php echo $LNG->LIST_NAV_NO_ITEMS; ?></b></p>";
     }
     return objH;
 }

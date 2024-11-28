@@ -34,26 +34,33 @@ function loadExploreGroupNet(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("network-group-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("network-group-div").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE GRAPH ****/
 
-	var graphDiv = new Element('div', {'id':'graphIssueDiv', 'style': 'clear:both;float:left'});
+	var graphDiv = document.createElement('div');
+	graphDiv.id = 'graphIssueDiv';
+	graphDiv.style = 'clear:both;float:left';
 	var width = 4000;
 	var height = 4000;
 
-	var messagearea = new Element("div", {'id':'netissuemessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'netissuemessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'float:left;clear:both;font-weight:bold';
 
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphIssueDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'graphIssueDiv-outer';
+	outerDiv.style = 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(graphDiv);
-	document.getElementById("network-group-div").insert(outerDiv);
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(graphDiv);
+	document.getElementById("network-group-div").appendChild(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraph('graphIssueDiv', '');
 
@@ -62,8 +69,8 @@ function loadExploreGroupNet(){
 	// THE TOOLBAR
 	var toolbar = createGraphToolbar(forcedirectedGraph, "network-group-div");
 
-	document.getElementById("network-group-div").insert({top: toolbar});
-	document.getElementById("network-group-div").insert({top: keybar});
+	document.getElementById("network-group-div").prepend(toolbar);
+	document.getElementById("network-group-div").prepend(keybar);
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -97,7 +104,7 @@ async function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 		nodetypes += ","+EVIDENCE_TYPES[i];
 	}
 
-	var args = Object.clone(NODE_ARGS);
+	var args = { ...NODE_ARGS };
 
 	args["scope"] = 'all';
 	args["start"] = 0;
@@ -128,8 +135,7 @@ async function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 			}
 		}
 
-		document.getElementById('graphConnectionCount').innerHTML = "";
-		document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>');
+		document.getElementById('graphConnectionCount').innerHTML = '<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conslenth+'</span>';
 
 		if (conns.length > 0) {
 			computeMostConnectedNode(forcedirectedGraph);

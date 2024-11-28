@@ -405,10 +405,10 @@ async function loadcons(context,args){
 				}
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div", {'class':'toolbarrow'});
 
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'con',reorderCons));
+			tb3.appendChild(displaySortForm(sortOpts,args,'con',reorderCons));
 
 			document.getElementById("tab-content-data-con").appendChild(tb3);
 			displayUsersNodes(document.getElementById("tab-content-data-con"),json.nodeset[0].nodes,parseInt(args['start'])+1);
@@ -472,10 +472,10 @@ async function loadpros(context,args){
 				}
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div", {'class':'toolbarrow'});
 
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'pro',reorderPros));
+			tb3.appendChild(displaySortForm(sortOpts,args,'pro',reorderPros));
 
 			const tabcontentdatapro = document.getElementById("tab-content-data-pro");
 			tabcontentdatapro.appendChild(tb3);
@@ -536,10 +536,10 @@ async function loadissues(context,args){
 				}
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div", {'class':'toolbarrow'});
 
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'issue',reorderIssues));
+			tb3.appendChild(displaySortForm(sortOpts,args,'issue',reorderIssues));
 
 			document.getElementById("tab-content-data-issue").appendChild(tb3);
 
@@ -598,10 +598,10 @@ async function loadsolutions(context,args){
 				}
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div", {'class':'toolbarrow'});
 
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'solution',reorderSolutions));
+			tb3.appendChild(displaySortForm(sortOpts,args,'solution',reorderSolutions));
 
 			document.getElementById("tab-content-data-solution").appendChild(tb3);
 			displayUsersNodes(document.getElementById("tab-content-data-solution"),json.nodeset[0].nodes,parseInt(args['start'])+1);
@@ -663,9 +663,9 @@ async function loadcomments(context,args) {
 				}
 			}
 
-			var tb3 = new Element("div", {'class':'toolbarrow'});
+			var tb3 = document.createElement("div", {'class':'toolbarrow'});
 			var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>'};
-			tb3.insert(displaySortForm(sortOpts,args,'comment',reorderComments));
+			tb3.appendChild(displaySortForm(sortOpts,args,'comment',reorderComments));
 			document.getElementById("tab-content-data-comment").appendChild(tb3);
 
 			displayUsersNodes(document.getElementById("tab-content-data-comment"),nodes,parseInt(args['start'])+1);
@@ -955,38 +955,38 @@ async function filterSearchComments() {
  */
 function displaySortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2  col-auto'});
-    sbTool.insert("<?php echo $LNG->SORT_BY; ?> ");
+	var sbTool = document.createElement("span", {'class':'sortback toolbar2  col-auto'});
+    sbTool.innerHTML = "<?php echo $LNG->SORT_BY; ?> ";
 
-    var selOrd = new Element("select");
+    var selOrd = document.createElement("select");
  	selOrd.onchange = handler;
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
     selOrd.setAttribute("aria-label","Sort by");
-    sbTool.insert(selOrd);
+    sbTool.appendChild(selOrd);
     for(var key in sortOpts){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortOpts[key].valueOf());
-        selOrd.insert(opt);
+        opt.innerHTML = sortOpts[key].valueOf();
+        selOrd.appendChild(opt);
         if(args.orderby == key){
         	opt.selected = true;
         }
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-    var sortBy = new Element("select");
+    var sortBy = document.createElement("select");
  	sortBy.onchange = handler;
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
     sortBy.setAttribute("aria-label","Order by");
-    sbTool.insert(sortBy);
+    sbTool.appendChild(sortBy);
     for(var key in sortBys){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortBys[key]);
-        sortBy.insert(opt);
+        opt.innerHTML = sortBys[key];
+        sortBy.appendChild(opt);
         if(args.sort == key){
         	opt.selected = true;
         }
@@ -1043,17 +1043,17 @@ function setSelectedUsers(types) {
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
+	var nav = document.createElement ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
-	nav.insert(header);
+	nav.appendChild(header);
 
-	var pageNav = new Element ("nav",{'aria-label':'Page navigation' }); 
-	var pageUL = new Element ("ul",{'class':'pagination' }); 
+	var pageNav = document.createElement ("nav",{'aria-label':'Page navigation' }); 
+	var pageUL = document.createElement ("ul",{'class':'pagination' }); 
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
+	    var prevSpan = document.createElement("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
@@ -1067,17 +1067,18 @@ function createNav(total, start, count, argArray, context, type){
 	        prevSpan.classList.add("inactive");
 	    }
 		
-		pageUL.insert(prevSpan);
+		pageUL.appendChild(prevSpan);
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages", "class": "page-nav"});
+	    var pageSpan = document.createElement("span", {'id':"nav-pages", "class": "page-nav"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i < totalPages +1; i++){
-	    	var page = new Element("li", {'class':"page-link"}).insert(i);
+	    	var page = document.createElement("li", {'class':"page-link"});
+			page.innerHTML += i;
 	    	if(i != currentPage){
 		    	page.classList.add("active");
-		    	var newArr = Object.clone(argArray);
+		    	var newArr = { ...argArray };
 		    	newArr["start"] = newArr["max"] * (i-1) ;
 				page.addEventListener("click", function(event) {
     				Pages.next.call(Pages, type, context, newArr, event);
@@ -1085,11 +1086,11 @@ function createNav(total, start, count, argArray, context, type){
 	    	} else {
 	    		page.classList.add("currentpage");
 	    	}
-	    	pageUL.insert(page);
+	    	pageUL.appendChild(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
+	    var nextSpan = document.createElement("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
@@ -1102,11 +1103,11 @@ function createNav(total, start, count, argArray, context, type){
 			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("inactive");
 	    }
-		pageUL.insert(nextSpan);
+		pageUL.appendChild(nextSpan);
 
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-			pageNav.insert(pageUL);
-			nav.insert(pageNav);
+			pageNav.appendChild(pageUL);
+			nav.appendChild(pageNav);
 	    }
 	}
 
@@ -1119,27 +1120,27 @@ function createNav(total, start, count, argArray, context, type){
 function createNavCounter(total, start, count, type){
 
     if(count != 0){
-    	var objH = new Element("span",{'class':'nav'});
+    	var objH = document.createElement("span",{'class':'nav'});
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>");
+        objH.innerHTML = "<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>";
     } else {
-    	var objH = new Element("span");
+    	var objH = document.createElement("span");
 		switch(type){
 			case 'con':
-				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_CON; ?></strong></p>");
+				objH.innerHTML = "<p><strong><?php echo $LNG->LIST_NAV_USER_NO_CON; ?></strong></p>";
 				break;
 			case 'pro':
-				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_PRO; ?></strong></p>");
+				objH.innerHTML = "<p><strong><?php echo $LNG->LIST_NAV_USER_NO_PRO; ?></strong></p>";
 				break;
 			case 'issues':
-				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_ISSUE; ?></strong></p>");
+				objH.innerHTML = "<p><strong><?php echo $LNG->LIST_NAV_USER_NO_ISSUE; ?></strong></p>";
 				break;
 			case 'solutions':
-				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_SOLUTION; ?></strong></p>");
+				objH.innerHTML = "<p><strong><?php echo $LNG->LIST_NAV_USER_NO_SOLUTION; ?></strong></p>";
 				break;
 			case 'comment':
-				objH.insert("<p><strong><?php echo $LNG->LIST_NAV_USER_NO_COMMENT; ?></strong></p>");
+				objH.innerHTML = "<p><strong><?php echo $LNG->LIST_NAV_USER_NO_COMMENT; ?></strong></p>";
 				break;
 		}
     }

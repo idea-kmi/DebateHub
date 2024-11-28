@@ -34,10 +34,10 @@
  *	Add the filter and sort controls for the page.
  */
 function addControls(container) {
-	var tb3 = new Element("div", {'class':'toolbarrowsearch row d-inline-block'});
+	var tb3 = document.createElement("div", {'class':'toolbarrowsearch row d-inline-block'});
 	var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
-	tb3.insert(displaySortForm(sortOpts));
-	container.insert(tb3);
+	tb3.appendChild(displaySortForm(sortOpts));
+	container.appendChild(tb3);
 }
 
 function buildSearchToolbar(container) {
@@ -51,8 +51,7 @@ async function loadissues(context,args){
 	args['filternodetypes'] = "Issue";
 
 	const contentissuelist = document.getElementById('content-issue-list');
-	contentissuelist.innerHTML = "";
-	contentissuelist.appendChild(getLoading("<?php echo $LNG->LOADING_ISSUES; ?>"));
+	contentissuelist.innerHTML = getLoading("<?php echo $LNG->LOADING_ISSUES; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -112,8 +111,7 @@ async function loadissues(context,args){
 			document.getElementById('content-issue-list').innerHTML = "";
 			document.getElementById('issue-result-menu').href = "javascript:return false";
 			document.getElementById('issue-result-menu').className = 'inactive';
-			document.getElementById('issue-list-count-main').innerHTML = "";
-			document.getElementById('issue-list-count-main').insert('0');
+			document.getElementById('issue-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -128,8 +126,7 @@ async function loadsolutions(context,args){
 	args['filternodetypes'] = "Solution";
 
 	const contentsolutionlist = document.getElementById('content-solution-list');
-	contentsolutionlist.innerHTML = "";
-	contentsolutionlist.appendChild(getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>"));
+	contentsolutionlist.innerHTML = getLoading("<?php echo $LNG->LOADING_SOLUTIONS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -187,8 +184,7 @@ async function loadsolutions(context,args){
 			document.getElementById('content-solution-list').innerHTML = "";
 			document.getElementById('solution-result-menu').href = "javascript:return false";
 			document.getElementById('solution-result-menu').className = 'inactive';
-			document.getElementById('solution-list-count-main').innerHTML = "";
-			document.getElementById('solution-list-count-main').insert('0');
+			document.getElementById('solution-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -210,8 +206,7 @@ async function loadpros(context,args){
 
 	document.getElementById('content-pro-main').style.display = "block";
 	const contentprolist = document.getElementById('content-pro-list');
-	contentprolist.innerHTML = "";
-	contentprolist.appendChild(getLoading("<?php echo $LNG->LOADING_PROS; ?>"));
+	contentprolist.innerHTML = getLoading("<?php echo $LNG->LOADING_PROS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -265,15 +260,14 @@ async function loadpros(context,args){
 			if (total > parseInt( args["max"] )) {
 				const contentprolist = document.getElementById('content-pro-list');
 				contentprolist.innerHTML = "";
-				contentprolist.insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+				contentprolist.insappendChildert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
 			}
 		} else {
 			document.getElementById('content-pro-main').style.display = "none";
 			document.getElementById('content-pro-list').innerHTML = "";
 			document.getElementById('pro-result-menu').href = "javascript:return false";
 			document.getElementById('pro-result-menu').className = 'inactive';
-			document.getElementById('pro-list-count-main').innerHTML = "";
-			document.getElementById('pro-list-count-main').insert('0');
+			document.getElementById('pro-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -294,8 +288,7 @@ async function loadcons(context,args) {
 
 	document.getElementById('content-con-main').style.display = "block";
 	const contentconlist = document.getElementById('content-con-list');
-	contentconlist.innerHTML = "";
-	contentconlist.appendChild(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
+	contentconlist.innerHTML = getLoading("<?php echo $LNG->LOADING_CONS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -355,8 +348,7 @@ async function loadcons(context,args) {
 			document.getElementById('content-con-list').innerHTML = "";
 			document.getElementById('con-result-menu').href = "javascript:return false";
 			document.getElementById('con-result-menu').className = 'inactive';
-			document.getElementById('con-list-count-main').innerHTML = "";
-			document.getElementById('con-list-count-main').insert('0');
+			document.getElementById('con-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -370,8 +362,7 @@ async function loadcons(context,args) {
 async function loadusers(context,args){
 
 	const contentuserlist = document.getElementById('content-user-list');
-	contentuserlist.innerHTML = "";
-	contentuserlist.appendChild(getLoading("<?php echo $LNG->LOADING_USERS; ?>"));
+	contentuserlist.innerHTML = getLoading("<?php echo $LNG->LOADING_USERS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getusersby" + context + "&includegroups=false&" + Object.toQueryString(args);
 	try {
@@ -422,9 +413,9 @@ async function loadusers(context,args){
 			}
 
 			if (json.userset[0].users.length > 1) {
-				var tb2 = new Element("div", {'class':'toolbarrow'});
+				var tb2 = document.createElement("div", {'class':'toolbarrow'});
 				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
-				tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
+				tb2.appendChild(displaySortForm(sortOpts,args,'user',reorderUsers));
 				document.getElementById("content-user-list").appendChild(tb2);
 			}
 
@@ -440,8 +431,7 @@ async function loadusers(context,args){
 			document.getElementById('content-user-list').innerHTML = "";
 			document.getElementById('user-result-menu').href = "javascript:return false";
 			document.getElementById('user-result-menu').className = 'inactive';
-			document.getElementById('user-list-count-main').innerHTML = "";
-			document.getElementById('user-list-count-main').insert('0');
+			document.getElementById('user-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -455,8 +445,7 @@ async function loadusers(context,args){
 async function loadgroups(context,args){
 
 	const contentgrouplist = document.getElementById('content-group-list');
-	contentgrouplist.innerHTML = "";
-	contentgrouplist.appendChild(getLoading("<?php echo $LNG->LOADING_GROUPS; ?>"));
+	contentgrouplist.innerHTML = getLoading("<?php echo $LNG->LOADING_GROUPS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getgroupsby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -511,9 +500,9 @@ async function loadgroups(context,args){
 			}
 
 			if (json.groupset[0].groups.length > 1) {
-				var tb2 = new Element("div", {'class':'toolbarrow'});
+				var tb2 = document.createElement("div", {'class':'toolbarrow'});
 				var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
-				tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
+				tb2.appendChild(displaySortForm(sortOpts,args,'group',reorderGroups));
 				document.getElementById("content-group-list").appendChild(tb2);
 			}
 
@@ -529,8 +518,7 @@ async function loadgroups(context,args){
 			document.getElementById('content-group-list').innerHTML = "";
 			document.getElementById('group-result-menu').href = "javascript:return false";
 			document.getElementById('group-result-menu').className = 'inactive';
-			document.getElementById('group-list-count-main').innerHTML = "";
-			document.getElementById('group-list-count-main').insert('0');
+			document.getElementById('group-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -550,8 +538,7 @@ async function loadcomment(context,args) {
 	}
 
 	const contentcommentlist = document.getElementById('content-comment-list');
-	contentcommentlist.innerHTML = "";
-	contentcommentlist.appendChild(getLoading("<?php echo $LNG->LOADING_RESOURCES; ?>"));
+	contentcommentlist.innerHTML = getLoading("<?php echo $LNG->LOADING_RESOURCES; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -611,8 +598,7 @@ async function loadcomment(context,args) {
 			document.getElementById('content-comment-list').innerHTML = "";
 			document.getElementById('comment-result-menu').href = "javascript:return false";
 			document.getElementById('comment-result-menu').className = 'inactive';
-			document.getElementById('comment-list-count-main').innerHTML = "";
-			document.getElementById('comment-list-count-main').insert('0');
+			document.getElementById('comment-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -632,8 +618,7 @@ async function loadnews(context,args) {
 	}
 
 	const contentnewslist = document.getElementById('content-news-list');
-	contentnewslist.innerHTML = "";
-	contentnewslist.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+	contentnewslist.innerHTML = getLoading("<?php echo $LNG->LOADING_ITEMS; ?>");
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 	try {
@@ -691,8 +676,7 @@ async function loadnews(context,args) {
 			document.getElementById('content-news-main').style.display = "none";
 			document.getElementById('news-result-menu').href = "javascript:return false";
 			document.getElementById('news-result-menu').className = 'inactive';
-			document.getElementById('news-list-count-main').innerHTML = "";
-			document.getElementById('news-list-count-main').insert('0');
+			document.getElementById('news-list-count-main').innerHTML = "0";
 		}
 	} catch (err) {
 		alert("There was an error: "+err.message);
@@ -729,36 +713,36 @@ function reorderUsers(){
  */
 function displayUserSortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
-    sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
+	var sbTool = document.createElement("span", {'class':'sortback toolbar2 col-auto'});
+    sbTool.innerHTML = "<?php echo $LNG->SORT_BY; ?>: ";
 
-    var selOrd = new Element("select");
+    var selOrd = document.createElement("select");
     selOrd.id = "select-orderby-"+tab;
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
  	selOrd.onchange = handler;
-    sbTool.insert(selOrd);
+    sbTool.appendChild(selOrd);
     for(var key in sortOpts){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortOpts[key].valueOf());
-        selOrd.insert(opt);
+        opt.innerHTML = sortOpts[key].valueOf();
+        selOrd.appendChild(opt);
         if(args.orderby == key){
         	opt.selected = true;
         }
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-    var sortBy = new Element("select");
+    var sortBy = document.createElement("select");
     sortBy.id = "select-sort-"+tab;
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
  	sortBy.onchange = handler;
-    sbTool.insert(sortBy);
+    sbTool.appendChild(sortBy);
     for(var key in sortBys){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortBys[key]);
-        sortBy.insert(opt);
+        opt.innerHTML=sortBys[key];
+        sortBy.appendChild(opt);
         if(args.sort == key){
         	opt.selected = true;
         }
@@ -812,36 +796,36 @@ function handleSort() {
  */
 function displaySortForm(sortOpts){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
-    sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
+	var sbTool = document.createElement("span", {'class':'sortback toolbar2 col-auto'});
+    sbTool.innerHTML = "<?php echo $LNG->SORT_BY; ?>: ";
 
-    var selOrd = new Element("select");
+    var selOrd = document.createElement("select");
     selOrd.id = "select-orderby-node";
     selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
-    sbTool.insert(selOrd);
+    sbTool.appendChild(selOrd);
  	selOrd.onchange = handleSort;
     for(var key in sortOpts){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortOpts[key].valueOf());
-        selOrd.insert(opt);
+        opt.innerHTML = sortOpts[key].valueOf();
+        selOrd.appendChild(opt);
         if(NODE_ARGS.orderby == key){
         	opt.selected = true;
         }
     }
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-    var sortBy = new Element("select");
+    var sortBy = document.createElement("select");
     sortBy.id = "select-sort-node";
     sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
-    sbTool.insert(sortBy);
+    sbTool.appendChild(sortBy);
  	sortBy.onchange = handleSort;
     for(var key in sortBys){
-        var opt = new Element("option");
+        var opt = document.createElement("option");
         opt.value=key;
-        opt.insert(sortBys[key]);
-        sortBy.insert(opt);
+        opt.innerHTML = sortBys[key];
+        sortBy.appendChild(opt);
         if(NODE_ARGS.sort == key){
         	opt.selected = true;
         }
@@ -855,17 +839,17 @@ function displaySortForm(sortOpts){
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
+	var nav = document.createElement ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
-	nav.insert(header);
+	nav.appendChild(header);
 
-	var pageNav = new Element ("nav",{'aria-label':'Page navigation' }); 
-	var pageUL = new Element ("ul",{'class':'pagination' }); 
+	var pageNav = document.createElement ("nav",{'aria-label':'Page navigation' }); 
+	var pageUL = document.createElement ("ul",{'class':'pagination' }); 
 
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
+	    var prevSpan = document.createElement("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
 			prevSpan.innerHTML = "<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>";
 	        prevSpan.classList.add("active");
@@ -879,27 +863,28 @@ function createNav(total, start, count, argArray, context, type){
 	        prevSpan.classList.add("inactive");
 	    }
 
-		pageUL.insert(prevSpan);
+		pageUL.appendChild(prevSpan);
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages"});
+	    var pageSpan = document.createElement("span", {'id':"nav-pages"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i < totalPages+1; i++){
-	    	var page = new Element("li", {'class':"nav-page"}).insert(i);
+	    	var page = document.createElement("li", {'class':"nav-page"});
+			page.innerHTML += i;
 	    	if(i != currentPage){
 		    	page.classList.add("active");
-		    	var newArr = Object.clone(argArray);
+		    	var newArr = { ...argArray };
 		    	newArr["start"] = newArr["max"] * (i-1) ;
 				page.addEventListener("click", function(event) { Pages.next.call(Pages, type, context, newArr); });
 	    	} else {
 	    		page.classList.add("currentpage");
 	    	}
-	    	pageUL.insert(page);
+	    	pageUL.appendChild(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
+	    var nextSpan = document.createElement("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
 			nextSpan.innerHTML = "<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>";
 	        nextSpan.classList.add("active");
@@ -913,11 +898,11 @@ function createNav(total, start, count, argArray, context, type){
 	        nextSpan.classList.add("inactive");
 	    }
 
-		pageUL.insert(nextSpan);
+		pageUL.appendChild(nextSpan);
 
 	    if( start > 0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-			pageNav.insert(pageUL);
-			nav.insert(pageNav);
+			pageNav.appendChild(pageUL);
+			nav.appendChild(pageNav);
 	    }
 	}
 
@@ -930,10 +915,10 @@ function createNav(total, start, count, argArray, context, type){
 function createNavCounter(total, start, count, type){
 
     if(count != 0){
-    	var objH = new Element("span",{'class':'nav'});
+    	var objH = document.createElement("span",{'class':'nav'});
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>");
+        objH.innerHTML = "<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>";
     }
     return objH;
 }

@@ -48,21 +48,21 @@
 	function init() {
 		document.getElementById("tab-connections-overview").innerHTML = "";
 
-		var nextrow = new Element("div", {'class':'d-flex flex-row mt-4 gap-2 align-items-stretch'});
+		var nextrow = document.createElement("div", {'class':'d-flex flex-row mt-4 gap-2 align-items-stretch'});
 
 		// ISSUES
-		var connectedissues = new Element("div", {'class':'col'});
+		var connectedissues = document.createElement("div", {'class':'col'});
 		var set = overviewNodeWidget(context, '<?php echo $LNG->OVERVIEW_ISSUE_MOSTCONNECTED_TITLE; ?>', "Issue", 'connectedness', 'DESC', '5', '<?php echo $LNG->OVERVIEW_BUTTON_EXPLOREALL; ?>', 'issue', '<?php echo $LNG->ISSUES_NAME; ?>', 'mostconnected');
-		connectedissues.insert(set);
-		nextrow.insert(connectedissues);
+		connectedissues.appendChild(set);
+		nextrow.appendChild(connectedissues);
 
 		// SOLUTIONS
-		var connectedsolutions = new Element("div", {'class':'col'});
+		var connectedsolutions = document.createElement("div", {'class':'col'});
 		var set = overviewNodeWidget(context, '<?php echo $LNG->OVERVIEW_SOLUTION_MOSTCONNECTED_TITLE; ?>', "Solution", 'connectedness', 'DESC', '5', '<?php echo $LNG->OVERVIEW_BUTTON_EXPLOREALL; ?>', 'solution', '<?php echo $LNG->SOLUTIONS_NAME; ?>', 'mostconnected');
-		connectedsolutions.insert(set);
-		nextrow.insert(connectedsolutions);
+		connectedsolutions.appendChild(set);
+		nextrow.appendChild(connectedsolutions);
 
-		document.getElementById("tab-connections-overview").insert( nextrow );
+		document.getElementById("tab-connections-overview").appendChild( nextrow );
 	}
 
 	async function overviewNodeWidget(context, title, filternodetypes, orderby, sort, count, buttontitle, key, hinttype, uniqueid, filtertype) {
@@ -71,13 +71,13 @@
 			uniqueid = 'something';
 		}
 
-		var set = new Element("fieldset", {'class':'overviewfieldset'});
-		var legend = new Element("legend", {'class':'overviewlegend widgettextcolor'});
-		legend.insert(title);
-		set.insert(legend);
-		var main = new Element("div", {'style':'height: 300px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;'});
+		var set = document.createElement("fieldset", {'class':'overviewfieldset'});
+		var legend = document.createElement("legend", {'class':'overviewlegend widgettextcolor'});
+		legend.innerHTML = title;
+		set.appendChild(legend);
+		var main = document.createElement("div", {'style':'height: 300px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;'});
 		main.appendChild(getLoading("(<?php echo $LNG->WIDGET_LOADING; ?> "+title+"...)"));
-		set.insert(main);
+		set.appendChild(main);
 
 		var args = new Object();
 		args['filternodetypes'] = filternodetypes;
@@ -100,7 +100,7 @@
 				displayConnectionStatNodes(main,nodes,parseInt(args['start'])+1, true, uniqueid);
 			} else {
 				main.innerHTML="";
-				main.insert("<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>");
+				main.innerHTML = "<?php echo $LNG->WIDGET_NO_RESULTS_FOUND; ?>";
 			}
 		} catch (err) {
 			alert("There was an error: "+err.message);
@@ -108,12 +108,16 @@
 		}
 
 		if (buttontitle && buttontitle != "") {
-			var allbutton = new Element("a", {'href':'#'+key+'-list', 'class':'active', 'title':'<?php echo $LNG->WIDGET_CLICK_EXPLORE_HINT; ?> '+hinttype, 'style':''});
-			allbutton.insert(buttontitle);
+			var allbutton = document.createElement("a");
+			allbutton.href = '#'+key+'-list';
+			allbutton.classNAme = 'active';
+			allbutton.title = '<?php echo $LNG->WIDGET_CLICK_EXPLORE_HINT; ?> '+hinttype;
+			allbutton.style = '';
+			allbutton.innerHTML = buttontitle;
 			allbutton.addEventListener("click",function() {
 				window.location.href = "<?php echo $CFG->homeAddress; ?>"+"#"+key;
 			});
-			set.insert(allbutton);
+			set.appendChild(allbutton);
 		}
 
 		return set;

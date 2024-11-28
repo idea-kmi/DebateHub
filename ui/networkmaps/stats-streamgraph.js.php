@@ -33,25 +33,33 @@ function loadStreamGraph(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("streamgraph-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("streamgraph-div").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE VIS ****/
-	var streamgraphdiv = new Element('div', {'id':'streamgraphdiv', 'style': 'clear:both;float:left;'});
+	var streamgraphdiv = document.createElement('div');
+	streamgraphdiv.id = 'streamgraphdiv';
+	streamgraphdiv.style = 'clear:both;float:left;';
 	var width = 980;
 	var height = 500;
 
 	streamgraphdiv.style.width = width+"px";
 	streamgraphdiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'streamgraphmessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'streamgraphdiv-outer', 'style': 'float:left;overflow:hidden'});
+	var messagearea = document.createElement("div")';
+	messagearea.id = 'streamgraphmessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'float:left;clear:both;font-weight:bold';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(streamgraphdiv);
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'streamgraphdiv-outer';
+	outerDiv.style = 'float:left;overflow:hidden';
 
-	document.getElementById("streamgraph-div").insert(outerDiv);
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(streamgraphdiv);
+
+	document.getElementById("streamgraph-div").appendChild(outerDiv);
 
 	loadStreamGraphData(messagearea, streamgraphdiv, width);
 }

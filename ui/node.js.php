@@ -51,7 +51,9 @@ function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status) {
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol");
+	lOL.start = start;
+	lOL.className = 'idea-list-ol';
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -63,9 +65,13 @@ function displayIdeaList(objDiv,nodes,start,includeUser,uniqueid,type,status) {
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li");
+			iUL.id = node.nodeid;
+			iUL.className = 'idea-list-li';
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list d-flex flex-column'});
+			var blobDiv = document.createElement("div");
+			blobDiv.id = 'ideablobdiv'+myuniqueid;
+			blobDiv.className = 'idea-blob-list d-flex flex-column';
 
 			var blobNode = renderIdeaList(node, myuniqueid, node.role[0].role,includeUser,type,status, i);
 			blobDiv.appendChild(blobNode);
@@ -93,7 +99,7 @@ function displayRemovedIdeaList(objDiv,nodes,start,includeUser,uniqueid){
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -105,9 +111,9 @@ function displayRemovedIdeaList(objDiv,nodes,start,includeUser,uniqueid){
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			var iUL = new Element("li", {'id':node.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li", {'id':node.nodeid, 'class':'idea-list-li'});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'id':'ideablobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderIdeaRemovedList(node, myuniqueid, node.role[0].role,includeUser);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -148,10 +154,10 @@ function displayIssueNodes(width, height, objDiv,nodes,start,includeUser,uniquei
 	// Clear timers from any previous calls
  	clearAllIssueTimers();
 
-	var lOL = new Element("div", {'start':start, 'class':'issues-div' });
+	var lOL = document.createElement("div", {'start':start, 'class':'issues-div' });
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var blobDiv = new Element("div", {'class':'d-inline-block m-2'});
+			var blobDiv = document.createElement("div", {'class':'d-inline-block m-2'});
 			var blobNode = renderIssueNode(width, height, nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,isActive, includeconnectedness, includevoting, cropdesc);
 			blobDiv.appendChild(blobNode);
 			lOL.appendChild(blobDiv);
@@ -178,7 +184,7 @@ function displayCommentNodes(objDiv,nodes,start,includeUser,uniqueid, type, stat
 	}
 
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -190,9 +196,9 @@ function displayCommentNodes(objDiv,nodes,start,includeUser,uniqueid, type, stat
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'id':'commentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'id':'commentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderCommentNode(nodes[i].cnode, myuniqueid, nodes[i].cnode.role[0].role,includeUser, type, status);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -218,7 +224,7 @@ function displayArgumentNodes(objDiv,nodes,start,includeUser,uniqueid, type, sta
 		status = <?php echo $CFG->STATUS_ACTIVE; ?>;
 	}
 	var myuniqueid = "";
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i < nodes.length; i++){
 		var node = nodes[i].cnode;
 		if(node){
@@ -230,9 +236,9 @@ function displayArgumentNodes(objDiv,nodes,start,includeUser,uniqueid, type, sta
 				myuniqueid = node.nodeid + myuniqueid;
 			}
 
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'id':'argumentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'id':'argumentblobdiv'+myuniqueid, 'class':'idea-blob-list'});
 			var blobNode = renderArgumentNode(nodes[i].cnode, myuniqueid, nodes[i].cnode.role[0].role,includeUser, type, status);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -248,12 +254,12 @@ function displayUsersNodes(objDiv,nodes,start,uniqueid){
 	if (uniqueid == undefined) {
 		uniqueid = 'widget-list';
 	}
-	var lOL = new Element("ul", {'class':'widget-list-ideas'});
+	var lOL = document.createElement("ul", {'class':'widget-list-ideas'});
 	for(var i=0; i < nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'class':' '});
+			var blobDiv = document.createElement("div", {'class':' '});
 			var blobNode = renderListNode(nodes[i].cnode, uniqueid+i+start, nodes[i].cnode.role[0].role, false);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -271,12 +277,12 @@ function displaySearchNodes(objDiv,nodes,start,includeUser,uniqueid){
 		uniqueid = 'search-list';
 	}
 
-	var lOL = new Element("ul", {'start':start, 'style':''});
+	var lOL = document.createElement("ul", {'start':start, 'style':''});
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'class':'idea-blob-list'});
 			var blobNode = renderListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role, includeUser);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -294,9 +300,9 @@ function displayReportNodes(objDiv,nodes,start){
 
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("span", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("span", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			objDiv.appendChild(iUL);
-			var blobDiv = new Element("div", {'class':' '});
+			var blobDiv = document.createElement("div", {'class':' '});
 			var blobNode = renderReportNode(nodes[i].cnode,'idea-list'+i+start, nodes[i].cnode.role[0].role);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -311,12 +317,12 @@ function displayConnectionStatNodes(objDiv,nodes,start,includeUser,uniqueid){
 	if (uniqueid == undefined) {
 		uniqueid = 'idea-list';
 	}
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'class':'idea-blob-list'});
 			var blobNode = renderWidgetListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,'active');
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -402,22 +408,22 @@ function renderWidgetListNode(node, uniQ, role, includeUser, type){
 		if (originalurl == "") {
 			originalurl = node.imagethumbnail;
 		}
-		var iconlink = new Element('a', {
+		var iconlink = document.createElement('a', {
 			'href':originalurl,
 			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
- 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
+ 		var nodeicon = document.createElement('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
  		iconlink.appendChild(nodeicon);
  		textCell.appendChild(iconlink);
  		textCell.innerHTML += alttext+": ";
 	} else if (role.image != null && role.image != "") {
- 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
+ 		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		textCell.appendChild(nodeicon);
 	} else {
  		textCell.innerHTML += alttext+": ";
 	}
 
 	var title = node.name;
-	var exploreButton = new Element('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ});
+	var exploreButton = document.createElement('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ});
 	if (role.name == "Map") {
 		if (node.searchid && node.searchid != "") {
 			exploreButton.href= "<?php echo $CFG->homeAddress; ?>map.php?id="+node.nodeid+"&sid="+node.searchid;
@@ -479,11 +485,11 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	// creation date will be the same, but modification date will be different for each duplicated node in the Audit
 	uniQ = node.modificationdate+node.nodeid + uniQ;
 
-	var iDiv = new Element("div", {'class':'idea-container'});
-	var ihDiv = new Element("div", {'class':'idea-header'});
-	var itDiv = new Element("div", {'class':'idea-title'});
+	var iDiv = document.createElement("div", {'class':'idea-container'});
+	var ihDiv = document.createElement("div", {'class':'idea-header'});
+	var itDiv = document.createElement("div", {'class':'idea-title'});
 
-	var nodeTable = new Element( 'table' );
+	var nodeTable = document.createElement( 'table' );
 	nodeTable.className = "toConnectionsTable";
 	if (type == "connselect") {
 		nodeTable.style.cursor = 'pointer';
@@ -518,15 +524,15 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 		if (originalurl == "") {
 			originalurl = node.imagethumbnail;
 		}
-		var iconlink = new Element('a', {
+		var iconlink = document.createElement('a', {
 			'href':originalurl,
 			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
- 		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
+ 		var nodeicon = document.createElement('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'src': URL_ROOT + node.imagethumbnail});
  		iconlink.appendChild(nodeicon);
  		itDiv.appendChild(iconlink);
  		itDiv.innerHTML += alttext+": ";
 	} else if (role.image != null && role.image != "") {
- 		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
+ 		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		itDiv.appendChild(nodeicon);
 	} else {
  		itDiv.innerHTML += alttext+": ";
@@ -536,12 +542,12 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	leftCell.appendChild(itDiv);
 
 	// Add right side with user image and date below
-	var iuDiv = new Element("div", {'class':'idea-user'});
+	var iuDiv = document.createElement("div", {'class':'idea-user'});
 
-	var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
+	var userimageThumb = document.createElement('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 
 	if (type == "active") {
-		var imagelink = new Element('a', {
+		var imagelink = document.createElement('a', {
 			'target':'_blank',
 			'href':URL_ROOT+"user.php?userid="+user.userid,
 			'title':user.name});
@@ -557,20 +563,20 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 	var modDate = new Date(node.creationdate*1000);
 	if (modDate) {
 		var fomatedDate = modDate.format(DATE_FORMAT);
-		iuDiv.appendChild("<div>"+fomatedDate+"</span>");
+		iuDiv.innerHTML += "<div>"+fomatedDate+"</span>";
 	}
 
 	rightCell.appendChild(iuDiv);
 	ihDiv.appendChild(nodeTable);
 
-	var iwDiv = new Element("div", {'class':'idea-wrapper'});
-	var imDiv = new Element("div", {'class':'idea-main'});
-	var idDiv = new Element("div", {'class':'idea-detail'});
-	var headerDiv = new Element("div", {'class':'idea-menus'});
+	var iwDiv = document.createElement("div", {'class':'idea-wrapper'});
+	var imDiv = document.createElement("div", {'class':'idea-main'});
+	var idDiv = document.createElement("div", {'class':'idea-detail'});
+	var headerDiv = document.createElement("div", {'class':'idea-menus'});
 	idDiv.appendChild(headerDiv);
 
 	if (type == 'active') {
-		var exploreButton = new Element("a", {'title':'<?php echo $LNG->NODE_EXPLORE_BUTTON_HINT; ?>'} );
+		var exploreButton = document.createElement("a", {'title':'<?php echo $LNG->NODE_EXPLORE_BUTTON_HINT; ?>'} );
 		exploreButton.innerHTML = "<?php echo $LNG->NODE_EXPLORE_BUTTON_TEXT;?>";
 		exploreButton.href= URL_ROOT+"explore.php?id="+node.nodeid;
 		exploreButton.target = 'coheremain';
@@ -607,11 +613,11 @@ function renderPickerNode(node, role, includeUser){
 		user = node.users[0].user;
 	}
 
-	var iDiv = new Element("div", {'class':' '});
-	var ihDiv = new Element("div", {'class':' '});
-	var itDiv = new Element("div", {'class':'idea-title'});
+	var iDiv = document.createElement("div", {'class':' '});
+	var ihDiv = document.createElement("div", {'class':' '});
+	var itDiv = document.createElement("div", {'class':'idea-title'});
 
-	var nodeTable = new Element( 'table' );
+	var nodeTable = document.createElement( 'table' );
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.style.cursor = 'pointer';
 
@@ -624,13 +630,13 @@ function renderPickerNode(node, role, includeUser){
 
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (role.image != null && role.image != "") {
-		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
+		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'src': URL_ROOT + role.image});
 		itDiv.appendChild(nodeicon);
 	} else {
-		itDiv.appendChild += alttext+": ";
+		itDiv.innerHTML += alttext+": ";
 	}
 
-	itDiv.addEventListener("click", ,function () {
+	itDiv.addEventListener("click", function () {
 		loadSelecteditem(node);
 	});
 
@@ -639,8 +645,8 @@ function renderPickerNode(node, role, includeUser){
 	leftCell.appendChild(itDiv);
 
 	if (includeUser) {
-		var iuDiv = new Element("div", {'class':'idea-user2'});
-		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
+		var iuDiv = document.createElement("div", {'class':'idea-user2'});
+		var userimageThumb = document.createElement('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 		iuDiv.appendChild(userimageThumb)
 		rightCell.appendChild(iuDiv);
 	}
@@ -649,7 +655,7 @@ function renderPickerNode(node, role, includeUser){
 
 	iDiv.appendChild(ihDiv);
 
-	var iwDiv = new Element("div", {'class':'idea-wrapper'});
+	var iwDiv = document.createElement("div", {'class':'idea-wrapper'});
 	iDiv.appendChild(iwDiv);
 
 	return iDiv;
@@ -734,26 +740,26 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		breakout = " target='_blank'";
 	}
 
-	var iDiv = new Element("div", {'class':'card border-0 my-2'});
+	var iDiv = document.createElement("div", {'class':'card border-0 my-2'});
 
-	var nodetableDiv = new Element("div", {'class':'card-body pb-0'});
-	var nodeTable = new Element( 'div', {'class':'nodetableDebate border border-2'} );
+	var nodetableDiv = document.createElement("div", {'class':'card-body pb-0'});
+	var nodeTable = document.createElement( 'div', {'class':'nodetableDebate border border-2'} );
 
 	nodetableDiv.appendChild(nodeTable);
 
-	var row = new Element( 'div', {'class':'d-flex flex-row'} );
+	var row = document.createElement( 'div', {'class':'d-flex flex-row'} );
 	nodeTable.appendChild(row);
 
-	var imageCell = new Element( 'div', {'class':'p-2 issue-img'} );
+	var imageCell = document.createElement( 'div', {'class':'p-2 issue-img'} );
 	row.appendChild(imageCell);
 
 	if (notStarted) {
-		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'src': node.image});
+		var imageObj = document.createElement('img',{'alt':node.name, 'title': node.name, 'src': node.image});
 		imageCell.appendChild(imageObj);
 		imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 	} else {
-		var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'src': node.image});
-		var imagelink = new Element('a', {
+		var imageObj = document.createElement('img',{'alt':node.name, 'title': node.name, 'src': node.image});
+		var imagelink = document.createElement('a', {
 			'href':URL_ROOT+"explore.php?id="+node.nodeid,
 		});
 
@@ -762,26 +768,26 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 	}
 
-	var textCell = new Element( 'div', {'class':'p-2'} );
+	var textCell = document.createElement( 'div', {'class':'p-2'} );
 	row.appendChild(textCell);
 
-	var textDiv = new Element('div', {'class':'issue-title'});
+	var textDiv = document.createElement('div', {'class':'issue-title'});
 	textCell.appendChild(textDiv);
 
 	var title = node.name;
 	var description = node.description;
 
 	if (mainheading) {
-		var exploreButton = new Element('h1');
+		var exploreButton = document.createElement('h1');
 		textDiv.appendChild(exploreButton);
 		exploreButton.innerHTML += title;
 	} else {
 		if (notStarted) {
-			var exploreButton = new Element('span', {'class':' '});
+			var exploreButton = document.createElement('span', {'class':' '});
 			textDiv.appendChild(exploreButton);
 			exploreButton.innerHTML += title;
 		} else {
-			var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'});
+			var exploreButton = document.createElement('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'});
 			if (node.searchid && node.searchid != "") {
 				exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"&sid="+node.searchid;
 			} else if (node.groupid && node.groupid != "") {
@@ -802,7 +808,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	}
 
 	if (mainheading) {
-		var textDivinner = new Element('div', {'class':' '});
+		var textDivinner = document.createElement('div', {'class':' '});
 		textDivinner.innerHTML += (description);
 		textDiv.appendChild(textDivinner);
 	} else {
@@ -820,19 +826,19 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 		}
 	}
 
-	var rowToolbar = new Element( 'div', {'class':'d-flex justify-content-between'} );
+	var rowToolbar = document.createElement( 'div', {'class':'d-flex justify-content-between'} );
 	nodeTable.appendChild(rowToolbar);
 
-	var toolbarCell = new Element( 'div', {'class':'d-flex align-items-end'} );
+	var toolbarCell = document.createElement( 'div', {'class':'d-flex align-items-end'} );
 	rowToolbar.appendChild(toolbarCell);
 
-	var userDiv = new Element("div", {'class':'m-1'} );
+	var userDiv = document.createElement("div", {'class':'m-1'} );
 	toolbarCell.appendChild(userDiv);
 
 	if (includeUser) {
-		var userimageThumb = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
+		var userimageThumb = document.createElement('img',{'alt':user.name, 'title': user.name, 'src': user.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+user.userid,
 				'title':user.name});
 			if (breakout != "") {
@@ -844,29 +850,29 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			userDiv.appendChild(userimageThumb)
 		}
 
-		var userDateDiv = new Element("div", {'class':'m-1'} );
+		var userDateDiv = document.createElement("div", {'class':'m-1'} );
 		toolbarCell.appendChild(userDateDiv);
 
 		var cDate = new Date(node.creationdate*1000);
-		var dateDiv = new Element('div',{'title':'<?php echo $LNG->NODE_ADDED_ON; ?>', 'class':'added_on'});
+		var dateDiv = document.createElement('div',{'title':'<?php echo $LNG->NODE_ADDED_ON; ?>', 'class':'added_on'});
 		dateDiv.innerHTML += cDate.format(DATE_FORMAT);
 
 		userDateDiv.appendChild(dateDiv);
 	}
 
-	var toolbarDivOuter = new Element("div", {'class':'d-flex align-items-end'} );
+	var toolbarDivOuter = document.createElement("div", {'class':'d-flex align-items-end'} );
 	rowToolbar.appendChild(toolbarDivOuter);
 
-	var toolbarDiv = new Element("div", {'class':'m-1 issue-tools'} );
+	var toolbarDiv = document.createElement("div", {'class':'m-1 issue-tools'} );
 	toolbarDivOuter.appendChild(toolbarDiv);
 
 	// IF OWNER ADD EDIT / DEL ACTIONS
 	if (type == "active") {
 		if (USER == user.userid) {
-			var edit = new Element('img',{'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+			var edit = document.createElement('img',{'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 			edit.onclick = function (){loadDialog('editissue',URL_ROOT+"ui/popups/issueedit.php?nodeid="+node.nodeid, 770,550)};
 			toolbarDiv.appendChild(edit);
-			var del = new Element('img',{'id':'deletebutton'+uniQ, 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
+			var del = document.createElement('img',{'id':'deletebutton'+uniQ, 'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
 			toolbarDiv.appendChild(del);
 			if (node.connectedness == 0) {
 				var deletename = node.name;
@@ -888,7 +894,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 
 	if (type == "active" && !issueClosed) {
 		if (USER != "") {
-			var followbutton = new Element('img', {'class':' '});
+			var followbutton = document.createElement('img', {'class':' '});
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 			followbutton.setAttribute('alt', 'Follow');
 			followbutton.setAttribute('id','follow'+node.nodeid);
@@ -918,7 +924,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			|| role.name == 'Con') {
 
 			// vote for
-			var voteforimg = new Element('img');
+			var voteforimg = document.createElement('img');
 			voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-grey3.png"); ?>');
 			voteforimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_FOR_ICON_ALT; ?>');
 			voteforimg.setAttribute('id','nodefor'+node.nodeid);
@@ -951,7 +957,7 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			}
 
 			// vote against
-			var voteagainstimg = new Element('img');
+			var voteagainstimg = document.createElement('img');
 			voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-grey3.png"); ?>');
 			voteagainstimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_AGAINST_ICON_ALT; ?>');
 			voteagainstimg.setAttribute('id', 'nodeagainst'+node.nodeid);
@@ -985,8 +991,8 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	}
 
 	if (mainheading) {
-		var jsonldButton = new Element("span", {'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
-		var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0', 'alt':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
+		var jsonldButton = document.createElement("span", {'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
+		var jsonldButtonicon = document.createElement("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0', 'alt':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
 		jsonldButton.appendChild(jsonldButtonicon);
 		var jsonldButtonhandler = function() {
 			var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
@@ -1009,8 +1015,8 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 
 	if (phase == PENDING_PHASE) {
 		var start = convertUTCTimeToLocalDate(node.startdatetime);
-		countdowntableDiv = new Element("div", {'class':'issue-status issuepending d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
+		countdowntableDiv = document.createElement("div", {'class':'issue-status issuepending d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = document.createElement("div", {'id':'timer'+node.nodeid} );
 		countdowntableDiv.appendChild(countdownbar);
 		iDiv.appendChild(countdowntableDiv);
 		countDownIssueTimer(start.getTime(), countdownbar, '<?php echo $LNG->NODE_COUNTDOWN_START; ?>', false);
@@ -1019,8 +1025,8 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			|| phase == DISCUSS_PHASE || phase == REDUCE_PHASE || phase == DECIDE_PHASE ) {
 
 		var end = convertUTCTimeToLocalDate(node.enddatetime);
-		countdowntableDiv = new Element("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
-		let countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
+		countdowntableDiv = document.createElement("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		let countdownbar = document.createElement("div", {'id':'timer'+node.nodeid} );
 		countdowntableDiv.appendChild(countdownbar);
 		iDiv.appendChild(countdowntableDiv);
 
@@ -1030,15 +1036,15 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 			countdownbar.innerHTML += "<?php echo $LNG->NODE_COUNTDOWN_TIMED; ?>";
 		}
 	} else if (phase == CLOSED_PHASE) {
-		countdowntableDiv = new Element("div", {'class':'issue-status issueclosed d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
+		countdowntableDiv = document.createElement("div", {'class':'issue-status issueclosed d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = document.createElement("div", {'id':'timer'+node.nodeid} );
 		countdownbar.innerHTML += "<?php echo $LNG->NODE_COUNTDOWN_CLOSED; ?>";
 		countdowntableDiv.appendChild(countdownbar);
 		iDiv.appendChild(countdowntableDiv);
 	} else if (phase == OPEN_PHASE
 			|| phase == OPEN_VOTEPENDING_PHASE || phase == OPEN_VOTEON_PHASE) {
-		countdowntableDiv = new Element("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
-		var countdownbar = new Element("div", {'id':'timer'+node.nodeid} );
+		countdowntableDiv = document.createElement("div", {'class':'issue-status issueopen d-flex justify-content-between', 'id':'div-timer'+node.nodeid});
+		var countdownbar = document.createElement("div", {'id':'timer'+node.nodeid} );
 		countdownbar.innerHTML += "<?php echo $LNG->NODE_COUNTDOWN_OPEN; ?>";
 		countdowntableDiv.appendChild(countdownbar);
 		iDiv.appendChild(countdowntableDiv);
@@ -1049,75 +1055,75 @@ function renderIssueNode(width, height, node, uniQ, role, includeUser, type, inc
 	}
 
 	if (includestats) {
-		var statstableDiv = new Element("div", {'class':'card-footer debates border-0 bg-white py-0 text-center'});
-		var statsTable = new Element( 'div', {'class':'nodetable'} );
+		var statstableDiv = document.createElement("div", {'class':'card-footer debates border-0 bg-white py-0 text-center'});
+		var statsTable = document.createElement( 'div', {'class':'nodetable'} );
 		statstableDiv.appendChild(statsTable);
 
-		var innerRowStats = new Element( 'div', {'class':'d-flex justify-content-between'} );
+		var innerRowStats = document.createElement( 'div', {'class':'d-flex justify-content-between'} );
 		statsTable.appendChild(innerRowStats);
 
-		var innerStatsCellViews = new Element( 'div', {'class':'col-auto'} );
+		var innerStatsCellViews = document.createElement( 'div', {'class':'col-auto'} );
 		innerRowStats.appendChild(innerStatsCellViews);
 
-		var viewslabelspan = new Element("strong");
-		viewslabelspan.innerMHTL+ = '<?php echo $LNG->DEBATE_BLOCK_STATS_VIEWS; ?>';
+		var viewslabelspan = document.createElement("strong");
+		viewslabelspan.innerMHTL += '<?php echo $LNG->DEBATE_BLOCK_STATS_VIEWS; ?>';
 		innerStatsCellViews.appendChild(viewslabelspan);
 
-		var viewnumspan = new Element("span", {'id':'debateviewstats'+node.nodeid});
-		viewnumspan.appendChild(node.viewcount);
+		var viewnumspan = document.createElement("span", {'id':'debateviewstats'+node.nodeid});
+		viewnumspan.innerHTML = node.viewcount;
 		innerStatsCellViews.appendChild(viewnumspan);
 
 		if ((NODE_ARGS['issueHasLemoning'] && NODE_ARGS['currentphase'] == DECIDE_PHASE)
 				|| (NODE_ARGS['issueHasLemoning'] && NODE_ARGS['currentphase'] == CLOSED_PHASE)) {
-			var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
+			var innerStatsCellDebates = document.createElement( 'div', {'class':'col-auto'} );
 			innerRowStats.appendChild(innerStatsCellDebates);
-			var idealabelspan = new Element("strong");
+			var idealabelspan = document.createElement("strong");
 			idealabelspan.innerHTML +=' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_ALL; ?>';
 			innerStatsCellDebates.appendChild(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid});
+			var ideanumspan = document.createElement("span", {'id':'debatestatsideas'+node.nodeid});
 			ideanumspan.innerHTML += '-';
 			innerStatsCellDebates.appendChild(ideanumspan);
 
-			var innerStatsCellDebatesNow = new Element( 'div', {'class':'col-auto'} );
+			var innerStatsCellDebatesNow = document.createElement( 'div', {'class':'col-auto'} );
 			innerRowStats.appendChild(innerStatsCellDebatesNow);
-			var idealabelspan = new Element("strong");
+			var idealabelspan = document.createElement("strong");
 			idealabelspan.innerHTML += ' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES_REMAINING; ?>';
 			innerStatsCellDebatesNow.appendChild(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideasnow'+node.nodeid});
+			var ideanumspan = document.createElement("span", {'id':'debatestatsideasnow'+node.nodeid});
 			ideanumspan.innerHTML += '-';
 			innerStatsCellDebatesNow.appendChild(ideanumspan);
 		} else {
-			var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
+			var innerStatsCellDebates = document.createElement( 'div', {'class':'col-auto'} );
 			innerRowStats.appendChild(innerStatsCellDebates);
-			var idealabelspan = new Element("strong");
+			var idealabelspan = document.createElement("strong");
 			idealabelspan.innerHTML += ' <?php echo $LNG->DEBATE_BLOCK_STATS_ISSUES; ?>';
 			innerStatsCellDebates.appendChild(idealabelspan);
-			var ideanumspan = new Element("span", {'id':'debatestatsideas'+node.nodeid});
+			var ideanumspan = document.createElement("span", {'id':'debatestatsideas'+node.nodeid});
 			ideanumspan.innerHTML += '-';
 			innerStatsCellDebates.appendChild(ideanumspan);
 		}
 
-		var innerStatsCellPeople = new Element( 'div', {'class':'col-auto'} );
+		var innerStatsCellPeople = document.createElement( 'div', {'class':'col-auto'} );
 		innerRowStats.appendChild(innerStatsCellPeople);
 
- 		var peoplelabelspan = new Element("strong");
+ 		var peoplelabelspan = document.createElement("strong");
 		peoplelabelspan.innerHTML += ' <?php echo $LNG->DEBATE_BLOCK_STATS_PEOPLE; ?>';
 		innerStatsCellPeople.appendChild(peoplelabelspan);
 
-		var peoplenumspan = new Element("span", {'id':'debatestatspeople'+node.nodeid});
+		var peoplenumspan = document.createElement("span", {'id':'debatestatspeople'+node.nodeid});
 		peoplenumspan.innerHTML += '-';
 		innerStatsCellPeople.appendChild(peoplenumspan);
 		peoplenumspan.people = new Array();
 		peoplenumspan.people.push(user.userid);
 
-		var innerStatsCellVotes = new Element( 'div', {'class':'col-auto'} );
+		var innerStatsCellVotes = document.createElement( 'div', {'class':'col-auto'} );
 		innerRowStats.appendChild(innerStatsCellVotes);
 
-		var votelabelspan = new Element("strong");
+		var votelabelspan = document.createElement("strong");
 		votelabelspan.innerHTML += '<?php echo $LNG->DEBATE_BLOCK_STATS_VOTES; ?>';
 		innerStatsCellVotes.appendChild(votelabelspan);
 
-		var votenumspan = new Element("span", {'id':'debatestatsvotes'+node.nodeid});
+		var votenumspan = document.createElement("span", {'id':'debatestatsvotes'+node.nodeid});
 		votenumspan.innerHTML += '-';
 		innerStatsCellVotes.appendChild(votenumspan);
 		votenumspan.votes = new Array();
@@ -1192,7 +1198,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		}
 	}
 
-	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker'});
+	var itDiv = document.createElement("div", {'class':'idea-title boxshadowsquaredarker'});
 
 	if (USER != "" && NODE_ARGS['currentphase'] == REDUCE_PHASE) {
 		itDiv.ondragover = function(e) {
@@ -1231,7 +1237,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 	}
 
-	var nodeTable = new Element('table', {'class':'table'});
+	var nodeTable = document.createElement('table', {'class':'table'});
 	nodeTable.className = "toConnectionsTable";
 	itDiv.appendChild(nodeTable);
 
@@ -1245,21 +1251,21 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		if (i == 0) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid});
+			var img = document.createElement("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('first-place.png'); ?> ";
 			img.alt = "1st place ";
 			winCell.appendChild(img);
 		} else if (i == 1) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid});
+			var img = document.createElement("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('second-place.png'); ?> ";
 			img.alt = "2nd place ";
 			winCell.appendChild(img);
 		} else if (i == 2) {
 			var winCell = row.insertCell(-1);
 			winCell.setAttribute('vAlign','top');
-			var img = new Element("img", {'id':node.nodeid});
+			var img = document.createElement("img", {'id':node.nodeid});
 			img.src = "<?php echo $HUB_FLM->getImagePath('third-place.png'); ?> ";
 			img.alt = "3rd place ";
 			winCell.appendChild(img);
@@ -1287,7 +1293,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		boxCell.setAttribute('id','nodecheckcell'+uniQ);
 		boxCell.userid = nodeuser.userid;
 		boxCell.nodeid = node.nodeid;
-		var inChk = new Element("input",{'class':'nodecheck','type':'checkbox','id':'nodecheck'+node.nodeid, 'value':node.nodeid, 'aria-label':'test'});
+		var inChk = document.createElement("input",{'class':'nodecheck','type':'checkbox','id':'nodecheck'+node.nodeid, 'value':node.nodeid, 'aria-label':'test'});
 		inChk.onclick = function () {
 			var toAdd = getSelectedNodeIDs(document.getElementById('tab-content-idea-list'));
 			if(toAdd.length < 2) {
@@ -1323,7 +1329,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 				voteCell.style.display = "none";
 			}
 
-			var voteDiv = new Element("div", {
+			var voteDiv = document.createElement("div", {
 				'name':'editformvotedividea',
 				'class':'editformvotedividea',
 				'id':'editformvotedividea'+uniQ
@@ -1333,7 +1339,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			var toRoleName = getNodeTitleAntecedence(connection.torole[0].role.name, false);
 
 			// vote for
-			var voteforimg = new Element('img');
+			var voteforimg = document.createElement('img');
 			voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-grey.png"); ?>');
 			voteforimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_FOR_ICON_ALT; ?>');
 			voteforimg.setAttribute('id', connection.connid+'for');
@@ -1398,7 +1404,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 				}
 			}
 
-			var voteforcount = new Element('span');
+			var voteforcount = document.createElement('span');
 			voteforcount.setAttribute('id',connection.connid+'votefor');
 			voteforcount.setAttribute('class',' ');
 			voteforcount.innerHTML += connection.positivevotes;
@@ -1406,7 +1412,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 
 			// vote against
-			var voteagainstimg = new Element('img');
+			var voteagainstimg = document.createElement('img');
 			voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-grey.png"); ?>');
 			voteagainstimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_AGAINST_ICON_ALT; ?>');
 			voteagainstimg.setAttribute('id', connection.connid+'against');
@@ -1464,7 +1470,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 				}
 			}
 
-			var voteagainstcount = new Element('span');
+			var voteagainstcount = document.createElement('span');
 			voteagainstcount.setAttribute('id',connection.connid+'voteagainst');
 			voteagainstcount.setAttribute('class',' ');
 			voteagainstcount.innerHTML = connection.negativevotes;
@@ -1483,14 +1489,14 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		}
 
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {
+		var iuDiv = document.createElement("div", {
 			'id':'editformuserdividea'+uniQ,
 			'class':'idea-user2'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
+		var userimageThumb = document.createElement('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
 				});
 			if (breakout != "") {
@@ -1508,7 +1514,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	var textCell = row.insertCell(-1);
 	textCell.classList.add("idea-section");
 
-	var textDiv = new Element("div", {
+	var textDiv = document.createElement("div", {
 		'id':'textdividea'+uniQ,
 		'class':'textdividea'
 	});
@@ -1516,11 +1522,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	
 	var title = node.name;
 
-	var textspan = new Element("span", {
+	var textspan = document.createElement("span", {
 		'id':'desctoggle'+uniQ,
 		'class':'desctoggle'
 	});
-	textspan.appendChild(title);
+	textspan.innerHTML += title;
 	textspan.datadisabled = false;
 	textDiv.appendChild(textspan);
 	textspan.onclick = function () {
@@ -1530,7 +1536,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	};
 
 	if (USER == nodeuser.userid && type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var editbutton = new Element("img", {			
+		var editbutton = document.createElement("img", {			
 			'class':'idea-edit',
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
 			'title':'<?php echo $LNG->NODE_EDIT_SOLUTION_ICON_HINT; ?>',
@@ -1542,7 +1548,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 		if (!node.otheruserconnections || node.otheruserconnections == 0) {
 			var deletename = node.name;
-			var del = new Element('img',{		
+			var del = document.createElement('img',{		
 				'class':'idea-delete',
 				'alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 
 				'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
@@ -1556,7 +1562,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			};
 			textDiv.appendChild(del);
 		} else {
-			var del = new Element('img',{ 	
+			var del = document.createElement('img',{ 	
 				'class':'idea-delete',
 				'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 
 				'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 
@@ -1573,7 +1579,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php } ?>
 
 	if (node.urls && node.urls.length > 0) {
-		var menuButton = new Element('img',{
+		var menuButton = document.createElement('img',{
 			'class':'idea-url',
 			'alt':'>','width':'16','height':'16',
 			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
@@ -1606,7 +1612,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 			showBox('toolbardiv'+uniQ);
 		};
-		var toolbarDiv = new Element("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
+		var toolbarDiv = document.createElement("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
 		toolbarDiv.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
 		};
@@ -1617,16 +1623,16 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			if(node.urls[i].url){
 				var next = node.urls[i].url;
 				var url = next.url;
-				var weblink = new Element("a", {'class':' ','target':'_blank'});
+				var weblink = document.createElement("a", {'class':' ','target':'_blank'});
 				weblink.href = url;
-				weblink.appendChild(url);
+				weblink.innerHTML += url;
 				toolbarDiv.appendChild(weblink);
 			}
 		}
 	}
 
 	if (type == 'active') {
-		var more = new Element('img',{
+		var more = document.createElement('img',{
 			'class':'idea-built',
 			'style':'display:none',
 			'alt':'built from', 
@@ -1640,7 +1646,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 		<?php if (isset($_SESSION['IS_MODERATOR']) && $_SESSION['IS_MODERATOR']){ ?>
 		if (NODE_ARGS['issueDiscussing']) {
-			var splitbutton = new Element("button", {
+			var splitbutton = document.createElement("button", {
 				'class':'idea-split',
 				'id':'ideasplitbutton'+uniQ,
 				'name':'ideasplitbutton',
@@ -1664,14 +1670,14 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	// LEMONING
 	if (USER != "" && NODE_ARGS['currentphase'] == REDUCE_PHASE) {
-		var lemonigDiv = new Element('div', { 'style':'float:right;width:100px;', 'name':'lemondiv','id':'lemondiv'+node.nodeid});
+		var lemonigDiv = document.createElement('div', { 'style':'float:right;width:100px;', 'name':'lemondiv','id':'lemondiv'+node.nodeid});
 		if (node.userlemonvote > 0) {
 			lemonigDiv.style.display = 'block';
 		} else {
 			lemonigDiv.style.display = 'none';
 		}
 
-		var minuslemon = new Element('span', {'class':'lemoningbuttons'});
+		var minuslemon = document.createElement('span', {'class':'lemoningbuttons'});
 		minuslemon.innerHTML += '&#8211';
 		minuslemon.onclick = function(e) {
 			document.body.style.cursor = 'wait';
@@ -1688,7 +1694,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 		lemonigDiv.appendChild(minuslemon);
 
-		var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimg' });
+		var lemonimg = document.createElement('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimg' });
 		lemonimg.setAttribute('draggable', 'true');
 		lemonimg.ondragstart = function(e) {
 			e.dataTransfer.setData("text", node.nodeid);
@@ -1696,11 +1702,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 		lemonigDiv.appendChild(lemonimg);
 
-		var lemoncountnum = new Element('span',{'id':'lemoncount'+node.nodeid, 'class':'lemoncount'});
+		var lemoncountnum = document.createElement('span',{'id':'lemoncount'+node.nodeid, 'class':'lemoncount'});
 		lemoncountnum.innerHTML += node.userlemonvote;
 		lemonigDiv.appendChild(lemoncountnum);
 
-		var pluslemon = new Element('span', {'class':'lemoningbuttons'});
+		var pluslemon = document.createElement('span', {'class':'lemoningbuttons'});
 		pluslemon.innerHTML +='+';
 		pluslemon.onclick = function(e) {
 			var remaininglemons = parseInt(document.getElementById('lemonbasketcount').innerHTML);
@@ -1737,7 +1743,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			|| NODE_ARGS['currentphase'] == DISCUSS_PHASE
 			|| NODE_ARGS['currentphase'] == REDUCE_PHASE
 		) {
-		var votebarDiv = new Element('div',{'name':'votebardiv','id':'votebardiv'+uniQ,'class':'votebar'});
+		var votebarDiv = document.createElement('div',{'name':'votebardiv','id':'votebardiv'+uniQ,'class':'votebar'});
 		votebarDiv.positivevotes = parseInt(connection.positivevotes);
 		votebarDiv.negativevotes = parseInt(connection.negativevotes);
 		votebarDiv.conpositivevotes = 0;
@@ -1759,7 +1765,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		textDiv.innerHTML += dStr;
 	}
 
-	var argumentLink = new Element("span", {
+	var argumentLink = document.createElement("span", {
 		'name':'ideaargumentlink',
 		'id':'ideaargumentlink'+uniQ,
 		'class':'active ideaargumentlink',
@@ -1780,7 +1786,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php } ?>
 
 	argumentLink.innerHTML += '<?php echo $LNG->IDEA_ARGUMENTS_LINK; ?> (';
-	var argumentCount = new Element("span", {
+	var argumentCount = document.createElement("span", {
 		'id':'ideaargumentcount'+node.nodeid,
 	});
 
@@ -1792,7 +1798,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	textDiv.appendChild(argumentLink);
 
-	var commentLink = new Element("span", {
+	var commentLink = document.createElement("span", {
 		'name':'ideacommentlink',
 		'id':'ideacommentlink'+uniQ,
 		'class':'active ideacommentlink',
@@ -1807,7 +1813,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	};
 
 	commentLink.innerHTML += '<?php echo $LNG->IDEA_COMMENTS_LINK; ?>';
-	var commentCount = new Element("span", {'id':'ideacommentscount'+node.nodeid});
+	var commentCount = document.createElement("span", {'id':'ideacommentscount'+node.nodeid});
 	commentCount.innerHTML += '0';
 	commentLink.innerHTML += ' (';
 	commentLink.appendChild(commentCount);
@@ -1819,7 +1825,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php if (!isset($USER->userid)) {
 		?>
 	if (USER == '' && NODE_ARGS['issueDiscussing']) {
-			var signinlink = new Element("a", {
+			var signinlink = document.createElement("a", {
 				'href':'<?php echo $CFG->homeAddress."ui/pages/login.php?ref="; ?>'+NODE_ARGS["ref"],
 				'title':'<?php echo $LNG->DEBATE_CONTRIBUTE_LINK_HINT; ?>',
 				'class':'lightgreenbutton',
@@ -1832,27 +1838,27 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 
 	/** ADD THE EDIT FORM FOR THE IDEA **/
 	if (USER == user.userid && type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var editDiv = new Element("fieldset", {
+		var editDiv = document.createElement("fieldset", {
 			'class':'editformdividea',
 			'name':'editformdividea',
 			'id':'editformdividea'+uniQ,
 			'style':'display:none;'
 		});
 
-		var legend = new Element("legend", {});
-		var legendtitle = new Element("h2", {'class':'editing-header',});
+		var legend = document.createElement("legend", {});
+		var legendtitle = document.createElement("h2", {'class':'editing-header',});
 		legendtitle.innerHTML += '<?php echo $LNG->EXPLORE_EDITING_ARGUMENT_TITLE; ?>';
 		legend.appendChild(legendtitle);
 		editDiv.appendChild(legend);
 
-		var editideaid = new Element("input", {
+		var editideaid = document.createElement("input", {
 			'name':'editideaid',
 			'id':'editideaid'+uniQ,
 			'type':'hidden',
 			'value':node.nodeid,
 		});
 		editDiv.appendChild(editideaid);
-		var editnodetypeid = new Element("input", {
+		var editnodetypeid = document.createElement("input", {
 			'name':'editideanodetypeid',
 			'id':'editideanodetypeid'+uniQ,
 			'type':'hidden',
@@ -1860,11 +1866,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		editDiv.appendChild(editnodetypeid);
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		editDiv.appendChild(rowDiv1);
-		var editideaname = new Element("input", {
+		var editideaname = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 			'id':'editideaname'+uniQ,
@@ -1874,11 +1880,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv1.appendChild(editideaname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		editDiv.appendChild(rowDiv2);
-		var editideadesc = new Element("textarea", {
+		var editideadesc = document.createElement("textarea", {
 			'rows':'3',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
@@ -1889,7 +1895,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		editideadesc.innerHTML+=node.description;
 		rowDiv2.appendChild(editideadesc);
 
-		var rowDiv4 = new Element("div", {
+		var rowDiv4 = document.createElement("div", {
 			'class':'mb-2',
 			'id':'linksdivedit'+uniQ,
 		});
@@ -1903,7 +1909,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 					var next = node.urls[i].url;
 					var urlid = next.urlid;
 					var url = next.url;
-					var weblink = new Element("input", {
+					var weblink = document.createElement("input", {
 						'class':'form-control',
 						'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 						'id':'argumentlinkedit'+uniQ+i,
@@ -1917,7 +1923,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			}
 		} else {
 			rowDiv4.linkcount = 0;
-			var weblink = new Element("input", {
+			var weblink = document.createElement("input", {
 				'class':'form-control',
 				'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 				'id':'argumentlinkedit'+uniQ+0,
@@ -1928,9 +1934,9 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			rowDiv4.appendChild(weblink);
 		}
 
-		var rowDiv5 = new Element("div", {'class':'my-3'});
+		var rowDiv5 = document.createElement("div", {'class':'my-3'});
 		editDiv.insappendChildert(rowDiv5);
-		var addURL = new Element("a", {
+		var addURL = document.createElement("a", {
 			'href':'javascript:void(0)',
 			'class':'hgrinput',
 		});
@@ -1939,11 +1945,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 			insertIdeaLink(uniQ, 'edit');
 		};
 		rowDiv5.appendChild(addURL);
-		var rowDiv3 = new Element("div", {
+		var rowDiv3 = document.createElement("div", {
 			'class':'formrowsm',
 		});
 		editDiv.appendChild(rowDiv3);
-		var editideasave = new Element("input", {
+		var editideasave = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-primary',
 			'id':'editidea',
@@ -1955,7 +1961,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 
 		rowDiv3.appendChild(editideasave);
-		var editideacancel = new Element("input", {
+		var editideacancel = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-secondary ms-2',
 			'id':'cancelidea',
@@ -1972,7 +1978,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	}
 
 	/** COMMENTS LIST **/
-	var expandDiv = new Element("div", {
+	var expandDiv = document.createElement("div", {
 		'name':'commentsdiv',
 		'id':'commentsdiv'+uniQ,
 		'nodeid':node.nodeid,
@@ -1982,24 +1988,24 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	});
 	itDiv.appendChild(expandDiv);
 
-	var kidscommentTable = new Element('table', {'style':'width:100%'});
+	var kidscommentTable = document.createElement('table', {'style':'width:100%'});
 	expandDiv.appendChild(kidscommentTable);
 	var rowcomment = kidscommentTable.insertRow(-1);
 	var commentCell = rowcomment.insertCell(-1);
 
-	var commentHeading = new Element('h3');
+	var commentHeading = document.createElement('h3');
 	commentHeading.style.marginBottom = "2px";
 	commentHeading.style.marginTop = "5px";
 	commentHeading.style.color = "black";
 	commentHeading.style.fontWeight = "normal";
 	commentHeading.innerHTML += '<?php echo $LNG->IDEA_COMMENTS_CHILDREN_TITLE; ?> (';
-	var commentCount = new Element('span', {'id':'count-comment'+uniQ});
+	var commentCount = document.createElement('span', {'id':'count-comment'+uniQ});
 	commentCount.innerHTML += '0';
 	commentHeading.appendChild(commentCount);
 	commentHeading.innerHTML += ')';
 	commentCell.appendChild(commentHeading);
 
-	var commentKidsDiv = new Element('div', {
+	var commentKidsDiv = document.createElement('div', {
 		'id':'commentslist'+uniQ,
 		'style':'width:100%;',
 	});
@@ -2009,17 +2015,17 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php if (isset($_SESSION['IS_MODERATOR']) && $_SESSION['IS_MODERATOR']){ ?>
 
 	if (type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var addCommentDiv = new Element("div", {
+		var addCommentDiv = document.createElement("div", {
 			'name':'addformdivcomment',
 			'id':'addformdivcomment'+uniQ,
 		});
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.appendChild(rowDiv1);
 
-		var addcommentname = new Element("input", {
+		var addcommentname = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 			'id':'addcommentname'+uniQ,
@@ -2029,11 +2035,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv1.appendChild(addcommentname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.appendChild(rowDiv2);
-		var addcommentdesc = new Element("textarea", {
+		var addcommentdesc = document.createElement("textarea", {
 			'rows':'3',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
@@ -2043,11 +2049,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv2.appendChild(addcommentdesc);
 
-		var rowDiv3 = new Element("div", {
+		var rowDiv3 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		addCommentDiv.appendChild(rowDiv3);
-		var addcommentsave = new Element("input", {
+		var addcommentsave = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-primary',
 			'id':'addcomment',
@@ -2064,7 +2070,7 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	<?php } ?>
 
 	/** PRO AND CON LISTS **/
-	var kidsTable = new Element('table', {
+	var kidsTable = document.createElement('table', {
 		'name':'ideaforagainstdiv',
 		'id':'ideaforagainstdiv'+uniQ,
 		'nodeid':node.nodeid,
@@ -2082,31 +2088,31 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	forCell.align = "left";
 	forCell.className = "for-against";
 	
-	var forHeading = new Element('h3');
+	var forHeading = document.createElement('h3');
 	forHeading.classList.add("forHeading");
 	forHeading.inneTRML += '<?php echo $LNG->NODE_CHILDREN_EVIDENCE_PRO; ?> (';
-	var forCount = new Element('span', {'id':'count-support'+uniQ});
+	var forCount = document.createElement('span', {'id':'count-support'+uniQ});
 	forCount.innerHTML += '0';
 	forHeading.appendChild(forCount);
 	forHeading.innerHTML += ')';
 	forCell.appendChild(forHeading);
 
-	var forKidsDiv = new Element('div', {'id':'supportkidsdiv'+uniQ});
+	var forKidsDiv = document.createElement('div', {'id':'supportkidsdiv'+uniQ});
 	forCell.appendChild(forKidsDiv);
 
 	<?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']){ ?>
 	if (type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var addProDiv = new Element("div", {
+		var addProDiv = document.createElement("div", {
 			'name':'addformdivpro',
 			'id':'addformdivpro'+uniQ,
 		});
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'formrowsm mt-2 mb-2',
 		});
 		addProDiv.appendChild(rowDiv1);
 
-		var addproname = new Element("input", {
+		var addproname = document.createElement("input", {
 			'aria-label':'<?php echo $LNG->FORM_PRO_LABEL_TITLE; ?>',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_PRO_LABEL_TITLE; ?>',
@@ -2116,11 +2122,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv1.appendChild(addproname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		addProDiv.appendChild(rowDiv2);
-		var addprodesc = new Element("textarea", {
+		var addprodesc = document.createElement("textarea", {
 			'aria-label':'<?php echo $LNG->FORM_PRO_LABEL_DESC; ?>',
 			'rows':'3',
 			'class':'form-control',
@@ -2130,14 +2136,14 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv2.appendChild(addprodesc);
 
-		var rowDiv3 = new Element("div", {
+		var rowDiv3 = document.createElement("div", {
 			'class':'formrowsm',
 			'id':'linksdivpro'+uniQ,
 		});
 		rowDiv3.linkcount = 0;
 		addProDiv.appendChild(rowDiv3);
 
-		var weblink = new Element("input", {
+		var weblink = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			'id':'argumentlinkpro'+uniQ+0,
@@ -2147,11 +2153,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv3.appendChild(weblink);
 
-		var rowDiv4 = new Element("div", {
+		var rowDiv4 = document.createElement("div", {
 			'class':'my-3',
 		});
 		addProDiv.appendChild(rowDiv4);
-		var addURL = new Element("a", {
+		var addURL = document.createElement("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
 		});
@@ -2161,11 +2167,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 		rowDiv4.appendChild(addURL);
 
-		var rowDiv5 = new Element("div", {
+		var rowDiv5 = document.createElement("div", {
 			'class':'formrowsm',
 		});
 		addProDiv.appendChild(rowDiv5);
-		var addprosave = new Element("input", {
+		var addprosave = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-primary',
 			'id':'addprosave',
@@ -2186,30 +2192,30 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 	conCell.align = "left";
 	conCell.className = "for-against";
 
-	var conHeading = new Element('h3', {'class':'conHeading'});
+	var conHeading = document.createElement('h3', {'class':'conHeading'});
 	conHeading.innerHTML += '<?php echo $LNG->NODE_CHILDREN_EVIDENCE_CON; ?> (';
-	var conCount = new Element('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
+	var conCount = document.createElement('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
 	conCount.innerHTML += '0';
 	conHeading.appendChild(conCount);
 	conHeading.innerHTML += ')';
 	conCell.appendChild(conHeading);
 
-	var conKidsDiv = new Element('div', {'id':'counterkidsdiv'+uniQ });
+	var conKidsDiv = document.createElement('div', {'id':'counterkidsdiv'+uniQ });
 	conCell.appendChild(conKidsDiv);
 
 	<?php if (isset($_SESSION['HUB_CANADD']) && $_SESSION['HUB_CANADD']){ ?>
 	if (type == 'active' && NODE_ARGS['issueDiscussing']) {
-		var addConDiv = new Element("div", {
+		var addConDiv = document.createElement("div", {
 			'name':'addformdivcon',
 			'id':'addformdivcon'+uniQ,
 		});
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'formrowsm mt-2 mb-2',
 		});
 		addConDiv.appendChild(rowDiv1);
 
-		var addconname = new Element("input", {
+		var addconname = document.createElement("input", {
 			'aria-label':'<?php echo $LNG->FORM_CON_LABEL_TITLE; ?>',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_CON_LABEL_TITLE; ?>',
@@ -2219,11 +2225,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv1.appendChild(addconname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'formrowsm mb-2',
 		});
 		addConDiv.appendChild(rowDiv2);
-		var addcondesc = new Element("textarea", {
+		var addcondesc = document.createElement("textarea", {
 			'aria-label':'<?php echo $LNG->FORM_CON_LABEL_DESC; ?>',
 			'rows':'3',
 			'class':'form-control',
@@ -2233,14 +2239,14 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv2.appendChild(addcondesc);
 
-		var rowDiv3 = new Element("div", {
+		var rowDiv3 = document.createElement("div", {
 			'class':'formrowsm',
 			'id':'linksdivcon'+uniQ,
 		});
 		rowDiv3.linkcount = 0;
 		addConDiv.appendChild(rowDiv3);
 
-		var weblink = new Element("input", {
+		var weblink = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 			'id':'argumentlinkcon'+uniQ+0,
@@ -2250,11 +2256,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		});
 		rowDiv3.appendChild(weblink);
 
-		var rowDiv4 = new Element("div", {
+		var rowDiv4 = document.createElement("div", {
 			'class':'my-3',
 		});
 		addConDiv.appendChild(rowDiv4);
-		var addURL = new Element("a", {
+		var addURL = document.createElement("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
 		});
@@ -2264,11 +2270,11 @@ function renderIdeaList(node, uniQ, role, includeUser, type, status, i){
 		};
 		rowDiv4.appendChild(addURL);
 
-		var rowDiv5 = new Element("div", {
+		var rowDiv5 = document.createElement("div", {
 			'class':'formrowsm',
 		});
 		addConDiv.appendChild(rowDiv5);
-		var addconsave = new Element("input", {
+		var addconsave = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-primary',
 			'id':'addconsave',
@@ -2345,9 +2351,9 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		}
 	}
 
-	var itDiv = new Element("div", {'class':'idea-title boxshadowsquaredarker'});
+	var itDiv = document.createElement("div", {'class':'idea-title boxshadowsquaredarker'});
 
-	var nodeTable = new Element('table', {'style':'width:100%;margin:3px;'});
+	var nodeTable = document.createElement('table', {'style':'width:100%;margin:3px;'});
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
 	itDiv.appendChild(nodeTable);
@@ -2382,14 +2388,14 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		}
 
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {
+		var iuDiv = document.createElement("div", {
 			'id':'editformuserdividea'+uniQ,
 			'class':'idea-user2',
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'style':'padding-left:5px;padding-top:5px;', 'src': nodeuser.thumb});
+		var userimageThumb = document.createElement('img',{'alt':nodeuser.name, 'style':'padding-left:5px;padding-top:5px;', 'src': nodeuser.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
 				});
 			if (breakout != "") {
@@ -2409,7 +2415,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	textCell.align="left";
 	textCell.setAttribute('width','95%');
 
-	var textDiv = new Element("div", {
+	var textDiv = document.createElement("div", {
 		'id':'textdividea'+uniQ,
 		'style':'clear:both;float:left;width:98%;display:block;padding-left:5px;padding-bottom:3px;'
 	});
@@ -2417,7 +2423,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 
 	var title = node.name;
 
-	var textspan = new Element("span", {
+	var textspan = document.createElement("span", {
 		'id':'desctoggle'+uniQ,
 		'style':'cursor:pointer;float:left;font-weight:bold;font-size:14pt'
 	});
@@ -2431,10 +2437,10 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	};
 
 	// LEMONING
-	var lemonigDiv = new Element('div', {'name':'lemondiv','id':'lemondiv'+node.nodeid,'style':'float:right;padding:0px;margin:0px;'});
-	var lemonimg = new Element('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimgoff' });
+	var lemonigDiv = document.createElement('div', {'name':'lemondiv','id':'lemondiv'+node.nodeid,'style':'float:right;padding:0px;margin:0px;'});
+	var lemonimg = document.createElement('img', {'src':'<?php echo $HUB_FLM->getImagePath("lemon22.png"); ?>',  'class':'lemonimgoff' });
 	lemonigDiv.appendChild(lemonimg);
-	var lemoncountnum = new Element('span',{'class':'lemoncount'});
+	var lemoncountnum = document.createElement('span',{'class':'lemoncount'});
 	lemoncountnum.innerHTML += node.lemonvotes;
 	lemonigDiv.appendChild(lemoncountnum);
 	textDiv.appendChild(lemonigDiv);
@@ -2448,7 +2454,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 		textDiv.innerHTML += dStr;
 	}
 
-	var argumentLink = new Element("span", {
+	var argumentLink = document.createElement("span", {
 		'name':'ideaargumentlink',
 		'id':'ideaargumentlink'+uniQ,
 		'class':'active',
@@ -2464,7 +2470,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	};
 
 	argumentLink.innerHTML += '<?php echo $LNG->IDEA_ARGUMENTS_LINK; ?> (';
-	var argumentCount = new Element("span", {
+	var argumentCount = document.createElement("span", {
 		'id':'ideaargumentcount'+node.nodeid,
 	});
 
@@ -2474,7 +2480,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 
 	textDiv.appendChild(argumentLink);
 
-	var commentLink = new Element("div", {
+	var commentLink = document.createElement("div", {
 		'name':'ideacommentlink',
 		'id':'ideacommentlink'+uniQ,
 		'class':'active',
@@ -2490,7 +2496,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	};
 
 	commentLink.innerHTML += '<?php echo $LNG->IDEA_COMMENTS_LINK; ?>';
-	var commentCount = new Element("span", {'id':'ideacommentscount'+node.nodeid});
+	var commentCount = document.createElement("span", {'id':'ideacommentscount'+node.nodeid});
 	commentCount.innerHTML += '0';
 	commentLink.innerHTML += ' (';
 	commentLink.appendChild(commentCount);
@@ -2499,7 +2505,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	textDiv.appendChild(commentLink);
 
 	/** COMMENTS LIST **/
-	var expandDiv = new Element("div", {
+	var expandDiv = document.createElement("div", {
 		'name':'commentsdiv',
 		'id':'commentsdiv'+uniQ,
 		'nodeid':node.nodeid,
@@ -2509,7 +2515,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	});
 	itDiv.appendChild(expandDiv);
 
-	var kidscommentTable = new Element('table', {'style':'clear:both;margin-top:0px;width:100%'});
+	var kidscommentTable = document.createElement('table', {'style':'clear:both;margin-top:0px;width:100%'});
 	kidscommentTable.width="100%";
 	kidscommentTable.style.paddingLeft = '20px';
 	expandDiv.appendChild(kidscommentTable);
@@ -2517,19 +2523,19 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	var rowcomment = kidscommentTable.insertRow(-1);
 	var commentCell = rowcomment.insertCell(-1);
 
-	var commentHeading = new Element('h3');
+	var commentHeading = document.createElement('h3');
 	commentHeading.style.marginBottom = "2px";
 	commentHeading.style.marginTop = "5px";
 	commentHeading.style.color = "black";
 	commentHeading.style.fontWeight = "normal";
 	commentHeading.innerHTML += '<?php echo $LNG->IDEA_COMMENTS_CHILDREN_TITLE; ?> (';
-	var commentCount = new Element('span', {'id':'count-comment'+uniQ});
+	var commentCount = document.createElement('span', {'id':'count-comment'+uniQ});
 	commentCount.innerHTML += '0';
 	commentHeading.appendChild(commentCount);
 	commentHeading.innerHTML += ')';
 	commentCell.appendChild(commentHeading);
 
-	var commentKidsDiv = new Element('div', {
+	var commentKidsDiv = document.createElement('div', {
 		'id':'commentslist'+uniQ,
 		'style':'width:100%;clear:both;float:left;padding-top:5px;margin-top:5px;',
 	});
@@ -2537,7 +2543,7 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	commentCell.appendChild(commentKidsDiv);
 
 	/** PRO AND CON LISTS **/
-	var kidsTable = new Element('table', {
+	var kidsTable = document.createElement('table', {
 		'name':'ideaforagainstdiv',
 		'id':'ideaforagainstdiv'+uniQ,
 		'nodeid':node.nodeid,
@@ -2562,19 +2568,19 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	forCell.style.minWidth = '360px';
 	forCell.width = "360px";
 
-	var forHeading = new Element('h3');
+	var forHeading = document.createElement('h3');
 	forHeading.style.marginBottom = "2px";
 	forHeading.style.marginTop = "5px";
 	forHeading.style.color = "green";
 	forHeading.style.fontWeight = "normal";
 	forHeading.innerHTML += '<?php echo $LNG->NODE_CHILDREN_EVIDENCE_PRO; ?> (';
-	var forCount = new Element('span', {'id':'count-support'+uniQ});
+	var forCount = document.createElement('span', {'id':'count-support'+uniQ});
 	forCount.innerHTML += '0';
 	forHeading.appendChild(forCount);
 	forHeading.innerTHML += ')';
 	forCell.appendChild(forHeading);
 
-	var forKidsDiv = new Element('div', {'id':'supportkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
+	var forKidsDiv = document.createElement('div', {'id':'supportkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
 	forKidsDiv.style.paddingTop = "5px";
 	forKidsDiv.style.borderTop = "1px solid #D8D8D8";
 	forCell.appendChild(forKidsDiv);
@@ -2588,18 +2594,18 @@ function renderIdeaRemovedList(node, uniQ, role, includeUser){
 	conCell.style.minWidth = '360px';
 	conCell.width = "360px";
 
-	var conHeading = new Element('h3');
+	var conHeading = document.createElement('h3');
 	conHeading.style.marginBottom = "2px";
 	conHeading.style.marginTop = "5px";
 	conHeading.style.fontWeight = "normal";
 	conHeading.innerHTML += '<?php echo $LNG->NODE_CHILDREN_EVIDENCE_CON; ?> (';
-	var conCount = new Element('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
+	var conCount = document.createElement('span', {'id':'count-counter'+uniQ, 'class':'count-counter'});
 	conCount.innerHTML += '0';
 	conHeading.appendChild(conCount);
 	conHeading.innerHTML+= ')';
 	conCell.appendChild(conHeading);
 
-	var conKidsDiv = new Element('div', {'id':'counterkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
+	var conKidsDiv = document.createElement('div', {'id':'counterkidsdiv'+uniQ, 'style':'width:100%;clear:both;float:left;'});
 	conKidsDiv.style.paddingTop = "5px";
 	conKidsDiv.style.borderTop = "1px solid #D8D8D8";
 	conCell.appendChild(conKidsDiv);
@@ -2669,7 +2675,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		}
 	}
 
-	var nodeTable = new Element('table', {'style':'width:100%'});
+	var nodeTable = document.createElement('table', {'style':'width:100%'});
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
 
@@ -2693,14 +2699,14 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	var textCell = row.insertCell(-1);
 	textCell.classList.add("idea-section");
 
-	var textDiv = new Element("div", {
+	var textDiv = document.createElement("div", {
 		'id':'textdivargument'+uniQ,
 		'class':'textdividea'
 	});
 	textCell.appendChild(textDiv);
 
 	var title = node.name;
-	var textspan = new Element("span", {
+	var textspan = document.createElement("span", {
 		'id':'desctoggle'+uniQ,
 		'class': 'idea-title'
 	});
@@ -2708,7 +2714,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	textDiv.appendChild(textspan);
 
 	if (USER == nodeuser.userid && type == "active" && NODE_ARGS['issueDiscussing']) {
-		var editbutton = new Element("img", {			
+		var editbutton = document.createElement("img", {			
 			'class':'idea-edit',
 			'alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 
 			'src':'<?php echo $HUB_FLM->getImagePath("edit.png"); ?>',
@@ -2725,7 +2731,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		};
 
 		var deletename = node.name;
-		var del = new Element('img',{		
+		var del = document.createElement('img',{		
 			'class':'idea-delete',
 			'alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 
 			'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 
@@ -2778,7 +2784,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 	<?php } ?>
 
 	if (node.urls && node.urls.length > 0) {
-		var menuButton = new Element('img',{
+		var menuButton = document.createElement('img',{
 			'class':'idea-url',
 			'alt':'>','width':'16','height':'16',
 			'src': '<?php echo $HUB_FLM->getImagePath("nodetypes/Default/reference-32x32.png"); ?>'
@@ -2811,7 +2817,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 			showBox('toolbardiv'+uniQ);
 		};
-		var toolbarDiv = new Element("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
+		var toolbarDiv = document.createElement("div", {'id':'toolbardiv'+uniQ, 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;border:1px solid gray;background:white'} );
 		toolbarDiv.onmouseout = function (event) {
 			hideBox('toolbardiv'+uniQ);
 		};
@@ -2822,9 +2828,9 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			if(node.urls[i].url){
 				var next = node.urls[i].url;
 				var url = next.url;
-				var weblink = new Element("a", {'style':'clear:both;float:left;margin-bottom:6px;font-size:10pt','target':'_blank'});
+				var weblink = document.createElement("a", {'style':'clear:both;float:left;margin-bottom:6px;font-size:10pt','target':'_blank'});
 				weblink.href = url;
-				weblink.appendChild(url);
+				weblink.innerHTML += url;
 				toolbarDiv.appendChild(weblink);
 			}
 		}
@@ -2850,7 +2856,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			voteCell.style.display = "table-cell";
 		}
 
-		var voteDiv = new Element("div", {
+		var voteDiv = document.createElement("div", {
 			'id':'editformvotedivargument'+uniQ,
 			'class':'editformvotedivargument',
 		});
@@ -2860,7 +2866,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		var toRoleName = getNodeTitleAntecedence(connection.torole[0].role.name, false);
 
 		// vote for
-		var voteforimg = new Element('img');
+		var voteforimg = document.createElement('img');
 		voteforimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-up-grey.png"); ?>');
 		voteforimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_FOR_ICON_ALT; ?>');
 		voteforimg.setAttribute('id', connection.connid+'for');
@@ -2943,7 +2949,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		}
 
 		// vote against
-		var voteagainstimg = new Element('img');
+		var voteagainstimg = document.createElement('img');
 		voteagainstimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-grey.png"); ?>');
 		voteagainstimg.setAttribute('alt', '<?php echo $LNG->NODE_VOTE_AGAINST_ICON_ALT; ?>');
 		voteagainstimg.setAttribute('id', connection.connid+'against');
@@ -3023,14 +3029,14 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {
+		var iuDiv = document.createElement("div", {
 			'id':'editformuserdivargument'+uniQ,
 			'class':'idea-user2',
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
+		var userimageThumb = document.createElement('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
 				});
 			if (breakout != "") {
@@ -3051,33 +3057,33 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 	/** ADD THE EDIT FORM FOR THE ARGUMENT **/
 	if (USER == user.userid && type == 'active') {
-		var editouterDiv = new Element("fieldset", {
+		var editouterDiv = document.createElement("fieldset", {
 			'id':'editformdivargument'+uniQ,
 			'class':'editformdivargument',
 			'style':'display:none;'
 		});
 
-		var legend = new Element("legend", { 'class':'edit-argument'});
-		var legendtitle = new Element("h2");
+		var legend = document.createElement("legend", { 'class':'edit-argument'});
+		var legendtitle = document.createElement("h2");
 		legendtitle.innerHTML += '<?php echo $LNG->EXPLORE_EDITING_ARGUMENT_TITLE; ?>';
 		legend.appendChild(legendtitle);
 		editouterDiv.appendChild(legend);
 
 		editCell.appendChild(editouterDiv);
 
-		var editDiv = new Element("div", {
+		var editDiv = document.createElement("div", {
 			'class':'edit-argument-form'
 		});
 		editouterDiv.appendChild(editDiv);
 
-		var editargumentid = new Element("input", {
+		var editargumentid = document.createElement("input", {
 			'name':'editargumentid',
 			'id':'editargumentid'+uniQ,
 			'type':'hidden',
 			'value':node.nodeid,
 		});
 		editDiv.appendChild(editargumentid);
-		var editargumentroleid = new Element("input", {
+		var editargumentroleid = document.createElement("input", {
 			'name':'editargumentnodetypeid',
 			'id':'editargumentnodetypeid'+uniQ,
 			'type':'hidden',
@@ -3085,11 +3091,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		});
 		editDiv.appendChild(editargumentroleid);
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'my-2',
 		});
 		editDiv.appendChild(rowDiv1);
-		var editargumentname = new Element("input", {
+		var editargumentname = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_TITLE; ?>',
 			'id':'editargumentname'+uniQ,
@@ -3099,11 +3105,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		});
 		rowDiv1.appendChild(editargumentname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'my-2',
 		});
 		editDiv.appendChild(rowDiv2);
-		var editargumentdesc = new Element("textarea", {
+		var editargumentdesc = document.createElement("textarea", {
 			'rows':'3',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->FORM_IDEA_LABEL_DESC; ?>',
@@ -3114,7 +3120,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		editargumentdesc.appendChild(node.description);
 		rowDiv2.appendChild(editargumentdesc);
 
-		var rowDiv = new Element("div", {
+		var rowDiv = document.createElement("div", {
 			'class':'my-2',
 			'id':'linksdivedit'+uniQ,
 		});
@@ -3131,7 +3137,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 
 					editDiv.appendChild(rowDiv);
 
-					var weblink = new Element("input", {
+					var weblink = document.createElement("input", {
 						'class':'form-control',
 						'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 						'id':'argumentlinkedit'+uniQ+i,
@@ -3146,7 +3152,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			}
 		} else {
 			rowDiv.linkcount = 0;
-			var weblink = new Element("input", {
+			var weblink = document.createElement("input", {
 				'class':'form-control',
 				'placeholder':'<?php echo $LNG->FORM_LINK_LABEL; ?>',
 				'id':'argumentlinkedit'+uniQ+0,
@@ -3158,9 +3164,9 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			rowDiv.appendChild(weblink);
 		}
 
-		var rowDiv5 = new Element("div", {'class':'my-3'});
+		var rowDiv5 = document.createElement("div", {'class':'my-3'});
 		editDiv.appendChild(rowDiv5);
-		var addURL = new Element("a", {
+		var addURL = document.createElement("a", {
 			'class':'hgrinput',
 			'href':'javascript:void(0)',
 		});
@@ -3170,11 +3176,11 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 		});
 		rowDiv5.appendChild(addURL);
 
-		var rowDiv6 = new Element("div", {
+		var rowDiv6 = document.createElement("div", {
 			'class':'formrowsm mb-3',
 		});
 		editDiv.appendChild(rowDiv6);
-		var editargumentsave = new Element("input", {
+		var editargumentsave = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-primary me-3',
 			'id':'editargument',
@@ -3190,7 +3196,7 @@ function renderArgumentNode(node, uniQ, role, includeUser, type, status){
 			showAddForm(node.parentuniq, innertype);
 		});
 		rowDiv6.appendChild(editargumentsave);
-		var editargumentcancel = new Element("input", {
+		var editargumentcancel = document.createElement("input", {
 			'type':'button',
 			'class':'btn btn-secondary',
 			'id':'cancelargument',
@@ -3269,7 +3275,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		}
 	}
 
-	var nodeTable = new Element('table', {'style':'width:100%'});
+	var nodeTable = document.createElement('table', {'style':'width:100%'});
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
 	//nodeTable.border = "1";
@@ -3291,14 +3297,14 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 	textCell.vAlign="top";
 	textCell.align="left";
 
-	var textDiv = new Element("div", {
+	var textDiv = document.createElement("div", {
 		'id':'textdivcomment'+uniQ,
 	});
 	textCell.appendChild(textDiv);
 
 	var title = node.name;
 
-	var textspan = new Element("span", {
+	var textspan = document.createElement("span", {
 		'id':'desctoggle'+uniQ,
 		'style':'font-weight:normal;font-size:11pt'
 	});
@@ -3306,7 +3312,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 	textDiv.appendChild(textspan);
 
 	if (USER == nodeuser.userid && type == "active") {
-		var editbutton = new Element("img", {
+		var editbutton = document.createElement("img", {
 			
 			'class':'imagebuttonfaded',
 			'style':'padding-left:10px',
@@ -3319,7 +3325,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		});
 
 		var deletename = node.name;
-		var del = new Element('img',{'style':'cursor: pointer;padding-left:5px;margin-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+		var del = document.createElement('img',{'style':'cursor: pointer;padding-left:5px;margin-top:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
 		del.addEventListener('click', function () {
 			var callback = function () {
 				document.getElementById('commentslist'+node.parentuniq).loaded = 'false';
@@ -3354,15 +3360,15 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 
 
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {
+		var iuDiv = document.createElement("div", {
 			'id':'editformuserdivcomment'+uniQ,
 			'class':'idea-user2',
 			'style':'float:left;display:block'
 		});
 
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
+		var userimageThumb = document.createElement('img',{'alt':nodeuser.name, 'src': nodeuser.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+nodeuser.userid
 				});
 			if (breakout != "") {
@@ -3383,19 +3389,19 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 
 	/** ADD THE EDIT FORM FOR THE IDEA **/
 	if (USER == user.userid && type == 'active') {
-		var editouterDiv = new Element("div", {
+		var editouterDiv = document.createElement("div", {
 			'id':'editformdivcomment'+uniQ,
 			'style':'clear:both;float:left;width:100%;display:none;border:1px solid #E8E8E8;'
 		});
 		editCell.appendChild(editouterDiv);
 
-		var editDiv = new Element("div", {
+		var editDiv = document.createElement("div", {
 			'style':'clear:both;float:left;margin:5px;'
 		});
 		editouterDiv.appendChild(editDiv);
 
 		/*
-		var editForm = new Element("form", {
+		var editForm = document.createElement("form", {
 			'name':'editformcomment'+uniQ,
 			'id':'editformcomment'+uniQ,
 			'action':'',
@@ -3406,14 +3412,14 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		editDiv.appendChild(editForm);
 		*/
 
-		var editideaid = new Element("input", {
+		var editideaid = document.createElement("input", {
 			'name':'editcommentid',
 			'id':'editcommentid'+uniQ,
 			'type':'hidden',
 			'value':node.nodeid,
 		});
 		editDiv.appendChild(editideaid);
-		var editidearole = new Element("input", {
+		var editidearole = document.createElement("input", {
 			'name':'editcommentnodetypeid',
 			'id':'editcommentnodetypeid'+uniQ,
 			'type':'hidden',
@@ -3421,12 +3427,12 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		});
 		editDiv.appendChild(editidearole);
 
-		var rowDiv1 = new Element("div", {
+		var rowDiv1 = document.createElement("div", {
 			'class':'formrowsm',
 			'style':'padding-top:0px;',
 		});
 		editDiv.appendChild(rowDiv1);
-		var editideaname = new Element("input", {
+		var editideaname = document.createElement("input", {
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_TITLE; ?>',
 			'id':'editcommentname'+uniQ,
@@ -3436,11 +3442,11 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 		});
 		rowDiv1.appendChild(editideaname);
 
-		var rowDiv2 = new Element("div", {
+		var rowDiv2 = document.createElement("div", {
 			'class':'formrowsm',
 		});
 		editDiv.appendChild(rowDiv2);
-		var editideadesc = new Element("textarea", {
+		var editideadesc = document.createElement("textarea", {
 			'rows':'3',
 			'class':'form-control',
 			'placeholder':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
@@ -3448,14 +3454,14 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 			'name':'editcommentdesc',
 			'aria-label':'<?php echo $LNG->IDEA_COMMENT_LABEL_DESC; ?>',
 		});
-		editideadesc.appendChild(node.description);
+		editideadesc.innerHTML += node.description;
 		rowDiv2.appendChild(editideadesc);
 
-		var rowDiv3 = new Element("div", {
+		var rowDiv3 = document.createElement("div", {
 			'class':'formrowsm',
 		});
 		editDiv.appendChild(rowDiv3);
-		var editideasave = new Element("input", {
+		var editideasave = document.createElement("input", {
 			'type':'button',
 			'class':'submitright',
 			'id':'editcomment',
@@ -3466,7 +3472,7 @@ function renderCommentNode(node, uniQ, role, includeUser, type, status){
 			editCommentNode(node, uniQ, 'comment', type, includeUser, status);
 		});
 		rowDiv3.appendChild(editideasave);
-		var editideacancel = new Element("input", {
+		var editideacancel = document.createElement("input", {
 			'type':'button',
 			'class':'submitright',
 			'id':'cancelcomment',
@@ -3520,7 +3526,7 @@ function renderListNode(node, uniQ, role, includeUser){
 
 	uniQ = node.nodeid + uniQ;
 
-	var nodeTable = new Element('table', {'class':'ideas-table'});
+	var nodeTable = document.createElement('table', {'class':'ideas-table'});
 	nodeTable.className = "toConnectionsTable";
 
 	var row = nodeTable.insertRow(-1);
@@ -3533,15 +3539,15 @@ function renderListNode(node, uniQ, role, includeUser){
 		userCell.title = dStr;
 
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {
+		var iuDiv = document.createElement("div", {
 			'id':'editformuserdivcomment'+uniQ,
 			'class':'idea-user2',
 			'style':'display:block'
 		});
 
-		var userimageThumb = new Element('img',{'alt':user.name, 'src': user.thumb});
+		var userimageThumb = document.createElement('img',{'alt':user.name, 'src': user.thumb});
 		if (type == "active") {
-			var imagelink = new Element('a', {
+			var imagelink = document.createElement('a', {
 				'href':URL_ROOT+"user.php?userid="+user.userid
 				});
 			if (breakout != "") {
@@ -3558,7 +3564,7 @@ function renderListNode(node, uniQ, role, includeUser){
 
 	var textCell = row.insertCell(-1);
 
-	var textDiv = new Element("div", {
+	var textDiv = document.createElement("div", {
 		'id':'textdivcomment'+uniQ,
 		'class':'textdivcomment',
 	});
@@ -3566,10 +3572,10 @@ function renderListNode(node, uniQ, role, includeUser){
 
 	var title = node.name;
 
-	var textspan = new Element("a", {
+	var textspan = document.createElement("a", {
 		'class':'textdivcomment-title'
 	});
-	textspan.appendChild(title);
+	textspan.innerHTML = title;
 	textspan.href = '<?php echo $CFG->homeAddress; ?>explore.php?id='+node.nodeid;
 	textDiv.appendChild(textspan);
 
@@ -3612,8 +3618,8 @@ function renderReportNode(node, uniQ, role){
 		breakout = " target='_blank'";
 	}
 	uniQ = node.nodeid + uniQ;
-	var iDiv = new Element("div", {'style':'clear:both;float:left; margin-bottom:10px'});
-	var itDiv = new Element("div", {'style':'float:left;'});
+	var iDiv = document.createElement("div", {'style':'clear:both;float:left; margin-bottom:10px'});
+	var itDiv = document.createElement("div", {'style':'float:left;'});
 
 	//get url for any saved image.
 	//add left side with icon image and node text.
@@ -3634,15 +3640,15 @@ function renderReportNode(node, uniQ, role){
 			if (originalurl == "") {
 				originalurl = node.imagethumbnail;
 			}
-			var iconlink = new Element('a', {
+			var iconlink = document.createElement('a', {
 				'href':originalurl,
 				'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
-			var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + node.imagethumbnail});
+			var nodeicon = document.createElement('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + node.imagethumbnail});
 			iconlink.appendChild(nodeicon);
 			itDiv.appendChild(iconlink);
 			itDiv.innerHTML += alttext+": ";
 		} else if (role.image != null && role.image != "") {
-			var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + role.image});
+			var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;margin-right:5px;','width':'16','height':'16','align':'left', 'src': URL_ROOT + role.image});
 			itDiv.appendChild(nodeicon);
 		} else {
 			itDiv.innerHTML += alttext+": ";
@@ -3862,8 +3868,7 @@ async function loadChildComments(section, nodeid, title, linktype, nodetype, foc
 
     if(section.visible() && (!section.loaded || section.loaded == 'false')){
 
-		section.innerHTML = "";
-    	section.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+   	section.innerHTML = getLoading("<?php echo $LNG->LOADING_ITEMS; ?>");
 
 		var reqUrl = SERVICE_ROOT + "&method=getconnectionsbynode&style=long&sort=ASC&orderby=date&status="+status;
 		reqUrl += "&filterlist="+linktype+"&filternodetypes="+nodetype+"&scope=all&start=0&max=-1&nodeid="+nodeid;
@@ -3937,8 +3942,7 @@ async function loadChildComments(section, nodeid, title, linktype, nodetype, foc
 			}
 
 			if (countArea) {
-				countarea.innerHTML = "";
-				countArea.appendChild(nodes.length);
+				countArea.innerHTML = nodes.length;
 			}
 			if (document.getElementById('ideacommentscount'+nodeid)) {
 				document.getElementById('ideacommentscount'+nodeid).innerHTML = nodes.length;
@@ -3979,8 +3983,7 @@ async function loadChildArguments(section, nodeid, title, linktype, nodetype, fo
 
     if(section.visible() && (!section.loaded || section.loaded == 'false')){
 
-		section.innerHTML = "";
-    	section.appendChild(getLoading("<?php echo $LNG->LOADING_ITEMS; ?>"));
+    	section.innerHTML = getLoading("<?php echo $LNG->LOADING_ITEMS; ?>");
 
 		var reqUrl = SERVICE_ROOT + "&method=getconnectionsbynode&style=long&sort=ASC&orderby=date&status="+status;
 		reqUrl += "&filterlist="+linktype+"&filternodetypes="+nodetype+"&scope=all&start=0&max=-1&nodeid="+nodeid;
@@ -4500,7 +4503,7 @@ async function unlemonNode(nodeid, issueid, handler) {
  */
 function getNodesFeed(nodeargs) {
 	var url = SERVICE_ROOT.replace('format=json','format=rss');
-	var args = Object.clone(nodeargs);
+	var args = { ...nodeargs};
 	args["start"] = 0;
 	args["style"] = 'long';
 	var fcontext = 'global';
@@ -4516,7 +4519,7 @@ function getNodesFeed(nodeargs) {
  */
 function getCommentNodesFeed(nodeargs) {
 	var url = SERVICE_ROOT.replace('format=json','format=rss');
-	var args = Object.clone(nodeargs);
+	var args = { ...nodeargs };
 	args["start"] = 0;
 	args["style"] = 'long';
 	var reqUrl = url+"&method=getconnectednodesby"+CONTEXT+"&"+Object.toQueryString(args);
@@ -4529,7 +4532,7 @@ function getCommentNodesFeed(nodeargs) {
 function printNodes(nodeargs, title) {
 	var url = SERVICE_ROOT;
 
-	var args = Object.clone(nodeargs);
+	var args = { ...nodeargs };
 	args["start"] = 0;
 	args["max"] = -1;
 	args["style"] = 'long';
@@ -4547,7 +4550,7 @@ function printNodes(nodeargs, title) {
 function printCommentNodes(nodeargs, title) {
 	var url = SERVICE_ROOT;
 
-	var args = Object.clone(nodeargs);
+	var args = { ...nodeargs };
 	args["start"] = 0;
 	args["max"] = -1;
 	args["style"] = 'long';
@@ -4586,7 +4589,7 @@ async function connectionVote(obj) {
 			const nodeagainstelements = document.querySelectorAll('#'+obj.connid+'against');
 			nodeagainstelements.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("thumb-down-empty.png"); ?>');
 			nodeagainstelements.setAttribute('title', nodeagainstelements.oldtitle);
-			nodeagainstelements.onclick' = function (){ connectionVote(this) };
+			nodeagainstelements.onclick = function (){ connectionVote(this) };
 		} else if (obj.vote == 'N') {
 			const voteagainstelements = document.querySelectorAll('#'+obj.connid+'voteagainst');
 			voteagainstelements.innerHTML = json.connection[0].negativevotes;
@@ -4736,7 +4739,7 @@ async function reportNodeSpamAlert(obj, nodetype, node) {
  */
 function createSpamMenuOption(node, nodetype) {
 
-	var spaming = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;font-size:10pt'} );
+	var spaming = document.createElement("span", {'class':'active','style':'margin-bottom:5px;clear:both;font-size:10pt'} );
 
 	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.innerHTML = "<?php echo $LNG->SPAM_REPORTED_TEXT; ?>";
@@ -4768,7 +4771,7 @@ function createSpamMenuOption(node, nodetype) {
  */
 function createSpamButton(node, nodetype) {
 	// Add spam icon
-	var spamimg = new Element('img', {'style':'padding-top:0px;padding-right:10px;padding-left:10px;'});
+	var spamimg = document.createElement('img', {'style':'padding-top:0px;padding-right:10px;padding-left:10px;'});
 	spamimg.classList.add('spamicon');
 	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
@@ -4927,14 +4930,14 @@ function drawVotesBar(container, uniQ, focalnodeid) {
 			}
 		}
 
-		var votebar = new Element("div", {'class':'progress'} );
+		var votebar = document.createElement("div", {'class':'progress'} );
 
 		if (positiveHint == 100) {
-			var bar = new Element("div", {'class':'barall', 'title':positiveHint+'% <?php echo $LNG->STATS_PRO_HINT_TEXT;?>', 'style':'width:'+positiveWidth+'%'} );
+			var bar = document.createElement("div", {'class':'barall', 'title':positiveHint+'% <?php echo $LNG->STATS_PRO_HINT_TEXT;?>', 'style':'width:'+positiveWidth+'%'} );
 			votebar.appendChild(bar);
 			bar.innerHTML += positiveHint+"%";
 		} else if (negativeHint == 100) {
-			var remainder = new Element("div", {'class':'remainderall','title':negativeHint+'%  <?php echo $LNG->STATS_CON_HINT_TEXT;?>', 'style':'width:'+negativeWidth+'%'} );
+			var remainder = document.createElement("div", {'class':'remainderall','title':negativeHint+'%  <?php echo $LNG->STATS_CON_HINT_TEXT;?>', 'style':'width:'+negativeWidth+'%'} );
 			votebar.appendChild(remainder);
 			remainder.innerHTML += negativeHint+"%";
 		} else {
@@ -4942,8 +4945,8 @@ function drawVotesBar(container, uniQ, focalnodeid) {
 			positiveWidth = positiveWidth-2;
 			negativeWidth = negativeWidth-2;
 
-			var bar = new Element("div", {'class':'bar', 'title':positiveHint+'%  <?php echo $LNG->STATS_PRO_HINT_TEXT;?>', 'style':'width:'+positiveWidth+'%'} );
-			var remainder = new Element("div", {'class':'remainder','title':negativeHint+'%  <?php echo $LNG->STATS_CON_HINT_TEXT;?>', 'style':'width:'+negativeWidth+'%'} );
+			var bar = document.createElement("div", {'class':'bar', 'title':positiveHint+'%  <?php echo $LNG->STATS_PRO_HINT_TEXT;?>', 'style':'width:'+positiveWidth+'%'} );
+			var remainder = document.createElement("div", {'class':'remainder','title':negativeHint+'%  <?php echo $LNG->STATS_CON_HINT_TEXT;?>', 'style':'width:'+negativeWidth+'%'} );
 			votebar.appendChild(bar);
 			votebar.appendChild(remainder);
 
@@ -5035,9 +5038,9 @@ function countDownIssueTimer(dt, container, message, withSeconds) {
 			if (seconds == 1) {
 				seclabel = '<?php echo $LNG->NODE_COUNTDOWN_SECOND; ?>';
 			}
-			container.innerHTML = "message+' <span style="padding-left:10px;">'+days+' '+daylabel+'</span><span style="padding-left:10px;">'+hours+hourlabel+'</span><span style="padding-left:10px;">'+minutes+minlabel+'</span><span style="padding-left:10px;">'+seconds+seclabel+'</span>';
+			container.innerHTML = message+' <span style="padding-left:10px;">'+days+' '+daylabel+'</span><span style="padding-left:10px;">'+hours+hourlabel+'</span><span style="padding-left:10px;">'+minutes+minlabel+'</span><span style="padding-left:10px;">'+seconds+seclabel+'</span>';
 		} else {
-			container.innerHTML = "message+' <span style="padding-left:10px;">'+days+' '+daylabel+'</span><span style="padding-left:10px;">'+hours+hourlabel+'</span><span style="padding-left:10px;">'+minutes+minlabel+'</span>';
+			container.innerHTML = message+' <span style="padding-left:10px;">'+days+' '+daylabel+'</span><span style="padding-left:10px;">'+hours+hourlabel+'</span><span style="padding-left:10px;">'+minutes+minlabel+'</span>';
 		}
 	}
 
@@ -5134,7 +5137,7 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 	if (countdowntableDiv) {
 		if (phase == DISCUSS_PHASE) {
 			if (mainheading) {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
 				var discussionend = 0;
 				if (node.properties[0] && node.properties[0].discussionend) {
@@ -5144,13 +5147,13 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 				}
 				countDownIssueTimer(discussionend.getTime(), bar, '<?php echo $LNG->NODE_COUNTDOWN_DISCUSSION_END; ?>', true);
 			} else {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
-				bar.appendChild("<?php echo $LNG->ISSUE_PHASE_CURRENT.': '.$LNG->ISSUE_PHASE_DISCUSS; ?>");
+				bar.innerHTML += "<?php echo $LNG->ISSUE_PHASE_CURRENT.': '.$LNG->ISSUE_PHASE_DISCUSS; ?>";
 			}
 		} else if (phase == REDUCE_PHASE) {
 			if (mainheading) {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
 				var lemonend = 0;
 				if (node.properties[0] && node.properties[0].lemoningend) {
@@ -5160,13 +5163,13 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 				}
 				countDownIssueTimer(lemonend.getTime(), bar, '<?php echo $LNG->NODE_COUNTDOWN_REDUCING_END; ?>', true);
 			} else {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
 				bar.innerHTML = "<?php echo $LNG->ISSUE_PHASE_CURRENT.': '.$LNG->ISSUE_PHASE_REDUCE; ?>";
 			}
 		} else if (phase == DECIDE_PHASE) {
 			if (mainheading) {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
 				var voteend = 0;
 				if (node.properties[0] && node.properties[0].votingend) {
@@ -5176,12 +5179,12 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 				}
 				countDownIssueTimer(voteend.getTime(), bar, '<?php echo $LNG->NODE_COUNTDOWN_DECIDING_END; ?>', true);
 			} else {
-				var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+				var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 				countdowntableDiv.appendChild(bar);
 				bar.innerHTML += "<?php echo $LNG->ISSUE_PHASE_CURRENT.': '.$LNG->ISSUE_PHASE_DECIDE; ?>";
 			}
 		} else if (phase == TIMED_VOTEON_PHASE) {
-			var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+			var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 			countdowntableDiv.appendChild(bar);
 			bar.innerHTML+="<?php echo $LNG->NODE_VOTE_COUNTDOWN_OPEN; ?>";
 		} else if (phase == TIMED_VOTEPENDING_PHASE) {
@@ -5191,11 +5194,11 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 			} else if (node.properties.votingstart) {
 				votestart = convertUTCTimeToLocalDate(node.properties.votingstart);
 			}
-			var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+			var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 			countdowntableDiv.appendChild(bar);
 			countDownIssueVoteTimer(votestart.getTime(), bar, "<?php echo $LNG->NODE_VOTE_COUNTDOWN_START; ?>");
 		} else if (phase == OPEN_VOTEON_PHASE || phase == OPEN_PHASE) {
-			var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+			var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 			countdowntableDiv.appendChild(bar);
 			bar.innerHTML = "<?php echo $LNG->NODE_VOTE_COUNTDOWN_OPEN; ?>";
 		} else if (phase == OPEN_VOTEPENDING_PHASE) {
@@ -5205,7 +5208,7 @@ function addIssuePhase(phase, node, countdowntableDiv, mainheading) {
 			} else if (node.properties.votingstart) {
 				votestart = convertUTCTimeToLocalDate(node.properties.votingstart);
 			}
-			var bar = new Element("div", {'class':'issuecountdownrightdiv'} );
+			var bar = document.createElement("div", {'class':'issuecountdownrightdiv'} );
 			countdowntableDiv.appendChild(bar);
 			countDownIssueVoteTimer(votestart.getTime(), bar, "<?php echo $LNG->NODE_VOTE_COUNTDOWN_START; ?>");
 		}
@@ -5240,12 +5243,12 @@ function displayConnectionNodes(objDiv, nodes,start,includeUser,uniqueid, childC
 		uniqueid = 'idea-list';
 	}
 
-	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	var lOL = document.createElement("ol", {'start':start, 'class':'idea-list-ol'});
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode){
-			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			var iUL = document.createElement("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
 			lOL.appendChild(iUL);
-			var blobDiv = new Element("div", {'class':'idea-blob-list'});
+			var blobDiv = document.createElement("div", {'class':'idea-blob-list'});
 			var blobNode = renderConnectionNode(nodes[i].cnode, uniqueid,nodes[i].cnode.role[0].role,includeUser, childCountSpan, parentrefreshhandler);
 			blobDiv.appendChild(blobNode);
 			iUL.appendChild(blobDiv);
@@ -5319,11 +5322,11 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		uniQ = node.nodeid + uniQ;
 	}
 
-	var iDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
-	var ihDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
-	var itDiv = new Element("div", {'class':'idea-title','style':'padding:0px;'});
+	var iDiv = document.createElement("div", {'style':'padding:0px;margin:0px;'});
+	var ihDiv = document.createElement("div", {'style':'padding:0px;margin:0px;'});
+	var itDiv = document.createElement("div", {'class':'idea-title','style':'padding:0px;'});
 
-	var nodeTable = new Element( 'table' );
+	var nodeTable = document.createElement( 'table' );
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
 	//nodeTable.border = "1";
@@ -5343,10 +5346,10 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 			arrowCell.align="left";
 
 			if (TREE_OPEN_ARRAY["desc"+uniQ] && TREE_OPEN_ARRAY["desc"+uniQ] == true) {
-				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>'});
+				expandArrow = document.createElement('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>'});
 				expandArrow.uniqueid = uniQ;
 			} else {
-				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>'});
+				expandArrow = document.createElement('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>'});
 				expandArrow.uniqueid = uniQ;
 			}
 			expandArrow.onclick = function (){ toggleItem("treedesc"+uniQ,uniQ); };
@@ -5357,14 +5360,14 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		//lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
 		lineCell.width="15px;"
 		lineCell.vAlign="middle";
-		var lineDiv = new Element('div',{'class':'graylinewide', 'style':'width:100%;'});
+		var lineDiv = document.createElement('div',{'class':'graylinewide', 'style':'width:100%;'});
 		lineCell.appendChild(lineDiv);
 	}
 
 	var textCell = row.insertCell(-1);
 	textCell.vAlign="middle";
 	textCell.align="left";
-	var textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell', 'class':'whiteborder', 'style':'padding:3px;'});
+	var textCellDiv = document.createElement("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell', 'class':'whiteborder', 'style':'padding:3px;'});
 	textCellDiv.nodeid = node.nodeid;
 	textCellDiv.focalnodeid = node.focalnodeid;
 	textCellDiv.nodetype = role.name;
@@ -5397,7 +5400,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 			backcolor = 'plainback';
 		} 
 
-		textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell','class':bordercolor+' '+backcolor, 'style':'padding:3px;'});
+		textCellDiv = document.createElement("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell','class':bordercolor+' '+backcolor, 'style':'padding:3px;'});
 		textCellDiv.nodeid = node.nodeid;
 		textCellDiv.nodetype = role.name;
 		textCellDiv.focalnodeid = node.focalnodeid;
@@ -5421,7 +5424,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	}
 
 	// ADD THE NODE ICON
-	var nodeArea = new Element("a", {'class':'itemtext', 'name':'nodeArea', 'style':'padding-top:2px;','title':dStr} );
+	var nodeArea = document.createElement("a", {'class':'itemtext', 'name':'nodeArea', 'style':'padding-top:2px;','title':dStr} );
 	nodeArea.nodeid = node.nodeid;
 	if (typeof node.focalnodeid != 'undefined') {
 		nodeArea.focalnodeid = node.focalnodeid;
@@ -5429,7 +5432,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (connrole.image != null && connrole.image != "") {
-		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'height:24px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + connrole.image});
+		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'style':'height:24px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + connrole.image});
 		nodeArea.appendChild(nodeicon);
 	} else {
 		nodeArea.innerHTML += alttext+": ";
@@ -5456,11 +5459,11 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 			|| role.name == "Issue" || role.name == "Solution" || role.name == "Idea"
 			|| role.name == "Pro"  || role.name == "Con" || role.name == "Comment") {
 
-			var childCount = new Element('div',{'style':' margin-left:5px;margin-right:5px;margin-top:2px;', 'title':'<?php echo $LNG->NODE_DEBATE_TREE_COUNT_HINT; ?>'});
+			var childCount = document.createElement('div',{'style':' margin-left:5px;margin-right:5px;margin-top:2px;', 'title':'<?php echo $LNG->NODE_DEBATE_TREE_COUNT_HINT; ?>'});
 			childCount.innerHTML += "(";
-			childCountSpan = new Element('span',{'name':'toptreecount'});
+			childCountSpan = document.createElement('span',{'name':'toptreecount'});
 			childCountSpan.id = 'toptreecount'+uniQ;
-			childCountSpan.appendChild(1);
+			childCountSpan.innerHTML += '1';
 			childCountSpan.uniqueid = uniQ;
 			childCount.appendChild(childCountSpan);
 			childCount.innerHTML += ")";
@@ -5470,11 +5473,11 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	
 	ihDiv.appendChild(itDiv);
 
-	var iwDiv = new Element("div", {'class':'idea-wrapper'});
-	var imDiv = new Element("div", {'class':'idea-main'});
-	var idDiv = new Element("div", {'class':'idea-detail'});
+	var iwDiv = document.createElement("div", {'class':'idea-wrapper'});
+	var imDiv = document.createElement("div", {'class':'idea-main'});
+	var idDiv = document.createElement("div", {'class':'idea-detail'});
 
-	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
+	var expandDiv = document.createElement("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
 
 	if (node.children && node.children.length > 0) {
 		if (expandArrow && expandArrow != null) {
@@ -5492,7 +5495,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	 * This is for the rollover hint around the vertical line - background image 21px wide 1px line in middle
 	 * This was the only way to get it to work in all four main browsers!!!!!
    	 **/
-	var expandTable = new Element( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
+	var expandTable = document.createElement( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
 	expandTable.height="100%";
 	var expandrow = expandTable.insertRow(-1);
 	expandrow.style.height="100%";
@@ -5528,9 +5531,9 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	}
 
 	/** EXPAND DIV **/
-	var innerexpandDiv = new Element("div", {'id':'desc'+uniQ,'class':'ideadata', 'style':'padding-left:20px;color:Gray;display:none;'} );
+	var innerexpandDiv = document.createElement("div", {'id':'desc'+uniQ,'class':'ideadata', 'style':'padding-left:20px;color:Gray;display:none;'} );
 
-	var nodeTable = new Element( 'table' );
+	var nodeTable = document.createElement( 'table' );
 	nodeTable.className = "toConnectionsTable";
 	nodeTable.width="100%";
 
@@ -5542,16 +5545,16 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	nextCell.align="left";
 
 	// USER ICON NAME AND CREATIONS DATES
-	var userbar = new Element("div", {'style':'clear:both;margin-bottom:5px;'} );
+	var userbar = document.createElement("div", {'style':'clear:both;margin-bottom:5px;'} );
 	if (includeUser == true) {
 		// Add right side with user image and date below
-		var iuDiv = new Element("div", {'class':'idea-user2', 'style':'clear:both;'});
-		var userimageThumb = new Element('img',{'alt':nodeuser.name, 'title': nodeuser.name, 'style':'padding-right:5px;', 'border':'0','src': nodeuser.thumb});
+		var iuDiv = document.createElement("div", {'class':'idea-user2', 'style':'clear:both;'});
+		var userimageThumb = document.createElement('img',{'alt':nodeuser.name, 'title': nodeuser.name, 'style':'padding-right:5px;', 'border':'0','src': nodeuser.thumb});
 		iuDiv.appendChild(userimageThumb)
 		userbar.appendChild(iuDiv);
 	}
 
-	var iuDiv = new Element("div", {'style':''});
+	var iuDiv = document.createElement("div", {'style':''});
 
 	var dStr = "";
 	var cDate = new Date(node.creationdate*1000);
@@ -5565,7 +5568,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 
 	// image
 	if (node.imagethumbnail != null && node.imagethumbnail != "") {
-		var imageDiv = new Element("div");
+		var imageDiv = document.createElement("div");
 
 		var originalurl = "";
 		if(node.urls && node.urls.length > 0){
@@ -5580,10 +5583,10 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		if (originalurl == "") {
 			originalurl = node.imagethumbnail;
 		}
-		var iconlink = new Element('a', {
+		var iconlink = document.createElement('a', {
 			'href':originalurl,
 			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
-		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'clear:both;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+		var nodeicon = document.createElement('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'clear:both;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
 		iconlink.appendChild(nodeicon);
 		imageDiv.appendChild(iconlink);
 		const row = nodeTable.insertRow(-1);
@@ -5593,8 +5596,8 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		nextCell.appendChild(imageDiv);
 		//nodeArea.innerHTML += alttext+": ";
 	} else if (node.image != null && node.image != "") {
-		var imageDiv = new Element("div");
-		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'clear:both;padding-right:5px;','align':'left','border':'0','src': node.image});
+		var imageDiv = document.createElement("div");
+		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'style':'clear:both;padding-right:5px;','align':'left','border':'0','src': node.image});
 		imageDiv.appendChild(nodeicon);
 		const row = nodeTable.insertRow(-1);
 		const nextCell = row.insertCell(-1);
@@ -5609,12 +5612,12 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
  	// add urls
 
 	if (node.urls && node.urls.length > 0) {
-		var iUL = new Element("ul", {});
+		var iUL = document.createElement("ul", {});
 		for (var i=0 ; i< node.urls.length; i++){
 
 			innerexpandDiv.innerHTML += '<span style="margin-right:5px;"><b><?php echo $LNG->NODE_URL_HEADING; ?></b></span>';
-			var link = new Element("a", {'href':node.urls[i].url.url,'target':'_blank','title':'<?php echo $LNG->NODE_RESOURCE_LINK_HINT; ?>'} );
-			link.appendChild(node.urls[i].url.title);
+			var link = document.createElement("a", {'href':node.urls[i].url.url,'target':'_blank','title':'<?php echo $LNG->NODE_RESOURCE_LINK_HINT; ?>'} );
+			link.innerHTML = node.urls[i].url.title;
 			innerexpandDiv.appendChild(link);
 		}
 		innerexpandDiv.appendChild(iUL);
@@ -5637,7 +5640,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	if (nodes != undefined && nodes.length > 0) {
 
 		childCell.innerHTML = '<div style="clear:both;"></div>';
-		var childrenDiv = new Element("div", {'id':'children'+uniQ, 'style':'clear:both;margin-left:0px;padding-left:0px;margin-bottom:5px;color:Gray;display:block;'} );
+		var childrenDiv = document.createElement("div", {'id':'children'+uniQ, 'style':'clear:both;margin-left:0px;padding-left:0px;margin-bottom:5px;color:Gray;display:block;'} );
 		childCell.appendChild(childrenDiv);
 		childCell.innerHTML += '<div style="clear:both;"></div>';
 		if (expandArrow) {

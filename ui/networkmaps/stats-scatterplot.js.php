@@ -33,46 +33,66 @@ function loadScatterPlot(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("scatterplot-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("scatterplot-div").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE VIS ****/
-	var scatterplotdiv = new Element('div', {'id':'scatterplotdiv', 'style': 'clear:both;float:left;'});
+	var scatterplotdiv = document.createElement('div');
+	scatterplotdiv.id = 'scatterplotdiv';
+	scatterplotdiv.style = 'clear:both;float:left;';
 	var width = 650;
 	var height = 650;
 
 	scatterplotdiv.style.width = width+"px";
 	scatterplotdiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'scatterplotmessage','class':'toolbitem','style':'width:580px;float:left;clear:both;font-weight:bold'});
-	var outerDiv = new Element('div', {'id':'scatterplotdiv-outer', 'style': 'float:left;overflow:hidden'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'scatterplotmessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'width:580px;float:left;clear:both;font-weight:bold';
 
-	var detailsarea = new Element("div", {'id':'scatterplotdetails','class':'boxshadowsquare','style':'padding:5px;float:left;width:250px;height:590px;margin-left:30px;margin-top:25px;'});
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'scatterplotdiv-outer';
+	outerDiv.style = 'float:left;overflow:hidden';
 
-	var detailsareatitlearea = new Element("div", {'id':'nodelistboxtitle','style':'float:left;width:99%;height:20px;padding:5px;'});
-	var detailsareatitle = new Element("h2");
-	detailsareatitle.insert('<?php echo $LNG->STATS_SCATTERPLOT_DETAILS; ?>');
-	detailsareatitlearea.insert(detailsareatitle);
-	detailsarea.insert(detailsareatitlearea);
+	var detailsarea = document.createElement("div");
+	detailsarea.id = 'scatterplotdetails';
+	detailsarea.class = 'boxshadowsquare';
+	detailsarea.style = 'padding:5px;float:left;width:250px;height:590px;margin-left:30px;margin-top:25px;';
 
-	var detailsareastats = new Element("div", {'id':'nodelistboxstats','style':'float:left;width:99%;padding:5px;'});
-	detailsarea.insert(detailsareastats);
+	var detailsareatitlearea = document.createElement("div");
+	detailsareatitlearea.id = 'nodelistboxtitle';
+	detailsareatitlearea.style = 'float:left;width:99%;height:20px;padding:5px;';
+	var detailsareatitle = document.createElement("h2");
+	detailsareatitle.innerHTML += '<?php echo $LNG->STATS_SCATTERPLOT_DETAILS; ?>';
+	detailsareatitlearea.appendChild(detailsareatitle);
+	detailsarea.appendChild(detailsareatitlearea);
 
-	var boxarea = new Element("div", {'style':'clear:both;float:left;width:100%;height:540px;overflow-y:auto;overflow-x:none'});
-	var boxarealist = new Element("div", {'id':'nodelistbox','style':'clear:both;float:left;padding:5px;padding-top:0px;'});
-	boxarea.insert(boxarealist);
-	detailsarea.insert(boxarea);
+	var detailsareastats = document.createElement("div");
+	detailsareastats.id = 'nodelistboxstats';
+	detailsareastats.style = 'float:left;width:99%;padding:5px;';
+	detailsarea.appendChild(detailsareastats);
 
-	var defaulttext = new Element("div", {'style':'float:left;margin-top:15px;'});
-	defaulttext.insert('<?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?>');
-	boxarealist.insert(defaulttext);
+	var boxarea = document.createElement("div");
+	boxarea.style = 'clear:both;float:left;width:100%;height:540px;overflow-y:auto;overflow-x:none';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(scatterplotdiv);
-	outerDiv.insert(detailsarea);
+	var boxarealist = document.createElement("div");
+	boxarealist.id = 'nodelistbox';
+	boxarealist.style = 'clear:both;float:left;padding:5px;padding-top:0px;';
+	boxarea.appendChild(boxarealist);
+	detailsarea.appendChild(boxarea);
 
-	document.getElementById("scatterplot-div").insert(outerDiv);
+	var defaulttext = document.createElement("div");
+	defaulttext.style = 'float:left;margin-top:15px;';
+	defaulttext.innerHTML = '<?php echo $LNG->STATS_SCATTERPLOT_DETAILS_CLICK; ?>';
+	boxarealist.appendChild(defaulttext);
+
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(scatterplotdiv);
+	outerDiv.appendChild(detailsarea);
+
+	document.getElementById("scatterplot-div").appendChild(outerDiv);
 
 	loadScatterPlotData(messagearea, scatterplotdiv, width);
 }

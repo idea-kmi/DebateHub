@@ -115,17 +115,17 @@
 				args['filternodetypes'] = "Issue,Solution,Idea,"+EVIDENCE_TYPES;
 
 				<?php if ($CFG->hasRss) { ?>
-				var feed = new Element("img",
-					{'src': '<?php echo $HUB_FLM->getImagePath("feed-icon-20x20.png"); ?>',
-					'title': '<?php echo $LNG->HEADER_RSS_FEED_ICON_HINT; ?>',
-					'alt': '<?php echo $LNG->HEADER_RSS_FEED_ICON_ALT; ?>',
-					'class': 'active',
-					'style': 'padding-top:0px;'});
+				var feed = document.createElement("img");
+				feed.src = '<?php echo $HUB_FLM->getImagePath("feed-icon-20x20.png"); ?>';
+				feed.title = '<?php echo $LNG->HEADER_RSS_FEED_ICON_HINT; ?>';
+				feed.alt = '<?php echo $LNG->HEADER_RSS_FEED_ICON_ALT; ?>';
+				feed.className = 'active';
+				feed.style = 'padding-top:0px;';
 				feed.addEventListener("click", function() {	
 					getNodesFeed(args);
 				});
 				const rssbuttonfred = document.getElementById('rssbuttonfred');
-				rssbuttonfred.insert(feed);
+				rssbuttonfred.appendChild(feed);
 				<?php } ?>
 			}
 			window.onload = init;

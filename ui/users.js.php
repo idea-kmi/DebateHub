@@ -30,34 +30,34 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
  * Javascript functions for drawing a list of users
  */
 function displayUsers(objDiv,users,start){
-	var lOL = new Element("ol", {'class':'user-list-ol user-list-tab-view'});
+	var lOL = document.createElement("ol", {'class':'user-list-ol user-list-tab-view'});
 	for(var i=0; i< users.length; i++){
 		if(users[i].user){
-			var iUL = new Element("li", {'id':users[i].user.userid, 'class':'user-list-li'});
-			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'class':'user-blob'});
+			var iUL = document.createElement("li", {'id':users[i].user.userid, 'class':'user-list-li'});
+			lOL.appendChild(iUL);
+			var blobDiv = document.createElement("div", {'class':'user-blob'});
 			var blobUser = renderUser(users[i].user);
-			blobDiv.insert(blobUser);
-			iUL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			iUL.appendChild(blobDiv);
 		}
 	}
-	objDiv.insert(lOL);
+	objDiv.appendChild(lOL);
 }
 
 /**
  * Javascript functions for drawing a list of groups
  */
 function displayGroups(objDiv,groups,start, mainheading, cropdesc){
-	var lOL = new Element("div", {'start':start, 'class':'groups-div'});
+	var lOL = document.createElement("div", {'start':start, 'class':'groups-div'});
 	for(var i=0; i< groups.length; i++){
 		if(groups[i].group){
-			var blobDiv = new Element("div", {'class':'d-inline-block m-2'});
+			var blobDiv = document.createElement("div", {'class':'d-inline-block m-2'});
 			var blobUser = renderGroup(groups[i].group, mainheading, cropdesc);
-			blobDiv.insert(blobUser);
-			lOL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			lOL.appendChild(blobDiv);
 		}
 	}
-	objDiv.insert(lOL);
+	objDiv.appendChild(lOL);
 }
 
 
@@ -66,50 +66,50 @@ function displayGroups(objDiv,groups,start, mainheading, cropdesc){
  * Used for not logged in homepage items
  */
 function displayHomeGroups(objDiv,groups,start, width, height){
-	var lOL = new Element("div", {'start':start, 'class':'home-groups'});
+	var lOL = document.createElement("div", {'start':start, 'class':'home-groups'});
 	for(var i=0; i< groups.length; i++){
 		if(groups[i].group){
-			var blobDiv = new Element("div", {'class':'d-inline-flex m-2'});
+			var blobDiv = document.createElement("div", {'class':'d-inline-flex m-2'});
 			var blobUser = renderHomeGroup(groups[i].group, width, height);
-			blobDiv.insert(blobUser);
-			lOL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			lOL.appendChild(blobDiv);
 		}
 	}
-	objDiv.insert(lOL);
+	objDiv.appendChild(lOL);
 }
 
 /**
  * Javascript functions for drawing a list of my groups
  */
 function displayMyGroups(objDiv,groups,start){
-	var lOL = new Element("div", {'start':start, 'class':'groups-div'});
+	var lOL = document.createElement("div", {'start':start, 'class':'groups-div'});
 	for(var i=0; i< groups.length; i++){
 		if(groups[i].group){
-			var blobDiv = new Element("div", {'class':'d-inline-block m-2'});
+			var blobDiv = document.createElement("div", {'class':'d-inline-block m-2'});
 			var blobUser = renderMyGroup(groups[i].group);
-			blobDiv.insert(blobUser);
-			lOL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			lOL.appendChild(blobDiv);
 		}
 	}
-	objDiv.insert(lOL);
+	objDiv.appendChild(lOL);
 }
 
 /**
  * Javascript functions for drawing list of users in a widget
  */
 function displayWidgetUsers(objDiv,users,start){
-	var lOL = new Element("ol", {'class':'user-list-ol user-dashboard-view'});
+	var lOL = document.createElement("ol", {'class':'user-list-ol user-dashboard-view'});
 	for(var i=0; i< users.length; i++){
 		if(users[i].user){
-			var iUL = new Element("li", {'id':users[i].user.userid, 'class':'user-list-li'});
-			lOL.insert(iUL);
-			var blobDiv = new Element("div", {'class':'user-blob'});
+			var iUL = document.createElement("li", {'id':users[i].user.userid, 'class':'user-list-li'});
+			lOL.appendChild(iUL);
+			var blobDiv = document.createElement("div", {'class':'user-blob'});
 			var blobUser = renderWidgetUser(users[i].user);
-			blobDiv.insert(blobUser);
-			iUL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			iUL.appendChild(blobDiv);
 		}
 	}
-	objDiv.insert(lOL);
+	objDiv.appendChild(lOL);
 }
 
 /**
@@ -118,12 +118,12 @@ function displayWidgetUsers(objDiv,users,start){
 function displayReportUsers(objDiv,users,start){
 	for(var i=0; i< users.length; i++){
 		if(users[i].user){
-			var iUL = new Element("span", {'id':users[i].user.userid, 'class':'idea-list-li'});
-			objDiv.insert(iUL);
-			var blobDiv = new Element("div", {'class':' '});
+			var iUL = document.createElement("span", {'id':users[i].user.userid, 'class':'idea-list-li'});
+			objDiv.appendChild(iUL);
+			var blobDiv = document.createElement("div", {'class':' '});
 			var blobUser = renderReportUser(users[i].user);
-			blobDiv.insert(blobUser);
-			iUL.insert(blobDiv);
+			blobDiv.appendChild(blobUser);
+			iUL.appendChild(blobDiv);
 		}
 	}
 }
@@ -141,8 +141,7 @@ async function followUser(obj) {
 		}	
 		obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
 		obj.setAttribute('title', '<?php echo $LNG->USERS_UNFOLLOW; ?>');
-		obj.onclick = function() {
-		unfollowUser(this);
+		obj.onclick = function() { unfollowUser(this); };
 	} catch (err) {
 		alert("There was an error: "+err.message);
 		console.log(err)
@@ -343,66 +342,66 @@ function createUserSpamButton(user) {
  */
 function renderUser(user){
 
-	var uDiv = new Element("div",{id:'context', "class": "row"});
+	var uDiv = document.createElement("div",{id:'context', "class": "row"});
 
-	var nodetableDiv = new Element("div", {'class':' '});
-	uDiv.insert(nodetableDiv);
+	var nodetableDiv = document.createElement("div", {'class':' '});
+	uDiv.appendChild(nodetableDiv);
 
-	var nodeTable = new Element( 'div', {'class':'nodetable boxborder boxbackground'} );
+	var nodeTable = document.createElement( 'div', {'class':'nodetable boxborder boxbackground'} );
 
-	nodetableDiv.insert(nodeTable);
+	nodetableDiv.appendChild(nodeTable);
 
-	var row = new Element( 'div', {'class':'nodetablerow'} );
-	nodeTable.insert(row);
+	var row = document.createElement( 'div', {'class':'nodetablerow'} );
+	nodeTable.appendChild(row);
 
-	var imageCell = new Element( 'div', {'class':'nodetablecelltop'} );
-	row.insert(imageCell);
+	var imageCell = document.createElement( 'div', {'class':'nodetablecelltop'} );
+	row.appendChild(imageCell);
 
-	var imageDiv = new Element("div");
+	var imageDiv = document.createElement("div");
 
-	var imageObj = new Element('img',{'alt':user.name, 'title': user.name, 'src': user.photo});
+	var imageObj = document.createElement('img',{'alt':user.name, 'title': user.name, 'src': user.photo});
 
-	var imagelink = new Element('a');
+	var imagelink = document.createElement('a');
 	if (user.searchid && user.searchid != "") {
 		imagelink.href = URL_ROOT+"user.php?userid="+user.userid+"&sid="+user.searchid;
 	} else {
 		imagelink.href = URL_ROOT+"user.php?userid="+user.userid;
 	}
 
-	imagelink.insert(imageObj);
-	imageDiv.insert(imagelink);
-	imageCell.insert(imageDiv);
+	imagelink.appendChild(imageObj);
+	imageDiv.appendChild(imagelink);
+	imageCell.appendChild(imageDiv);
 	imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 
-	var textCell = new Element( 'div', {'class':'nodetablecelltop'} );
-	row.insert(textCell);
+	var textCell = document.createElement( 'div', {'class':'nodetablecelltop'} );
+	row.appendChild(textCell);
 
-	var textDiv = new Element('div', {'class':' '});
-	textCell.insert(textDiv);
+	var textDiv = document.createElement('div', {'class':' '});
+	textCell.appendChild(textDiv);
 
-	var uiDiv = new Element("div",{id:'contextinfo', "class":"col contextinfo"});
+	var uiDiv = document.createElement("div",{id:'contextinfo', "class":"col contextinfo"});
 	
 	if (user.searchid && user.searchid != "") {
-		uiDiv.insert("<b><a href='user.php?userid="+ user.userid +"&sid="+user.searchid+"'>" + user.name + "</a></b>");
+		uiDiv.innerHTML += "<b><a href='user.php?userid="+ user.userid +"&sid="+user.searchid+"'>" + user.name + "</a></b>";
 	} else {
-		uiDiv.insert("<b><a href='user.php?userid="+ user.userid +"'>" + user.name + "</a></b>");
+		uiDiv.innerHTML += "<b><a href='user.php?userid="+ user.userid +"'>" + user.name + "</a></b>";
 	}
 
 	<?php if ($CFG->SPAM_ALERT_ON) { ?>
 	// Add spam icon
-	var spamDiv = new Element("div");
-	spamDiv.insert(createUserSpamButton(user));
-	imageCell.insert(spamDiv);
+	var spamDiv = document.createElement("div");
+	spamDiv.appendChild(createUserSpamButton(user));
+	imageCell.appendChild(spamDiv);
 	<?php } ?>
 
 	if(USER != ""){
-		var followDiv = new Element("div");
+		var followDiv = document.createElement("div");
 		var followbutton = document.createElement('img');
 		followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 		followbutton.setAttribute('alt', '<?php echo $LNG->USERS_FOLLOW_ICON_ALT; ?>');
 		followbutton.setAttribute('id','follow'+user.userid);
 		followbutton.userid = user.userid;
-		followDiv.insert(followbutton);
+		followDiv.appendChild(followbutton);
 		if (user.userfollow && user.userfollow == "Y") {
 			follow.onclick =  function (){ unfollowUser(this) };
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("following.png"); ?>');
@@ -412,7 +411,7 @@ function renderUser(user){
 			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
 			followbutton.setAttribute('title', '<?php echo $LNG->USERS_FOLLOW; ?>');
 		}
-		uiDiv.insert(followDiv);
+		uiDiv.appendChild(followDiv);
 	}
 
 	var str = "<div>";
@@ -430,16 +429,16 @@ function renderUser(user){
 		var cDate = new Date(user.lastlogin*1000);
 		str += "<span class=\"user-last-login\"><b><?php echo $LNG->USERS_LAST_LOGIN; ?> </b>"+cDate.format(TIME_FORMAT)+"</span>";
 	}
-	uiDiv.insert(str+"</div>");
+	uiDiv.innerHTML += str+"</div>";
 
 	if(user.description != ""){
-		uiDiv.insert("<div>"+user.description+"</div>");
+		uiDiv.innerHTML += "<div>"+user.description+"</div>";
 	}
 	if(user.website != ""){
-        uiDiv.insert("<div><a href='"+user.website+"' target='_blank'>"+user.website+"</a></div>");
+        uiDiv.innerHTML += "<div><a href='"+user.website+"' target='_blank'>"+user.website+"</a></div>";
     }
 
-	textCell.insert(uiDiv);
+	textCell.appendChild(uiDiv);
 	return uDiv;
 }
 
@@ -448,51 +447,51 @@ function renderUser(user){
  */
 function renderGroup(group, mainheading, cropdesc){
 
-	var iDiv = new Element("div", {'class':'card border-0 my-2'});
+	var iDiv = document.createElement("div", {'class':'card border-0 my-2'});
 
-	var nodetableDiv = new Element("div", {'class':'card-body pb-1'});
-	var nodeTable = new Element( 'div', {'class':'nodetableGroup border border-2'} );
+	var nodetableDiv = document.createElement("div", {'class':'card-body pb-1'});
+	var nodeTable = document.createElement( 'div', {'class':'nodetableGroup border border-2'} );
 
-	nodetableDiv.insert(nodeTable);
+	nodetableDiv.appendChild(nodeTable);
 
-	var row = new Element( 'div', {'class':'d-flex flex-row'} );
-	nodeTable.insert(row);
+	var row = document.createElement( 'div', {'class':'d-flex flex-row'} );
+	nodeTable.appendChild(row);
 
-	var imageCell = new Element( 'div', {'class':'p-2'} );
-	row.insert(imageCell);
+	var imageCell = document.createElement( 'div', {'class':'p-2'} );
+	row.appendChild(imageCell);
 
-	var imageObj = new Element('img',{'alt':group.name, 'title': group.name, 'src': group.photo});
-	var imagelink = new Element('a', {'href':URL_ROOT+"group.php?groupid="+group.groupid });
+	var imageObj = document.createElement('img',{'alt':group.name, 'title': group.name, 'src': group.photo});
+	var imagelink = document.createElement('a', {'href':URL_ROOT+"group.php?groupid="+group.groupid });
 
-	imagelink.insert(imageObj);
-	imageCell.insert(imagelink);
+	imagelink.appendChild(imageObj);
+	imageCell.appendChild(imagelink);
 
-	var textCell = new Element( 'div', {'class':'p-2'} );
-	row.insert(textCell);
+	var textCell = document.createElement( 'div', {'class':'p-2'} );
+	row.appendChild(textCell);
 
 	var title = group.name;
 	var description = group.description;
 
 	if (mainheading) {
-		var exploreButton = new Element('h1');
-		textCell.insert(exploreButton);
-		exploreButton.insert(title);
+		var exploreButton = document.createElement('h1');
+		textCell.appendChild(exploreButton);
+		exploreButton.innerHTML += title;
 	} else {
-		var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'class':''});
+		var exploreButton = document.createElement('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'class':''});
 		if (group.searchid && group.searchid != "") {
 			exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid+"&sid="+group.searchid;
 		} else {
 			exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid;
 		}
-		exploreButton.insert(title);
-		textCell.insert(exploreButton);
+		exploreButton.innerHTML += title;
+		textCell.appendChild(exploreButton);
 	}
 	
 	if (description != "") {
 		if (mainheading) {
-			var textDivinner = new Element('div', {'class':' '});
-			textDivinner.insert(description);
-			textCell.insert(textDivinner);
+			var textDivinner = document.createElement('div', {'class':' '});
+			textDivinner.innerHTMl = description;
+			textCell.appendChild(textDivinner);
 		} else {
 			if (description != "" && title.length <=80) {
 				var plaindesc = removeHTMLTags(description);
@@ -501,9 +500,9 @@ function renderGroup(group, mainheading, cropdesc){
 				if (plaindesc && plaindesc.length > croplength) {
 					hint = plaindesc;
 					var plaincrop = plaindesc.substr(0,croplength)+"...";
-					textCell.insert('<p title="'+hint+'">'+plaincrop+'</p>');
+					textCell.innerHTML += '<p title="'+hint+'">'+plaincrop+'</p>';
 				} else {
-					textCell.insert('<p>'+plaindesc+'</p>');
+					textCell.innerHTML += '<p>'+plaindesc+'</p>';
 				}
 			}
 		}			
@@ -511,76 +510,76 @@ function renderGroup(group, mainheading, cropdesc){
 	
 	// Show any associated url on the main group page only.
 	if(mainheading && group.website != ""){
-		textCell.insert("<div style='float:left;margin-bottom:5px;'><a href='"+group.website+"' target='_blank' style='word-wrap:break-word;overflow-wrap: break-word;'>"+group.website+"</a></div>");
+		textCell.innerHTML += "<div style='float:left;margin-bottom:5px;'><a href='"+group.website+"' target='_blank' style='word-wrap:break-word;overflow-wrap: break-word;'>"+group.website+"</a></div>";
     }
 
-	var rowToolbar = new Element( 'div', {'class':'nodetablerow'} );
-	nodeTable.insert(rowToolbar);
+	var rowToolbar = document.createElement( 'div', {'class':'nodetablerow'} );
+	nodeTable.appendChild(rowToolbar);
 
-	var toolbarCell = new Element( 'div', {'class':'nodetablecellbottom'} );
-	rowToolbar.insert(toolbarCell);
+	var toolbarCell = document.createElement( 'div', {'class':'nodetablecellbottom'} );
+	rowToolbar.appendChild(toolbarCell);
 
-	var userDiv = new Element("div", {'class':'nodetablecellbottom'} );
-	toolbarCell.insert(userDiv);
+	var userDiv = document.createElement("div", {'class':'nodetablecellbottom'} );
+	toolbarCell.appendChild(userDiv);
 
-	var toolbarDivOuter = new Element("div", {'class':'nodetablecellbottom'} );
-	rowToolbar.insert(toolbarDivOuter);
+	var toolbarDivOuter = document.createElement("div", {'class':'nodetablecellbottom'} );
+	rowToolbar.appendChild(toolbarDivOuter);
 
-	var toolbarDiv = new Element("div", {'class':'d-flex justify-content-end'} );
-	toolbarDivOuter.insert(toolbarDiv);
+	var toolbarDiv = document.createElement("div", {'class':'d-flex justify-content-end'} );
+	toolbarDivOuter.appendChild(toolbarDiv);
 
 	// IF OWNER MANAGE GROUPS
 	if (mainheading) {
 		if (NODE_ARGS['isgroupadmin'] == "true") {
-			toolbarDiv.insert('<span class="active p-2 editgroup-link" onclick="loadDialog(\'editgroup\',\'<?php echo $CFG->homeAddress?>ui/popups/groupedit.php?groupid='+group.groupid+'\', 900,800);"><?php echo $LNG->GROUP_MANAGE_TITLE; ?></span>');
+			toolbarDiv.innerHTML += '<span class="active p-2 editgroup-link" onclick="loadDialog(\'editgroup\',\'<?php echo $CFG->homeAddress?>ui/popups/groupedit.php?groupid='+group.groupid+'\', 900,800);"><?php echo $LNG->GROUP_MANAGE_TITLE; ?></span>';
 		}
 	}
 
 	if (mainheading) {
 		<?php if ($CFG->SPAM_ALERT_ON) { ?>
 	    // Add spam icon
-	    const spamDiv = new Element("div");
+	    const spamDiv = document.createElement("div");
 		spamDiv.className = "p-2";
 		const item = createGroupSpamButton(group);
-	    spamDiv.insert(item);
-	    toolbarDiv.insert(spamDiv);
+	    spamDiv.appendChild(item);
+	    toolbarDiv.appendChild(spamDiv);
 	    <?php } ?>
 
-		var jsonldButton = new Element("div", {'class':'p-2', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT_GROUP;?>'});
-		var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'API call'});
-		jsonldButton.insert(jsonldButtonicon);
+		var jsonldButton = document.createElement("div", {'class':'p-2', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT_GROUP;?>'});
+		var jsonldButtonicon = document.createElement("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'API call'});
+		jsonldButton.insappendChildert(jsonldButtonicon);
 		var jsonldButtonhandler = function() {
 			var code = URL_ROOT+'api/conversations/'+NODE_ARGS['groupid'];
 			textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE_GROUP; ?>', code, "", "", "");
 		};
 		jsonldButton.onclick = jsonldButtonhandler;
-		toolbarDiv.insert(jsonldButton);
+		toolbarDiv.appendChild(jsonldButton);
 	}
 
-	var statstableDiv = new Element("div", {'class':'card-footer border-0 bg-white py-0 text-center'});
-	var statsTable = new Element( 'div', {'class':'nodetable'} );
-	statstableDiv.insert(statsTable);
+	var statstableDiv = document.createElement("div", {'class':'card-footer border-0 bg-white py-0 text-center'});
+	var statsTable = document.createElement( 'div', {'class':'nodetable'} );
+	statstableDiv.appendChild(statsTable);
 
-	var innerRowStats = new Element( 'div', {'class':'row'} );
-	statsTable.insert(innerRowStats);
+	var innerRowStats = document.createElement( 'div', {'class':'row'} );
+	statsTable.appendChild(innerRowStats);
 
-	var innerStatsCellPeople = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellPeople);
+	var innerStatsCellPeople = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellPeople);
 
-	innerStatsCellPeople.insert('<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_PEOPLE; ?></strong>'+'<span> '+group.membercount+'</span></p>');
+	innerStatsCellPeople.innerHTML += '<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_PEOPLE; ?></strong>'+'<span> '+group.membercount+'</span></p>';
 
-	var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellDebates);
+	var innerStatsCellDebates = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellDebates);
 
-	innerStatsCellDebates.insert('<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_ISSUES;?></strong>'+'<span> '+group.debatecount+'</span></p>')
+	innerStatsCellDebates.innerHTML += '<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_ISSUES;?></strong>'+'<span> '+group.debatecount+'</span></p>';
 
-	var innerStatsCellVotes = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellVotes);
+	var innerStatsCellVotes = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellVotes);
 
-	innerStatsCellVotes.insert('<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_VOTES;?></strong>'+'<span> '+group.votes+'</span></p>');
+	innerStatsCellVotes.innerHTML += '<p><strong><?php echo $LNG->GROUP_BLOCK_STATS_VOTES;?></strong>'+'<span> '+group.votes+'</span></p>';
 
-	iDiv.insert(nodetableDiv);
-	iDiv.insert(statstableDiv);
+	iDiv.appendChild(nodetableDiv);
+	iDiv.appendChild(statstableDiv);
 
 	return iDiv;
 }
@@ -589,69 +588,69 @@ function renderGroup(group, mainheading, cropdesc){
  * Draw a single group item in a list on the homepage.
  */
 function renderHomeGroup(group, width, height){	
-	var iDiv = new Element("div", {'class':'card border-0 my-2'});
+	var iDiv = document.createElement("div", {'class':'card border-0 my-2'});
 
-	var nodetableDiv = new Element("div", {'class':'card-body p-1'});
-	var nodeTable = new Element( 'div', {'class':'nodetable border border-2'} );
+	var nodetableDiv = document.createElement("div", {'class':'card-body p-1'});
+	var nodeTable = document.createElement( 'div', {'class':'nodetable border border-2'} );
 
-	nodetableDiv.insert(nodeTable);
+	nodetableDiv.appendChild(nodeTable);
 
-	var row = new Element( 'div', {'class':'d-flex flex-row'} );
-	nodeTable.insert(row);
+	var row = document.createElement( 'div', {'class':'d-flex flex-row'} );
+	nodeTable.appendChild(row);
 
-	var imageCell = new Element( 'div', {'class':'p-2'} );
-	row.insert(imageCell);
+	var imageCell = document.createElement( 'div', {'class':'p-2'} );
+	row.appendChild(imageCell);
 
-	var imageObj = new Element('img',{'alt':group.name, 'title': group.name, 'src': group.photo});
-	var imagelink = new Element('a', {'href':URL_ROOT+"group.php?groupid="+group.groupid });
+	var imageObj = document.createElement('img',{'alt':group.name, 'title': group.name, 'src': group.photo});
+	var imagelink = document.createElement('a', {'href':URL_ROOT+"group.php?groupid="+group.groupid });
 
-	imagelink.insert(imageObj);
-	imageCell.insert(imagelink);
+	imagelink.appendChild(imageObj);
+	imageCell.appendChild(imagelink);
 
-	var textCell = new Element( 'div', {'class':'p-2'} );
-	row.insert(textCell);
+	var textCell = document.createElement( 'div', {'class':'p-2'} );
+	row.appendChild(textCell);
 
-	var textDiv = new Element('div', {'class':' '});
-	textCell.insert(textDiv);
+	var textDiv = document.createElement('div', {'class':' '});
+	textCell.appendChild(textDiv);
 
 	var title = group.name;
 
-	var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'});
+	var exploreButton = document.createElement('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'});
 	if (group.searchid && group.searchid != "") {
 		exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid+"&sid="+group.searchid;
 	} else {
 		exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid;
 	}
-	exploreButton.insert(title);
-	textDiv.insert(exploreButton);
+	exploreButton.innerHTML += title;
+	textDiv.appendChild(exploreButton);
 
-	var statstableDiv = new Element("div", {'class':'card-footer border-0 bg-white py-0 text-center'});
-	var statsTable = new Element( 'div', {'class':'nodetable'} );
-	statstableDiv.insert(statsTable);
+	var statstableDiv = document.createElement("div", {'class':'card-footer border-0 bg-white py-0 text-center'});
+	var statsTable = document.createElement( 'div', {'class':'nodetable'} );
+	statstableDiv.appendChild(statsTable);
 
-	var innerRowStats = new Element( 'div', {'class':'row'} );
-	statsTable.insert(innerRowStats);
+	var innerRowStats = document.createElement( 'div', {'class':'row'} );
+	statsTable.appendChild(innerRowStats);
 
-	var innerStatsCellPeople = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellPeople);
+	var innerStatsCellPeople = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellPeople);
 
-	innerStatsCellPeople.insert('<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_PEOPLE; ?></strong>'+
-	'<span> '+group.membercount+'</span></p>');
+	innerStatsCellPeople.innerHTML += '<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_PEOPLE; ?></strong>'+
+	'<span> '+group.membercount+'</span></p>';
 
-	var innerStatsCellDebates = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellDebates);
+	var innerStatsCellDebates = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellDebates);
 
-	innerStatsCellDebates.insert('<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_ISSUES;?></strong>'+
-	'<span> '+group.debatecount+'</span></p>')
+	innerStatsCellDebates.innerHTML += '<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_ISSUES;?></strong>'+
+	'<span> '+group.debatecount+'</span></p>';
 
-	var innerStatsCellVotes = new Element( 'div', {'class':'col-auto'} );
-	innerRowStats.insert(innerStatsCellVotes);
+	var innerStatsCellVotes = document.createElement( 'div', {'class':'col-auto'} );
+	innerRowStats.appendChild(innerStatsCellVotes);
 
-	innerStatsCellVotes.insert('<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_VOTES;?></strong>'+
-	'<span> '+group.votes+'</span></p>');
+	innerStatsCellVotes.innerHTML += '<p class="mb-0"><strong><?php echo $LNG->GROUP_BLOCK_STATS_VOTES;?></strong>'+
+	'<span> '+group.votes+'</span></p>';
 
-	iDiv.insert(nodetableDiv);
-	iDiv.insert(statstableDiv);
+	iDiv.appendChild(nodetableDiv);
+	iDiv.appendChild(statstableDiv);
 
 	return iDiv;
 }
@@ -661,46 +660,46 @@ function renderHomeGroup(group, width, height){
  */
 function renderMyGroup(group){
 
-	var iDiv = new Element("div", {'class':'card border-0 my-2'});
+	var iDiv = document.createElement("div", {'class':'card border-0 my-2'});
 
-	var nodetableDiv = new Element("div", {'class':'card-body pb-1'});
-	var nodeTable = new Element( 'div', {'class':'nodetableGroup border border-2'} );
+	var nodetableDiv = document.createElement("div", {'class':'card-body pb-1'});
+	var nodeTable = document.createElement( 'div', {'class':'nodetableGroup border border-2'} );
 
-	nodetableDiv.insert(nodeTable);
+	nodetableDiv.appendChild(nodeTable);
 
-	var row = new Element( 'div', {'class':'d-flex flex-row'} );
-	nodeTable.insert(row);
+	var row = document.createElement( 'div', {'class':'d-flex flex-row'} );
+	nodeTable.appendChild(row);
 
-	var imageCell = new Element( 'div', {'class':'p-2'} );
-	row.insert(imageCell);
+	var imageCell = document.createElement( 'div', {'class':'p-2'} );
+	row.appendChild(imageCell);
 
-	var imageObj = new Element('img',{'alt':group.name, 'title': group.name,'src': group.photo});
-	var imagelink = new Element('a', {
+	var imageObj = document.createElement('img',{'alt':group.name, 'title': group.name,'src': group.photo});
+	var imagelink = document.createElement('a', {
 		'href':URL_ROOT+"group.php?groupid="+group.groupid
 	});
 
-	imagelink.insert(imageObj);
-	imageCell.insert(imagelink);
+	imagelink.appendChild(imageObj);
+	imageCell.appendChild(imagelink);
 	imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 
-	var textCell = new Element( 'div', {'class':'nodetablecelltop'} );
-	row.insert(textCell);
+	var textCell = document.createElement( 'div', {'class':'nodetablecelltop'} );
+	row.appendChild(textCell);
 
-	var textDiv = new Element('div', {'class':'m-1'});
-	textCell.insert(textDiv);
+	var textDiv = document.createElement('div', {'class':'m-1'});
+	textCell.appendChild(textDiv);
 
 	var title = group.name;
 	var description = group.description;
 
-	var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'class':'active'});
+	var exploreButton = document.createElement('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'class':'active'});
 	if (group.searchid && group.searchid != "") {
 		exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid+"&sid="+group.searchid;
 	} else {
 		exploreButton.href= "<?php echo $CFG->homeAddress; ?>group.php?groupid="+group.groupid;
 	}
-	exploreButton.insert(title);
-	textDiv.insert(exploreButton);
-	textDiv.insert("<br />");
+	exploreButton.innerHTML += title;
+	textDiv.appendChild(exploreButton);
+	textDiv.innerHTML += "<br />";
 
 	if (description != "") {
 		var plaindesc = removeHTMLTags(description);
@@ -708,26 +707,26 @@ function renderMyGroup(group){
 		if (plaindesc.length > 90) {
 			hint = plaindesc;
 			plaindesc = plaindesc.substr(0,90)+"...";
-			textDiv.insert('<p title="'+hint+'">'+plaindesc+'</p>');
+			textDiv.innerHTML += '<p title="'+hint+'">'+plaindesc+'</p>';
 		} else {
-			textDiv.insert('<p>'+plaindesc+'</p>');
+			textDiv.innerHTML += '<p>'+plaindesc+'</p>';
 		}
 	}
 
-	var rowToolbar = new Element( 'div', {'class':'nodetablerow'} );
-	nodeTable.insert(rowToolbar);
+	var rowToolbar = document.createElement( 'div', {'class':'nodetablerow'} );
+	nodeTable.appendChild(rowToolbar);
 
-	var toolbarCell = new Element( 'div', {'class':'nodetablecellbottom'} );
-	rowToolbar.insert(toolbarCell);
+	var toolbarCell = document.createElement( 'div', {'class':'nodetablecellbottom'} );
+	rowToolbar.appendChild(toolbarCell);
 
-	var userDiv = new Element("div", {'class':'nodetablecellbottom'} );
-	toolbarCell.insert(userDiv);
+	var userDiv = document.createElement("div", {'class':'nodetablecellbottom'} );
+	toolbarCell.appendChild(userDiv);
 
-	var toolbarDivOuter = new Element("div", {'class':'nodetablecellbottom'} );
-	rowToolbar.insert(toolbarDivOuter);
+	var toolbarDivOuter = document.createElement("div", {'class':'nodetablecellbottom'} );
+	rowToolbar.appendChild(toolbarDivOuter);
 
-	var toolbarDiv = new Element("div", {'class':'text-end m-2'} );
-	toolbarDivOuter.insert(toolbarDiv);
+	var toolbarDiv = document.createElement("div", {'class':'text-end m-2'} );
+	toolbarDivOuter.appendChild(toolbarDiv);
 
 	// IF OWNER MANAGE GROUPS
 	if (USER != "" && group.members[0].userset.users) {
@@ -735,23 +734,23 @@ function renderMyGroup(group){
 		for(var i=0; i<members.length; i++) {
 			var member = members[i].user;
 			if (member.userid == USER && member.isAdmin) {
-				toolbarDiv.insert('<span class="active p-2 editgroup-link" onclick="loadDialog(\'editgroup\',\'<?php echo $CFG->homeAddress?>ui/popups/groupedit.php?groupid='+group.groupid+'\', 900,800);"><?php echo $LNG->GROUP_MANAGE_SINGLE_TITLE; ?></span>');
+				toolbarDiv.innerHTML += '<span class="active p-2 editgroup-link" onclick="loadDialog(\'editgroup\',\'<?php echo $CFG->homeAddress?>ui/popups/groupedit.php?groupid='+group.groupid+'\', 900,800);"><?php echo $LNG->GROUP_MANAGE_SINGLE_TITLE; ?></span>';
 				break;
 			}
 		}
 	}
 
-	var jsonldButton = new Element("div", {'style':'float:right;padding-right:5px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT_GROUP;?>'});
-	var jsonldButtonicon = new Element("img", {'style':'vertical-align:middle','src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'json LD Data'});
-	jsonldButton.insert(jsonldButtonicon);
+	var jsonldButton = document.createElement("div", {'style':'float:right;padding-right:5px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT_GROUP;?>'});
+	var jsonldButtonicon = document.createElement("img", {'style':'vertical-align:middle','src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'json LD Data'});
+	jsonldButton.appendChild(jsonldButtonicon);
 	var jsonldButtonhandler = function() {
 		var code = URL_ROOT+'api/conversations/'+group.groupid;
 		textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE_GROUP; ?>', code, "", "", "");
 	};
 	jsonldButton.onclick = jsonldButtonhandler;
-	toolbarDiv.insert(jsonldButton);
+	toolbarDiv.appendChild(jsonldButton);
 
-	iDiv.insert(nodetableDiv);
+	iDiv.appendChild(nodetableDiv);
 
 	return iDiv;
 }
@@ -761,32 +760,32 @@ function renderMyGroup(group){
  */
 function renderWidgetUser(user){
 
-	var uDiv = new Element("div",{id:'context'});
-	var imgDiv = new Element("div", {'style':'clear:both;float:left'});
-	var cI = new Element("div", {'class':'idea-user2', 'style':'clear:both;float:left;'});
+	var uDiv = document.createElement("div",{id:'context'});
+	var imgDiv = document.createElement("div", {'style':'clear:both;float:left'});
+	var cI = document.createElement("div", {'class':'idea-user2', 'style':'clear:both;float:left;'});
 	if(user.isgroup == 'Y'){
-		cI.insert("<a href='group.php?groupid="+ user.userid +"'><img border='0' src='"+user.thumb+"'/></a>");
+		cI.innerHTML += "<a href='group.php?groupid="+ user.userid +"'><img border='0' src='"+user.thumb+"'/></a>";
 	} else {
-		cI.insert("<a href='user.php?userid="+ user.userid +"'><img border='0' src='"+user.thumb+"'/></a>")
+		cI.innerHTML += "<a href='user.php?userid="+ user.userid +"'><img border='0' src='"+user.thumb+"'/></a>";
 	}
 
-	imgDiv.insert(cI);
+	imgDiv.appendChild(cI);
 
-	var uiDiv = new Element("div", {'style':'float:left;'});
+	var uiDiv = document.createElement("div", {'style':'float:left;'});
 	if(user.isgroup == 'Y'){
-		uiDiv.insert("<b><a href='group.php?groupid="+ user.userid +"'>" + user.name + "</a></b>");
+		uiDiv.innerHTML += "<b><a href='group.php?groupid="+ user.userid +"'>" + user.name + "</a></b>";
 	} else {
-		uiDiv.insert("<b><a href='user.php?userid="+ user.userid +"'>" + user.name + "</a></b>");
+		uiDiv.innerHTML += "<b><a href='user.php?userid="+ user.userid +"'>" + user.name + "</a></b>";
 	}
 	if (user.followdate){
 		var cDate = new Date(user.followdate*1000);
-		uiDiv.insert("<br /><b><?php echo $LNG->USERS_STARTED_FOLLOWING_ON; ?> </b>"+ cDate.format(DATE_FORMAT));
+		uiDiv.innerHTML += "<br /><b><?php echo $LNG->USERS_STARTED_FOLLOWING_ON; ?> </b>"+ cDate.format(DATE_FORMAT);
 	}
 
-	imgDiv.insert(uiDiv);
-	uDiv.insert(imgDiv);
+	imgDiv.appendChild(uiDiv);
+	uDiv.appendChild(imgDiv);
 
-	uDiv.insert("<div style='clear:both'></div>");
+	uDiv.innerHTML += "<div style='clear:both'></div>";
 	return uDiv;
 }
 
@@ -795,15 +794,15 @@ function renderWidgetUser(user){
  */
 function renderReportUser(user){
 
-	var uDiv = new Element("div",{id:'context'});
-	var imgDiv = new Element("div", {'style':'clear:both;float:left'});
+	var uDiv = document.createElement("div",{id:'context'});
+	var imgDiv = document.createElement("div", {'style':'clear:both;float:left'});
 
-	var uiDiv = new Element("div", {'style':'float:left;'});
-	uiDiv.insert("<div style='float:left;width:600px;'>"+user.name+"</div>");
+	var uiDiv = document.createElement("div", {'style':'float:left;'});
+	uiDiv.innerHTML += "<div style='float:left;width:600px;'>"+user.name+"</div>";
 
-	imgDiv.insert(uiDiv);
-	uDiv.insert(imgDiv);
+	imgDiv.appendChild(uiDiv);
+	uDiv.appendChild(imgDiv);
 
-	uDiv.insert("<div style='clear:both'></div>");
+	uDiv.innerHTML += "<div style='clear:both'></div>";
 	return uDiv;
 }

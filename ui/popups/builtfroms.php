@@ -94,7 +94,7 @@
      *  set which tab to show and load first
      */
     window.addEventListener('load', function() {
-	    document.getElementById('dialogheader').insert('<?php echo '<span style="color: black">'.$node->name.'</span><br>'.$LNG->BUILTFROM_DIALOG_TITLE; ?>');
+	    document.getElementById('dialogheader').innerHTML += '<?php echo '<span style="color: black">'.$node->name.'</span><br>'.$LNG->BUILTFROM_DIALOG_TITLE; ?>';
         getNodes();
     });
 //]]>

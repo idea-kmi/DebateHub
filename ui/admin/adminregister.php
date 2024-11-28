@@ -104,7 +104,7 @@
 
 <script type="text/javascript">
 	function init() {
-		document.getElementById('dialogadmin').insert('<?php echo $LNG->FORM_REGISTER_ADMIN_TITLE; ?>');
+		document.getElementById('dialogadmin').innerHTML += '<?php echo $LNG->FORM_REGISTER_ADMIN_TITLE; ?>';
 	}
 	window.onload = init;
 </script>

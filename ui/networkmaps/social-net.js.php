@@ -35,25 +35,32 @@ function loadSocialNet() {
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("tab-content-user-net").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("tab-content-user-net").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE GRAPH ****/
 
-	var graphDiv = new Element('div', {'id':'graphUserDiv', 'style': 'clear:both;float:left'});
+	var graphDiv = document.createElement('div');
+	graphDiv.id = 'graphUserDiv';
+	graphDiv.style = 'clear:both;float:left';
 	var width = 2000;
 	var height = 2000; // multi-graphs float off
 
-	var messagearea = new Element("div", {'id':'netusermessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'netusermessage';
+	messagearea.className = 'toolbitem';
+	messagearea.style = 'float:left;clear:both;font-weight:bold';
 
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphUserDiv-outer', 'style': 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden'});
-	outerDiv.insert(messagearea);
-	outerDiv.insert(graphDiv);
-	document.getElementById("tab-content-user-net").insert(outerDiv);
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'graphUserDiv-outer';
+	outerDiv.style = 'border:1px solid gray;clear:both;float:left;margin-left:5px;margin-bottom:5px;overflow:hidden';
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(graphDiv);
+	document.getElementById("tab-content-user-net").appendChild(outerDiv);
 
 	forcedirectedGraph = createNewForceDirectedGraphSocial('graphUserDiv', "");
 
@@ -62,8 +69,8 @@ function loadSocialNet() {
 	// THE TOOLBAR
 	var toolbar = createSocialGraphToolbar(forcedirectedGraph, "tab-content-user-net");
 
-	document.getElementById("tab-content-user-net").insert({top: toolbar});
-	document.getElementById("tab-content-user-net").insert({top: keybar});
+	document.getElementById("tab-content-user-net").prepend(toolbar);
+	document.getElementById("tab-content-user-net").prepend(keybar);
 
 	//event to resize
 	window.addEventListener("resize", function() {
@@ -97,7 +104,7 @@ async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 		nodetypes += ","+EVIDENCE_TYPES[i];
 	}
 
-	var args = Object.clone(ISSUE_ARGS);
+	var args = { ...ISSUE_ARGS };
 
 	//alert(nodetypes);
 
@@ -119,8 +126,8 @@ async function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 			return;
 		}
 		var conns = json.connectionset[0].connections;
-		//document.getElementById(('graphConnectionCount').innerHTML = "";
-		//document.getElementById('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
+		//document.getElementById('graphConnectionCount').innerHTML = "";
+		//document.getElementById('graphConnectionCount').innerHTML += '<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>';
 
 		//alert("connection count = "+conns.length);
 		let concount = 0;

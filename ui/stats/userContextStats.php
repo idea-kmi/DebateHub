@@ -109,27 +109,36 @@
 			}
 			uniQ = connection.connid + uniQ;
 
-			var connDiv = new Element("div",{'class': 'connection'});
+			var connDiv = document.createElement("div");
+			connDiv.className = 'connection';
 
-			var fromDiv = new Element("div",{'class': 'fromidea-horiz'});
+			var fromDiv = document.createElement("div");
+			fromDiv.className = 'fromidea-horiz';
 			var fromNode = renderNodeFromLocalJSon(connection.from,'conn-from-idea'+uniQ, connection.fromrole, includemenu);
-			fromDiv.insert(fromNode).insert('<div style="clear:both;"></div>');
-			connDiv.insert(fromDiv);
+			fromDiv.appendChild(fromNode);
+			fromDiv.innerHTML += '<div style="clear:both;"></div>';
+			connDiv.appendChild(fromDiv);
 
 			var linktypelabelfull = connection.linktype.label;
 			var linktypelabel = linktypelabelfull;
 
-			var linkDiv = new Element("div",{'class': 'connlink-horiz-slim','id': 'connlink'+connection.connid});
+			var linkDiv = document.createElement("div");
+			linkDiv.className = 'connlink-horiz-slim';
+			linkDiv.id = 'connlink'+connection.connid;
 			linkDiv.setStyle('background-image: url("'+URL_ROOT +'images/conn-'+connection.linktype.grouplabel.toLowerCase()+'-slim3.png")');
-			var ltDiv = new Element("div",{'class': 'conn-link-text'});
+			var ltDiv = document.createElement("div");
+			ltDiv.className = 'conn-link-text';
 
-			linkDiv.insert(ltDiv);
+			linkDiv.appendChild(ltDiv);
 
-			var ltWrap = new Element("div",{'class': 'link-type-wrapper'});
-			ltDiv.insert(ltWrap);
+			var ltWrap = document.createElement("div");
+			ltWrap.className = 'link-type-wrapper';
+			ltDiv.appendChild(ltWrap);
 
-			var ltText = new Element("div",{'class':'link-type-text'}).insert(linktypelabel);
-			ltWrap.insert(ltText);
+			var ltText = document.createElement("div");
+			ltText.className':'link-type-text'});
+			ltText.innerHTML += linktypelabel;
+			ltWrap.innerHTML += ltText;
 			// set colour of ltText
 			if (connection.linktype.grouplabel.toLowerCase() == "positive"){
 				ltText.setStyle({"color":"#00BD53"});
@@ -148,25 +157,31 @@
 				ltText.style.width="140px";
 			}
 
-			var iuDiv = new Element("div");
+			var iuDiv = document.createElement("div");
 			iuDiv.style.marginLeft='100px';
 			iuDiv.style.marginTop="3px";
-			var imagelink = new Element('a', {
-				'href':URL_ROOT+"user.php?userid="+connection.users[0].userid,
-				'title':connection.users[0].name});
+			var imagelink = document.createElement('a');
+			imagelink.href = URL_ROOT+"user.php?userid="+connection.users[0].userid;
+			imagelink.title = connection.users[0].name;
 			imagelink.target = "_blank";
-			var userimageThumb = new Element('img',{'title': connection.users[0].name, 'style':'padding-right:5px;','border':'0','src': connection.users[0].thumb});
-			imagelink.insert(userimageThumb);
-			iuDiv.insert(imagelink);
-			linkDiv.insert(iuDiv);
+			var userimageThumb = document.createElement('img');
+			userimageThumb.title = connection.users[0].name, 
+			userimageThumb.style = 'padding-right:5px;';
+			userimageThumb.border ='0';
+			userimageThumb.src = connection.users[0].thumb;
+			imagelink.appendChild(userimageThumb);
+			iuDiv.appendChild(imagelink);
+			linkDiv.appendChild(iuDiv);
 
-			connDiv.insert(linkDiv);
+			connDiv.appendChild(linkDiv);
 
-			var toDiv = new Element("div",{'class': 'toidea-horiz'});
+			var toDiv = document.createElement("div");
+			toDiv.className = 'toidea-horiz';
 			var toNode = renderNodeFromLocalJSon(connection.to,'conn-to-idea'+uniQ, connection.torole, includemenu);
 
-			toDiv.insert(toNode).insert('<div style="clear:both;"></div>');
-			connDiv.insert(toDiv);
+			toDiv.appendChild(toNode);
+			toDiv.innerHTML += '<div style="clear:both;"></div>';
+			connDiv.appendChild(toDiv);
 
 			return connDiv;
 		}

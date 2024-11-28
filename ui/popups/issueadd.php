@@ -148,7 +148,7 @@
 
 <script type="text/javascript">
 	function init() {
-		document.getElementById('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
+		document.getElementById('dialogheader').innerHTML += '<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>';
 		initialisePhaseDates();
 	}
 

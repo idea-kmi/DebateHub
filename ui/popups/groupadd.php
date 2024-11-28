@@ -149,7 +149,7 @@
 
             <script type="text/javascript">
                 function init() {
-                    document.getElementById('dialogheader').insert('<?php echo $LNG->GROUP_CREATE_TITLE; ?>');
+                    document.getElementById('dialogheader').innerHTML += '<?php echo $LNG->GROUP_CREATE_TITLE; ?>';
                 }
                 function closeGroupDialog(groupid){
                     try {

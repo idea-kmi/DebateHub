@@ -149,7 +149,7 @@
 
 			<script type="text/javascript">
 				function init() {
-					document.getElementById('dialogheader').insert('<?php echo $LNG->GROUP_MANAGE_TITLE; ?>');
+					document.getElementById('dialogheader').innerHTML += '<?php echo $LNG->GROUP_MANAGE_TITLE; ?>';
 				}
 				function loadgroup(){
 					var groupid = document.getElementById('groupid').options[document.getElementById('groupid').selectedIndex].value;

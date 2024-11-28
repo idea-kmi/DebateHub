@@ -34,39 +34,51 @@ function loadExploreGroupStackedArea(){
 	document.getElementById("stackedarea-div").innerHTML = "";
 
 	if (!isCanvasSupported()) {
-		document.getElementById("stackedarea-div").insert('<div><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("stackedarea-div").innerHTML += '<div><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
-	var stackedareadiv = new Element('div', {'id':'stackedareadiv','class':'stackedareadiv'});
+	var stackedareadiv = document.createElement('div');
+	stackedareadiv.id = 'stackedareadiv','class':'stackedareadiv';
 	var width = 950;
 	var height = 600;
 	stackedareadiv.style.width = width+"px";
 	stackedareadiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'stackedareamessage','class':'toolbitem fw-bold'});
-	var outerDiv = new Element('div', {'id':'stackedareadiv-outer', 'style': 'margin-left:5px;margin-bottom:5px;overflow:hidden'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'stackedareamessage';
+	messagearea.className = 'toolbitem fw-bold';
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'stackedareadiv-outer';
+	outerDiv.style = 'margin-left:5px;margin-bottom:5px;overflow:hidden';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(stackedareadiv);
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(stackedareadiv);
 
-	var stackedareaInfoOuter = new Element('div', {'class':'boxshadowsquare p-3 w-25 stackedarea-div', 'id':'stackedareaInfoOuterdiv'});
-	var stackedareaTitleDiv = new Element('div', {'id':'stackedareaTitleDiv'});
-	stackedareaTitleDiv.insert('<h2><?php echo $LNG->STATS_GROUP_STACKEDAREA_TITLE; ?></h2>');
+	var stackedareaInfoOuter = document.createElement('div');
+	stackedareaInfoOuter.class = 'boxshadowsquare p-3 w-25 stackedarea-div';
+	stackedareaInfoOuter.id = 'stackedareaInfoOuterdiv';
+	var stackedareaTitleDiv = document.createElement('div');
+	stackedareaTitleDiv.id = 'stackedareaTitleDiv';
+	stackedareaTitleDiv.innerHTML = '<h2><?php echo $LNG->STATS_GROUP_STACKEDAREA_TITLE; ?></h2>';
 
-	var stackedareaInfoDiv = new Element('div', {'id':'stackedareaInfoDiv', 'class':'d-flex flex-column justify-content-center'});
+	var stackedareaInfoDiv = document.createElement('div');
+	stackedareaInfoDiv.id = 'stackedareaInfoDiv';
+	stackedareaInfoDiv.className = 'd-flex flex-column justify-content-center';
 
-	stackedareaInfoOuter.insert(stackedareaTitleDiv);
-	stackedareaInfoOuter.insert(stackedareaInfoDiv);
-	document.getElementById("stackedarea-div").insert(stackedareaInfoOuter);
+	stackedareaInfoOuter.appendChild(stackedareaTitleDiv);
+	stackedareaInfoOuter.appendChild(stackedareaInfoDiv);
+	document.getElementById("stackedarea-div").appendChild(stackedareaInfoOuter);
 
-	document.getElementById("stackedarea-div").insert(outerDiv);
+	document.getElementById("stackedarea-div").appendChild(outerDiv);
 
 	stackedAreaChart = createStackedAreaChart('stackedareadiv');
 	loadData(stackedAreaChart, messagearea);
 
-	var listobj = new Element('ul', {'id':'id-list','style':'margin:0px;'});
-	stackedareaInfoDiv.insert(listobj);
+	var listobj = document.createElement('ul');
+	listobj.id = 'id-list';
+	listobj.style = 'margin:0px;';
+	stackedareaInfoDiv.appendChild(listobj);
 
 	//dynamically add legend to list
 	var legend = stackedAreaChart.getLegend();
@@ -77,14 +89,16 @@ function loadExploreGroupStackedArea(){
 	}
 	listobj.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 
-	stackedareaInfoDiv.insert('<div style="padding-top:20px;"><?php echo $LNG->STATS_GROUP_STACKEDAREA_HELP; ?></div>');
+	stackedareaInfoDiv.innerHTML += '<div style="padding-top:20px;"><?php echo $LNG->STATS_GROUP_STACKEDAREA_HELP; ?></div>';
 
-	var restoreButton = new Element('div', {'id':'restore','class':'restorebtn theme button white'});
-	restoreButton.insert('<?php echo $LNG->STATS_GROUP_STACKEDAREA_RESTORE_BUTTON; ?>');
+	var restoreButton = document.createElement('div');
+	restoreButton.id = 'restore';
+	restoreButton.className = 'restorebtn theme button white';
+	restoreButton.innerHTML = '<?php echo $LNG->STATS_GROUP_STACKEDAREA_RESTORE_BUTTON; ?>';
 	restoreButton.addEventListener('click', function() {
  		stackedAreaChart.restore();
 	});
-	stackedareaInfoDiv.insert(restoreButton);
+	stackedareaInfoDiv.appendChild(restoreButton);
 }
 
 function loadData(stackedAreaChart, messagearea) {

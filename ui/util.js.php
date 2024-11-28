@@ -122,6 +122,12 @@ var NS = 0;
 var GECKO = 0;
 var openpopups = new Array();
 
+function toQueryString(obj) {
+    return Object.keys(obj)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+        .join('&');
+}
+
 /** Store some variables about the browser being used.*/
 if (document.all) {     // Internet Explorer Detected
 	OS = navigator.platform;
@@ -466,15 +472,15 @@ function showGlobalHint(type,evt,panelName) {
 	} else if (type == "StatsOverviewParticipation") {
 		globalMessage.innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_PARTICIPATION_HINT; ?>';
 	} else if (type == "StatsOverviewViewing") {
-		globalMessage..innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWING_HINT; ?>';
+		globalMessage.innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_VIEWING_HINT; ?>';
 	} else if (type == "StatsOverviewDebate") {
-		globalMessage..innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_HINT; ?>';
+		globalMessage.innerHTML += '<?php echo $LNG->STATS_OVERVIEW_HEALTH_CONTRIBUTION_HINT; ?>';
 	} else if (type == "StatsDebateContribution") {
-		globalMessage..innerHTML += '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_HELP; ?>';
+		globalMessage.innerHTML += '<?php echo $LNG->STATS_DEBATE_CONTRIBUTION_HELP; ?>';
 	} else if (type == "StatsDebateViewing") {
-		globalMessage..innerHTML += '<?php echo $LNG->STATS_DEBATE_VIEWING_HELP; ?>';
+		globalMessage.innerHTML += '<?php echo $LNG->STATS_DEBATE_VIEWING_HELP; ?>';
 	} else if (type == 'PendingMember') {
-		globalMessage..innerHTML += '<?php echo $LNG->GROUP_JOIN_REQUEST_MESSAGE; ?>';
+		globalMessage.innerHTML += '<?php echo $LNG->GROUP_JOIN_REQUEST_MESSAGE; ?>';
 	}
 
 	showHint(event, panelName, 10, -10);
@@ -625,7 +631,7 @@ function hideBoxes() {
 }
 
 function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler, key, nodetofocusid, promptlabel, selectedOption, refresher) {
-	const prompttext = document.getElementById('prompttext');
+	let prompttext = document.getElementById('prompttext');
 
 	prompttext.innerHTML="";
 	prompttext.style.width = "380px";
@@ -639,17 +645,17 @@ function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler
 	prompttext.style.left = x+getPageOffsetX()+"px";
 	prompttext.style.top = y+getPageOffsetY()+"px";
 
-	var choicehidden = new Element('input', {'name':'radiopromptchoice','id':'radiopromptchoice','type':'hidden', 'value':'supports'});
+	var choicehidden = document.createElement('input', {'name':'radiopromptchoice','id':'radiopromptchoice','type':'hidden', 'value':'supports'});
 	prompttext.appendChild(choicehidden);
 
-	var labelobj = new Element('label', {'style':'padding-bottom:5px;font-weight:bold;font-size:12pt; color:black;'});
-	labelobj.appendChild(promptlabel);
+	var labelobj = document.createElement('label', {'style':'padding-bottom:5px;font-weight:bold;font-size:12pt; color:black;'});
+	labelobj.innerHTML = promptlabel;
 	prompttext.appendChild (labelobj);
 
-	prompttext.appendChild("<br />");
-	prompttext.appendChild("<br />");
+	prompttext.innerHTML += "<br />";
+	prompttext.innerHTML += "<br />";
 
-	var radio = new Element('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'supports'});
+	var radio = document.createElement('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'supports'});
 	radio.checked = "checked";
 	radio.addEventListener('click', function() {
 		if (this.checked) {
@@ -657,32 +663,31 @@ function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler
 		}
 	});
 	prompttext.appendChild(radio);
-	prompttext.appendChild('<img border="0" alt="+" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("plus-16x16.png"); ?>" /><span style="color:black"> Supporting</span>');
-	prompttext.appendChild("<br />");
+	prompttext.innerHTML += '<img border="0" alt="+" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("plus-16x16.png"); ?>" /><span style="color:black"> Supporting</span>';
+	prompttext.innerHTML += "<br />";
 
-	var radio2 = new Element('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'challenges'});
+	var radio2 = document.createElement('input', {'style':'vertical-align:bottom','type':'radio','name':'radioPrompt','value':'challenges'});
 	radio2.addEventListener('click', function() {	
 		if (this.checked) {
 			document.getElementById('radiopromptchoice').value = this.value;
 		}
 	});
 	prompttext.appendChild(radio2);
-	prompttext.appendChild('<img border="0" alt="-" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("minus-16x16.png"); ?>" /><span style="color:black"> Countering</span>');
-	prompttext.appendChild("<br />");
+	prompttext.innerHTML += '<img border="0" alt="-" style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath("minus-16x16.png"); ?>" /><span style="color:black"> Countering</span>';
+	prompttext.innerHTML += "<br />";
+	prompttext.innerHTML += "<br />";
 
-	prompttext.appendChild("<br />");
-
-    var buttonOK = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
+    var buttonOK = document.createElement('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CONTINUE; ?>'});
 	buttonOK.addEventListener('click', function() {	
 		var valuechosen = document.getElementById('radiopromptchoice').value;
 		eval( refresher + '("'+focalnodeid+'","'+filternodetypes+'","'+focalnodeend+'","'+handler+'","'+key+'","'+nodetofocusid+'","'+valuechosen+'")' );
 		textAreaCancel();
 	});
 
-    var buttonCancel = new Element('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = document.createElement('input', { 'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	buttonCancel.addEventListener('click', textAreaCancel);
 
-	var buttonDiv = new Element('div', { 'class':'col-auto'});
+	var buttonDiv = document.createElement('div', { 'class':'col-auto'});
 	buttonDiv.appendChild(buttonOK);
 	buttonDiv.appendChild(buttonCancel);
 
@@ -691,13 +696,13 @@ function radioEvidencePrompt(focalnodeid, filternodetypes, focalnodeend, handler
 }
 
 function textAreaCancel() {
-	const prompttext = document.getElementById('prompttext');
+	let prompttext = document.getElementById('prompttext');
 	prompttext.style.display = "none";
 	prompttext.innerHTML="";
 }
 
 function textAreaPrompt(messageStr, text, connid, handler, refresher, width, height) {
-	const prompttext = document.getElementById('prompttext');
+	let prompttext = document.getElementById('prompttext');
 
 	prompttext.innerHTML="";
 	if (width == undefined) {
@@ -716,27 +721,26 @@ function textAreaPrompt(messageStr, text, connid, handler, refresher, width, hei
 	prompttext.style.left = x+getPageOffsetX()+"px";
 	prompttext.style.top = y+getPageOffsetY()+"px";
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'messagetextarea'});
+	var textarea1 = document.createElement('textarea', {'id':'messagetextarea','rows':'5','class':'messagetextarea'});
 	textarea1.value=text;
 
 	if (connid != "") {
-		var buttonOK = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
+		var buttonOK = document.createElement('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
 		buttonOK.addEventListener('click', function() {	
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
-    var buttonCancel = new Element('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+    var buttonCancel = document.createElement('input', {  'class':'btn btn-secondary text-dark fw-bold mx-3 mt-2 float-end', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
 	buttonCancel.addEventListener('click', textAreaCancel);
 
-	var buttonDiv = new Element('div', { 'class':'col-auto'});
+	var buttonDiv = document.createElement('div', { 'class':'col-auto'});
 	if (connid != "") {
 		document.getElementById('buttonDiv').appendChild(buttonOK);
 	}
 	buttonDiv.appendChild(buttonCancel);
 
-	const prompttext = document.getElementById('prompttext');
 	prompttext.appendChild('<div class="fw-bold p-2" style="color: #4E725F">'+messageStr+'</div>');
 	prompttext.appendChild(textarea1);
 	prompttext.appendChild(buttonDiv);
@@ -796,15 +800,15 @@ function fadeoutloop(){
 
 
 function getLoading(infoText){
-    var loadDiv = new Element("div",{'class':'loading'});
+    var loadDiv = document.createElement("div",{'class':'loading'});
     loadDiv.innerHTML = "<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>'/>";
     loadDiv.innerHTML += "<br/>"+infoText;
     return loadDiv;
 }
 
 function getLoadingLine(infoText){
-    var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.innerHTML = "<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>' />");
+    var loadDiv = document.createElement("div",{'class':'loading'});
+    loadDiv.innerHTML = "<img src='<?php echo $HUB_FLM->getImagePath('ajax-loader.gif'); ?>' />";
     loadDiv.innerHTML += "&nbsp;"+infoText;
     return loadDiv;
 }
@@ -981,9 +985,9 @@ function addConnectionToNetworkMap(c, map) {
 	toRole = getNodeTitleAntecedence(toRole, false);
 
 	//create from & to nodes
-	const map = document.getElementById(map);
-	map.addNode(fN.nodeid, fromRole+": "+fromName, fromDesc, fN.users[0].user.userid, fN.creationdate, fN.otheruserconnections, fNNodeImage, fN.users[0].user.thumb, fN.users[0].user.name, fromRole, fromHEX);
-	map.addNode(tN.nodeid, toRole+": "+toName, toDesc, tN.users[0].user.userid, tN.creationdate, tN.otheruserconnections, tNNodeImage, tN.users[0].user.thumb, tN.users[0].user.name, toRole, toHEX);
+	const mapobj = document.getElementById(map);
+	mapobj.addNode(fN.nodeid, fromRole+": "+fromName, fromDesc, fN.users[0].user.userid, fN.creationdate, fN.otheruserconnections, fNNodeImage, fN.users[0].user.thumb, fN.users[0].user.name, fromRole, fromHEX);
+	mapobj.addNode(tN.nodeid, toRole+": "+toName, toDesc, tN.users[0].user.userid, tN.creationdate, tN.otheruserconnections, tNNodeImage, tN.users[0].user.thumb, tN.users[0].user.name, toRole, toHEX);
 
 	// add edge/conn
 	var fromRoleName = fromRole;
@@ -1451,6 +1455,13 @@ $CFG->ALERT_INTERESTING_TO_PEOPLE_LIKE_ME = "interesting_to_people_like_me";
 $CFG->ALERT_SUPPORTED_BY_PEOPLE_LIKE_ME = "supported_by_people_like_me";
 */
 
+function toQueryString(obj) {
+    return Object.keys(obj)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+        .join('&');
+}
+Object.toQueryString = toQueryString;
+
 function loadUserAlertsData(nodealertDiv, useralertDiv, alertmessagearea, issuenodeid) {
 	var args = {}; //must be an empty object to send down the url, or all the Array functions get sent too.
 	args["issueid"] = issuenodeid;
@@ -1570,9 +1581,9 @@ async function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea
 							if (alertTypes.hasOwnProperty(alerttype)) {
 								//alert(alertype);
 								var alertName = getAlertName(alerttype);
-								var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
+								var	title = document.createElement('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
 								title.innerHTML = alertName;
-								var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
+								var countspan = document.createElement('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
 								title.appendChild(countspan);
 								if (i > 0) {
 									title.style.marginTop = '10px';
@@ -1602,7 +1613,7 @@ async function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea
 								}
 								countspan.innerHTML = "("+k+")";
 								if (k>ALERT_COUNT) {
-									var morebutton = new Element('span', {'class':'active','style':'color:#A6156C;margin-bottom:10px;'});
+									var morebutton = document.createElement('span', {'class':'active','style':'color:#A6156C;margin-bottom:10px;'});
 									morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
 									morebutton.alerttype = alerttype;
 									morebutton.addEventListener('click', function() {
@@ -1628,9 +1639,9 @@ async function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea
 				if (alertarray.hasOwnProperty(alerttype)) {
 					i++;
 					var alertName = getAlertName(alerttype);
-					var	title = new Element('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
+					var	title = document.createElement('div', {'title':getAlertHint(alerttype), 'style':'font-weight:bold;border-top:1px solid #E8E8E8;font-size:12pt'});
 					title.innerHTML = alertName;
-					var countspan = new Element('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
+					var countspan = document.createElement('span', {'id':'titlecount'+i, 'style':'font-size:10pt; font-weight:normal; padding-left:5px;'});
 					title.appendChild(countspan);
 					if (i > 0) {
 						title.style.marginTop = '10px';
@@ -1659,7 +1670,7 @@ async function loadAlertsData(args, nodealertDiv, useralertDiv, alertmessagearea
 					}
 					countspan.innerHTML = "("+k+")";
 					if (k>ALERT_COUNT) {
-						var morebutton = new Element('div', {'class':'active','style':'color:#A6156C;margin-top:5px;margin-bottom:10px;'});
+						var morebutton = document.createElement('div', {'class':'active','style':'color:#A6156C;margin-top:5px;margin-bottom:10px;'});
 						morebutton.innerHTML = '<?php echo $LNG->ALERT_SHOW_ALL; ?>';
 						morebutton.alerttype = alerttype;
 						morebutton.addEventListener('click', function() {
@@ -1693,22 +1704,22 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 	if (display == 'none') {
 		id = type;
 	}
-	var nodespan = new Element('div', {'name':id, 'style':'display:'+display+';padding-top:10px;'});
+	var nodespan = document.createElement('div', {'name':id, 'style':'display:'+display+';padding-top:10px;'});
 
 	var role = node.role[0].role;
 	var alttext = getNodeTitleAntecedence(role.name, false);
 	if (role.image != null && role.image != "") {
-		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;padding-top:6px;padding-right:5px;','border':'0','src': URL_ROOT + role.image});
+		var nodeicon = document.createElement('img',{'alt':alttext, 'title':alttext, 'style':'width:16px;height:16px;padding-top:6px;padding-right:5px;','border':'0','src': URL_ROOT + role.image});
 		nodespan.appendChild(nodeicon);
 	}
 
 	if (nodeObj && nodeObj.nodeid == postid) {
-		var nodespantext = new Element('span', {'style':'display:inline'});
+		var nodespantext = document.createElement('span', {'style':'display:inline'});
 		nodespantext.innerHTML = name;
 		nodespan.appendChild(nodespantext);
 	} else {
 		var desc = "<?php echo $LNG->ALERT_CLICK_HIGHLIGHT; ?>";
-		var nodespantext = new Element('span', {'class':'active', 'title':desc, 'style':'display:inline'});
+		var nodespantext = document.createElement('span', {'class':'active', 'title':desc, 'style':'display:inline'});
 		nodespantext.postid = postid;
 		nodespantext.alerttype = alerttype;
 		nodespantext.innerHTML = name;
@@ -1763,9 +1774,9 @@ function createAlertUserLink(alerttype, postid, inneruser, container, display) {
 	if (display == 'none') {
 		id = type;
 	}
-	var nodespan = new Element('div', {'name':id, 'class':'active', 'style':'display:'+display+';padding-top:10px;'});
+	var nodespan = document.createElement('div', {'name':id, 'class':'active', 'style':'display:'+display+';padding-top:10px;'});
 
-	var nodespantext = new Element('span', {'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>: '+inneruser.name, });
+	var nodespantext = document.createElement('span', {'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>: '+inneruser.name, });
 	nodespantext.userid = inneruser.userid;
 	nodespantext.alerttype = alerttype;
 	nodespantext.innerHTML = '<span>'+inneruser.name+'</span>';

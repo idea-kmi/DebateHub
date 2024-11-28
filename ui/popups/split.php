@@ -142,7 +142,7 @@ if(!empty($errors)){
 var noIdeas = <?php $count = 0; if (is_countable($ideanamearray)) { $count = count($ideanamearray); } echo $count; ?>;
 
 function init() {
-   	document.getElementById('dialogheader').insert("Split this idea into two or more ideas.");
+   	document.getElementById('dialogheader').innerHTML + "Split this idea into two or more ideas.";
 }
 
 function checkForm() {

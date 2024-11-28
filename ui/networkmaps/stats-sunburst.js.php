@@ -35,38 +35,51 @@ function loadExploreGroupSunburst(){
 
 	/**** CHECK GRAPH SUPPORTED ****/
 	if (!isCanvasSupported()) {
-		document.getElementById("sunburst-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
+		document.getElementById("sunburst-div").innerHTML += '<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>';
 		return;
 	}
 
 	/**** SETUP THE GRAPH ****/
 
-	var sunburstdiv = new Element('div', {'id':'sunburstdiv', 'style': ''});
+	var sunburstdiv = document.createElement('div');
+	sunburstdiv.id = 'sunburstdiv';
+	sunburstdiv.style = '';
 	var width = 600;
 	var height = 600;
 	sunburstdiv.style.width = width+"px";
 	sunburstdiv.style.height = height+"px";
 
-	var messagearea = new Element("div", {'id':'sunburstmessage','class':'toolbitem fw-bold'});
-	var outerDiv = new Element('div', {'id':'sunburstdiv-outer', 'style': 'overflow:hidden'});
+	var messagearea = document.createElement("div");
+	messagearea.id = 'sunburstmessage';
+	messagearea.className = 'toolbitem fw-bold';
+	var outerDiv = document.createElement('div');
+	outerDiv.id = 'sunburstdiv-outer';
+	outerDiv.style = 'overflow:hidden';
 
-	outerDiv.insert(messagearea);
-	outerDiv.insert(sunburstdiv);
-	document.getElementById("sunburst-div").insert(outerDiv);
+	outerDiv.appendChild(messagearea);
+	outerDiv.appendChild(sunburstdiv);
+	document.getElementById("sunburst-div").appendChild(outerDiv);
 
-	var sunburstInfoOuter = new Element('div', {'class':'boxshadowsquare', 'id':'sunburstinfoouterdiv'});
-	var sunburstTitleDiv = new Element('div', {'id':'sunbursttitlediv'});
-	sunburstTitleDiv.insert('<h2><?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS; ?></h2>');
+	var sunburstInfoOuter = document.createElement('div');
+	sunburstInfoOuter.className = 'boxshadowsquare';
+	sunburstInfoOuter.id = 'sunburstinfoouterdiv';
+	var sunburstTitleDiv = document.createElement('div');
+	sunburstTitleDiv.id = 'sunbursttitlediv';
+	sunburstTitleDiv.innerHTML = '<h2><?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS; ?></h2>';
 
-	var sunburstInfoScrollDiv = new Element('div', {'id':'sunburstinfoscrolldiv', 'style': 'overflow-y:auto;overflow-x:none'});
+	var sunburstInfoScrollDiv = document.createElement('div');
+	sunburstInfoScrollDiv.id = 'sunburstinfoscrolldiv';
+	sunburstInfoScrollDiv.style = 'overflow-y:auto;overflow-x:none';
 
-	var sunburstInfoDiv = new Element('div', {'id':'sunburstinfodiv', 'style': 'padding:5px;padding-top:0px;'});
-	sunburstInfoDiv.insert('<?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS_CLICK; ?>');
-	sunburstInfoScrollDiv.insert(sunburstInfoDiv);
+	var sunburstInfoDiv = document.createElement('div');
+	sunburstInfoDiv.id = 'sunburstinfodiv';
+	sunburstInfoDiv.style = 'padding:5px;padding-top:0px;';
+	sunburstInfoDiv.innerHTML = '<?php echo $LNG->STATS_GROUP_SUNBURST_DETAILS_CLICK; ?>';
+	sunburstInfoScrollDiv.appendChild(sunburstInfoDiv);
 
-	sunburstInfoOuter.insert(sunburstTitleDiv);
-	sunburstInfoOuter.insert(sunburstInfoScrollDiv);
-	document.getElementById("sunburst-div").insert(sunburstInfoOuter);
+	sunburstInfoOuter.appendChild(sunburstTitleDiv);
+	sunburstInfoOuter.appendChild(sunburstInfoScrollDiv);
+	document.getElementById("sunburst-div").appendChild(sunburstInfoOuter);
 
 	sunburstGraph = createNewSunburstGraph('sunburstdiv', 'sunburstinfodiv');
 

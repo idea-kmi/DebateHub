@@ -297,7 +297,7 @@
 
 <script type="text/javascript">
 	function init(){
-		document.getElementById('dialogheader').insert("<?php echo $LNG->FORM_ACTIVITY_HEADING; ?> <?php echo htmlspecialchars($node->role->name);?>:<span style='font-size: 11pt'> <?php echo htmlspecialchars($node->name); ?></span>");
+		document.getElementById('dialogheader').innerHTML += "<?php echo $LNG->FORM_ACTIVITY_HEADING; ?> <?php echo htmlspecialchars($node->role->name);?>:<span style='font-size: 11pt'> <?php echo htmlspecialchars($node->name); ?></span>";
 
 		Object.entries(activityitems).forEach(function([key, value]) {
 			const element = document.querySelector(key);

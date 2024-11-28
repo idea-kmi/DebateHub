@@ -79,7 +79,7 @@
      *  set which tab to show and load first
      */
     window.addEventListener('load', function() {
-	    document.getElementById('dialogheader').insert('<?php echo $title; ?>');
+	    document.getElementById('dialogheader').innerHTML += '<?php echo $title; ?>';
         getNodes();
     });
 //]]>

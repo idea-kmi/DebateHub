@@ -30,7 +30,7 @@ var highlightcolour = "#ffff99";
 
 function processMargotResults(data) {
     document.body.style.cursor ="wait";
-	document.getElementById('margotcount').innerHTML = "0";
+	document.getElementById('margotcount');.innerHTML = "0";
 
     try {
 		var json = JSON.parse(data);

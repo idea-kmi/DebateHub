@@ -25,7 +25,7 @@
 
 $LNG->PAGE_ABOUT_TITLE = "About ".$CFG->SITE_TITLE;
 
-$LNG->PAGE_ABOUT_BODY = '<div><iframe title=".$LNG->IFRAME_ABOUT_DEBTEHUB." src="//www.youtube.com/embed/JrfX_zysLcQ" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>';
+$LNG->PAGE_ABOUT_BODY = '<div><iframe title=".$LNG->IFRAME_ABOUT_DEBTEHUB." src="//www.youtube-nocookie.com/embed/JrfX_zysLcQ" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>';
 
 $LNG->PAGE_ABOUT_BODY .= '<p>Developed by the Open University\'s Knowledge Management Institute, DebateHub is a tool for online communities to: raise issues; share ideas; debate the pros and cons; and prioritise contributions in order to collectively organise and progress good ideas forward. DebateHub is distinctive in its use of advanced analytics to show the best argued ideas, and visualisations of a community.</p>';
 $LNG->PAGE_ABOUT_BODY .= '<h2 class="page-heading">Key Features</h2>';

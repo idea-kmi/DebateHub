@@ -1298,60 +1298,6 @@ function auditDashboardButton(itemid, name, link, levelname, elementid) {
 	return true;
 }
 
-function auditPreviousDashboardPage() {
-	var allcookies = document.cookie;
-	if (allcookies != null) {
-		var previouspage = "";
-		var cookiearray  = allcookies.split(';');
-		for(var i=0; i<cookiearray.length; i++){
-			var param = cookiearray[i].split('=')
-			var name = param[0];
-			var value = param[1];
-			if (name.trim() == 'previousPage') {
-				previouspage = value;
-			}
-		}
-
-		if (previouspage != "" && previouspage.indexOf("ui/stats/") != -1) {
-			var itemid='';
-			if (NODE_ARGS && NODE_ARGS['nodeid']) {
-				itemid = NODE_ARGS['nodeid'];
-			}
-			if (NODE_ARGS && NODE_ARGS['groupid']) {
-				itemid = NODE_ARGS['groupid'];
-			}
-			var testelementid=window.location.href;
-			var testevent='leftvispage';
-			var state=document.referrer;
-
-			auditTesting(itemid,testelementid,testevent,state);
-
-			var date = new Date();
-			date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-			document.cookie = "previousPage="+window.location.href+"; expires=" + date.toGMTString();
-		}
-	} else {
-		var date = new Date();
-		date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-		document.cookie = "previousPage="+window.location.href+"; expires=" + date.toGMTString();
-	}
-
-	/*if (document.referrer && document.referrer.indexOf("ui/stats/") != -1) {
-		var itemid='';
-		if (NODE_ARGS && NODE_ARGS['nodeid']) {
-			itemid = NODE_ARGS['nodeid'];
-		}
-		if (NODE_ARGS && NODE_ARGS['groupid']) {
-			itemid = NODE_ARGS['groupid'];
-		}
-		var testelementid=window.location.href;
-		var testevent='leftvispage';
-		var state=document.referrer;
-
-		auditTesting(itemid,testelementid,testevent,state);
-	}*/
-}
-
 /** FUNCTIONS FOR ALERTS **/
 /*
 // DATA BASED

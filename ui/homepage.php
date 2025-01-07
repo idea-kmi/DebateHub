@@ -283,7 +283,7 @@ $ref = "http" . ((!empty($_SERVER["HTTPS"])) ? "s" : "") . "://".$_SERVER["SERVE
 			<hr class="my-4" />
 			<div class="col">
 				<h6 class="mb-4"><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h6>
-				<iframe title="<?php echo $LNG->IFRAME_ABOUT_DEBTEHUB;?>" src="//www.youtube.com/embed/JrfX_zysLcQ" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+				<iframe title="<?php echo $LNG->IFRAME_ABOUT_DEBTEHUB;?>" src="//www.youtube-nocookie.com/embed/JrfX_zysLcQ" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 			</div>
 			<div class="col">
 				<h6 class="mb-4"><?php echo $LNG->HELP_MOVIES_TITLE_INTRO;?> <span class="text-secondary fs-6">(1m 48s)</span></h6>

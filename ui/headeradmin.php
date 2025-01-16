@@ -160,7 +160,7 @@
 					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
 				</div>
 				<br/>
-				<a href="ui/pages/cookies.php">Read our cookie policy</a>
+				<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php">Read our cookie policy</a>
 			</div>
 		</div>
 		<nav class="py-2 bg-light border-bottom">

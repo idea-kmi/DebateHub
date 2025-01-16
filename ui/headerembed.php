@@ -81,7 +81,7 @@ if (file_exists($custom)) {
 
 <script type="text/javascript">
 
-window.name="coheremain";
+window.name="debatehubmain";
 
 function init(){
     var args = new Object();

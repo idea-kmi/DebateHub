@@ -63,6 +63,13 @@
 
         <script src="<?php echo $HUB_FLM->getCodeWebPath('ui/lib/bootstrap/bootstrap.bundle.min.js'); ?>" type="text/javascript"></script>
 
+		<script type="text/javascript">
+			function init(){
+				document.getElementById('cookie-policy-link').focus();
+			}
+			window.onload = init;
+		</script>
+
 		<?php
 			$custom = $HUB_FLM->getCodeDirPath("ui/headerloginCustom.php");
 			if (file_exists($custom)) {
@@ -87,7 +94,7 @@
 					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
 				</div>
 				<br/>
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php">Read our cookie policy</a>
+				<a id="cookie-policy-link" href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php">Read our cookie policy</a>
 			</div>
 		</div>
         <header class="py-3 mb-0 border-bottom" id="header">

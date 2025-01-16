@@ -109,8 +109,10 @@
 		<?php } ?>
 
 		<script type="text/javascript">
-			window.name="coheremain";
+			window.name="debatehubmain";
 			function init(){
+				document.getElementById('cookie-policy-link').focus();
+
 				var args = new Object();
 				args['filternodetypes'] = "Issue,Solution,Idea,"+EVIDENCE_TYPES;
 
@@ -160,7 +162,7 @@
 					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
 				</div>
 				<br/>
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php">Read our cookie policy</a>
+				<a id="cookie-policy-link" href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php">Read our cookie policy</a>
 			</div>
 		</div>
 		<nav class="py-2 bg-light border-bottom">

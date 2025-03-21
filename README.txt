@@ -3,9 +3,9 @@ Debate Hub - Release 2.0
 
 Coming Soon!
 
-We are in the process of updating this opriginal Debatehub repo with a merged in version of the current live post Catalyst repo.
+We are in the process of updating this original Debatehub repo with a merged in version of the current live post Catalyst repo.
 
-The installation instructions currently given will have out-of-date until the merge is complete and we have had time to update all the documentation.
+The installation instructions currently given will be out-of-date until the merge is complete and we have had time to update all the documentation.
 We will then do an official 2.0 release.
 
 

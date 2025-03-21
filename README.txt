@@ -1,7 +1,7 @@
 Debate Hub - Release 2.0
 ==========================
 
-We have released 2.0. There is still work to do on updating documentation. So some of the below information may be out-of-date.
+We have released 2.0. There is still work to do on updating documentation. So some of the documentation may be out-of-date.
 
 Debate Hub - Release 1.1
 ==========================
@@ -22,15 +22,4 @@ The 'src/install' folder has the sql for adding the required tables for the data
 script for adding the default data to those tables.
 
 Start by surfing to 'docs/index.html' and read the notes.
-
-License
--------
-
-Debate Hub is Copyright (c) 2015, The Open University.
-
-This software is freely distributed in accordance with                      
-the GNU Lesser General Public (LGPL) license, version 3 or later           
-as published by the Free Software Foundation.                            
-For details see LGPL: <http://www.fsf.org/licensing/licenses/lgpl.html>    
-                and GPL: <http://www.fsf.org/licensing/licenses/gpl-3.0.html>
 

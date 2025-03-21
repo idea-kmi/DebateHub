@@ -1,13 +1,7 @@
 Debate Hub - Release 2.0
 ==========================
 
-Coming Soon!
-
-We are in the process of updating this original Debatehub repo with a merged in version of the current live post Catalyst repo.
-
-The installation instructions currently given will be out-of-date until the merge is complete and we have had time to update all the documentation.
-We will then do an official 2.0 release.
-
+We have released 2.0. There is still work to do on updating documentation. So some of the below information may be out-of-date.
 
 Debate Hub - Release 1.1
 ==========================

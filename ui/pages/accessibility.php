@@ -1,10 +1,7 @@
-
-
-The Evidence Hub code is released under the following license:
-
+<?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 - 2025 The Open University UK                            *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -24,16 +21,19 @@ The Evidence Hub code is released under the following license:
  *  arising in any way out of the use of this software, even if advised of the  *
  *  possibility of such damage.                                                 *
  *                                                                              *
- ********************************************************************************
- 
- 
-The Evidence Hub also uses third party libraries whose licenses are all compatible
-with the GNU Lesser General Public (LGPL) license.
+ ********************************************************************************/
+    include_once("../../config.php");
+	
+    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
+?>
+	
+<div class="container-fluid" style="padding-top:20px;">
+    <div class="page">
+		<h1><?php echo $LNG->PAGE_ACCESSIBILITY_TITLE; ?></h1>
+		<?php echo $LNG->PAGE_ACCESSIBILITY_BODY; ?>
+	</div>
+</div>
 
-For full details see the third party libraries located in:
-
-/core/lib/
-
-and 
-
-/ui/lib/
+<?php
+	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+?>

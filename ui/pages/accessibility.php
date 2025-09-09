@@ -22,25 +22,18 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-    include_once("config.php");
-
-    $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
-    if ($HUB_FLM->hasCustomVersion($me)) {
-    	$path = $HUB_FLM->getCodeDirPath($me);
-    	include_once($path);
-		die;
-	}
-
-    include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+    include_once("../../config.php");
+	
+    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 ?>
-
-<div style="margin:10px;">
-	<h1>403: Forbidden</h1>
-	<p>We're very sorry, but you cannot view the page you have requested.</p>
-	<p>Try going to the root page of the <a href="<?php echo $CFG->homeAddress ;?>"><?php echo $CFG->SITE_TITLE ;?></a> website instead.</p>
-	<span>Questions or problems regarding this web site should be directed to <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $CFG->SITE_TITLE ;?> Support</a>.<br></span>
+	
+<div class="container-fluid" style="padding-top:20px;">
+    <div class="page">
+		<h1><?php echo $LNG->PAGE_ACCESSIBILITY_TITLE; ?></h1>
+		<?php echo $LNG->PAGE_ACCESSIBILITY_BODY; ?>
+	</div>
 </div>
 
 <?php
-    include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

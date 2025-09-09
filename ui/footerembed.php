@@ -28,17 +28,7 @@
 </div> <!-- end contentwrapper -->
 </div> <!-- end main -->
 
-<div id="footer" style="height:40px;" class="footerback">
-	<!-- div style="height:25px; margin-left: 15px; margin-right: 10px; margin-top: 20px;">
-		<div style="float:right;border:margin-right:5px;">
-			<div style="clear:both;float:right; line-height:14px; margin-top:10px;">
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/conditionsofuse.php"><?php echo $LNG->FOOTER_TERMS_LINK; ?></a> |
-				<a href="<?php print($CFG->homeAddress);?>ui/pages/privacy.php"><?php echo $LNG->FOOTER_PRIVACY_LINK; ?></a>
-				| <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->FOOTER_CONTACT_LINK; ?></a>
-			</div>
-		</div>
-	</div -->
-</div>
+<div id="footer" style="height:40px;" class="footerback"></div>
 
 </div>
 </body>

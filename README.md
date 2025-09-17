@@ -30,12 +30,12 @@ Start by going to ***docs/index.html*** and read the notes.
 Developed by the Open University’s Knowledge Management Institute, DebateHub is a tool for online communities to: raise issues; share ideas; debate the pros and cons; and prioritise contributions in order to collectively organise and progress good ideas forward. Debate Hub is distinctive in its use of advanced analytics to show the best argued ideas, and visualisations of a community.
 
 Key Features
- - A ***grouping*** mechanism to set up discussion groups.
- - An intuitive linear interface for ***argumentation-based discussion***.
- - 2-D mapping canvases to connect ideas and build argument maps.
- - New mechanisms to ***prioritise*** issues, ideas and arguments.
- - A ***Moderator toolbar*** to allow re-structuring and organisation of the debate by merging and splitting ideas and arguments.
- - A ***Visualisation Dashboard*** to support community management and sense making of the debate.
+ - A ***grouping*** mechanism to set up discussion groups.
+ - An intuitive linear interface for ***argumentation-based discussion***.
+ - 2-D mapping canvases to connect ideas and build argument maps.
+ - New mechanisms to ***prioritise*** issues, ideas and arguments.
+ - A ***Moderator toolbar*** to allow re-structuring and organisation of the debate by merging and splitting ideas and arguments.
+ - A ***Visualisation Dashboard*** to support community management and sense making of the debate.
 
 Public deliberation in complex socio-technical debates is critical, but poorly supported by today’s social media platforms: it is hardly possible for citizens and community managers to quickly grasp the state of a public debate, know where they might best contribute to advance understanding, and effectively identify and pursue socially innovative ideas.
 

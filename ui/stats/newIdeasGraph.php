@@ -1,7 +1,7 @@
 <?php // $Id: graph-downloads.php,v 1.3 2007/02/28 15:28:16 msb262 Exp $
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
+ *  (c) Copyright 2015 - 2025 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
